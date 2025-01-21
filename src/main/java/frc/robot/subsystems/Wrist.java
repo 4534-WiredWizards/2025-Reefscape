@@ -4,7 +4,17 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.C_Wrist;
+
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class Wrist extends SubsystemBase {
@@ -13,7 +23,7 @@ public class Wrist extends SubsystemBase {
   private DutyCycleEncoder absEncoder;
 
   public Wrist() {
-    wristMotor = new SparkFlex(Elevator.wristMotorID, SparkLowLevel.MotorType.kBrushless);
+    wristMotor = new SparkFlex(C_Wrist.wristMotorID, SparkLowLevel.MotorType.kBrushless);
     absEncoder = new DutyCycleEncoder(1);
     SparkFlexConfig baseConfig = new SparkFlexConfig();
 
@@ -26,6 +36,10 @@ public class Wrist extends SubsystemBase {
 
   public void move(double speed) {
     wristMotor.set(speed);
+  }
+
+  public void moveToPosition(double position) {
+    // TO DO 
   }
 
   public double getAngle() {

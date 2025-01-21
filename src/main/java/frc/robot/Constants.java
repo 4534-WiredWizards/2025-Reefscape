@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package main.java.frc.robot;
+package frc.robot;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -19,17 +19,17 @@ package main.java.frc.robot;
 public interface Constants {
 
     // Subsystems
-    interface Elevator {
+    interface C_Elevator {
         int leftMotorID = 51;
         int rightMotorID = 52;
         int BottomLimitSwitchID = 0;
     }
 
-    interface Wrist {
+    interface C_Wrist {
         int wristMotorID = 53;
     }
 
-    interface Intake {
+    interface C_Intake {
         int intakeMotorID = 54;
     }
 
