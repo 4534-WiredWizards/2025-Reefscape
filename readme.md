@@ -5,15 +5,14 @@
 ### Branch Strategy
 Base branch structure:
 - `Gillbert`: Swerve base code
-- `Subsystems`: All robot subsystem development
-- `Commands`: All robot command development
-- `Main`: Final integration branch
+- `develop`: Active development and integration
+- `main`: Stable, production-ready code
 
 ### Branch Management
 - [ ] Set up branch protection rules
-- [ ] All team members can work on `Subsystems` and `Commands` branches
-- [ ] Max to review all Pull Requests before merging to main
-- [ ] Branches will remain active for continuous development
+- [ ] Team development occurs in `develop` branch
+- [ ] Max reviews all Pull Requests 
+- [ ] Merge from `develop` to `main` only after thorough testing
 - [ ] Limit base branch modifications to Max and Greg
 
 ## 🛠️ Code Setup
@@ -38,7 +37,8 @@ Base branch structure:
 - [ ] Reference command list: [Reefscape Command Spreadsheet](https://docs.google.com/spreadsheets/d/1-hmzdXKS6qgACqeQ6U8RYg2TpfawPsJiIGIwLDxqnBw/edit?gid=1163826648#gid=1163826648)
 
 ## 🚀 Next Steps
-- Coordinate with team on specific implementation details
+- Coordinate team development in `develop` branch
+- Ensure comprehensive testing before merging to `main`
 - Regularly review and update this README
 
 ## Resources
