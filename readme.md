@@ -1,45 +1,16 @@
-# Reefscape 2025 Robot Code Repository
+# Reefscape 2025 Robot Code Repository: `develop` 🚀
 
-## 🤖 Repository Structure
+## 🌲 Branch Strategy 
+- **Gillbert**: Dedicated to swerve base code.
+- **develop**: Active development and integration branch. All team development occurs here.
+- **main**: Stable, production-ready branch. Changes are merged into main only after testing.
 
-### Branch Strategy
-Base branch structure:
-- `Gillbert`: Swerve base code
-- `develop`: Active development and integration
-- `main`: Stable, production-ready code
-
-### Branch Management
-1. Set up branch protection rules
-2. Team development occurs in `develop` branch
-3. Max reviews all Pull Requests
-4. Merge from `develop` to `main` only after thorough testing
-5. Limit base branch modifications to Max and Greg
-
-## 🛠️ Code Setup
-
-### Drivetrain
-- [ ] Import Advantage Kit drive code
-- [ ] Complete full diagnostic tuning for swerve
-
-### Path Planning
-- [ ] Evaluate and select Path Planner or Choreo
-- [ ] Integrate chosen path planning solution
-
-### Vision Integration
-- [ ] Implement Limelight setup from Advantage Kit base code
-- [ ] Configure forward and rear-facing camera
-- [ ] Decision: Use Limelight (preferred from previous year)
-
-## 📋 Additional Configuration
-
-### Command Structure
-- [ ] Develop base structure and constants
-- [ ] Reference command list: [Reefscape Command Spreadsheet](https://docs.google.com/spreadsheets/d/1-hmzdXKS6qgACqeQ6U8RYg2TpfawPsJiIGIwLDxqnBw/edit?gid=1163826648#gid=1163826648)
-
-## 🚀 Next Steps
-- Coordinate team development in `develop` branch
-- Ensure comprehensive testing before merging to `main`
-- Regularly review and update this README
-
-## Resources
-- [Advantage Kit Vision Integration Docs](https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template/#vision-integration)
+## 📋 Branch Management Guidelines 
+1. **Development Flow**:
+    - All feature and bug fix branches are created off of develop.
+    - Team members submit Pull Requests into develop for integration.
+2. **Review Process**:
+    - Max reviews all Pull Requests for code quality and functionality.
+    - Merges into main occur only after thorough testing in develop.
+3. **Permissions**:
+    - Only Max and Greg can modify the main and Gillbert branches directly.
