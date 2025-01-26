@@ -6,7 +6,7 @@
 Base branch structure:
 - `Gillbert`: Swerve base code
 - `develop`: Active development and integration
-- `main`: Stable, production-ready code
+- `main`: Stable, compitition-ready code 🤖🥳
 
 ### Branch Management
 1. Set up branch protection rules
