@@ -9,11 +9,11 @@ Base branch structure:
 - `main`: Stable, production-ready code
 
 ### Branch Management
-- [ ] Set up branch protection rules
-- [ ] Team development occurs in `develop` branch
-- [ ] Max reviews all Pull Requests 
-- [ ] Merge from `develop` to `main` only after thorough testing
-- [ ] Limit base branch modifications to Max and Greg
+1. Set up branch protection rules
+2. Team development occurs in `develop` branch
+3. Max reviews all Pull Requests
+4. Merge from `develop` to `main` only after thorough testing
+5. Limit base branch modifications to Max and Greg
 
 ## 🛠️ Code Setup
 
