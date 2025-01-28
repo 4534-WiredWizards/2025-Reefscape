@@ -43,3 +43,6 @@ Base branch structure:
 
 ## Resources
 - [Advantage Kit Vision Integration Docs](https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template/#vision-integration)
+
+
+maxs really awesome super neat change
