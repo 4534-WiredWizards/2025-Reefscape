@@ -28,20 +28,32 @@
 - [x] Manual and PID control commands
 > Future Work
 - [ ] Tune PID and feedforward
- - [ ] Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations. Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
+- [ ] Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations. Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
+    <details>
+        <summary>Show code</summary>
+        <br>
+
+            elevatorEncoder.setPositionConversionFactor(C_Elevator.ENCODER_DISTANCE_PER_PULSE);
+            elevatorEncoder.setVelocityConversionFactor(C_Elevator.ENCODER_VELOCITY_FACTOR);
+    </details>
+
 - [ ] Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute velocity/acceleration setpoints `m_ElevatorFeedforward.calculate(C_Elevator.TargetVelocity)`
 - [ ] Motor Output Clamping: Summing PID and feedforward could exceed motor limits. Clamp the output:
-```java
-double output = pidOutput + feedforward;
-output = Math.max(-1, Math.min(1, output));
-elevatorMotor.set(output);
-```
+    <details>
+        <summary>Show code</summary>
+        <br>
+        
+        double output = pidOutput + feedforward;
+        output = Math.max(-1, Math.min(1, output));
+        elevatorMotor.set(output);
+    </details>
+
 - [ ] Implement software limit switches to prevent elevator from exceeding bounds:
     <details>
         <summary>Show code</summary>
         <br>
         
-        `
+        
         public void moveManual(double speed) {
                 if ((getEncoderPosition() >= C_Elevator.MAX_HEIGHT && speed > 0) ||
                         (getEncoderPosition() <= C_Elevator.MIN_HEIGHT && speed < 0)) {
@@ -49,7 +61,7 @@ elevatorMotor.set(output);
                 }
                 elevatorMotor.set(speed);
         }
-        `
+    
     </details>
 - [ ] Explore implementing `public SparkBaseConfig voltageCompensation(double nominalVoltage)`
 
