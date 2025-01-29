@@ -41,7 +41,7 @@ elevatorMotor.set(output);
         <summary>Show code</summary>
         <br>
         
-        ```java
+        `
         public void moveManual(double speed) {
                 if ((getEncoderPosition() >= C_Elevator.MAX_HEIGHT && speed > 0) ||
                         (getEncoderPosition() <= C_Elevator.MIN_HEIGHT && speed < 0)) {
@@ -49,7 +49,7 @@ elevatorMotor.set(output);
                 }
                 elevatorMotor.set(speed);
         }
-        ```
+        `
     </details>
 - [ ] Explore implementing `public SparkBaseConfig voltageCompensation(double nominalVoltage)`
 
