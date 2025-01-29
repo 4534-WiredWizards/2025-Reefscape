@@ -1,118 +1,161 @@
-# Reefscape 2025 Robot Code Repository
+# 🐠 Team 4534 Robot Code Repository
 
+**Next-gen robotics codebase for efficient reef conservation automation.**
 
-<!-- Table Of Contents -->
-## 📚 Table Of Contents
-- [🚧 Functions & Goals](#-functions--goals)
-  - [Elevator](#elevator) 
+---
+
+## 📚 Table of Contents
+- [🎯 High-Level Goals](#-high-level-goals)
+- [🚀 Features & Progress](#-features--progress)
+  - [Elevator](#elevator)
   - [Wrist](#wrist)
   - [Drivetrain](#drivetrain)
   - [Path Planning](#path-planning)
   - [Vision Integration](#vision-integration)
-- [🛠️ Highlevel Goals](#️-highlevel-goals)
-  - [Drivetrain](#drivetrain)
-  - [Path Planning](#path-planning)
-  - [Vision Integration](#vision-integration)
-- [💫 Resources](#-resources
-  - [Elevator](#elevator)
-  - [Vision](#vision)
-- [🤖 Repository Structure](#-repository-structure)
-    - [Branch Strategy](#branch-strategy)
-    - [Branch Management](#branch-management)
+- [📖 Resources](#-resources)
+  - [Guides](#guides)
+  - [Subsystems](#subsystems)
+- [🌳 Repository Structure](#-repository-structure)
+  - [Branch Strategy](#branch-strategy)
+  - [Workflow](#workflow)
 
+---
 
-## 🚧 Functions & Goals
+## 🎯 High-Level Goals
 
-### Elevator
-- [x] Subsystem
-- [x] Manual and PID control commands
-> Future Work
-- [ ] Tune PID and feedforward
-- [ ] Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations. Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
-    <details>
-        <summary>Show code</summary>
-        <br>
+- **Drivetrain**: Optimize swerve responsiveness + odometry accuracy.
+- **Path Planning**: Seamless autonomous navigation via Path Planner.
+- **Vision**: Real-time AprilTag tracking + multi-camera support.
 
-            elevatorEncoder.setPositionConversionFactor(C_Elevator.ENCODER_DISTANCE_PER_PULSE);
-            elevatorEncoder.setVelocityConversionFactor(C_Elevator.ENCODER_VELOCITY_FACTOR);
-    </details>
+---
 
-- [ ] Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute velocity/acceleration setpoints `m_ElevatorFeedforward.calculate(C_Elevator.TargetVelocity)`
-- [ ] Motor Output Clamping: Summing PID and feedforward could exceed motor limits. Clamp the output:
-    <details>
-        <summary>Show code</summary>
-        <br>
-        
-        double output = pidOutput + feedforward;
-        output = Math.max(-1, Math.min(1, output));
-        elevatorMotor.set(output);
-    </details>
+## 🚀 Features & Progress
 
-- [ ] Implement software limit switches to prevent elevator from exceeding bounds:
-    <details>
-        <summary>Show code</summary>
-        <br>
-        
-        
-        public void moveManual(double speed) {
-                if ((getEncoderPosition() >= C_Elevator.MAX_HEIGHT && speed > 0) ||
-                        (getEncoderPosition() <= C_Elevator.MIN_HEIGHT && speed < 0)) {
-                        speed = 0;
-                }
-                elevatorMotor.set(speed);
-        }
-    
-    </details>
-- [ ] Explore implementing `public SparkBaseConfig voltageCompensation(double nominalVoltage)`
+### **Elevator**
 
-### Wrist
-- [ ] Subsystem
-- [ ] Manual and PID control commands
-> Future Work
-- [ ] Tune PID and feedforward
-- [ ] Implement motion profiling
+- Tune PID + feedforward
+- Real-world position conversion (meters via pulley ratios)
+- Motion profiling (`TrapezoidProfile`)
+- Safety: Software limits + output clamping
 
+<details>
+<summary>✅ Completed Items</summary>
 
-### Drivetrain
-- [x] Import Advantage Kit drive code
-- [ ] Complete full diagnostic tuning for swerve
+- Subsystem framework
+- Manual + PID control commands
 
-### Path Planning
-- [x] Evaluate **Path Planner**
-- [ ] Integrate path planning solution
+</details>
 
-### Vision Integration
-- [x] Decision: Use Limelight (preferred from previous year)
-- [ ] Implement Limelight setup from Advantage Kit base code
-- [ ] Configure forward and rear-facing camera
+<details>
+<summary>📁 Code Snippets</summary>
 
+```java
+// Position conversion  
+elevatorEncoder.setPositionConversionFactor(C_Elevator.ENCODER_DISTANCE_PER_PULSE);  
+elevatorEncoder.setVelocityConversionFactor(C_Elevator.ENCODER_VELOCITY_FACTOR);
 
+// Clamping motor output 
+double output = pidOutput + feedforward;  
+output = Math.max(-1, Math.min(1, output));  
+elevatorMotor.set(output); 
+```
 
-## 💫 Resources
-- [Advantage Kit Vision Integration Docs](https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template/#vision-integration)
-- [Path Planner Documentation](https://pathplanner.dev/home.html)
-- [Limelight Documentation](https://docs.limelightvision.io/en/latest/)
-- [REV API Robotics Spark Flex Documentation](https://codedocs.revrobotics.com/java/com/revrobotics/spark/sparkflex)
+</details>
 
-### Elevator:
-- [Using Feedforward Components with PID](https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html?utm_source=chatgpt.com#using-feedforward-components-with-pid)
-- [SysId, PID, and Feedforward Tuning for Elevator](https://www.chiefdelphi.com/t/sysid-pid-and-feedfoward-tuning-for-elevator/482797)
-- [Elevator Relative Speed](https://www.chiefdelphi.com/t/elevator-relative-speed/482861)
-### Vision:
-- [How to Check Which April Tag the Limelight is Seeing](https://www.chiefdelphi.com/t/how-to-check-which-april-tag-the-limelight-is-seeing/483990/2)
+---
 
+### **Wrist**
 
-## 🤖 Repository Structure
+- Subsystem setup
+- Manual + PID controls
+- Motion profiling
 
-### Branch Strategy
-Base branch structure:
-- `Gillbert`: Swerve base code
-- `develop`: Active development and integration
-- `main`: Stable, compitition-ready code 🤖🥳
+<details>
+<summary>✅ Completed Items</summary>
 
-### Branch Management
-1. Set up branch protection rules
-2. Team development occurs in `develop` branch
-3. Max reviews all Pull Requests
-4. Merge from `develop` to `main` only after thorough testing
-5. Limit base branch modifications to Max and Greg
+- None yet
+
+</details>
+
+---
+
+### **Drivetrain**
+
+- Full swerve diagnostic tuning
+- Odometry calibration
+- Path following optimization
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- Swerve base code (Advantage Kit)
+
+</details>
+
+---
+
+### **Path Planning**
+
+- Integration with codebase
+- Auto routine builder
+- Constraint tuning
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- Path Planner evaluation
+
+</details>
+
+---
+
+### **Vision Integration**
+
+- Advantage Kit + Limelight setup
+- Dual camera configuration
+- AprilTag pose estimation
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- Limelight selected (legacy compatibility)
+
+</details>
+
+---
+
+## 📖 Resources
+
+### **Guides**
+- [Advantage Kit Vision Docs](https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template/#vision-integration)
+- [Path Planner Tutorials](https://pathplanner.dev/home.html)
+- [Limelight Setup Guide](https://docs.limelightvision.io/en/latest/)
+- [REV Spark Flex API](https://codedocs.revrobotics.com/java/com/revrobotics/spark/sparkflex)
+
+### **Subsystems**
+
+- **Elevator**
+    - 🔗 [PID + Feedforward Tuning](https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html)
+    - 🔗 [SysId Best Practices](https://www.chiefdelphi.com/t/sysid-pid-and-feedfoward-tuning-for-elevator/482797)
+
+- **Vision**
+  - 🔗 [AprilTag Filtering](https://www.chiefdelphi.com/t/how-to-check-which-april-tag-the-limelight-is-seeing/483990/2)
+
+---
+
+## 🌳 Repository Structure
+
+### **Branch Strategy**
+- `Gillbert`: Swerve prototype base 🧪
+- `develop`: Active integration + testing 🔄
+- `main`: Competition-ready stable releases 🏆
+
+### **Workflow**
+1. **Protect Branches**: Require PR reviews for `main`/`develop`.
+2. **Develop in `develop`**: All features tested here first.
+3. **PR Reviews**: Approved by leads (Max/Greg) before merging.
+4. **Release to `main`**: Only after rigorous validation.
+
+---
+
+**Made with ❤️ by Team 4534 - The Wired Wizards**
