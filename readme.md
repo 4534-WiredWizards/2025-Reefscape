@@ -3,7 +3,12 @@
 
 <!-- Table Of Contents -->
 ## 📚 Table Of Contents
-- [🚧 Current Work](#-current-work)
+- [🚧 Functions & Goals](#-functions--goals)
+  - [Elevator](#elevator) 
+  - [Wrist](#wrist)
+  - [Drivetrain](#drivetrain)
+  - [Path Planning](#path-planning)
+  - [Vision Integration](#vision-integration)
 - [🛠️ Highlevel Goals](#️-highlevel-goals)
   - [Drivetrain](#drivetrain)
   - [Path Planning](#path-planning)
@@ -16,21 +21,44 @@
     - [Branch Management](#branch-management)
 
 
-## 🚧 Current Work
-
-
-
-
-
-## 🛠️ Highlevel Goals
+## 🚧 Functions & Goals
 
 ### Elevator
 - [x] Subsystem
-- [x] Manual and PID control
-- [ ] Tune PID and feedforward
+- [x] Manual and PID control commands
 > Future Work
+- [ ] Tune PID and feedforward
  - [ ] Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations. Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
 - [ ] Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute velocity/acceleration setpoints `m_ElevatorFeedforward.calculate(C_Elevator.TargetVelocity)`
+- [ ] Motor Output Clamping: Summing PID and feedforward could exceed motor limits. Clamp the output:
+```java
+double output = pidOutput + feedforward;
+output = Math.max(-1, Math.min(1, output));
+elevatorMotor.set(output);
+```
+- [ ] Implement software limit switches to prevent elevator from exceeding bounds:
+    <details>
+        <summary>Show code</summary>
+        <br>
+        
+        ```java
+        public void moveManual(double speed) {
+                if ((getEncoderPosition() >= C_Elevator.MAX_HEIGHT && speed > 0) ||
+                        (getEncoderPosition() <= C_Elevator.MIN_HEIGHT && speed < 0)) {
+                        speed = 0;
+                }
+                elevatorMotor.set(speed);
+        }
+        ```
+    </details>
+- [ ] Explore implementing `public SparkBaseConfig voltageCompensation(double nominalVoltage)`
+
+### Wrist
+- [ ] Subsystem
+- [ ] Manual and PID control commands
+> Future Work
+- [ ] Tune PID and feedforward
+- [ ] Implement motion profiling
 
 
 ### Drivetrain
@@ -52,6 +80,7 @@
 - [Advantage Kit Vision Integration Docs](https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template/#vision-integration)
 - [Path Planner Documentation](https://pathplanner.dev/home.html)
 - [Limelight Documentation](https://docs.limelightvision.io/en/latest/)
+- [REV API Robotics Spark Flex Documentation](https://codedocs.revrobotics.com/java/com/revrobotics/spark/sparkflex)
 
 ### Elevator:
 - [Using Feedforward Components with PID](https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html?utm_source=chatgpt.com#using-feedforward-components-with-pid)
