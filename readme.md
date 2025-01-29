@@ -256,7 +256,7 @@ public void setRainbowPattern() {
 - **Elevator**
     - 🔗 [PID + Feedforward Tuning](https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html)
     - 🔗 [SysId Best Practices](https://www.chiefdelphi.com/t/sysid-pid-and-feedfoward-tuning-for-elevator/482797)
-
+    - 🔗 [Driving an elevator and a wrist while having forbidden positions] (https://www.chiefdelphi.com/t/controlling-a-wrist-on-an-elevator-while-avoiding-collisions/483756)
 - **Vision**
   - 🔗 [AprilTag Filtering](https://www.chiefdelphi.com/t/how-to-check-which-april-tag-the-limelight-is-seeing/483990/2)
 
