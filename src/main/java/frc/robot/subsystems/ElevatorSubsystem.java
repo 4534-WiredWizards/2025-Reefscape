@@ -45,6 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         // Configure encoder (adjust these values based on your setup)
         SparkFlexConfig motorConfig = new SparkFlexConfig();
 
+        // TODO: Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations. Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
         motorConfig.encoder.positionConversionFactor(1.0);
 
         elevatorMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -80,7 +81,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         // Calculate the PID output
         double pidOutput = pidController.calculate(getEncoderPosition(), setpoint);
 
+        // TODO: Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute velocity/acceleration setpoints.
         double feedforward = m_ElevatorFeedforward.calculate(C_Elevator.TargetVelocity);
+
         // Set the motor output
         elevatorMotor.set(pidOutput + feedforward);
     }
