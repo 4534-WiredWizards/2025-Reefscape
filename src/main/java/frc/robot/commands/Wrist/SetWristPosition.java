@@ -2,24 +2,15 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.WristSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ChangeWristAngle extends Command {
-
-  private final WristSubsystem m_wrist;
-  private final int targetPosition;
-
-  /** Creates a new ChangeWristAngle. */
-  public ChangeWristAngle(WristSubsystem m_wrist, int targetPosition) {
+public class SetWristPosition extends Command {
+  /** Creates a new SetWristPosition. */
+  public SetWristPosition() {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_wrist = m_wrist;
-    this.targetPosition = targetPosition;
-    addRequirements(m_wrist);
-
   }
 
   // Called when the command is initially scheduled.

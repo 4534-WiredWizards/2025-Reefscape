@@ -17,12 +17,12 @@ import frc.robot.Constants.C_Wrist;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
-public class Wrist extends SubsystemBase {
+public class WristSubystem extends SubsystemBase {
   /** Creates a new Wrist. */
   private final SparkFlex wristMotor;
   private DutyCycleEncoder absEncoder;
 
-  public Wrist() {
+  public WristSubsystem() {
     wristMotor = new SparkFlex(C_Wrist.wristMotorID, SparkLowLevel.MotorType.kBrushless);
     absEncoder = new DutyCycleEncoder(1);
     SparkFlexConfig baseConfig = new SparkFlexConfig();

@@ -22,6 +22,9 @@ public interface Constants {
 
     // Subsystems
     interface C_Elevator {
+        double PIDPositionTolerance = 0.1;
+        double PIDVelocityTolerance = 1;
+
         int leftMotorID = 51;
         int rightMotorID = 52;
         int BottomLimitSwitchID = 0;
@@ -40,6 +43,14 @@ public interface Constants {
         int algae2Position= 0;
         int processorPosition= 0;
         int maxSafeUp= 0;
+        double kS= 0;
+        double kG= 2.28;
+        double kV= 3.07;
+        double kA= 0.41;
+        double TargetVelocity= 2.0;
+        double kP = 0.1;  // Proportional gain
+        double kI = 0.0;  // Integral gain
+     double kD = 0.0;  // Derivative gain
 
     }
 
