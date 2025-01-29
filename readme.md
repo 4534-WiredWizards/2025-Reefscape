@@ -1,6 +1,6 @@
 # 🐠 Team 4534 Robot Code Repository
 
-**Next-gen robotics codebase for efficient reef conservation automation.**
+**Next-gen FIRST robotics codebase for efficient reef scoring automation 😎**
 
 ---
 
