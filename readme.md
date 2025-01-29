@@ -29,8 +29,8 @@
 - [x] Manual and PID control
 - [ ] Tune PID and feedforward
 > Future Work
-    - [ ] Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations. Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
-    - [ ] Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute velocity/acceleration setpoints `m_ElevatorFeedforward.calculate(C_Elevator.TargetVelocity)`
+ - [ ] Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations. Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
+- [ ] Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute velocity/acceleration setpoints `m_ElevatorFeedforward.calculate(C_Elevator.TargetVelocity)`
 
 
 ### Drivetrain
