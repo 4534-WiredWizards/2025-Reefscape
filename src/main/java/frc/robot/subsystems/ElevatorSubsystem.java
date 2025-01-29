@@ -107,6 +107,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void disable() {
         PIDEnabled = false;
+        setSetpoint(getEncoderPosition());  // Reset setpoint to current position
         elevatorMotor.set(0);
     }
 
