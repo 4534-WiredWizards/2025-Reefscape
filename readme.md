@@ -65,9 +65,6 @@ elevatorMotor.set(output);
 ---
 
 ### **Wrist**
-
-- Subsystem setup
-- Manual + PID controls
 - Motion profiling
 - Separate CoralIn/AlgaeOut logic if mechanisms differ (e.g., rollers vs. belts).
 - Implement safety checks for mechanism limits.
@@ -98,7 +95,10 @@ if (isAtLimit()) {
 <details>
 <summary>✅ Completed Items</summary>
 
-- None yet
+- Subsystem setup
+    - Support main wrist joint movement
+    - Support actual intake mechanism (e.g., rollers, belts)
+- Manual + PID controls
 
 </details>
 
@@ -121,8 +121,8 @@ if (isAtLimit()) {
 
 ### **Path Planning**
 
-- Integration with codebase
-- Auto routine builder
+- Integration pathplanner into codebase and test creation of basic paths
+- Define robot constraints for path planning
 - Constraint tuning
 
 <details>

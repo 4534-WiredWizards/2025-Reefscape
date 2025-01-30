@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.C_Elevator;
-import frc.robot.Constants.C_Intake;
 import frc.robot.Constants.C_Locations;
 import frc.robot.Constants.C_Wrist;
 

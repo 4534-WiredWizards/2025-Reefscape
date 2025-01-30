@@ -50,36 +50,70 @@ public interface Constants {
         double TargetVelocity= 2.0;
         double kP = 0.1;  // Proportional gain
         double kI = 0.0;  // Integral gain
-     double kD = 0.0;  // Derivative gain
+        double kD = 0.0;  // Derivative gain
 
     }
 
     interface C_Wrist {
-    
-        int wristMotorID = 53;
 
-        int wristL1= 0;
-        int wristL2= 0;
-        int wristL3= 0;
-        int wristL4= 0;
-        int wristCoralIntakePosition= 0;
-        int wristBargePosition= 0;
-        int wristAlgae1= 0;
-        int wristAlgae2= 0;
-        int wristAlgaeGround= 0;
-        int wristDrivePosition= 0;
+        interface Encoder {
+            int port =1;
+            int fullRange = 1024;
+            int expectedZero = 0;
+        }
+
+     
+        // Rollermotor for intake and scoring of game pieces
+        interface Roller {
+            int MotorID = 54;
+            int SpeedCoralIn= 0;
+            int SpeedCoralOut= 0;
+            int SpeedAlgaeIn= 0;
+            int SpeedAlgaeOut= 0;
+        }
         
+
+
+
+        // Pivot motor for wrist angle movment
+        int pivotMotorID = 53;
+
+        double kS= 0;
+        double kG= 2.28;
+        double kV= 3.07;
+        double kA= 0.41;
+        double TargetVelocity= 2.0;
+        double kP = 0.1;  // Proportional gain
+        double kI = 0.0;  // Integral gain
+        double kD = 0.0;  // Derivative gain
+        double AbsEncoderOffset = 0.0; // TODO
+        double PIDPositionTolerance = 0.1;
+        double PIDVelocityTolerance = 1;
+        
+    
+        // Scoring Angles
+        int L1= 0;
+        int L2= 0;
+        int L3= 0;
+        int L4= 0;
+        int CoralIntakePosition= 0;
+        int BargePosition= 0;
+        int Algae1= 0;
+        int Algae2= 0;
+        int AlgaeGround= 0;
+        int DrivePosition= 0;
+        
+        // Game Piece Switching Angles
+        // This is 
+        int coralMaxAngle = 270;
+        int coralMinAngle = 20;
+
+        
+
     }
 
 
-    interface C_Intake {
-        int intakeMotorID = 54;
-
-        int intakeSpeedCoralIn= 0;
-        int intakeSpeedCoralOut= 0;
-        int intakeSpeedAlgaeIn= 0;
-        int intakeSpeedAlgaeOut= 0;
-    }
+   
 
     interface C_Locations {
 
