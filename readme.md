@@ -121,7 +121,7 @@ if (isAtLimit()) {
 
 ### **Path Planning**
 
-- Integration pathplanner into codebase and test creation of basic paths
+- Integration pathplanner into codebase and test creation of basic paths (TI)
 - Define robot constraints for path planning
 - Constraint tuning
 
@@ -136,7 +136,7 @@ if (isAtLimit()) {
 
 ### **Vision Integration**
 
-- Advantage Kit + Limelight setup
+- Advantage Kit + Limelight setup (BM)
 - Dual camera configuration
 - AprilTag pose estimation
 - AssistedMove (e.g., aligning to AprilTags on the reef/barge)
