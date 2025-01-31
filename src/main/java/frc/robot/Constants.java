@@ -30,6 +30,111 @@ public final class Constants {
 
     /** Running a physics simulator. */
     SIM,
+  }
+    // Test 123
+
+    // Subsystems
+    interface C_Elevator {
+        double PIDPositionTolerance = 0.1;
+        double PIDVelocityTolerance = 1;
+
+        int leftMotorID = 51;
+        int rightMotorID = 52;
+        int BottomLimitSwitchID = 0;
+
+        int toL1= 0;
+        int toL2= 0;
+        int toL3= 0;
+        int toL4= 0;
+        int coralIntakePosition= 0;
+        int drivePosition= 0;
+        int toBarge= 0;
+        int climbGrabPosition= 0;
+        int climbFinalPosition= 0;
+        int climbGroundPosition= 0;
+        int algae1Position= 0;
+        int algae2Position= 0;
+        int processorPosition= 0;
+        int maxSafeUp= 0;
+        double kS= 0;
+        double kG= 2.28;
+        double kV= 3.07;
+        double kA= 0.41;
+        double TargetVelocity= 2.0;
+        double kP = 0.1;  // Proportional gain
+        double kI = 0.0;  // Integral gain
+        double kD = 0.0;  // Derivative gain
+
+    }
+
+    interface C_Wrist {
+
+        interface Encoder {
+            int port =1;
+            int fullRange = 1024;
+            int expectedZero = 0;
+        }
+
+     
+        // Rollermotor for intake and scoring of game pieces
+        interface Roller {
+            int MotorID = 54;
+            int SpeedCoralIn= 0;
+            int SpeedCoralOut= 0;
+            int SpeedAlgaeIn= 0;
+            int SpeedAlgaeOut= 0;
+        }
+        
+
+
+
+        // Pivot motor for wrist angle movment
+        int pivotMotorID = 53;
+
+        double kS= 0;
+        double kG= 2.28;
+        double kV= 3.07;
+        double kA= 0.41;
+        double TargetVelocity= 2.0;
+        double kP = 0.1;  // Proportional gain
+        double kI = 0.0;  // Integral gain
+        double kD = 0.0;  // Derivative gain
+        double AbsEncoderOffset = 0.0; // TODO
+        double PIDPositionTolerance = 0.1;
+        double PIDVelocityTolerance = 1;
+        
+    
+        // Scoring Angles
+        int L1= 0;
+        int L2= 0;
+        int L3= 0;
+        int L4= 0;
+        int CoralIntakePosition= 0;
+        int BargePosition= 0;
+        int Algae1= 0;
+        int Algae2= 0;
+        int AlgaeGround= 0;
+        int DrivePosition= 0;
+        
+        // Game Piece Switching Angles
+        // This is 
+        int coralMaxAngle = 270;
+        int coralMinAngle = 20;
+
+        
+
+    }
+
+
+   
+
+    interface C_Locations {
+
+        int locReef= 0;
+        int locBarge= 0;
+        int locProcessor= 0;
+        int locCoralStation= 0;
+    }
 
     /** Replaying from a log file. */
     REPLAY
