@@ -66,7 +66,6 @@ elevatorMotor.set(output);
 
 ### **Wrist**
 - Motion profiling
-- Separate CoralIn/AlgaeOut logic if mechanisms differ (e.g., rollers vs. belts).
 - Implement safety checks for mechanism limits.
 
 <details>
@@ -99,6 +98,7 @@ if (isAtLimit()) {
     - Support main wrist joint movement
     - Support actual intake mechanism (e.g., rollers, belts)
 - Manual + PID controls
+- Separate CoralIn/AlgaeOut logic if mechanisms differ (e.g., rollers vs. belts).
 
 </details>
 
