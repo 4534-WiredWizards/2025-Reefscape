@@ -30,6 +30,9 @@ public final class Constants {
 
     /** Running a physics simulator. */
     SIM,
+
+    // Replay Mode
+    REPLAY
   }
     // Test 123
 
@@ -136,7 +139,4 @@ public final class Constants {
         int locCoralStation= 0;
     }
 
-    /** Replaying from a log file. */
-    REPLAY
   }
-}
