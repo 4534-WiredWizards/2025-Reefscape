@@ -11,9 +11,10 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-//import edu.wpi.first.math.controller.PIDController; 
+// import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.C_Elevator;
 
@@ -56,9 +57,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // Initialize PID controller
-    pidController = new ProfiledPIDController(C_Elevator.kP, C_Elevator.kI, C_Elevator.kD,
-      new TrapezoidProfile.Constraints(C_Elevator.maxVelocity, C_Elevator.maxAcceleration));
-      
+    pidController =
+        new ProfiledPIDController(
+            C_Elevator.kP,
+            C_Elevator.kI,
+            C_Elevator.kD,
+            new TrapezoidProfile.Constraints(C_Elevator.maxVelocity, C_Elevator.maxAcceleration));
+
     pidController.setTolerance(
         C_Elevator.PIDPositionTolerance, C_Elevator.PIDVelocityTolerance); // Set the
     // tolerance to
@@ -77,7 +82,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Set the desired setpoint (elevator position)
   public void setSetpoint(double setpoint) {
     this.setpoint = Math.max(0, Math.min(C_Elevator.maxSafeUp, setpoint));
-    pidController.setGoal(setpoint);
+    pidController.setGoal(this.setpoint);
   }
 
   // Function to check if PID method is complete
@@ -135,5 +140,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     if (PIDEnabled == true) {
       runPID();
     }
+    SmartDashboard.putNumber("Elevator Setpoint", setpoint);
+    SmartDashboard.putNumber("Elevator Position", getEncoderPosition());
   }
 }

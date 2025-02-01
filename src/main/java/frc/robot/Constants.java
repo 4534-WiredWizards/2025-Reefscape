@@ -67,8 +67,8 @@ public interface Constants {
     double kP = 0.1; // Proportional gain
     double kI = 0.0; // Integral gain
     double kD = 0.0; // Derivative gain
-    double maxVelocity = 2.0; //todo set this maximum
-    double maxAcceleration = 2.0; //todo set this maximum
+    double maxVelocity = 2.0; // todo set this maximum
+    double maxAcceleration = 2.0; // todo set this maximum
   }
 
   interface C_Wrist {
@@ -102,6 +102,10 @@ public interface Constants {
     double AbsEncoderOffset = 0.0; // TODO
     double PIDPositionTolerance = 0.1;
     double PIDVelocityTolerance = 1;
+    double maxVelocity = 2.0; // todo set this maximum
+    double maxAcceleration = 2.0; // todo set this maximum
+    double maxSafeUp = 0; // highest wrist is allowed to go
+    double maxSafeDown = 0; // lowest wrist is allowed to go
 
     // Scoring Angles
     int L1 = 0;
@@ -142,8 +146,5 @@ public interface Constants {
     double robotMassKG = 74.088;
     double robotMOI = 6.883;
     double wheelCOF = 1.2;
-
-    
-
   }
 }

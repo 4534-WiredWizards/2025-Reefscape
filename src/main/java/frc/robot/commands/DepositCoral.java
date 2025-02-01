@@ -19,10 +19,11 @@ public class DepositCoral extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new MoveElevator(C_Elevator.toL4),
-        new ChangeWristAngle(C_Wrist.wristL4),
+        //new ChangeWristAngle(C_Wrist.L4), need to fix
         new AssistedMove(C_Locations.locReef),
-        new RunIntake(C_Intake.intakeSpeedCoralOut),
-        new MoveElevator(C_Elevator.drivePosition),
-        new ChangeWristAngle(C_Wrist.wristCoralIntakePosition));
+       // new RunIntake(C_Intake.intakeSpeedCoralOut), need to fix
+        new MoveElevator(C_Elevator.drivePosition)
+       // new ChangeWristAngle(C_Wrist.wristCoralIntakePosition)); need to fix
+    );
   }
 }

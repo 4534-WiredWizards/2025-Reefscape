@@ -11,9 +11,12 @@ import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
+// import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.C_Wrist;
 
@@ -25,7 +28,7 @@ public class WristSubsystem extends SubsystemBase {
 
   private DutyCycleEncoder absEncoder;
 
-  private final PIDController pidController;
+  private final ProfiledPIDController pidController;
 
   private boolean PIDEnabled = false;
 
@@ -35,7 +38,12 @@ public class WristSubsystem extends SubsystemBase {
   private double setpoint;
 
   public WristSubsystem() {
-    pidController = new PIDController(C_Wrist.kP, C_Wrist.kI, C_Wrist.kD);
+    pidController =
+        new ProfiledPIDController(
+            C_Wrist.kP,
+            C_Wrist.kI,
+            C_Wrist.kD,
+            new TrapezoidProfile.Constraints(C_Wrist.maxVelocity, C_Wrist.maxAcceleration));
     pidController.setTolerance(C_Wrist.PIDPositionTolerance, C_Wrist.PIDVelocityTolerance);
 
     wristMotor = new SparkFlex(C_Wrist.pivotMotorID, SparkLowLevel.MotorType.kBrushless);
@@ -65,7 +73,8 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void setWristSetpoint(double setpoint) {
-    this.setpoint = setpoint;
+    this.setpoint = Math.max(C_Wrist.maxSafeDown, Math.min(C_Wrist.maxSafeUp, setpoint));
+    pidController.setGoal(this.setpoint);
   }
 
   public boolean atSetpoint() {
@@ -73,17 +82,22 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void runPID() {
-    double pidoutput = pidController.calculate(getAngle(), setpoint);
-    wristMotor.set(
-        pidoutput + m_WristFeedforward.calculate(Units.degreesToRadians(getAngle()), pidoutput));
+    double pidoutput = pidController.calculate(getAngle());
+
     double feedforward =
-        m_WristFeedforward.calculate(Units.degreesToRadians(getAngle()), C_Wrist.TargetVelocity);
-    wristMotor.set(pidoutput + feedforward);
+        m_WristFeedforward.calculate(
+            Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
+
+    setClampSpeed(pidoutput + feedforward);
   }
 
   public void moveManual(double speed) {
     this.disable();
-    wristMotor.set(speed);
+    setClampSpeed(speed);
+  }
+
+  private void setClampSpeed(double speed) {
+    wristMotor.set((Math.max(-1, Math.min(1, speed))));
   }
 
   public void moveRoller(double speed) {
@@ -100,10 +114,13 @@ public class WristSubsystem extends SubsystemBase {
 
   public void enable() {
     PIDEnabled = true;
+    pidController.reset(getAngle());
   }
 
   public void disable() {
     PIDEnabled = false;
+    setWristSetpoint(getAngle()); // reset setpoint to current position
+    setClampSpeed(0);
   }
 
   public boolean isEnabled() {
@@ -119,5 +136,7 @@ public class WristSubsystem extends SubsystemBase {
     if (PIDEnabled == true) {
       runPID();
     }
+    SmartDashboard.putNumber("Wrist Setpoint", setpoint);
+    SmartDashboard.putNumber("Wrist Position", getAngle());
   }
 }

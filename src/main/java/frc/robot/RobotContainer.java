@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -23,8 +24,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.C_Elevator;
+import frc.robot.Constants.C_Wrist;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Elevator.SetElevatorPosition;
+import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -32,14 +40,6 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import frc.robot.subsystems.WristSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.commands.Wrist.AdaptiveWrist;
-import frc.robot.commands.Elevator.SetElevatorPosition;
-import frc.robot.commands.Wrist.SetWristPosition;
-import com.pathplanner.lib.events.EventTrigger;
-import frc.robot.Constants.C_Elevator;
-import frc.robot.Constants.C_Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,18 +63,18 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
+
     // Register named commands
     NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Wrist, true));
     NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
     NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Wrist, false));
 
-    //Event Triggers
+    // Event Triggers
     new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL4));
     new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL3));
     new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL2));
     new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL1));
-    
+
     new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L4));
     new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L3));
     new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L2));
@@ -82,7 +82,6 @@ public class RobotContainer {
 
     new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Wrist, false));
     new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Wrist, true));
-
 
     switch (Constants.currentMode) {
       case REAL:

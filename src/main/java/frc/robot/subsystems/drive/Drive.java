@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.Constants.C_Pathplanner;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
@@ -54,7 +55,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import frc.robot.Constants.C_Pathplanner;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
@@ -129,7 +129,8 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(C_Pathplanner.drivekP, C_Pathplanner.drivekI, C_Pathplanner.drivekD), new PIDConstants(C_Pathplanner.turnkP, C_Pathplanner.turnkI, C_Pathplanner.turnkD)), 
+            new PIDConstants(C_Pathplanner.drivekP, C_Pathplanner.drivekI, C_Pathplanner.drivekD),
+            new PIDConstants(C_Pathplanner.turnkP, C_Pathplanner.turnkI, C_Pathplanner.turnkD)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
