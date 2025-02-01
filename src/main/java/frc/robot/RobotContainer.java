@@ -34,6 +34,7 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.SetWristPosition;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -52,16 +53,15 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  // Named Commands
-  public final NamedCommands namedCommands = new NamedCommands();
-  
-  //commands
+  // Named Command
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
     // Register named commands
     NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Wrist, true));
+    NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
+    NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Wrist, false));
 
     switch (Constants.currentMode) {
       case REAL:
