@@ -54,6 +54,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.Constants.C_Pathplanner;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
@@ -69,17 +70,14 @@ public class Drive extends SubsystemBase {
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
   // PathPlanner config constants
-  private static final double ROBOT_MASS_KG = 74.088;
-  private static final double ROBOT_MOI = 6.883;
-  private static final double WHEEL_COF = 1.2;
   private static final RobotConfig PP_CONFIG =
       new RobotConfig(
-          ROBOT_MASS_KG,
-          ROBOT_MOI,
+          C_Pathplanner.robotMassKG,
+          C_Pathplanner.robotMOI,
           new ModuleConfig(
               TunerConstants.FrontLeft.WheelRadius,
               TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
-              WHEEL_COF,
+              C_Pathplanner.wheelCOF,
               DCMotor.getKrakenX60Foc(1)
                   .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
               TunerConstants.FrontLeft.SlipCurrent,
@@ -131,7 +129,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(C_Pathplanner.drivekP, C_Pathplanner.drivekI, C_Pathplanner.drivekD), new PIDConstants(C_Pathplanner.turnkP, C_Pathplanner.turnkI, C_Pathplanner.turnkD)), 
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);

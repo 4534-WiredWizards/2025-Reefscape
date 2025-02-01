@@ -126,4 +126,22 @@ public interface Constants {
     int locProcessor = 0;
     int locCoralStation = 0;
   }
+
+  interface C_Pathplanner {
+    // TODO: Add pathplanner constants
+    double drivekP = 5.0;
+    double drivekI = 0.0;
+    double drivekD = 0.0;
+
+    double turnkP = 5.0;
+    double turnkI = 0.0;
+    double turnkD = 0.0;
+
+    double robotMassKG = 74.088;
+    double robotMOI = 6.883;
+    double wheelCOF = 1.2;
+
+    
+
+  }
 }
