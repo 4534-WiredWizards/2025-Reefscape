@@ -67,6 +67,8 @@ public interface Constants {
     double kP = 0.1; // Proportional gain
     double kI = 0.0; // Integral gain
     double kD = 0.0; // Derivative gain
+    double maxVelocity = 2.0; //todo set this maximum
+    double maxAcceleration = 2.0; //todo set this maximum
   }
 
   interface C_Wrist {
