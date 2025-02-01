@@ -76,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // Set the desired setpoint (elevator position)
   public void setSetpoint(double setpoint) {
-    this.setpoint = setpoint;
+    this.setpoint = Math.max(0, Math.min(C_Elevator.maxSafeUp, setpoint));
     pidController.setGoal(setpoint);
   }
 

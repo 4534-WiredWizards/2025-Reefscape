@@ -58,7 +58,7 @@ public interface Constants {
     int algae1Position = 0;
     int algae2Position = 0;
     int processorPosition = 0;
-    int maxSafeUp = 0;
+    int maxSafeUp = 0; // highest elevator is allowed to go
     double kS = 0;
     double kG = 2.28;
     double kV = 3.07;
