@@ -58,7 +58,7 @@ public interface Constants {
     int algae1Position = 0;
     int algae2Position = 0;
     int processorPosition = 0;
-    int maxSafeUp = 0;
+    int maxSafeUp = 0; // highest elevator is allowed to go
     double kS = 0;
     double kG = 2.28;
     double kV = 3.07;
@@ -67,6 +67,8 @@ public interface Constants {
     double kP = 0.1; // Proportional gain
     double kI = 0.0; // Integral gain
     double kD = 0.0; // Derivative gain
+    double maxVelocity = 2.0; //todo set this maximum
+    double maxAcceleration = 2.0; //todo set this maximum
   }
 
   interface C_Wrist {

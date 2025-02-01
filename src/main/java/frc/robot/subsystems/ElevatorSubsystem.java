@@ -11,7 +11,9 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.PIDController;
+//import edu.wpi.first.math.controller.PIDController; 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.C_Elevator;
 
@@ -24,7 +26,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final RelativeEncoder elevatorEncoder;
 
   // PID controller for the elevator
-  private final PIDController pidController;
+  private final ProfiledPIDController pidController;
 
   private boolean PIDEnabled = false;
 
@@ -54,7 +56,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // Initialize PID controller
-    pidController = new PIDController(C_Elevator.kP, C_Elevator.kI, C_Elevator.kD);
+    pidController = new ProfiledPIDController(C_Elevator.kP, C_Elevator.kI, C_Elevator.kD,
+      new TrapezoidProfile.Constraints(C_Elevator.maxVelocity, C_Elevator.maxAcceleration));
+      
     pidController.setTolerance(
         C_Elevator.PIDPositionTolerance, C_Elevator.PIDVelocityTolerance); // Set the
     // tolerance to
@@ -72,7 +76,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // Set the desired setpoint (elevator position)
   public void setSetpoint(double setpoint) {
-    this.setpoint = setpoint;
+    this.setpoint = Math.max(0, Math.min(C_Elevator.maxSafeUp, setpoint));
+    pidController.setGoal(setpoint);
   }
 
   // Function to check if PID method is complete
@@ -83,21 +88,25 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Run the PID controller to move the elevator to the setpoint
   public void runPID() {
     // Calculate the PID output
-    double pidOutput = pidController.calculate(getEncoderPosition(), setpoint);
+    double pidOutput = pidController.calculate(getEncoderPosition());
 
     // TODO: Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute
     // velocity/acceleration setpoints.
-    double feedforward = m_ElevatorFeedforward.calculate(C_Elevator.TargetVelocity);
+    double feedforward = m_ElevatorFeedforward.calculate(pidController.getSetpoint().velocity);
 
     // Set the motor output
-    elevatorMotor.set(pidOutput + feedforward);
+    setClampSpeed(pidOutput + feedforward);
   }
 
   // Move the elevator manually (for manual driving)
   public void moveManual(double speed) {
     // Disable PID control and set the motor speed directly
     this.disable();
-    elevatorMotor.set(speed);
+    setClampSpeed(speed);
+  }
+
+  private void setClampSpeed(double speed) {
+    elevatorMotor.set((Math.max(-1, Math.min(1, speed))));
   }
 
   // Stop the elevator motor
@@ -107,13 +116,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void enable() {
     PIDEnabled = true;
-    pidController.reset();
+    pidController.reset(getEncoderPosition());
   }
 
   public void disable() {
     PIDEnabled = false;
     setSetpoint(getEncoderPosition()); // Reset setpoint to current position
-    elevatorMotor.set(0);
+    setClampSpeed(0);
   }
 
   public boolean isEnabled() {

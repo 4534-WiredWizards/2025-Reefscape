@@ -35,14 +35,15 @@
 
 - Tune PID + feedforward
 - Real-world position conversion (meters via pulley ratios)
-- Motion profiling (`TrapezoidProfile`)
-- Safety: Software limits + output clamping
+
 
 <details>
 <summary>✅ Completed Items</summary>
 
 - Subsystem framework
 - Manual + PID control commands
+- Motion profiling (`TrapezoidProfile`)
+- Safety: Software limits + output clamping
 
 </details>
 
@@ -54,10 +55,7 @@
 elevatorEncoder.setPositionConversionFactor(C_Elevator.ENCODER_DISTANCE_PER_PULSE);
 elevatorEncoder.setVelocityConversionFactor(C_Elevator.ENCODER_VELOCITY_FACTOR);
 
-// Clamping motor output
-double output = pidOutput + feedforward;
-output = Math.max(-1, Math.min(1, output));
-elevatorMotor.set(output);
+
 ```
 
 </details>
