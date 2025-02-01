@@ -136,9 +136,7 @@ if (isAtLimit()) {
 
 ### **Vision Integration**
 
-- Advantage Kit + Limelight setup (BM)
-- Dual camera configuration
-- AprilTag pose estimation
+
 - AssistedMove (e.g., aligning to AprilTags on the reef/barge)
 - PipelineCommand to dynamically switch vision pipelines for different targets
 
@@ -202,6 +200,9 @@ public class PipelineCommand extends InstantCommand {
 <summary>✅ Completed Items</summary>
 
 - Limelight selected (legacy compatibility)
+- Advantage Kit + Limelight setup (BM)
+- Dual camera configuration
+- AprilTag pose estimation
 
 </details>
 
