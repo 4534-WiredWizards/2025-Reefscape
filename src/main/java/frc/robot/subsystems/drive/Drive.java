@@ -318,12 +318,17 @@ public class Drive extends SubsystemBase {
     }
     return output;
   }
+/** Returns yaw velocity in Radians per second */
+  public double getGyroRate() {
+    return gyroInputs.yawVelocityRadPerSec; // Assuming yaw velocity is stored in radians/sec
+    
+}
 
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
-  }
+  }  
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
