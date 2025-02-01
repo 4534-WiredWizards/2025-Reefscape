@@ -81,6 +81,7 @@ public class RobotContainer {
     new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L1));
 
     new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Wrist, false));
+    new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Wrist, true));
 
 
     switch (Constants.currentMode) {
