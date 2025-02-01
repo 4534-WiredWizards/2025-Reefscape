@@ -33,8 +33,13 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Wrist.SetWristPosition;
+import com.pathplanner.lib.events.EventTrigger;
+import frc.robot.Constants.C_Elevator;
+import frc.robot.Constants.C_Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,6 +51,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final WristSubsystem m_Wrist = new WristSubsystem();
+  private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -62,6 +68,20 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Wrist, true));
     NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
     NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Wrist, false));
+
+    //Event Triggers
+    new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL4));
+    new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL3));
+    new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL2));
+    new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL1));
+    
+    new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L4));
+    new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L3));
+    new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L2));
+    new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L1));
+
+    new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Wrist, false));
+
 
     switch (Constants.currentMode) {
       case REAL:
