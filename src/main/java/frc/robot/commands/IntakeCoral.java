@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.*;
-import frc.robot.commands.MoveElevator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -17,14 +16,11 @@ public class IntakeCoral extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-
-      new MoveElevator(C_Elevator.coralIntakePosition),
-      new ChangeWristAngle(C_Wrist.wristCoralIntakePosition),
-      new AssistedMove(C_Locations.locCoralStation),
-      new RunIntake(C_Intake.intakeSpeedCoralIn),
-      new ChangeWristAngle(C_Wrist.wristDrivePosition),
-      new MoveElevator(C_Elevator.drivePosition)
-
-    );
+        new MoveElevator(C_Elevator.coralIntakePosition),
+        new ChangeWristAngle(C_Wrist.wristCoralIntakePosition),
+        new AssistedMove(C_Locations.locCoralStation),
+        new RunIntake(C_Intake.intakeSpeedCoralIn),
+        new ChangeWristAngle(C_Wrist.wristDrivePosition),
+        new MoveElevator(C_Elevator.drivePosition));
   }
 }

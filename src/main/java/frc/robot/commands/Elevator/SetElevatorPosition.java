@@ -6,7 +6,6 @@ package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.Constants.C_Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetElevatorPosition extends Command {
@@ -25,7 +24,6 @@ public class SetElevatorPosition extends Command {
     // Set the desired position
     m_elevator.setSetpoint(targetPosition);
     m_elevator.enable();
-
   }
 
   @Override
@@ -35,10 +33,9 @@ public class SetElevatorPosition extends Command {
 
   @Override
   public void end(boolean interrupted) {
-        // Check if the elevator has reached the target position (within a tolerance)
-        m_elevator.stop();
-        m_elevator.disable();
-        
+    // Check if the elevator has reached the target position (within a tolerance)
+    m_elevator.stop();
+    m_elevator.disable();
   }
 
   @Override
