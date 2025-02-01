@@ -63,10 +63,12 @@ elevatorEncoder.setVelocityConversionFactor(C_Elevator.ENCODER_VELOCITY_FACTOR);
 ---
 
 ### **Wrist**
-- Motion profiling
-- Implement safety checks for mechanism limits.
 
+- Tune PID + feedforward + motion profiling
+- Implement safety checks for mechanism limits
+- PID tuning
 <details>
+
 <summary>📁 Code Snippets</summary>
 
 ```java
