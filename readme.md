@@ -121,14 +121,16 @@ if (isAtLimit()) {
 
 ### **Path Planning**
 
-- Integration pathplanner into codebase and test creation of basic paths (TI)
-- Define robot constraints for path planning
 - Constraint tuning
 
 <details>
 <summary>✅ Completed Items</summary>
 
 - Path Planner evaluation
+- Integration of Path Planner into codebase and test creation of basic paths (TI)
+- Define robot constraints for path planning
+- Implement basic path commands
+- Implement basic event triggers for use in paths
 
 </details>
 
