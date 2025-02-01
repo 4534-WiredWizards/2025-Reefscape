@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,13 +32,9 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.subsystems.WristSubsystem;
+import frc.robot.commands.Wrist.AdaptiveWrist;
 
-//pathplanner imports
-package com.pathplanner.lib.auto;
-
-
-
- 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -47,6 +44,7 @@ package com.pathplanner.lib.auto;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final WristSubsystem m_Wrist = new WristSubsystem();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -54,11 +52,16 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  // Named Commands
+  public final NamedCommands namedCommands = new NamedCommands();
+  
+  //commands
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    //Named Commands
-    namedCommands.registerCommand("IntakeCoral", WristSubsystem.IntakeCoral());
+    
+    // Register named commands
+    NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Wrist, true));
 
     switch (Constants.currentMode) {
       case REAL:
@@ -146,7 +149,7 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Reset gyro to 0° when B button is pressed
+    // Reset gyro to 0° when B button is pressed
     controller
         .b()
         .onTrue(
