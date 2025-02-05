@@ -10,8 +10,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-// import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -140,6 +140,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     if (PIDEnabled == true) {
       runPID();
     }
+
+    // Update SmartDashboard
     SmartDashboard.putNumber("Elevator Setpoint", setpoint);
     SmartDashboard.putNumber("Elevator Position", getEncoderPosition());
   }
