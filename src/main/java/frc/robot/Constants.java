@@ -63,12 +63,15 @@ public interface Constants {
     double kG = 2.28;
     double kV = 3.07;
     double kA = 0.41;
-    double TargetVelocity = 2.0;
+    double TargetVelocity = 0.1;
     double kP = 0.1; // Proportional gain
     double kI = 0.0; // Integral gain
     double kD = 0.0; // Derivative gain
     double maxVelocity = 2.0; // todo set this maximum
     double maxAcceleration = 2.0; // todo set this maximum
+    double manualElevatorSpeed = 0.2;
+    double elevatorUpDir = 1.0; // change this to -1 if the direction is wrong
+    double elevatorDownDir = elevatorUpDir * -1.0; // Do not change this one
   }
 
   interface C_Wrist {
@@ -106,6 +109,8 @@ public interface Constants {
     double maxAcceleration = 2.0; // todo set this maximum
     double maxSafeUp = 0; // highest wrist is allowed to go
     double maxSafeDown = 0; // lowest wrist is allowed to go
+    double wristInDir = 1.0; // change this to -1 if the direction is wrong
+    double wristOutDir = wristInDir * -1.0; // Do not change this one
 
     // Scoring Angles
     int L1 = 0;
