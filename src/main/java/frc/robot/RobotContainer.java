@@ -16,20 +16,23 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.C_Elevator;
 import frc.robot.Constants.C_Wrist;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Elevator.SetElevatorPosition;
+import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.Wrist.AdaptiveWrist;
 import frc.robot.commands.Wrist.SetWristPosition;
+import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -54,7 +57,8 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController Operatorcontroller = new CommandXboxController(0);
+  private final Joystick driverJoystick = new Joystick(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -152,33 +156,50 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -Operatorcontroller.getLeftY(),
+            () -> -Operatorcontroller.getLeftX(),
+            () -> -Operatorcontroller.getRightX()));
 
-    // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
+    // Lock to 0° when A button is held TODO
+    // lockAngle
+    new JoystickButton(driverJoystick, 7)
+        .toggleOnTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
+                () -> -driverJoystick.getY(),
+                () -> -driverJoystick.getX(),
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // TODO make this button 8 on flight controller
+    new JoystickButton(driverJoystick, 8).toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    // todo make this l1 on flight controller
+    //     controller
+    //         .b()
+    //         .onTrue(
+    //             Commands.runOnce(
+    //                     () ->
+    //                         drive.setPose(
+    //                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+    //                     drive)
+    //                 .ignoringDisable(true));
+
+    Operatorcontroller.leftBumper()
+        .whileTrue(
+            new SimpleMoveElevator(
+                m_elevator, () -> C_Elevator.elevatorDownDir * C_Elevator.manualElevatorSpeed));
+    Operatorcontroller.rightBumper()
+        .whileTrue(
+            new SimpleMoveElevator(
+                m_elevator, () -> C_Elevator.elevatorUpDir * C_Elevator.manualElevatorSpeed));
+    Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Wrist, true));
+    Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Wrist, false));
+
+    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> Operatorcontroller.getLeftX()));
   }
 
   /**
