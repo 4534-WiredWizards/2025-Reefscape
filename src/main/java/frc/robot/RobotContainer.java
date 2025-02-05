@@ -13,9 +13,12 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -32,6 +35,7 @@ import frc.robot.commands.Wrist.AdaptiveWrist;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ScoringQueueSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -39,7 +43,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -52,6 +55,8 @@ public class RobotContainer {
   private final Drive drive;
   private final WristSubsystem m_Wrist = new WristSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+  private final ScoringQueueSubsystem scoringQueue = new ScoringQueueSubsystem();
+
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -122,6 +127,7 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
+    // TODO: Comment out after characterization
     autoChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
     autoChooser.addOption(
@@ -149,6 +155,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
@@ -156,6 +163,7 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
+            
     // Lock to 0° when A button is held
     controller
         .a()
@@ -179,6 +187,22 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+
+                // Max Testing 
+                // Add the command to the queue
+                //.onTrue(
+                //         Commands.runOnce(() -> 
+                //         scoringQueue.addScoringCommand(
+                //             ScoringQueueSubsystem.ScoringSide.LEFT, 
+                //             ScoringQueueSubsystem.ScoringHeight.L3
+                //         )
+                //     )
+                // );
+
+                // Clear and run the queue
+                //         .onTrue(new ProcessQueueCommand(scoringQueue));
+
   }
 
   /**
