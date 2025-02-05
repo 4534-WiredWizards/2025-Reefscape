@@ -17,14 +17,11 @@ public class IntakeCoral extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-
-      new MoveElevator(C_Elevator.coralIntakePosition),
-      new ChangeWristAngle(C_Wrist.wristCoralIntakePosition),
-      new AssistedMove(C_Locations.locCoralStation),
-      new RunIntake(C_Intake.intakeSpeedCoralIn),
-      new ChangeWristAngle(C_Wrist.wristDrivePosition),
-      new MoveElevator(C_Elevator.drivePosition)
-
-    );
+        new MoveElevator(C_Elevator.coralIntakePosition),
+        new ChangeWristAngle(C_Wrist.wristCoralIntakePosition),
+        new AssistedMove(C_Locations.locCoralStation),
+        new RunIntake(C_Intake.intakeSpeedCoralIn),
+        new ChangeWristAngle(C_Wrist.wristDrivePosition),
+        new MoveElevator(C_Elevator.drivePosition));
   }
 }

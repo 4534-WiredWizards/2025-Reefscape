@@ -13,7 +13,8 @@
 
 package frc.robot.subsystems.drive;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -21,6 +22,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
@@ -110,6 +112,7 @@ public class Drive extends SubsystemBase {
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
+
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0, TunerConstants.FrontLeft);
     modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
@@ -155,6 +158,24 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+  }
+
+  // Function to drive to a specific point
+  public void driveToPoint(double TargetX, double TargetY, double rotationDegrees) {
+
+    Pose2d targetPose = new Pose2d(TargetX, TargetY, Rotation2d.fromDegrees(rotationDegrees));
+
+    PathConstraints constraints =
+        new PathConstraints(
+            getMaxLinearSpeedMetersPerSec(), // Maximum linear velocity (m/s)
+            getMaxLinearSpeedMetersPerSec() * 2, // Maximum linear acceleration (m/s²)
+            getMaxAngularSpeedRadPerSec(), // Maximum angular velocity (rad/s)
+            getMaxAngularSpeedRadPerSec() * 2 // Maximum angular acceleration (rad/s²)
+            );
+
+    AutoBuilder.pathfindToPose(
+        targetPose, constraints, 0.0 // Goal end velocity (m/s)
+        );
   }
 
   @Override
@@ -319,17 +340,17 @@ public class Drive extends SubsystemBase {
     }
     return output;
   }
-/** Returns yaw velocity in Radians per second */
+
+  /** Returns yaw velocity in Radians per second */
   public double getGyroRate() {
     return gyroInputs.yawVelocityRadPerSec; // Assuming yaw velocity is stored in radians/sec
-    
-}
+  }
 
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
-  }  
+  }
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {

@@ -3,16 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.CoralScoringCommand;
-
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ScoringQueueSubsystem extends SubsystemBase {
   /** Creates a new ScoringQueueSubsystem. */
-
   private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
 
   public enum ScoringSide {
@@ -32,10 +30,10 @@ public class ScoringQueueSubsystem extends SubsystemBase {
   }
 
   public Queue<CoralScoringCommand> getQueue() {
-      return new LinkedList<>(commandQueue);
+    return new LinkedList<>(commandQueue);
   }
 
   public void clearQueue() {
-      commandQueue.clear();
+    commandQueue.clear();
   }
 }
