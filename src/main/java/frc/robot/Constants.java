@@ -159,7 +159,6 @@ public interface Constants {
 
     // Operator Controller (Xbox)
     interface Operator {
-      int 
 
 
       // Buttons
