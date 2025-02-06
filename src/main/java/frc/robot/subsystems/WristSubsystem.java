@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.C_Wrist;
+import frc.robot.Constants.Wrist;
 
 public class WristSubsystem extends SubsystemBase {
   /** Creates a new Wrist. */
@@ -33,25 +33,25 @@ public class WristSubsystem extends SubsystemBase {
   private boolean PIDEnabled = false;
 
   private final ArmFeedforward m_WristFeedforward =
-      new ArmFeedforward(C_Wrist.kS, C_Wrist.kG, C_Wrist.kV, C_Wrist.kA);
+      new ArmFeedforward(Wrist.KS, Wrist.KG, Wrist.KV, Wrist.KA);
 
   private double setpoint;
 
   public WristSubsystem() {
     pidController =
         new ProfiledPIDController(
-            C_Wrist.kP,
-            C_Wrist.kI,
-            C_Wrist.kD,
-            new TrapezoidProfile.Constraints(C_Wrist.maxVelocity, C_Wrist.maxAcceleration));
-    pidController.setTolerance(C_Wrist.PIDPositionTolerance, C_Wrist.PIDVelocityTolerance);
+            Wrist.KP,
+            Wrist.KI,
+            Wrist.KD,
+            new TrapezoidProfile.Constraints(Wrist.MAX_VELOCITY, Wrist.MAX_ACCELERATION));
+    pidController.setTolerance(Wrist.PID_POSITION_TOLERANCE, Wrist.PID_VELOCITY_TOLERANCE);
 
-    wristMotor = new SparkFlex(C_Wrist.pivotMotorID, SparkLowLevel.MotorType.kBrushless);
-    rollerMotor = new SparkFlex(C_Wrist.Roller.MotorID, SparkLowLevel.MotorType.kBrushless);
+    wristMotor = new SparkFlex(Wrist.PIVOT_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+    rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
     absEncoder =
         new DutyCycleEncoder(
-            C_Wrist.Encoder.port, C_Wrist.Encoder.fullRange, C_Wrist.Encoder.expectedZero);
+            Wrist.Encoder.PORT, Wrist.Encoder.FULL_RANGE, Wrist.Encoder.EXPECTED_ZERO);
 
     SparkFlexConfig brakeConfig = new SparkFlexConfig();
     SparkFlexConfig IdleConfig = new SparkFlexConfig();
@@ -69,11 +69,11 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public double getAngle() {
-    return ((((-1 * absEncoder.get()) + C_Wrist.AbsEncoderOffset + 1) % 1.0) * (2 * Math.PI));
+    return ((((-1 * absEncoder.get()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * (2 * Math.PI));
   }
 
   public void setWristSetpoint(double setpoint) {
-    this.setpoint = Math.max(C_Wrist.maxSafeDown, Math.min(C_Wrist.maxSafeUp, setpoint));
+    this.setpoint = Math.max(Wrist.MIN_SAFE_ANGLE, Math.min(Wrist.MAX_SAFE_ANGLE, setpoint));
     pidController.setGoal(this.setpoint);
   }
 

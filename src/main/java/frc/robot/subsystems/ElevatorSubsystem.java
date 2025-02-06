@@ -16,7 +16,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.C_Elevator;
+import frc.robot.Constants.Elevator;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -32,7 +32,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private boolean PIDEnabled = false;
 
   private final ElevatorFeedforward m_ElevatorFeedforward =
-      new ElevatorFeedforward(C_Elevator.kS, C_Elevator.kG, C_Elevator.kV, C_Elevator.kA);
+      new ElevatorFeedforward(Elevator.KS, Elevator.KG, Elevator.KV, Elevator.KA);
 
   // Elevator setpoint (desired position)
   private double setpoint;
@@ -41,7 +41,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // Initialize motor controller
     elevatorMotor =
         new SparkFlex(
-            C_Elevator.leftMotorID, MotorType.kBrushless); // Replace with the correct CAN ID
+            Elevator.LEFT_MOTOR_ID, MotorType.kBrushless); // Replace with the correct CAN ID
 
     // Initialize encoder
     elevatorEncoder = elevatorMotor.getEncoder();
@@ -59,13 +59,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     // Initialize PID controller
     pidController =
         new ProfiledPIDController(
-            C_Elevator.kP,
-            C_Elevator.kI,
-            C_Elevator.kD,
-            new TrapezoidProfile.Constraints(C_Elevator.maxVelocity, C_Elevator.maxAcceleration));
+            Elevator.KP,
+            Elevator.KI,
+            Elevator.KD,
+            new TrapezoidProfile.Constraints(Elevator.MAX_VELOCITY, Elevator.MAX_ACCELERATION));
 
     pidController.setTolerance(
-        C_Elevator.PIDPositionTolerance, C_Elevator.PIDVelocityTolerance); // Set the
+        Elevator.PID_POSITION_TOLERANCE, Elevator.PID_VELOCITY_TOLERANCE); // Set the
     // tolerance to
     // 0.1 units
     // (e.g., inches)
@@ -81,7 +81,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // Set the desired setpoint (elevator position)
   public void setSetpoint(double setpoint) {
-    this.setpoint = Math.max(0, Math.min(C_Elevator.maxSafeUp, setpoint));
+    this.setpoint = Math.max(0, Math.min(Elevator.MAX_SAFE_HEIGHT, setpoint));
     pidController.setGoal(this.setpoint);
   }
 

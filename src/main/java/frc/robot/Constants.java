@@ -16,140 +16,178 @@ package frc.robot;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
- * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
- * on a roboRIO. Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
- * (log replay from a file).
+ * Contains global constants and configurations for the robot.
+ * Includes runtime mode definitions, subsystem configurations, and controller mappings.
  */
 public interface Constants {
-  public static final Mode simMode = Mode.SIM;
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
-
+  /* Runtime Mode Configuration */
   public static enum Mode {
-    /** Running on a real robot. */
+    /** Running on a real robot */
     REAL,
-
-    /** Running a physics simulator. */
+    
+    /** Running in physics simulation */
     SIM,
-
-    // Replay Mode
+    
+    /** Replaying from log file */
     REPLAY
   }
-  // Test 123
 
-  // Subsystems
-  interface C_Elevator {
-    double PIDPositionTolerance = 0.1;
-    double PIDVelocityTolerance = 1;
+  public static final Mode SIM_MODE = Mode.SIM;
+  public static final Mode CURRENT_MODE = RobotBase.isReal() ? Mode.REAL : SIM_MODE;
 
-    int leftMotorID = 51;
-    int rightMotorID = 52;
-    int BottomLimitSwitchID = 0;
+  /* Subsystem Constants */
+  interface Elevator {
+    // Motor Configurations
+    int LEFT_MOTOR_ID = 51;
+    int RIGHT_MOTOR_ID = 52;
+    int BOTTOM_LIMIT_SWITCH_ID = 0;
 
-    int toL1 = 0;
-    int toL2 = 0;
-    int toL3 = 0;
-    int toL4 = 0;
-    int coralIntakePosition = 0;
-    int drivePosition = 0;
-    int toBarge = 0;
-    int climbGrabPosition = 0;
-    int climbFinalPosition = 0;
-    int climbGroundPosition = 0;
-    int algae1Position = 0;
-    int algae2Position = 0;
-    int processorPosition = 0;
-    int maxSafeUp = 0; // highest elevator is allowed to go
-    double kS = 0;
-    double kG = 2.28;
-    double kV = 3.07;
-    double kA = 0.41;
-    double TargetVelocity = 0.1;
-    double kP = 0.1; // Proportional gain
-    double kI = 0.0; // Integral gain
-    double kD = 0.0; // Derivative gain
-    double maxVelocity = 2.0; // todo set this maximum
-    double maxAcceleration = 2.0; // todo set this maximum
-    double manualElevatorSpeed = 0.2;
-    double elevatorUpDir = 1.0; // change this to -1 if the direction is wrong
-    double elevatorDownDir = elevatorUpDir * -1.0; // Do not change this one
+    // PID Configuration
+    double PID_POSITION_TOLERANCE = 0.1;
+    double PID_VELOCITY_TOLERANCE = 1;
+    double KP = 0.1;
+    double KI = 0.0;
+    double KD = 0.0;
+
+    // Motion Profile Configuration
+    double MAX_VELOCITY = 2.0;  // TODO: Set actual maximum
+    double MAX_ACCELERATION = 2.0;  // TODO: Set actual maximum
+    double TARGET_VELOCITY = 0.1;
+
+    // Feedforward Constants
+    double KS = 0;
+    double KG = 2.28;
+    double KV = 3.07;
+    double KA = 0.41;
+
+    // Operational Parameters
+    double MANUAL_SPEED = 0.2;
+    double ELEVATOR_UP_DIR = 1.0;
+    double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
+
+    // Preset Positions (TODO: Set actual values)
+    int TO_L1 = 0;
+    int TO_L2 = 0;
+    int TO_L3 = 0;
+    int TO_L4 = 0;
+    int CORAL_INTAKE_POSITION = 0;
+    int DRIVE_POSITION = 0;
+    int MAX_SAFE_HEIGHT = 0;
   }
 
-  interface C_Wrist {
-
+  interface Wrist {
+    // Motor Configurations
+    int PIVOT_MOTOR_ID = 53;
+    
+    // Encoder Configuration
     interface Encoder {
-      int port = 1;
-      int fullRange = 1024;
-      int expectedZero = 0;
+      int PORT = 1;
+      int FULL_RANGE = 1024;
+      int EXPECTED_ZERO = 0;
+      double ABSOLUTE_OFFSET = 0.0;  // TODO: Calibrate
     }
 
-    // Rollermotor for intake and scoring of game pieces
+    // Roller Configuration
     interface Roller {
-      int MotorID = 54;
-      int SpeedCoralIn = 0;
-      int SpeedCoralOut = 0;
-      int SpeedAlgaeIn = 0;
-      int SpeedAlgaeOut = 0;
+      int MOTOR_ID = 54;
+      double CORAL_INTAKE_SPEED = 0;
+      double CORAL_OUTTAKE_SPEED = 0;
+
+      double ALGAE_INTAKE_SPEED = 0;
+      double ALGAE_OUTTAKE_SPEED = 0;
     }
 
-    // Pivot motor for wrist angle movment
-    int pivotMotorID = 53;
+    // PID Configuration
+    double PID_POSITION_TOLERANCE = 0.1;
+    double PID_VELOCITY_TOLERANCE = 1;
+    double KP = 0.1;
+    double KI = 0.0;
+    double KD = 0.0;
 
-    double kS = 0;
-    double kG = 2.28;
-    double kV = 3.07;
-    double kA = 0.41;
-    double TargetVelocity = 2.0;
-    double kP = 0.1; // Proportional gain
-    double kI = 0.0; // Integral gain
-    double kD = 0.0; // Derivative gain
-    double AbsEncoderOffset = 0.0; // TODO
-    double PIDPositionTolerance = 0.1;
-    double PIDVelocityTolerance = 1;
-    double maxVelocity = 2.0; // todo set this maximum
-    double maxAcceleration = 2.0; // todo set this maximum
-    double maxSafeUp = 0; // highest wrist is allowed to go
-    double maxSafeDown = 0; // lowest wrist is allowed to go
-    double wristInDir = 1.0; // change this to -1 if the direction is wrong
-    double wristOutDir = wristInDir * -1.0; // Do not change this one
+    // Motion Profile Configuration
+    double MAX_VELOCITY = 2.0;  // TODO: Set actual maximum
+    double MAX_ACCELERATION = 2.0;  // TODO: Set actual maximum
 
-    // Scoring Angles
-    int L1 = 0;
-    int L2 = 0;
-    int L3 = 0;
-    int L4 = 0;
-    int CoralIntakePosition = 0;
-    int BargePosition = 0;
-    int Algae1 = 0;
-    int Algae2 = 0;
-    int AlgaeGround = 0;
-    int DrivePosition = 0;
+    // Feedforward Constants
+    double KS = 0;
+    double KG = 2.28;
+    double KV = 3.07;
+    double KA = 0.41;
+
+    // Safety Limits
+    double MAX_SAFE_ANGLE = 0;
+    double MIN_SAFE_ANGLE = 0;
+
+    // Preset Positions (TODO: Set actual values)
+    int L1_ANGLE = 0;
+    int L2_ANGLE = 0;
+    int L3_ANGLE = 0;
+    int L4_ANGLE = 0;
+    int CORAL_INTAKE_ANGLE = 0;
+    int BARGER_POSITION = 0;
+    int DRIVE_POSITION = 0;
 
     // Game Piece Switching Angles
     // This is
-    int coralMaxAngle = 270;
-    int coralMinAngle = 20;
+    int CORAL_MAX_ANGLE = 270;
+    int CORAL_MIN_ANGLE = 20;
   }
 
-  interface C_Locations {
+  /* Input/Output Configuration */
+  interface IO {
+    // Controller Port Configuration
+    static final int DRIVER_CONTROLLER_PORT = 0;
+    static final int OPERATOR_CONTROLLER_PORT = 1;
 
-    int locReef = 0;
-    int locBarge = 0;
-    int locProcessor = 0;
-    int locCoralStation = 0;
+
+    // Driver Controller (Xbox)
+    interface Driver {
+      // Axes
+      int DRIVE_X_AXIS = 0;
+      int DRIVE_Y_AXIS = 1;
+      int DRIVE_ROTATE_AXIS = 4;
+
+      // Buttons
+      int ZERO_GYRO_BUTTON = 2;  // A button
+      int FIELD_RELATIVE_TOGGLE = 3;  // B button
+      int SLOW_MODE_TOGGLE = 4;  // X button
+      int LOCK_ANGLE_BUTTON = 7;
+      int STOP_WITH_X_BUTTON = 8;
+      int TRIGGER = 1;
+      
+    }
+
+    // Operator Controller (Xbox)
+    interface Operator {
+      int 
+
+
+      // Buttons
+      int ELEVATOR_HOME_BUTTON = 1;  // A button
+      int INTAKE_CORAL_BUTTON = 2;  // B button
+      int SCORE_L1_BUTTON = 3;  // X button
+      int SCORE_L2_BUTTON = 4;  // Y button
+      int MANUAL_OVERRIDE_BUTTON = 5;  // Left bumper
+      int CLIMB_SEQUENCE_BUTTON = 6;  // Right bumper
+    }
   }
 
-  interface C_Pathplanner {
-    // TODO: Add pathplanner constants
-    double drivekP = 5.0;
-    double drivekI = 0.0;
-    double drivekD = 0.0;
+  /* Autonomous Configuration */
+  interface Autonomous {
+    // Pathfinding Constants
+    double ROBOT_MASS_KG = 74.088;
+    double ROBOT_MOI = 6.883;
+    double WHEEL_COF = 1.2;
 
-    double turnkP = 5.0;
-    double turnkI = 0.0;
-    double turnkD = 0.0;
-
-    double robotMassKG = 74.088;
-    double robotMOI = 6.883;
-    double wheelCOF = 1.2;
+    // PID Constants
+    interface PID {
+      double DRIVE_KP = 5.0;
+      double DRIVE_KI = 0.0;
+      double DRIVE_KD = 0.0;
+      
+      double TURN_KP = 5.0;
+      double TURN_KI = 0.0;
+      double TURN_KD = 0.0;
+    }
   }
 }

@@ -5,7 +5,7 @@
 package frc.robot.commands.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.C_Wrist;
+import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.WristSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -32,19 +32,19 @@ public class AdaptiveWrist extends Command {
 
     double wristAngle = m_wrist.getAngle();
 
-    boolean isCoralRange = wristAngle > C_Wrist.coralMinAngle && wristAngle < C_Wrist.coralMaxAngle;
+    boolean isCoralRange = wristAngle > Wrist.CORAL_MIN_ANGLE && wristAngle < Wrist.CORAL_MAX_ANGLE;
 
     if (isPickup) {
       if (isCoralRange) {
-        m_wrist.moveRoller(C_Wrist.Roller.SpeedCoralIn);
+        m_wrist.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
       } else {
-        m_wrist.moveRoller(C_Wrist.Roller.SpeedAlgaeIn);
+        m_wrist.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
       }
     } else {
       if (isCoralRange) {
-        m_wrist.moveRoller(C_Wrist.Roller.SpeedCoralOut);
+        m_wrist.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
       } else {
-        m_wrist.moveRoller(C_Wrist.Roller.SpeedAlgaeOut);
+        m_wrist.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
       }
     }
   }

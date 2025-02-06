@@ -19,17 +19,25 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.C_Elevator;
-import frc.robot.Constants.C_Wrist;
+import frc.robot.Constants.Elevator;
+import static frc.robot.Constants.IO.Driver.FIELD_RELATIVE_TOGGLE;
+import static frc.robot.Constants.IO.Driver.LOCK_ANGLE_BUTTON;
+import static frc.robot.Constants.IO.Driver.SLOW_MODE_TOGGLE;
+import static frc.robot.Constants.IO.Driver.STOP_WITH_X_BUTTON;
+import static frc.robot.Constants.IO.Driver.ZERO_GYRO_BUTTON;
+import frc.robot.Constants.Wrist;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
@@ -79,20 +87,20 @@ public class RobotContainer {
     NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Wrist, false));
 
     // Event Triggers
-    new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL4));
-    new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL3));
-    new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL2));
-    new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, C_Elevator.toL1));
+    new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L4));
+    new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L3));
+    new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L2));
+    new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L1));
 
-    new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L4));
-    new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L3));
-    new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L2));
-    new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, C_Wrist.L1));
+    new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+    new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+    new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+    new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
 
     new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Wrist, false));
     new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Wrist, true));
 
-    switch (Constants.currentMode) {
+    switch (Constants.CURRENT_MODE) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         drive =
@@ -147,6 +155,13 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    // Set the default commands
+    scoringQueue.setDefaultCommand(
+        new ParallelCommandGroup(
+            
+        )
+    );
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -165,11 +180,14 @@ public class RobotContainer {
             drive,
             () -> -Operatorcontroller.getLeftY(),
             () -> -Operatorcontroller.getLeftX(),
-            () -> -Operatorcontroller.getRightX()));
+            () -> -Operatorcontroller.getRightX(),
+            () -> driverJoystick.getRawButton(SLOW_MODE_TOGGLE),
+            () -> driverJoystick.getRawButton(FIELD_RELATIVE_TOGGLE)
+            ));
 
     // Lock to 0° when A button is held TODO
     // lockAngle
-    new JoystickButton(driverJoystick, 7)
+    new JoystickButton(driverJoystick, LOCK_ANGLE_BUTTON)
         .toggleOnTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
@@ -180,7 +198,7 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
 
     // TODO make this button 8 on flight controller
-    new JoystickButton(driverJoystick, 8).toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
+    new JoystickButton(driverJoystick, STOP_WITH_X_BUTTON).toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
 
      // TODO: Max Testing 
                 // Add the command to the queue
@@ -198,29 +216,38 @@ public class RobotContainer {
 
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Reset gyro to 0° when B button is pressed
+    // Reset gyro to 0° when Rest gyro button is pressed
     // todo make this l1 on flight controller
-    //     controller
-    //         .b()
-    //         .onTrue(
-    //             Commands.runOnce(
-    //                     () ->
-    //                         drive.setPose(
-    //                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                     drive)
-    //                 .ignoringDisable(true));
+       new JoystickButton(driverJoystick, ZERO_GYRO_BUTTON).onTrue(
+                Commands.runOnce(
+                        () ->
+                            drive.setPose(
+                                new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                        drive)
+                    .ignoringDisable(true));
+
+    
 
     Operatorcontroller.leftBumper()
         .whileTrue(
             new SimpleMoveElevator(
-                m_elevator, () -> C_Elevator.elevatorDownDir * C_Elevator.manualElevatorSpeed));
+                m_elevator, () -> Elevator.ELEVATOR_DOWN_DIR * Elevator.MANUAL_SPEED));
     Operatorcontroller.rightBumper()
         .whileTrue(
             new SimpleMoveElevator(
-                m_elevator, () -> C_Elevator.elevatorUpDir * C_Elevator.manualElevatorSpeed));
+                m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
     Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Wrist, true));
     Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Wrist, false));
 
+    //COMBOS
+
+    //LEFT
+    if(Operatorcontroller.povUp().getAsBoolean() && Operatorcontroller.axisGreaterThan(4, -0.3).getAsBoolean()){
+        //TODO PID
+        new InstantCommand(() -> System.out.println("WE GOT COMBOS BABAY"));
+    }
+    
+    
     m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> Operatorcontroller.getLeftX()));
   }
 
