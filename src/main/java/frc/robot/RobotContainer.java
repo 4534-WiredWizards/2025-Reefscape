@@ -18,7 +18,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -35,6 +34,7 @@ import static frc.robot.Constants.IO.Driver.LOCK_ANGLE_BUTTON;
 import static frc.robot.Constants.IO.Driver.SLOW_MODE_TOGGLE;
 import static frc.robot.Constants.IO.Driver.STOP_WITH_X_BUTTON;
 import static frc.robot.Constants.IO.Driver.ZERO_GYRO_BUTTON;
+import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -104,41 +104,38 @@ public class RobotContainer {
         switch (Constants.CURRENT_MODE) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                drive
-                        = new Drive(
-                                new GyroIOPigeon2(),
-                                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                                new ModuleIOTalonFX(TunerConstants.BackRight));
+                drive = new Drive(
+                        new GyroIOPigeon2(),
+                        new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                        new ModuleIOTalonFX(TunerConstants.FrontRight),
+                        new ModuleIOTalonFX(TunerConstants.BackLeft),
+                        new ModuleIOTalonFX(TunerConstants.BackRight));
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                drive
-                        = new Drive(
-                                new GyroIO() {
-                        },
-                                new ModuleIOSim(TunerConstants.FrontLeft),
-                                new ModuleIOSim(TunerConstants.FrontRight),
-                                new ModuleIOSim(TunerConstants.BackLeft),
-                                new ModuleIOSim(TunerConstants.BackRight));
+                drive = new Drive(
+                        new GyroIO() {
+                },
+                        new ModuleIOSim(TunerConstants.FrontLeft),
+                        new ModuleIOSim(TunerConstants.FrontRight),
+                        new ModuleIOSim(TunerConstants.BackLeft),
+                        new ModuleIOSim(TunerConstants.BackRight));
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
-                drive
-                        = new Drive(
-                                new GyroIO() {
-                        },
-                                new ModuleIO() {
-                        },
-                                new ModuleIO() {
-                        },
-                                new ModuleIO() {
-                        },
-                                new ModuleIO() {
-                        });
+                drive = new Drive(
+                        new GyroIO() {
+                },
+                        new ModuleIO() {
+                },
+                        new ModuleIO() {
+                },
+                        new ModuleIO() {
+                },
+                        new ModuleIO() {
+                });
                 break;
         }
 
@@ -148,7 +145,8 @@ public class RobotContainer {
         // Set up SysId routines
         // TODO: Comment out after characterization
         autoChooser.addOption(
-                "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+                "Drive Wheel Radius Characterization",
+                DriveCommands.wheelRadiusCharacterization(drive));
         autoChooser.addOption(
                 "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
         autoChooser.addOption(
@@ -168,8 +166,8 @@ public class RobotContainer {
 
     /**
      * Use this method to define your button->command mappings. Buttons can be
-     * created by instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+     * created by instantiating a {@link GenericHID} or one of its subclasses null     ({@link
+         * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
      * passing it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
@@ -183,8 +181,7 @@ public class RobotContainer {
                         () -> -Operatorcontroller.getLeftX(),
                         () -> -Operatorcontroller.getRightX(),
                         () -> driverJoystick.getRawButton(SLOW_MODE_TOGGLE),
-                        () -> driverJoystick.getRawButton(FIELD_RELATIVE_TOGGLE)
-                ));
+                        () -> driverJoystick.getRawButton(FIELD_RELATIVE_TOGGLE)));
 
         // Lock to 0° when A button is held TODO
         // lockAngle
@@ -198,53 +195,110 @@ public class RobotContainer {
 
         // Switch to X pattern when X button is pressed
         // TODO make this button 8 on flight controller
-        new JoystickButton(driverJoystick, STOP_WITH_X_BUTTON).toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
+        new JoystickButton(driverJoystick, STOP_WITH_X_BUTTON)
+                .toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
 
-        // TODO: Max Testing 
-        // Add the command to the queue
-        //.onTrue(
-        //         Commands.runOnce(() -> 
-        //         scoringQueue.addScoringCommand(
-        //             ScoringQueueSubsystem.ScoringSide.LEFT, 
-        //             ScoringQueueSubsystem.ScoringHeight.L3
-        //         )
-        //     )
-        // );
-        // Clear and run the queue
-        //         .onTrue(new ProcessQueueCommand(scoringQueue));
-        // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-        // Reset gyro to 0° when Rest gyro button is pressed
-        // todo make this l1 on flight controller
+        // Zero gyro when Y button is pressed
         new JoystickButton(driverJoystick, ZERO_GYRO_BUTTON).onTrue(
-                Commands.runOnce(
-                        ()
-                        -> drive.setPose(
-                                new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                        drive)
-                        .ignoringDisable(true));
+                Commands.runOnce(() -> drive.resetGyro()).ignoringDisable(true)
+        );
 
         Operatorcontroller.leftBumper()
                 .whileTrue(
                         new SimpleMoveElevator(
-                                m_elevator, () -> Elevator.ELEVATOR_DOWN_DIR * Elevator.MANUAL_SPEED));
+                                m_elevator, 
+                                () -> Elevator.ELEVATOR_DOWN_DIR
+                                * Elevator.MANUAL_SPEED
+                        )
+                );
         Operatorcontroller.rightBumper()
                 .whileTrue(
                         new SimpleMoveElevator(
-                                m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
+                                m_elevator, () -> Elevator.ELEVATOR_UP_DIR
+                                * Elevator.MANUAL_SPEED));
         Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Wrist, true));
         Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Wrist, false));
 
-        //COMBOS
-        // Create the combined trigger for RightLevel1
-        Trigger rightLevel1 = Operatorcontroller.axisGreaterThan(4, 0.5).and(Operatorcontroller.povDown());
+        // Buttom/Axis Event Combos
+        // Right Coral Side
+        // Right L1 - Down
+        Trigger rightLevel1 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                .and(Operatorcontroller.povDown());
+        // Right L2 - Left
+        Trigger rightLevel2 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                .and(Operatorcontroller.povLeft());
+        // Right L3 - Right
+        Trigger rightLevel3 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                .and(Operatorcontroller.povRight());
+        // Right L4 - Up
+        Trigger rightLevel4 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                .and(Operatorcontroller.povUp());
+
+        // Left Coral Side
+        // Left L1 - Down
+        Trigger leftLevel1 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                .and(Operatorcontroller.povDown());
+        // Left L2 - Left
+        Trigger leftLevel2 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                .and(Operatorcontroller.povLeft());
+        // Left L3 - Right
+        Trigger leftLevel3 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                .and(Operatorcontroller.povRight());
+        // Left L4 - Up
+        Trigger leftLevel4 = Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                .and(Operatorcontroller.povUp());
+
         // Bind the combined trigger to a command
         rightLevel1.onTrue(Commands.runOnce(() -> {
             scoringQueue.addScoringCommand(
                     ScoringQueueSubsystem.ScoringSide.RIGHT,
-                    ScoringQueueSubsystem.ScoringHeight.L1
-            );
+                    ScoringQueueSubsystem.ScoringHeight.L1);
         }));
 
+        rightLevel2.onTrue(Commands.runOnce(() -> {
+            scoringQueue.addScoringCommand(
+                    ScoringQueueSubsystem.ScoringSide.RIGHT,
+                    ScoringQueueSubsystem.ScoringHeight.L2);
+        }));
+
+        rightLevel3.onTrue(Commands.runOnce(() -> {
+            scoringQueue.addScoringCommand(
+                    ScoringQueueSubsystem.ScoringSide.RIGHT,
+                    ScoringQueueSubsystem.ScoringHeight.L3);
+        }));
+
+        rightLevel4.onTrue(Commands.runOnce(() -> {
+            scoringQueue.addScoringCommand(
+                    ScoringQueueSubsystem.ScoringSide.RIGHT,
+                    ScoringQueueSubsystem.ScoringHeight.L4);
+        }));
+
+        leftLevel1.onTrue(Commands.runOnce(() -> {
+            scoringQueue.addScoringCommand(
+                    ScoringQueueSubsystem.ScoringSide.LEFT,
+                    ScoringQueueSubsystem.ScoringHeight.L1);
+        }));
+
+        leftLevel2.onTrue(Commands.runOnce(() -> {
+            scoringQueue.addScoringCommand(
+                    ScoringQueueSubsystem.ScoringSide.LEFT,
+                    ScoringQueueSubsystem.ScoringHeight.L2);
+        }));
+
+        leftLevel3.onTrue(Commands.runOnce(() -> {
+            scoringQueue.addScoringCommand(
+                    ScoringQueueSubsystem.ScoringSide.LEFT,
+                    ScoringQueueSubsystem.ScoringHeight.L3);
+        }));
+
+        leftLevel4.onTrue(Commands.runOnce(() -> {
+            scoringQueue.addScoringCommand(
+                    ScoringQueueSubsystem.ScoringSide.LEFT,
+                    ScoringQueueSubsystem.ScoringHeight.L4);
+        }));
+
+        // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
+        // degree postions
         m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> Operatorcontroller.getLeftX()));
     }
 

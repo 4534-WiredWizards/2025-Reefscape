@@ -4,11 +4,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.CoralScoringCommand;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class ScoringQueueSubsystem extends SubsystemBase {
   private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
@@ -26,8 +27,11 @@ public class ScoringQueueSubsystem extends SubsystemBase {
   }
 
   public void addScoringCommand(ScoringSide side, ScoringHeight height) {
+    // Clear the queue before adding a new command
+    commandQueue.clear();
+
     // Log command added in logs
-    System.out.println("Scoring command added to queue");
+    // System.out.println("Scoring command added to queue");
     commandQueue.add(new CoralScoringCommand(side, height));
   }
 

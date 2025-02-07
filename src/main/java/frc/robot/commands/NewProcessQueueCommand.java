@@ -4,10 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.ScoringQueueSubsystem;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.ScoringQueueSubsystem;
 
 public class NewProcessQueueCommand extends SequentialCommandGroup {
   public NewProcessQueueCommand(ScoringQueueSubsystem queueSubsystem) {
@@ -20,6 +21,6 @@ public class NewProcessQueueCommand extends SequentialCommandGroup {
       addCommands(cmd);
     }
 
-    System.out.println("Processing queue with " + queue.size() + " commands");
+    // System.out.println("Processing queue with " + queue.size() + " commands");
   }
 }

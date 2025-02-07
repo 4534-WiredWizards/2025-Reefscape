@@ -160,7 +160,6 @@ public interface Constants {
     // Operator Controller (Xbox)
     interface Operator {
 
-
       // Buttons
       int ELEVATOR_HOME_BUTTON = 1;  // A button
       int INTAKE_CORAL_BUTTON = 2;  // B button
@@ -168,6 +167,7 @@ public interface Constants {
       int SCORE_L2_BUTTON = 4;  // Y button
       int MANUAL_OVERRIDE_BUTTON = 5;  // Left bumper
       int CLIMB_SEQUENCE_BUTTON = 6;  // Right bumper
+      int RIGHT_THUMB_AXIS = 4;
     }
   }
 
