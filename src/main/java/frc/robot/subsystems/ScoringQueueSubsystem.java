@@ -27,12 +27,16 @@ public class ScoringQueueSubsystem extends SubsystemBase {
   }
 
   public void addScoringCommand(ScoringSide side, ScoringHeight height) {
-    // Clear the queue before adding a new command
-    commandQueue.clear();
 
-    // Log command added in logs
-    // System.out.println("Scoring command added to queue");
-    commandQueue.add(new CoralScoringCommand(side, height));
+    // Systsem log for scoring side and height
+    System.out.println("Scoring command added to queue: " + side + " " + height);
+
+    // // Clear the queue before adding a new command
+    // commandQueue.clear();
+
+    // // Log command added in logs
+    // // System.out.println("Scoring command added to queue");
+    // commandQueue.add(new CoralScoringCommand(side, height));
   }
 
   public Queue<CoralScoringCommand> getQueue() {
