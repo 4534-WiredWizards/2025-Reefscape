@@ -35,6 +35,15 @@ public interface Constants {
   public static final Mode SIM_MODE = Mode.SIM;
   public static final Mode CURRENT_MODE = RobotBase.isReal() ? Mode.REAL : SIM_MODE;
 
+  // LED constants
+  interface LEDConstants {
+    int LED_ID = 26;
+    double brightnessScalar = 0.4;
+    int timeoutMs = 100;
+    int CANdleLEDstartIndex = 0;
+    int CANdleLEDSegmentSize = 8;
+  }
+
   /* Subsystem Constants */
   interface Elevator {
     // Motor Configurations
