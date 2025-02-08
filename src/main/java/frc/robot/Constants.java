@@ -16,18 +16,18 @@ package frc.robot;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
- * Contains global constants and configurations for the robot.
- * Includes runtime mode definitions, subsystem configurations, and controller mappings.
+ * Contains global constants and configurations for the robot. Includes runtime mode definitions,
+ * subsystem configurations, and controller mappings.
  */
 public interface Constants {
   /* Runtime Mode Configuration */
   public static enum Mode {
     /** Running on a real robot */
     REAL,
-    
+
     /** Running in physics simulation */
     SIM,
-    
+
     /** Replaying from log file */
     REPLAY
   }
@@ -50,8 +50,8 @@ public interface Constants {
     double KD = 0.0;
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 2.0;  // TODO: Set actual maximum
-    double MAX_ACCELERATION = 2.0;  // TODO: Set actual maximum
+    double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
+    double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
     double TARGET_VELOCITY = 0.1;
 
     // Feedforward Constants
@@ -78,13 +78,13 @@ public interface Constants {
   interface Wrist {
     // Motor Configurations
     int PIVOT_MOTOR_ID = 53;
-    
+
     // Encoder Configuration
     interface Encoder {
       int PORT = 1;
       int FULL_RANGE = 1024;
       int EXPECTED_ZERO = 0;
-      double ABSOLUTE_OFFSET = 0.0;  // TODO: Calibrate
+      double ABSOLUTE_OFFSET = 0.0; // TODO: Calibrate
     }
 
     // Roller Configuration
@@ -105,8 +105,8 @@ public interface Constants {
     double KD = 0.0;
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 2.0;  // TODO: Set actual maximum
-    double MAX_ACCELERATION = 2.0;  // TODO: Set actual maximum
+    double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
+    double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
 
     // Feedforward Constants
     double KS = 0;
@@ -139,7 +139,6 @@ public interface Constants {
     static final int DRIVER_CONTROLLER_PORT = 0;
     static final int OPERATOR_CONTROLLER_PORT = 1;
 
-
     // Driver Controller (Xbox)
     interface Driver {
       // Axes
@@ -148,25 +147,24 @@ public interface Constants {
       int DRIVE_ROTATE_AXIS = 4;
 
       // Buttons
-      int ZERO_GYRO_BUTTON = 2;  // A button
-      int FIELD_RELATIVE_TOGGLE = 3;  // B button
-      int SLOW_MODE_TOGGLE = 4;  // X button
+      int ZERO_GYRO_BUTTON = 2; // A button
+      int FIELD_RELATIVE_TOGGLE = 3; // B button
+      int SLOW_MODE_TOGGLE = 4; // X button
       int LOCK_ANGLE_BUTTON = 7;
       int STOP_WITH_X_BUTTON = 8;
       int TRIGGER = 1;
-      
     }
 
     // Operator Controller (Xbox)
     interface Operator {
 
       // Buttons
-      int ELEVATOR_HOME_BUTTON = 1;  // A button
-      int INTAKE_CORAL_BUTTON = 2;  // B button
-      int SCORE_L1_BUTTON = 3;  // X button
-      int SCORE_L2_BUTTON = 4;  // Y button
-      int MANUAL_OVERRIDE_BUTTON = 5;  // Left bumper
-      int CLIMB_SEQUENCE_BUTTON = 6;  // Right bumper
+      int ELEVATOR_HOME_BUTTON = 1; // A button
+      int INTAKE_CORAL_BUTTON = 2; // B button
+      int SCORE_L1_BUTTON = 3; // X button
+      int SCORE_L2_BUTTON = 4; // Y button
+      int MANUAL_OVERRIDE_BUTTON = 5; // Left bumper
+      int CLIMB_SEQUENCE_BUTTON = 6; // Right bumper
       int RIGHT_THUMB_AXIS = 4;
     }
   }
@@ -183,7 +181,7 @@ public interface Constants {
       double DRIVE_KP = 5.0;
       double DRIVE_KI = 0.0;
       double DRIVE_KD = 0.0;
-      
+
       double TURN_KP = 5.0;
       double TURN_KI = 0.0;
       double TURN_KD = 0.0;

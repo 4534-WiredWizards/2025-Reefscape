@@ -4,12 +4,11 @@
 
 package frc.robot.subsystems;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.CoralScoringCommand;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ScoringQueueSubsystem extends SubsystemBase {
   private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();

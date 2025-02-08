@@ -4,11 +4,10 @@
 
 package frc.robot.commands;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ScoringQueueSubsystem;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class NewProcessQueueCommand extends SequentialCommandGroup {
   public NewProcessQueueCommand(ScoringQueueSubsystem queueSubsystem) {
