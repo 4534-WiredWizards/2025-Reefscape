@@ -1,105 +1,63 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.CoralScoringCommand;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class ScoringQueueSubsystem extends SubsystemBase {
-  private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
+    private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
 
-  public enum ScoringSide {
-    LEFT,
-    RIGHT
-  }
+    public enum ScoringSide { LEFT, RIGHT }
+    public enum ScoringHeight { L1, L2, L3, L4 }
 
-  public enum ScoringHeight {
-    L1,
-    L2,
-    L3,
-    L4
-  }
-
-  private boolean QueuedL1 = false;
-  private boolean QueuedLeftL2 = false;
-  private boolean QueuedLeftL3 = false;
-  private boolean QueuedLeftL4 = false;
-  private boolean QueuedRightL2 = false;
-  private boolean QueuedRightL3 = false;
-  private boolean QueuedRightL4 = false;
-
-  public void addScoringCommand(ScoringSide side, ScoringHeight height) {
-
-    // Systsem log for scoring side and height
-    System.out.println("Scoring command added to queue: " + side + " " + height);
-
-    if (side == ScoringSide.LEFT) {
-      if (height == ScoringHeight.L2) {
-        QueuedLeftL2 = true;
-      } else if (height == ScoringHeight.L3) {
-        QueuedLeftL3 = true;
-      } else if (height == ScoringHeight.L4) {
-        QueuedLeftL4 = true;
-      }
-    }
-    if (height == ScoringHeight.L1) {
-      QueuedL1 = true;
-    } else {
-      if (height == ScoringHeight.L2) {
-        QueuedRightL2 = true;
-      } else if (height == ScoringHeight.L3) {
-        QueuedRightL3 = true;
-      } else if (height == ScoringHeight.L4) {
-        QueuedRightL4 = true;
-      }
+    public void addScoringCommand(ScoringSide side, ScoringHeight height) {
+        System.out.println("Adding command: " + side + " " + height);
+        commandQueue.add(new CoralScoringCommand(side, height));
     }
 
-    // // Clear the queue before adding a new command
-    // commandQueue.clear();
+    public Queue<CoralScoringCommand> getQueue() {
+        return new LinkedList<>(commandQueue);
+    }
 
-    // // Log command added in logs
-    // // System.out.println("Scoring command added to queue");
-    // commandQueue.add(new CoralScoringCommand(side, height));
-  }
+    public void clearQueue() {
+        commandQueue.clear();
+    }
 
-  public Queue<CoralScoringCommand> getQueue() {
-    return new LinkedList<>(commandQueue);
-  }
+    @Override
+    public void periodic() {
+        // Update level status indicators
+        updateLevelStatus();
+    }
 
-  public void clearQueue() {
-    commandQueue.clear();
-    QueuedL1 = false;
-    QueuedLeftL2 = false;
-    QueuedLeftL3 = false;
-    QueuedLeftL4 = false;
+    private void updateLevelStatus() {
+        boolean hasL1 = false;
+        boolean[] leftLevels = new boolean[4];  // Index 0 unused (L1 handled separately)
+        boolean[] rightLevels = new boolean[4];
 
-    QueuedRightL2 = false;
-    QueuedRightL3 = false;
-    QueuedRightL4 = false;
-  }
+        for (CoralScoringCommand cmd : commandQueue) {
+            ScoringHeight height = cmd.getHeight();
+            if (height == ScoringHeight.L1) {
+                hasL1 = true;
+                continue;
+            }
 
-  @Override
-  public void periodic() {
-    // Convert queue entries to human-readable strings
-    String[] queueEntries =
-        commandQueue.stream()
-            .map(command -> command.toString()) // Assuming CoralScoringCommand has toString()
-            .toArray(String[]::new);
+            int levelIndex = height.ordinal() - 1;  // Convert L2-L4 to 1-3
+            if (cmd.getSide() == ScoringSide.LEFT) {
+                leftLevels[levelIndex] = true;
+            } else {
+                rightLevels[levelIndex] = true;
+            }
+        }
 
-    SmartDashboard.putStringArray("Scoring Queue", queueEntries);
-
-    SmartDashboard.putBoolean("QueuedL1", QueuedL1);
-    SmartDashboard.putBoolean("QueuedLeftL2", QueuedLeftL2);
-    SmartDashboard.putBoolean("QueuedLeftL3", QueuedLeftL3);
-    SmartDashboard.putBoolean("QueuedLeftL4", QueuedLeftL4);
-
-    SmartDashboard.putBoolean("QueuedRightL2", QueuedRightL2);
-    SmartDashboard.putBoolean("QueuedRightL3", QueuedRightL3);
-    SmartDashboard.putBoolean("QueuedRightL4", QueuedRightL4);
-  }
+        // Update SmartDashboard entries
+        SmartDashboard.putBoolean("Queued/L1", hasL1);
+        SmartDashboard.putBoolean("Queued/Left/L2", leftLevels[0]);
+        SmartDashboard.putBoolean("Queued/Left/L3", leftLevels[1]);
+        SmartDashboard.putBoolean("Queued/Left/L4", leftLevels[2]);
+        SmartDashboard.putBoolean("Queued/Right/L2", rightLevels[0]);
+        SmartDashboard.putBoolean("Queued/Right/L3", rightLevels[1]);
+        SmartDashboard.putBoolean("Queued/Right/L4", rightLevels[2]);
+    }
 }
