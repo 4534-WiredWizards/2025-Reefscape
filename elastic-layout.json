@@ -19,210 +19,32 @@
     {
       "name": "Tab 3",
       "grid_layout": {
-        "layouts": [
-          {
-            "title": "Gyro",
-            "x": 864.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Connected",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/AdvantageKit/Drive/Gyro/Connected",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              },
-              {
-                "title": "OdometryYawTimestamps",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/Drive/Gyro/OdometryYawTimestamps",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "YawVelocityRadPerSec",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/Drive/Gyro/YawVelocityRadPerSec",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              }
-            ]
-          }
-        ],
+        "layouts": [],
         "containers": [
           {
-            "title": "MatchType",
-            "x": 512.0,
-            "y": 704.0,
-            "width": 512.0,
-            "height": 192.0,
-            "type": "Match Time",
-            "properties": {
-              "topic": "/FMSInfo/MatchType",
-              "period": 0.06,
-              "data_type": "int",
-              "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 15,
-              "yellow_start_time": 30
-            }
-          },
-          {
-            "title": "YawVelocityRadPerSec",
-            "x": 256.0,
-            "y": 704.0,
-            "width": 256.0,
-            "height": 192.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/Drive/Gyro/YawVelocityRadPerSec",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Swerve Drive",
-            "x": 1280.0,
-            "y": 0.0,
-            "width": 512.0,
-            "height": 256.0,
-            "type": "SwerveDrive",
-            "properties": {
-              "topic": "/SmartDashboard/Swerve Drive",
-              "period": 0.06,
-              "show_robot_rotation": true,
-              "rotation_unit": "Radians"
-            }
-          },
-          {
-            "title": "Auto Choices",
-            "x": 1024.0,
-            "y": 704.0,
-            "width": 256.0,
-            "height": 192.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/SmartDashboard/Auto Choices",
-              "period": 0.06,
-              "sort_options": false
-            }
-          },
-          {
             "title": "Elevator Position",
-            "x": 608.0,
-            "y": 384.0,
-            "width": 96.0,
-            "height": 192.0,
+            "x": 864.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 256.0,
             "type": "Number Bar",
             "properties": {
               "topic": "/SmartDashboard/Elevator Position",
               "period": 0.06,
               "data_type": "double",
-              "min_value": 0.0,
-              "max_value": 150.0,
+              "min_value": -1.0,
+              "max_value": 1.0,
               "divisions": 5,
               "inverted": false,
               "orientation": "vertical"
             }
           },
           {
-            "title": "MatchTime",
-            "x": 320.0,
-            "y": 576.0,
-            "width": 320.0,
-            "height": 128.0,
-            "type": "Match Time",
-            "properties": {
-              "topic": "/AdvantageKit/DriverStation/MatchTime",
-              "period": 0.06,
-              "data_type": "double",
-              "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 15,
-              "yellow_start_time": 30
-            }
-          },
-          {
-            "title": "GCTimeMS",
-            "x": 640.0,
-            "y": 576.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/LoggedRobot/GCTimeMS",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "EpochTimeMicros",
-            "x": 896.0,
-            "y": 576.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "Match Time",
-            "properties": {
-              "topic": "/AdvantageKit/SystemStats/EpochTimeMicros",
-              "period": 0.06,
-              "data_type": "int",
-              "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 15,
-              "yellow_start_time": 30
-            }
-          },
-          {
-            "title": "Timestamp",
-            "x": 0.0,
-            "y": 576.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Match Time",
-            "properties": {
-              "topic": "/AdvantageKit/Timestamp",
-              "period": 0.06,
-              "data_type": "int",
-              "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 15,
-              "yellow_start_time": 30
-            }
-          },
-          {
             "title": "Field",
             "x": 0.0,
             "y": 0.0,
-            "width": 608.0,
-            "height": 384.0,
+            "width": 864.0,
+            "height": 512.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
@@ -239,10 +61,10 @@
           },
           {
             "title": "L-L2",
-            "x": 608.0,
-            "y": 192.0,
-            "width": 96.0,
-            "height": 96.0,
+            "x": 864.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/QueuedLeftL2",
@@ -256,10 +78,10 @@
           },
           {
             "title": "L-L3",
-            "x": 608.0,
-            "y": 96.0,
-            "width": 96.0,
-            "height": 96.0,
+            "x": 864.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/QueuedLeftL3",
@@ -273,10 +95,10 @@
           },
           {
             "title": "L-L4",
-            "x": 608.0,
+            "x": 864.0,
             "y": 0.0,
-            "width": 96.0,
-            "height": 96.0,
+            "width": 128.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/QueuedLeftL4",
@@ -290,10 +112,10 @@
           },
           {
             "title": "R-L2",
-            "x": 704.0,
-            "y": 192.0,
-            "width": 96.0,
-            "height": 96.0,
+            "x": 992.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/QueuedRightL2",
@@ -307,10 +129,10 @@
           },
           {
             "title": "R-L3",
-            "x": 704.0,
-            "y": 96.0,
-            "width": 96.0,
-            "height": 96.0,
+            "x": 992.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/QueuedRightL3",
@@ -324,10 +146,10 @@
           },
           {
             "title": "R-L4",
-            "x": 704.0,
+            "x": 992.0,
             "y": 0.0,
-            "width": 96.0,
-            "height": 96.0,
+            "width": 128.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/QueuedRightL4",
@@ -341,10 +163,10 @@
           },
           {
             "title": "L1",
-            "x": 608.0,
-            "y": 288.0,
-            "width": 192.0,
-            "height": 96.0,
+            "x": 864.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/QueuedL1",
@@ -358,10 +180,10 @@
           },
           {
             "title": "Wrist Position",
-            "x": 896.0,
-            "y": 320.0,
-            "width": 208.0,
-            "height": 208.0,
+            "x": 992.0,
+            "y": 512.0,
+            "width": 240.0,
+            "height": 256.0,
             "type": "Radial Gauge",
             "properties": {
               "topic": "/SmartDashboard/Wrist Position",
@@ -375,6 +197,61 @@
               "wrap_value": false,
               "show_pointer": true,
               "show_ticks": true
+            }
+          },
+          {
+            "title": "GYRO",
+            "x": 1232.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/AdvantageKit/Drive/Gyro/YawVelocityRadPerSec",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -140.0,
+              "end_angle": 140.0,
+              "min_value": 0.0,
+              "max_value": 100.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "Voltage",
+            "x": 1120.0,
+            "y": 384.0,
+            "width": 352.0,
+            "height": 128.0,
+            "type": "Voltage View",
+            "properties": {
+              "topic": "/AdvantageKit/PowerDistribution/Voltage",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 4.0,
+              "max_value": 13.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "MatchTime",
+            "x": 1120.0,
+            "y": 256.0,
+            "width": 352.0,
+            "height": 128.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "/AdvantageKit/DriverStation/MatchTime",
+              "period": 0.06,
+              "data_type": "double",
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
             }
           }
         ]

@@ -117,6 +117,8 @@ public class Robot extends LoggedRobot {
 
     // Return to normal thread priority
     Threads.setCurrentThreadPriority(false, 10);
+
+    robotContainer.updateDashboard();
   }
 
   /** This function is called once when the robot is disabled. */
