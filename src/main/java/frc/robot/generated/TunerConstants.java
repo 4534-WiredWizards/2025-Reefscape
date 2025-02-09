@@ -70,8 +70,10 @@ public class TunerConstants {
     // Tuning after FF Characterization
         // new Slot0Configs().withKP(0.1).withKI(0).withKD(0).withKS(0.19335).withKV(0.88251);
     // Tuning after SysId
-        new Slot0Configs().withKP(0.06134).withKI(0).withKD(0).withKA(0.01698).withKS(0.19258).withKV(0.50239);
-
+        // new Slot0Configs().withKP(0.06134).withKI(0).withKD(0).withKA(0.01698).withKS(0.19258).withKV(0.50239);
+    // Gregs Suggestions - Try Kv 0.12227, Keep Ks 0.19258, Devide all other values by 2pi
+        new Slot0Configs().withKP(0.0963526467).withKI(0).withKD(0).withKA(0.0266721216).withKS(0.19258).withKV(0.1920612669);
+    
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
