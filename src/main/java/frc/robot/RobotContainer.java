@@ -164,8 +164,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
+            () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
             () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
             () -> driverJoystick.getRawButton(Driver.SLOW_MODE_TOGGLE),
