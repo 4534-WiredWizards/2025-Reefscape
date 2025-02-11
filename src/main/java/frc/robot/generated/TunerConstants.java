@@ -1,5 +1,12 @@
 package frc.robot.generated;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -17,16 +24,9 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -42,15 +42,15 @@ public class TunerConstants {
   // The steer motor uses any SwerveModule.SteerRequestType control request with
   // the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
-private static final Slot0Configs steerGains =
-        new Slot0Configs()
-                .withKP(100.0)
-                .withKI(0.0)
-                .withKD(0.5)
-                .withKS(0.1)
-                .withKV(1.59)
-                .withKA(0.0)
-                .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+  private static final Slot0Configs steerGains =
+      new Slot0Configs()
+          .withKP(100.0)
+          .withKI(0.0)
+          .withKD(0.5)
+          .withKS(0.1)
+          .withKV(1.59)
+          .withKA(0.0)
+          .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
   // When using closed-loop control, the drive motor uses the control
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
   // ********** Drive FF Characterization Results **********
@@ -66,14 +66,19 @@ private static final Slot0Configs steerGains =
   // Kd: 0.00000
 
   // Final Kv = 0.12227 + 0.38012 = 0.50239
-private static final Slot0Configs driveGains =
-        new Slot0Configs()
-                .withKP(0.0097625642)
-                .withKI(0.0)
-                .withKD(0.0)
-                .withKS(0.19258)
-                .withKV(0.0194598749)
-                .withKA(0.0027024509);
+
+  private static final Slot0Configs driveGains =
+      new Slot0Configs().withKP(0.06134).withKI(0.0).withKD(0.0).withKS(0.19258).withKV(0.50239);
+  //   .withKA(0.01698);
+
+  //   private static final Slot0Configs driveGains =
+  //       new Slot0Configs()
+  //           .withKP(0.0097625642)
+  //           .withKI(0.0)
+  //           .withKD(0.0)
+  //           .withKS(0.19258)
+  //           .withKV(0.12227)
+  //           .withKA(0.0027024509);
 
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
