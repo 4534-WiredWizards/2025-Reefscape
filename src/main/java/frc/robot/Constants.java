@@ -142,6 +142,31 @@ public interface Constants {
     int CORAL_MIN_ANGLE = 20;
   }
 
+  interface Swerve {
+
+    interface Drive {
+      interface PID {
+        double KP = 100.0;
+        double KI = 0.0;
+        double KD = 0.5;
+        double KS = 0.1;
+        double KV = 1.59;
+        double KA = 0.0;
+      }
+    }
+
+    interface Steer {
+      interface PID {
+        double KP = 0.0097625642;
+        double KI = 0.0;
+        double KD = 0.0;
+        double KS = 0.19258;
+        double KV = 0.0194598749;
+        double KA = 0.0027024509;
+      }
+    }
+  }
+
   /* Input/Output Configuration */
   interface IO {
     // Controller Port Configuration
@@ -153,7 +178,8 @@ public interface Constants {
       // Axes
       int DRIVE_X_AXIS = 0;
       int DRIVE_Y_AXIS = 1;
-      int DRIVE_ROTATE_AXIS = 4;
+      int DRIVE_ROTATE_AXIS = 3;
+      int DRIVE_THROTTLE_AXIS = 2;
 
       // Buttons
       int ZERO_GYRO_BUTTON = 2; // A button

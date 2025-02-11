@@ -13,6 +13,14 @@
 
 package frc.robot.commands;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -29,13 +37,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
@@ -73,6 +74,7 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier,
+      DoubleSupplier throttleSupplier,
       BooleanSupplier slowTurn,
       BooleanSupplier fieldOrientedView) {
     return Commands.run(
@@ -91,11 +93,22 @@ public class DriveCommands {
           if (slowTurn.getAsBoolean()) {
             turningSpeed /= 2;
           }
+
+          double xDirectionSpeed = linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec();
+          double yDirectionSpeed = linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec();
+
+            // Throttle adjust, get throttSupplier double, when value is -1 then speed should be multiplied by 1, when value is at 1 should be multiplied by 0.5
+            // Thus the throttle axis caps the speed in a range of 50%-100% based on the axis's value which when at "full" is -1 and when at "empty" is 1
+            double throttle = throttleSupplier.getAsDouble();
+            double speedMultiplier = throttle*-.25 + .75;
+            xDirectionSpeed *= speedMultiplier;
+            yDirectionSpeed *= speedMultiplier;
+
           // Convert to field relative speeds & send command
           ChassisSpeeds speeds =
               new ChassisSpeeds(
-                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                  xDirectionSpeed,
+                  yDirectionSpeed,
                   omega * turningSpeed);
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()

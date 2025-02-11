@@ -12,15 +12,12 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import static frc.robot.Constants.IO.Driver.FIELD_RELATIVE_TOGGLE;
-import static frc.robot.Constants.IO.Driver.LOCK_ANGLE_BUTTON;
-import static frc.robot.Constants.IO.Driver.SLOW_MODE_TOGGLE;
-import static frc.robot.Constants.IO.Driver.STOP_WITH_X_BUTTON;
-import static frc.robot.Constants.IO.Driver.ZERO_GYRO_BUTTON;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -34,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
+import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.DriveCommands;
@@ -52,7 +50,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -169,15 +166,16 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -Operatorcontroller.getLeftY(),
-            () -> -Operatorcontroller.getLeftX(),
-            () -> -Operatorcontroller.getRightX(),
-            () -> driverJoystick.getRawButton(SLOW_MODE_TOGGLE),
-            () -> driverJoystick.getRawButton(FIELD_RELATIVE_TOGGLE)));
+            () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
+            () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
+            () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
+            () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
+            () -> driverJoystick.getRawButton(Driver.SLOW_MODE_TOGGLE),
+            () -> driverJoystick.getRawButton(Driver.FIELD_RELATIVE_TOGGLE)));
 
     // Lock to 0° when A button is held TODO
     // lockAngle
-    new JoystickButton(driverJoystick, LOCK_ANGLE_BUTTON)
+    new JoystickButton(driverJoystick, Driver.LOCK_ANGLE_BUTTON)
         .toggleOnTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
@@ -187,11 +185,11 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     // TODO make this button 8 on flight controller
-    new JoystickButton(driverJoystick, STOP_WITH_X_BUTTON)
+    new JoystickButton(driverJoystick, Driver.STOP_WITH_X_BUTTON)
         .toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Zero gyro when Y button is pressed
-    new JoystickButton(driverJoystick, ZERO_GYRO_BUTTON)
+    new JoystickButton(driverJoystick, Driver.ZERO_GYRO_BUTTON)
         .onTrue(Commands.runOnce(() -> drive.resetGyro()).ignoringDisable(true));
 
     Operatorcontroller.leftBumper()

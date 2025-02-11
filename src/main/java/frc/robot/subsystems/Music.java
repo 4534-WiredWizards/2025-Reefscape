@@ -4,24 +4,24 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Music extends SubsystemBase {
 
-//Define Motors
-private final TalonFX FrontLeftDrive = new TalonFX(10);
-private final TalonFX FrontLeftTurn = new TalonFX(15);
+  // Define Motors
+  private final TalonFX FrontLeftDrive = new TalonFX(10);
+  private final TalonFX FrontLeftTurn = new TalonFX(15);
 
-private final TalonFX FrontRightDrive = new TalonFX(20);
-private final TalonFX FrontRightTurn = new TalonFX(25);
+  private final TalonFX FrontRightDrive = new TalonFX(20);
+  private final TalonFX FrontRightTurn = new TalonFX(25);
 
-private final TalonFX BackLeftDrive = new TalonFX(30);
-private final TalonFX BackLeftTurn = new TalonFX(35);
+  private final TalonFX BackLeftDrive = new TalonFX(30);
+  private final TalonFX BackLeftTurn = new TalonFX(35);
 
-private final TalonFX BackRightDrive = new TalonFX(40);
-private final TalonFX BackRightTurn = new TalonFX(45);
+  private final TalonFX BackRightDrive = new TalonFX(40);
+  private final TalonFX BackRightTurn = new TalonFX(45);
 
   private Orchestra m_orchestra = new Orchestra();
   /** Creates a new Music. */
@@ -40,10 +40,10 @@ private final TalonFX BackRightTurn = new TalonFX(45);
     // stop any music that is currently playing
     m_orchestra.stop();
 
-    //load Under The Sea
+    // load Under The Sea
     m_orchestra.loadMusic("UnderTheSea.chrp");
 
-    //play Under The Sea
+    // play Under The Sea
     m_orchestra.play();
   }
 
@@ -51,10 +51,10 @@ private final TalonFX BackRightTurn = new TalonFX(45);
     // stop any music that is currently playing
     m_orchestra.stop();
 
-    //load Final Countdown
+    // load Final Countdown
     m_orchestra.loadMusic("TheFinalCountdown.chrp");
 
-    //play Final Countdown
+    // play Final Countdown
     m_orchestra.play();
   }
 
@@ -62,10 +62,10 @@ private final TalonFX BackRightTurn = new TalonFX(45);
     // stop any music that is currently playing
     m_orchestra.stop();
 
-    //load We Are The Champions
+    // load We Are The Champions
     m_orchestra.loadMusic("WeAreTheChampions.chrp");
 
-    //play We Are The Champions
+    // play We Are The Champions
     m_orchestra.play();
   }
 
