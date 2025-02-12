@@ -37,8 +37,10 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println("in periodic");
     for (String ll : limelights) {
       updateVisionPose(ll);
+      System.out.println("in forloop " + ll);
     }
   }
 
@@ -57,6 +59,7 @@ public class VisionSubsystem extends SubsystemBase {
     if (shouldAcceptMeasurement(mt2)) {
       Matrix<N3, N1> stdDevs = calculateMeasurementUncertainty(mt2);
       swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, stdDevs);
+      System.out.println("Vision measurement accepted!");
     }
   }
 
