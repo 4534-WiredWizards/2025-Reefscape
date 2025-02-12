@@ -9,6 +9,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LimelightHelpers;
@@ -16,7 +17,7 @@ import frc.robot.util.LimelightHelpers.PoseEstimate;
 
 public class VisionSubsystem extends SubsystemBase {
   private final Drive swerveDrive;
-  private final String[] limelights = {"limelight-front", "limelight-back"};
+  private final String[] limelights = {"limelight-front" /*  "limelight-back"*/};
   private final int[] validAprilTagIDs = {
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
   };
@@ -54,9 +55,11 @@ public class VisionSubsystem extends SubsystemBase {
 
     // Get MegaTag2 pose estimate (always use blue origin for 2024+)
     PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+    SmartDashboard.putNumber("mt2 X", mt2.pose.getX());
+    SmartDashboard.putNumber("mt2 Y", mt2.pose.getY());
 
     // Validate and apply vision measurement
-    if (shouldAcceptMeasurement(mt2)) {
+    if (true /*shouldAcceptMeasurement(mt2) */) {
       Matrix<N3, N1> stdDevs = calculateMeasurementUncertainty(mt2);
       swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, stdDevs);
       System.out.println("Vision measurement accepted!");
