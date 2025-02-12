@@ -9,6 +9,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
@@ -38,56 +39,77 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("in periodic");
     for (String ll : limelights) {
       updateVisionPose(ll);
-      System.out.println("in forloop " + ll);
     }
+  
+    // Log current pose from poseEstimator
+    Pose2d estimatedPose = swerveDrive.getPose();
+    System.out.println("[VisionSubsystem] Current Estimated Pose: " + estimatedPose);
   }
 
   private void updateVisionPose(String limelightName) {
-    // Get current robot pose estimate
     Pose2d currentEstimate = swerveDrive.getPose();
-
-    // Set robot orientation for MegaTag2 (critical for single-tag operation)
     LimelightHelpers.SetRobotOrientation(
         limelightName, currentEstimate.getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
-    // Get MegaTag2 pose estimate (always use blue origin for 2024+)
     PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-    SmartDashboard.putNumber("mt2 X", mt2.pose.getX());
-    SmartDashboard.putNumber("mt2 Y", mt2.pose.getY());
 
-    // Validate and apply vision measurement
-    if (true /*shouldAcceptMeasurement(mt2) */) {
-      Matrix<N3, N1> stdDevs = calculateMeasurementUncertainty(mt2);
-      swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, stdDevs);
-      System.out.println("Vision measurement accepted!");
+    double currentTime = Timer.getFPGATimestamp();
+    if (Math.abs(currentTime - mt2.timestampSeconds) > 0.3) {
+        System.out.println("WARNING: Stale vision data. Delta: " 
+            + (currentTime - mt2.timestampSeconds));
+    }
+    
+    // Debug: Log vision pose and timestamp
+    System.out.println("Vision Pose: " + mt2.pose + " | Timestamp: " + mt2.timestampSeconds);
+    SmartDashboard.putNumber("VisionTS", mt2.timestampSeconds);
+
+    if (shouldAcceptMeasurement(mt2)) { // REMOVED THE HARD-CODED TRUE
+        Matrix<N3, N1> stdDevs = calculateMeasurementUncertainty(mt2);
+        // Debug: Log standard deviations
+        System.out.println("Applying vision. Std Devs: " + stdDevs);
+        swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, stdDevs);
+    } else {
+        System.out.println("REJECTED - Tag Count: " + mt2.tagCount 
+            + " | Avg Dist: " + mt2.avgTagDist 
+            + " | Gyro Rate: " + Math.toDegrees(swerveDrive.getGyroRate()));
     }
   }
 
   private boolean shouldAcceptMeasurement(PoseEstimate estimate) {
-    // Basic validation checks
-    if (estimate.tagCount == 0) return false; // Reject if no tags are detected
-    if (estimate.avgTagDist > 4.0)
-      return false; // Reject if the average distance to tags is greater than 4 meters
+    // // Basic validation checks
+    if (estimate.tagCount == 0) {
+      System.out.println("Rejected: No tags detected");
+      return false;
+  }
+  if (estimate.avgTagDist > 4.0) {
+      System.out.println("Rejected: Avg tag distance too far: " + estimate.avgTagDist);
+      return false;
+  }
+  if (Math.abs(swerveDrive.getGyroRate()) > Math.toRadians(720)) {
+      System.out.println("Rejected: Excessive gyro rate");
+      return false;
+  }
 
-    // Motion sanity checks
-    if (Math.abs(swerveDrive.getGyroRate()) > Math.toRadians(720))
-      return false; // Reject if the yaw velocity is greater than 720 degrees per second
-    // AKA we are spinnger super fast and probably should not trust the vision data
-
-    // Pose consistency check (optional)
-    Pose2d currentEstimate = swerveDrive.getPose();
-    double poseDifference =
-        currentEstimate.getTranslation().getDistance(estimate.pose.getTranslation());
-    return poseDifference < 0.5; // Reject if the pose difference is greater than 0.5 meters
+  Pose2d currentEstimate = swerveDrive.getPose();
+  double poseDifference = currentEstimate.getTranslation().getDistance(estimate.pose.getTranslation());
+  if (poseDifference > 1.5) {
+      System.out.println("Rejected: Pose diff " + poseDifference + " meters");
+      return false;
+  }
+  return true;
+    
   }
 
   private Matrix<N3, N1> calculateMeasurementUncertainty(PoseEstimate estimate) {
-    // Dynamic uncertainty based on tag observations
-    double xyStdDev = 0.01 * estimate.avgTagDist * (2.0 / estimate.tagCount);
-    double rotStdDev = Math.toRadians(0.5 * estimate.avgTagDist * (2.0 / estimate.tagCount));
-    return VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev);
+
+     // TEMPORARY DEBUG: Use fixed low uncertainty
+     return VecBuilder.fill(0.1, 0.1, Math.toRadians(1));
+
+    // // Dynamic uncertainty based on tag observations
+    // double xyStdDev = 0.01 * estimate.avgTagDist * (2.0 / estimate.tagCount);
+    // double rotStdDev = Math.toRadians(0.5 * estimate.avgTagDist * (2.0 / estimate.tagCount));
+    // return VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev);
   }
 }
