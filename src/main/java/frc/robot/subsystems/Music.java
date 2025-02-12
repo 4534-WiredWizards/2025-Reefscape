@@ -8,7 +8,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Music extends SubsystemBase {
@@ -37,7 +36,7 @@ public class Music extends SubsystemBase {
     // add back motors to different track to add ability for chords
     m_orchestra.addInstrument(BackLeftDrive, 0);
     m_orchestra.addInstrument(BackLeftTurn, 0);
-    m_orchestra.addInstrument(BackRightDrive,0);
+    m_orchestra.addInstrument(BackRightDrive, 0);
     m_orchestra.addInstrument(BackRightTurn, 0);
   }
 

@@ -1,4 +1,4 @@
-// Copyright 2021-2025 FRC 6328
+// Copyright 2021-2025 FRC 4534
 // http://github.com/Mechanical-Advantage
 //
 // This program is free software; you can redistribute it and/or
@@ -40,6 +40,7 @@ import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ScoringQueueSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -59,6 +60,7 @@ public class RobotContainer {
   // Subsystems
 
   private final Drive drive;
+  private final VisionSubsystem m_vision;
   private final WristSubsystem m_Wrist = new WristSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   private final ScoringQueueSubsystem scoringQueue = new ScoringQueueSubsystem();
@@ -127,7 +129,7 @@ public class RobotContainer {
                 new ModuleIO() {});
         break;
     }
-
+    m_vision = new VisionSubsystem(drive);
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
