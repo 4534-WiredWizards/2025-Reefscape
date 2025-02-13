@@ -60,7 +60,7 @@ public class RobotContainer {
   // Subsystems
 
   private final Drive drive;
-  private final VisionSubsystem m_vision;
+  public final VisionSubsystem m_vision;
   private final WristSubsystem m_Wrist = new WristSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   private final ScoringQueueSubsystem scoringQueue = new ScoringQueueSubsystem();

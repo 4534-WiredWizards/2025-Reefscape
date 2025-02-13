@@ -122,6 +122,13 @@ public class Robot extends LoggedRobot {
     robotContainer.updateDashboard();
   }
 
+  // Robot intialization function
+  @Override
+  public void robotInit() {
+    // Call the robot container's init method
+    robotContainer.m_vision.resetLimelightBotPoseBlue();
+  }
+
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {}
@@ -133,6 +140,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    robotContainer.m_vision.resetLimelightBotPoseBlue();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -148,6 +156,7 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    robotContainer.m_vision.resetLimelightBotPoseBlue();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
