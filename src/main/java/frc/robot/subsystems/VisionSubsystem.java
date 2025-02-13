@@ -40,9 +40,6 @@ public class VisionSubsystem extends SubsystemBase {
     for (String ll : limelights) {
       updateVisionPose(ll);
     }
-
-    Pose2d estimatedPose = swerveDrive.getPose();
-    // System.out.println("[VisionSubsystem] Current Estimated Pose: " + estimatedPose);
   }
 
   private void updateVisionPose(String limelightName) {
@@ -54,80 +51,62 @@ public class VisionSubsystem extends SubsystemBase {
 
     double currentTime = Timer.getFPGATimestamp();
     if (Math.abs(currentTime - mt2.timestampSeconds) > 0.3) {
-      // System.out.println(
-      //     "WARNING: Stale vision data. Delta: " + (currentTime - mt2.timestampSeconds));
+      // Optional: Log stale data warning if needed
     }
 
-    // System.out.println("Vision Pose: " + mt2.pose + " | Timestamp: " + mt2.timestampSeconds);
     SmartDashboard.putNumber("VisionTS", mt2.timestampSeconds);
 
     if (shouldAcceptMeasurement(mt2)) {
       Matrix<N3, N1> stdDevs = calculateMeasurementUncertainty(mt2);
-      // System.out.println("Applying vision. Std Devs: " + stdDevs);
       swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds, stdDevs);
-    } else {
-      // System.out.println(
-      //     "REJECTED - Tag Count: "
-      //         + mt2.tagCount
-      //         + " | Avg Dist: "
-      //         + mt2.avgTagDist
-      //         + " | Gyro Rate: "
-      //         + Math.toDegrees(swerveDrive.getGyroRate()));
     }
   }
 
   private boolean shouldAcceptMeasurement(PoseEstimate estimate) {
     if (estimate.tagCount == 0) {
-      // System.out.println("Rejected: No tags detected");
       return false;
     }
     if (estimate.avgTagDist > 4.0) {
-      // System.out.println("Rejected: Avg tag distance too far: " + estimate.avgTagDist);
       return false;
     }
     if (Math.abs(swerveDrive.getGyroRate()) > Math.toRadians(720)) {
-      // System.out.println("Rejected: Excessive gyro rate");
       return false;
     }
 
     Pose2d currentEstimate = swerveDrive.getPose();
     double poseDifference =
         currentEstimate.getTranslation().getDistance(estimate.pose.getTranslation());
-    if (poseDifference > 1.5) {
-      // System.out.println("Rejected: Pose diff " + poseDifference + " meters");
-      // System.out.println("Current Pose (2): " + currentEstimate);
-      // System.out.println("New Pose (2): " + estimate.pose);
-      return false;
-    }
-    return true;
+    return poseDifference <= 1.5;
   }
 
   private Matrix<N3, N1> calculateMeasurementUncertainty(PoseEstimate estimate) {
-    
-    return VecBuilder.fill(0.1, 0.1, Math.toRadians(1));
+    // Dynamic uncertainty based on tag observations
+    double xyStdDev = 0.01 * estimate.avgTagDist * (2.0 / estimate.tagCount);
+    double rotStdDev = Math.toRadians(0.5 * estimate.avgTagDist * (2.0 / estimate.tagCount));
+    return VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev);
   }
 
   public void resetLimelightBotPoseBlue() {
-    // System.out.println("Resetting bot pose from Limelight");
+    System.out.println("Attempting to reset bot pose from Limelight...");
     for (String ll : limelights) {
-      PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
-      if (estimate.tagCount == 0) {
-        // System.out.println("No tags detected for reset on " + ll);
-        continue;
-      }
-      if (estimate.avgTagDist > 4.0) {
-        // System.out.println("Avg tag distance too far for reset on " + ll);
-        continue;
-      }
-      double currentTime = Timer.getFPGATimestamp();
-      if (Math.abs(currentTime - estimate.timestampSeconds) > 0.3) {
-        // System.out.println("Stale data for reset on " + ll);
-        continue;
-      }
-      swerveDrive.setPose(estimate.pose);
-      System.out.println("Reset pose to " + estimate.pose + " from " + ll);
-      return;
+        PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
+        if (estimate.tagCount == 0) {
+            System.out.println("No tags detected for reset on " + ll);
+            continue;
+        }
+        if (estimate.avgTagDist > 4.0) {
+            System.out.println("Avg tag distance too far for reset on " + ll + ": " + estimate.avgTagDist);
+            continue;
+        }
+        double currentTime = Timer.getFPGATimestamp();
+        if (Math.abs(currentTime - estimate.timestampSeconds) > 0.3) {
+            System.out.println("Stale data for reset on " + ll + ": Delta = " + (currentTime - estimate.timestampSeconds));
+            continue;
+        }
+        swerveDrive.setPose(estimate.pose);
+        System.out.println("Successfully reset pose to " + estimate.pose + " from " + ll);
+        return;
     }
-    System.out.println("Could not reset pose: no valid Limelight data");
+    System.out.println("Could not reset pose: no valid Limelight data found.");
   }
 }
