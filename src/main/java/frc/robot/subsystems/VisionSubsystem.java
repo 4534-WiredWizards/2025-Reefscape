@@ -89,23 +89,28 @@ public class VisionSubsystem extends SubsystemBase {
   public void resetLimelightBotPoseBlue() {
     System.out.println("Attempting to reset bot pose from Limelight...");
     for (String ll : limelights) {
-        PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
-        if (estimate.tagCount == 0) {
-            System.out.println("No tags detected for reset on " + ll);
-            continue;
-        }
-        if (estimate.avgTagDist > 4.0) {
-            System.out.println("Avg tag distance too far for reset on " + ll + ": " + estimate.avgTagDist);
-            continue;
-        }
-        double currentTime = Timer.getFPGATimestamp();
-        if (Math.abs(currentTime - estimate.timestampSeconds) > 0.3) {
-            System.out.println("Stale data for reset on " + ll + ": Delta = " + (currentTime - estimate.timestampSeconds));
-            continue;
-        }
-        swerveDrive.setPose(estimate.pose);
-        System.out.println("Successfully reset pose to " + estimate.pose + " from " + ll);
-        return;
+      PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
+      if (estimate.tagCount == 0) {
+        System.out.println("No tags detected for reset on " + ll);
+        continue;
+      }
+      if (estimate.avgTagDist > 4.0) {
+        System.out.println(
+            "Avg tag distance too far for reset on " + ll + ": " + estimate.avgTagDist);
+        continue;
+      }
+      double currentTime = Timer.getFPGATimestamp();
+      if (Math.abs(currentTime - estimate.timestampSeconds) > 0.3) {
+        System.out.println(
+            "Stale data for reset on "
+                + ll
+                + ": Delta = "
+                + (currentTime - estimate.timestampSeconds));
+        continue;
+      }
+      swerveDrive.setPose(estimate.pose);
+      System.out.println("Successfully reset pose to " + estimate.pose + " from " + ll);
+      return;
     }
     System.out.println("Could not reset pose: no valid Limelight data found.");
   }

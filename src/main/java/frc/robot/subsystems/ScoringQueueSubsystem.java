@@ -1,17 +1,36 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.CoralScoringCommand;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.CoralScoringCommand;
+import frc.robot.subsystems.drive.Drive;
+
 public class ScoringQueueSubsystem extends SubsystemBase {
   private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
+  private final Drive swerveDrive;
+
+
+  public ScoringQueueSubsystem(Drive swerveDrive) {
+    this.swerveDrive = swerveDrive;
+  }
+
 
   public enum ScoringSide {
     LEFT,
     RIGHT
+  }
+
+  public enum CoralZones {
+    ZONE1,
+    ZONE2,
+    ZONE3,
+    ZONE4,
+    ZONE5,
+    ZONE6,  
   }
 
   public enum ScoringHeight {
@@ -23,6 +42,24 @@ public class ScoringQueueSubsystem extends SubsystemBase {
 
   public void addScoringCommand(ScoringSide side, ScoringHeight height) {
     System.out.println("Adding command: " + side + " " + height);
+
+    Pose2d pose = swerveDrive.getPose();
+    // Each zone is defined by a trapaziod shape with 4 corners
+    // If the robots pose is within the zone, set the robots zone to that zone number
+    // If the robots pose is not within any zone, set the robots zone to 0
+
+    // Zone 1
+    
+
+    // Need to determine zone based on pose
+    //
+    if(pose > Zone1Leftbound && pose < Zone1LightBound){
+
+    }else if( pose > Zone2LeftBound && pose < Zone2RightBound{
+    
+    }
+
+    
     commandQueue.add(new CoralScoringCommand(side, height));
   }
 

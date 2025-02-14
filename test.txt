@@ -1,0 +1,63 @@
+Warning﻿ at edu.wpi.first.wpilibj.Tracer.lambda$printEpochs$0(Tracer.java:62): 	Drive.periodic(): 0.002931s ﻿
+﻿﻿﻿﻿﻿﻿ 	VisionSubsystem.periodic(): 0.184257s ﻿
+﻿﻿﻿﻿﻿﻿ 	buttons.run(): 0.000038s ﻿
+﻿﻿﻿﻿﻿﻿ 	ScoringQueueSubsystem.periodic(): 0.000055s ﻿
+﻿﻿﻿﻿﻿﻿ 	ElevatorSubsystem.periodic(): 0.000112s ﻿
+﻿﻿﻿﻿﻿﻿ 	WristSubsystem.periodic(): 0.000074s ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ Vision Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) | Timestamp: 67.71076478308105 ﻿
+﻿﻿﻿﻿﻿﻿ Applying vision. Std Devs: Type = DDRM , rows = 3 , cols = 1 ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.7453E-02  ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Adding Vision Measurement:  ﻿
+﻿﻿﻿﻿﻿﻿   - Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿   - Timestamp: 67.71076478308105 ﻿
+﻿﻿﻿﻿﻿﻿   - StdDevs: Type = DDRM , rows = 3 , cols = 1 ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.7453E-02  ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Updated Estimated Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Current Estimated Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿ Vision Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) | Timestamp: 67.74502191271974 ﻿
+﻿﻿﻿﻿﻿﻿ Applying vision. Std Devs: Type = DDRM , rows = 3 , cols = 1 ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.7453E-02  ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Adding Vision Measurement:  ﻿
+﻿﻿﻿﻿﻿﻿   - Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿   - Timestamp: 67.74502191271974 ﻿
+﻿﻿﻿﻿﻿﻿   - StdDevs: Type = DDRM , rows = 3 , cols = 1 ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.7453E-02  ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Updated Estimated Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Current Estimated Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿ Vision Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) | Timestamp: 67.74502191271974 ﻿
+﻿﻿﻿﻿﻿﻿ Applying vision. Std Devs: Type = DDRM , rows = 3 , cols = 1 ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.7453E-02  ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Adding Vision Measurement:  ﻿
+﻿﻿﻿﻿﻿﻿   - Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿   - Timestamp: 67.74502191271974 ﻿
+﻿﻿﻿﻿﻿﻿   - StdDevs: Type = DDRM , rows = 3 , cols = 1 ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.7453E-02  ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Updated Estimated Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Current Estimated Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) ﻿
+﻿﻿﻿﻿﻿﻿ Vision Pose: Pose2d(Translation2d(X: 1.70, Y: 4.13), Rotation2d(Rads: -0.00, Deg: -0.14)) | Timestamp: 67.77920235339356 ﻿
+﻿﻿﻿﻿﻿﻿ Applying vision. Std Devs: Type = DDRM , rows = 3 , cols = 1 ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.0000E-01  ﻿
+﻿﻿﻿﻿﻿﻿  1.7453E-02  ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ [VisionSubsystem] Adding Vision Measurement:  ﻿
+﻿﻿﻿﻿﻿﻿   - Pose: Pose2d(Translation2d(X: 1.70, Y: 4.1
