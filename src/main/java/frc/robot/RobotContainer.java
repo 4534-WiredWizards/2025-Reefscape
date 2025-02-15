@@ -12,9 +12,12 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -39,6 +42,7 @@ import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ScoringQueueSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
@@ -47,7 +51,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -62,6 +65,7 @@ public class RobotContainer {
   public final VisionSubsystem m_vision;
   private final WristSubsystem m_Wrist = new WristSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+  private final ScoringQueueSubsystem m_scoringQueue;
 
   // Controller
   private final CommandXboxController Operatorcontroller = new CommandXboxController(0);
@@ -128,6 +132,7 @@ public class RobotContainer {
         break;
     }
     m_vision = new VisionSubsystem(drive);
+    m_scoringQueue = new ScoringQueueSubsystem(drive);
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
