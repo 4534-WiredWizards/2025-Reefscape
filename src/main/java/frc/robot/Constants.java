@@ -66,6 +66,7 @@ public interface Constants {
     double KI = 0.0;
     double KD = 0.0;
 
+
     // Motion Profile Configuration
     double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
     double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
@@ -73,9 +74,9 @@ public interface Constants {
 
     // Feedforward Constants
     double KS = 0;
-    double KG = 2.28;
-    double KV = 3.07;
-    double KA = 0.41;
+    double KG = 0.46;
+    double KV = 8.98;
+    double KA = 0.05;
 
     // Operational Parameters
     double MANUAL_SPEED = 0.2;
@@ -127,9 +128,9 @@ public interface Constants {
 
     // Feedforward Constants
     double KS = 0;
-    double KG = 2.28;
-    double KV = 3.07;
-    double KA = 0.41;
+    double KG = 1.01;
+    double KV = 0.81;
+    double KA = 0.03;
 
     // Safety Limits
     double MAX_SAFE_ANGLE = 0;
