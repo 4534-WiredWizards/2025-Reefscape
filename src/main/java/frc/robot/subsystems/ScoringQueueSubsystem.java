@@ -4,19 +4,42 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ScoringQueue;
 import frc.robot.commands.CoralScoringCommand;
 import frc.robot.subsystems.drive.Drive;
+
 
 public class ScoringQueueSubsystem extends SubsystemBase {
   private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
   private final Drive swerveDrive;
 
+  //enstanciate Zone Detection
+  private double BLUECENTERX;
+  private double BLUECENTERY;
 
+  private final double[] lineSlopes;
+  
+
+  // Random stuff for SmartDashboard
+  private static final double EPSILON = 1e-6;
+  private boolean Zone1Top = false;
+  private boolean Zone2Top = false;
+  private boolean Zone3Top = false;
+
+
+  
   public ScoringQueueSubsystem(Drive swerveDrive) {
     this.swerveDrive = swerveDrive;
+    this.BLUECENTERX = ScoringQueue.BLUECENTERX;
+    this.BLUECENTERY = ScoringQueue.BLUECENTERY;
+    this.lineSlopes = new double[3];
+
+    lineSlopes[0] = Double.POSITIVE_INFINITY; //vertical line
+    lineSlopes[1] = Math.tan(Math.toRadians(60)); //60 degrees
+    lineSlopes[2] = Math.tan(Math.toRadians(-60)); //-60 degrees 
+    SmartDashboard.putNumber("CURRENT_ZONE", 0);
   }
 
 
@@ -25,13 +48,13 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     RIGHT
   }
 
-  public enum CoralZones {
-    ZONE1,
-    ZONE2,
-    ZONE3,
-    ZONE4,
-    ZONE5,
-    ZONE6,  
+  public enum ReefZone {
+    ZONE_1,
+    ZONE_2,
+    ZONE_3,
+    ZONE_4,
+    ZONE_5,
+    ZONE_6,  
   }
 
   public enum ScoringHeight {
@@ -45,6 +68,7 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     System.out.println("Adding command: " + side + " " + height);
 
     Pose2d pose = swerveDrive.getPose();
+    
     // Each zone is defined by a trapaziod shape with 4 corners
     // If the robots pose is within the zone, set the robots zone to that zone number
     // If the robots pose is not within any zone, set the robots zone to 0
@@ -62,72 +86,8 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     commandQueue.add(new CoralScoringCommand(side, height));
   }
 
-  private static final double EPSILON = 1e-6;
-  private boolean Zone1Top = false;
-  private boolean Zone2Top = false;
-  private boolean Zone3Top = false;
-
-  private boolean InZone1 = false;
-  private boolean InZone2 = false;
-  private boolean InZone3 = false;
-  private boolean InZone4 = false; 
-  private boolean InZone5 = false;
-  private boolean InZone6 = false;
 
 
-private int calculateZone(VisionSubsystem.getPose pose){  //TODO: Fix
-  // Example usage of pose variable
-
-  //account for wierd coordinate system in frc (i made a dumb mistake and this is the simplest way to fix it)
-  double x = pose.getY();
-  double y = pose.getX();
-
-  double centerX = 0.0;
-  double centerY = 0.0;
-  double istart = centerX-5;
-  double iend = centerX+5;
-  
-
-  // Border 1
-  for (double i = istart; i < iend; i+= EPSILON) {
-    if(y >= centerY){
-      Zone1Top = true;
-    } else if (x < centerX && y < centerY){
-      Zone1Top = false;
-    }
-
-    // Border 2
-    if(x >= -Math.sqrt(3)*i+centerX || y >= -i/Math.sqrt(3)+centerY){
-      Zone2Top = true;
-    } else if (x < -Math.sqrt(3)*i+centerX || y < -i/Math.sqrt(3)+centerY){
-      Zone2Top = false;
-    }
-
-    // Border 3
-    if(x >= Math.sqrt(3)*i+centerX || y >= i/Math.sqrt(3)+centerY){
-      Zone3Top = true;
-    } else if (x < Math.sqrt(3)*i+centerX || y < i/Math.sqrt(3)+centerY){
-      Zone3Top = false;
-    }
-
-  }
-  
-//zone 1
-  if(Zone2Top == false && Zone3Top == false){
-    InZone1 = true;
-  } else {
-    InZone1 = false;
-  }
-
-  //zone 4
-  if(Zone2Top == true && Zone3Top == true){
-    InZone4 = true;
-  } else {
-    InZone4 = false;
-  }
-    
-  
-}
 
   public Queue<CoralScoringCommand> getQueue() {
     return new LinkedList<>(commandQueue);
@@ -141,6 +101,36 @@ private int calculateZone(VisionSubsystem.getPose pose){  //TODO: Fix
   public void periodic() {
     // Update level status indicators
     updateLevelStatus();
+    zoneTest();
+
+  }
+
+  private  void zoneTest () {
+    Pose2d pose = swerveDrive.getPose();
+    ReefZone zone = getZone(pose);
+    switch (zone) {
+      case ZONE_1 -> {
+      SmartDashboard.putNumber("CURRENT_ZONE", 1);
+      }
+      case ZONE_2 -> {
+      SmartDashboard.putNumber("CURRENT_ZONE", 2);
+      }
+      case ZONE_3 -> {
+      SmartDashboard.putNumber("CURRENT_ZONE", 3);
+      }
+      case ZONE_4 -> {
+      SmartDashboard.putNumber("CURRENT_ZONE", 4);
+      }
+      case ZONE_5 -> {
+      SmartDashboard.putNumber("CURRENT_ZONE", 5);
+      }
+      case ZONE_6 -> {
+      SmartDashboard.putNumber("CURRENT_ZONE", 6);
+      }
+      default -> {
+      SmartDashboard.putNumber("CURRENT_ZONE", 0);
+      }
+    }
   }
 
   private void updateLevelStatus() {
@@ -172,4 +162,52 @@ private int calculateZone(VisionSubsystem.getPose pose){  //TODO: Fix
     SmartDashboard.putBoolean("Queued/Right/L3", rightLevels[1]);
     SmartDashboard.putBoolean("Queued/Right/L4", rightLevels[2]);
   }
+
+
+
+
+    /**
+     * Determines which side of a line a point lies on
+     * @param x Point x coordinate
+     * @param y Point y coordinate
+     * @param slope Slope of the line
+     * @return positive if above/right of line, negative if below/left of line
+     */  
+    private double getSideOfLine(double x, double y, double slope) {
+      if (Double.isInfinite(slope)) {
+          // Vertical line case
+          return x - BLUECENTERX;
+      }
+      // y - y1 = m(x - x1) rearranged to get consistent sign
+      return (y - BLUECENTERY) - slope * (x - BLUECENTERX);
+    }
+
+  public ReefZone getZone(Pose2d pose) {
+    double x = pose.getX();
+    double y = pose.getY();
+
+    boolean[] sides = new boolean[3];
+    for (int i = 0; i < 3; i++) {
+      sides[i] = getSideOfLine(x, y, lineSlopes[i]) > 0;
+    }
+
+    if (sides[0]) {  // Right of vertical
+            if (sides[1]) {  // Above 60° line
+                if (sides[2]) return ReefZone.ZONE_1;
+                else return ReefZone.ZONE_2;
+            } else {  // Below 60° line
+                if (sides[2]) return ReefZone.ZONE_6;
+                else return ReefZone.ZONE_5;
+            }
+        } else {  // Left of vertical
+            if (sides[1]) {  // Above 60° line
+                if (sides[2]) return ReefZone.ZONE_2;
+                else return ReefZone.ZONE_3;
+            } else {  // Below 60° line
+                if (sides[2]) return ReefZone.ZONE_5;
+                else return ReefZone.ZONE_4;
+            }
+        }
+  }
+
 }

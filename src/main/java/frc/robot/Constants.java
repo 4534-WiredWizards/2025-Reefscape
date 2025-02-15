@@ -44,6 +44,12 @@ public interface Constants {
     int CANdleLEDSegmentSize = 8;
   }
 
+  // Scoring Queue Subsystem 
+  interface ScoringQueue {
+    double BLUECENTERX = 0.0;
+    double BLUECENTERY = 0.0;
+  }
+
   /* Subsystem Constants */
   interface Elevator {
     // Motor Configurations
