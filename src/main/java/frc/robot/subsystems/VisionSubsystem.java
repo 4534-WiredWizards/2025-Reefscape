@@ -18,9 +18,9 @@ import frc.robot.util.LimelightHelpers.PoseEstimate;
 
 public class VisionSubsystem extends SubsystemBase {
   private final Drive swerveDrive;
-  private final String[] limelights = {"limelight-front", "limelight-back"};
+  private final String[] limelights = { "limelight-front" };
   private final int[] validAprilTagIDs = {
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
   };
 
   public VisionSubsystem(Drive swerveDrive) {
@@ -49,9 +49,9 @@ public class VisionSubsystem extends SubsystemBase {
 
     PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
-    double currentTime = Timer.getFPGATimestamp();
-    if (Math.abs(currentTime - mt2.timestampSeconds) > 0.3) {
-      // Optional: Log stale data warning if needed
+    if (mt2 == null) {
+      System.out.println("PoseEstimate is null for " + limelightName);
+      return;
     }
 
     SmartDashboard.putNumber("VisionTS", mt2.timestampSeconds);
@@ -74,8 +74,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     Pose2d currentEstimate = swerveDrive.getPose();
-    double poseDifference =
-        currentEstimate.getTranslation().getDistance(estimate.pose.getTranslation());
+    double poseDifference = currentEstimate.getTranslation().getDistance(estimate.pose.getTranslation());
     return poseDifference <= 1.5;
   }
 
@@ -90,13 +89,13 @@ public class VisionSubsystem extends SubsystemBase {
     System.out.println("Attempting to reset bot pose from Limelight...");
     for (String ll : limelights) {
       PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
-      
+
       // Check if estimate is null before accessing its properties
       if (estimate == null) {
         System.out.println("No pose estimate available from " + ll);
         continue;
       }
-      
+
       if (estimate.tagCount == 0) {
         System.out.println("No tags detected for reset on " + ll);
         continue;
