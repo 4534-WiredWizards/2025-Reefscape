@@ -77,9 +77,14 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public double getAngle() {
-    //using motor encoder instead of absolute encoder for now
-    //return ((((-1 * absEncoder.get()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * (2 * Math.PI));
-    return ((((-1 * wristMotor.getRotorPosition().getValueAsDouble()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * 360);
+    // using motor encoder instead of absolute encoder for now
+    // return ((((-1 * absEncoder.get()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * (2 *
+    // Math.PI));
+    return ((((-1 * wristMotor.getRotorPosition().getValueAsDouble())
+                + Wrist.Encoder.ABSOLUTE_OFFSET
+                + 1)
+            % 1.0)
+        * 360);
   }
 
   public void setWristSetpoint(double setpoint) {
@@ -125,7 +130,6 @@ public class WristSubsystem extends SubsystemBase {
   public void enable() {
     pidController.reset(getAngle());
     PIDEnabled = true;
-    
   }
 
   public void disable() {

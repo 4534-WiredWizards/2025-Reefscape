@@ -1,14 +1,13 @@
 package frc.robot.subsystems;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ScoringQueue;
 import frc.robot.commands.CoralScoringCommand;
 import frc.robot.subsystems.drive.Drive;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ScoringQueueSubsystem extends SubsystemBase {
   private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
@@ -33,8 +32,8 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     this.lineSlopes = new double[3];
 
     lineSlopes[0] = Double.POSITIVE_INFINITY; // vertical line
-    lineSlopes[1] = Math.tan(Math.toRadians(60)); // 60 degrees
-    lineSlopes[2] = Math.tan(Math.toRadians(-60)); // -60 degrees
+    lineSlopes[1] = 1 / Math.tan(Math.toRadians(60)); // 60 degrees
+    lineSlopes[2] = 1 / Math.tan(Math.toRadians(-60)); // -60 degrees
     SmartDashboard.putNumber("CURRENT_ZONE", 0);
   }
 
@@ -93,26 +92,11 @@ public class ScoringQueueSubsystem extends SubsystemBase {
   public void periodic() {
     // Update level status indicators
     updateLevelStatus();
-    zoneTest();
-
+    // Debug zone output
+    SmartDashboard.putNumber("CURRENT_ZONE", getZone(swerveDrive.getPose()).ordinal() + 1);
   }
 
-  private void zoneTest() {
-    Pose2d pose = swerveDrive.getPose();
-    ReefZone zone = getZone(pose);
-
-    // Debug output
-    SmartDashboard.putNumber("CURRENT_ZONE", zone.ordinal() + 1);
-    SmartDashboard.putNumber("Robot_X", pose.getX());
-    SmartDashboard.putNumber("Robot_Y", pose.getY());
-
-    // Debug line calculations
-    double[] lineValues = new double[3];
-    for (int i = 0; i < 3; i++) {
-      lineValues[i] = getSideOfLine(pose.getX(), pose.getY(), lineSlopes[i]);
-      SmartDashboard.putNumber("Line_" + i + "_Value", lineValues[i]);
-    }
-  }
+ 
 
   private void updateLevelStatus() {
     boolean hasL1 = false;
@@ -146,9 +130,9 @@ public class ScoringQueueSubsystem extends SubsystemBase {
 
   /**
    * Determines which side of a line a point lies on
-   * 
-   * @param x     Point x coordinate
-   * @param y     Point y coordinate
+   *
+   * @param x Point x coordinate
+   * @param y Point y coordinate
    * @param slope Slope of the line
    * @return positive if above/right of line, negative if below/left of line
    */
@@ -178,37 +162,27 @@ public class ScoringQueueSubsystem extends SubsystemBase {
       sides[i] = getSideOfLine(x, y, lineSlopes[i]) > 0;
     }
 
-    // Debug output
-    SmartDashboard.putBoolean("Side_0", sides[0]);
-    SmartDashboard.putBoolean("Side_1", sides[1]);
-    SmartDashboard.putBoolean("Side_2", sides[2]);
+
 
     // Revised zone determination based on provided coordinates
     if (sides[0]) { // Right of vertical
-      if (sides[1]) { // Above 60° line
-        if (sides[2])
-          return ReefZone.ZONE_1;
-        else
-          return ReefZone.ZONE_6;
-      } else { // Below 60° line
-        if (sides[2])
-          return ReefZone.ZONE_2;
-        else
-          return ReefZone.ZONE_5;
+      if (sides[1]) { // Above 60 line
+        return ReefZone.ZONE_5;
+      } else { // Below 60 line, 2 options
+        if (sides[2]) return ReefZone.ZONE_4; // Above -60 line
+        else {
+          return ReefZone.ZONE_3; // Below -60 line
+        }
       }
     } else { // Left of vertical
-      if (sides[1]) { // Above 60° line
-        if (sides[2])
-          return ReefZone.ZONE_3;
-        else
-          return ReefZone.ZONE_4;
-      } else { // Below 60° line
-        if (sides[2])
-          return ReefZone.ZONE_4;
-        else
-          return ReefZone.ZONE_3;
+      if (sides[2]) { // Above -60 line
+        return ReefZone.ZONE_6;
+      } else { // Below -60 line
+        if (sides[1]) // Above 60 line
+        return ReefZone.ZONE_1;
+        else // Below 60 line
+        return ReefZone.ZONE_2;
       }
     }
   }
-
 }

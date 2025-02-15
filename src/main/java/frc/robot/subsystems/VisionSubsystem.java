@@ -18,9 +18,9 @@ import frc.robot.util.LimelightHelpers.PoseEstimate;
 
 public class VisionSubsystem extends SubsystemBase {
   private final Drive swerveDrive;
-  private final String[] limelights = { "limelight-front" };
+  private final String[] limelights = {"limelight-front"};
   private final int[] validAprilTagIDs = {
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
   };
 
   public VisionSubsystem(Drive swerveDrive) {
@@ -74,7 +74,8 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     Pose2d currentEstimate = swerveDrive.getPose();
-    double poseDifference = currentEstimate.getTranslation().getDistance(estimate.pose.getTranslation());
+    double poseDifference =
+        currentEstimate.getTranslation().getDistance(estimate.pose.getTranslation());
     return poseDifference <= 1.5;
   }
 
