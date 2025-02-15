@@ -1,13 +1,14 @@
 package frc.robot.subsystems;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ScoringQueue;
 import frc.robot.commands.CoralScoringCommand;
 import frc.robot.subsystems.drive.Drive;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class ScoringQueueSubsystem extends SubsystemBase {
   private final Queue<CoralScoringCommand> commandQueue = new LinkedList<>();
@@ -58,7 +59,7 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     L4
   }
 
-  public void addScoringCommand(ScoringSide side, ScoringHeight height) {
+  public void addScoringCommand(ReefZone reefZone, ScoringSide side, ScoringHeight height) {
     System.out.println("Adding command: " + side + " " + height);
 
     Pose2d pose = swerveDrive.getPose();
@@ -77,7 +78,7 @@ public class ScoringQueueSubsystem extends SubsystemBase {
 
     // }
 
-    commandQueue.add(new CoralScoringCommand(side, height));
+    commandQueue.add(new CoralScoringCommand(reefZone ,side, height));
   }
 
   public Queue<CoralScoringCommand> getQueue() {
@@ -94,6 +95,11 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     updateLevelStatus();
     // Debug zone output
     SmartDashboard.putNumber("CURRENT_ZONE", getZone(swerveDrive.getPose()).ordinal() + 1);
+  }
+
+  // Public function to fetch zone, usable by other subsystems
+  public int getZone() {
+    return (getZone(swerveDrive.getPose()).ordinal() + 1);
   }
 
  

@@ -48,6 +48,8 @@ public interface Constants {
   interface ScoringQueue {
     double BLUECENTERX = 4.5;
     double BLUECENTERY = 4;
+    double REDCENTERX = 13;
+    double REDCENTERY = 4;
   }
 
   /* Subsystem Constants */
