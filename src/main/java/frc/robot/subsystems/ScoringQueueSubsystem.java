@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.CoralScoringCommand;
@@ -49,8 +50,6 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     // If the robots pose is not within any zone, set the robots zone to 0
 
     // Zone 1
-    
-
     // Need to determine zone based on pose
     //
     // if(pose > Zone1Leftbound && pose < Zone1LightBound){
@@ -62,6 +61,73 @@ public class ScoringQueueSubsystem extends SubsystemBase {
     
     commandQueue.add(new CoralScoringCommand(side, height));
   }
+
+  private static final double EPSILON = 1e-6;
+  private boolean Zone1Top = false;
+  private boolean Zone2Top = false;
+  private boolean Zone3Top = false;
+
+  private boolean InZone1 = false;
+  private boolean InZone2 = false;
+  private boolean InZone3 = false;
+  private boolean InZone4 = false; 
+  private boolean InZone5 = false;
+  private boolean InZone6 = false;
+
+
+private int calculateZone(VisionSubsystem.getPose pose){  //TODO: Fix
+  // Example usage of pose variable
+
+  //account for wierd coordinate system in frc (i made a dumb mistake and this is the simplest way to fix it)
+  double x = pose.getY();
+  double y = pose.getX();
+
+  double centerX = 0.0;
+  double centerY = 0.0;
+  double istart = centerX-5;
+  double iend = centerX+5;
+  
+
+  // Border 1
+  for (double i = istart; i < iend; i+= EPSILON) {
+    if(y >= centerY){
+      Zone1Top = true;
+    } else if (x < centerX && y < centerY){
+      Zone1Top = false;
+    }
+
+    // Border 2
+    if(x >= -Math.sqrt(3)*i+centerX || y >= -i/Math.sqrt(3)+centerY){
+      Zone2Top = true;
+    } else if (x < -Math.sqrt(3)*i+centerX || y < -i/Math.sqrt(3)+centerY){
+      Zone2Top = false;
+    }
+
+    // Border 3
+    if(x >= Math.sqrt(3)*i+centerX || y >= i/Math.sqrt(3)+centerY){
+      Zone3Top = true;
+    } else if (x < Math.sqrt(3)*i+centerX || y < i/Math.sqrt(3)+centerY){
+      Zone3Top = false;
+    }
+
+  }
+  
+//zone 1
+  if(Zone2Top == false && Zone3Top == false){
+    InZone1 = true;
+  } else {
+    InZone1 = false;
+  }
+
+  //zone 4
+  if(Zone2Top == true && Zone3Top == true){
+    InZone4 = true;
+  } else {
+    InZone4 = false;
+  }
+    
+  
+}
 
   public Queue<CoralScoringCommand> getQueue() {
     return new LinkedList<>(commandQueue);
