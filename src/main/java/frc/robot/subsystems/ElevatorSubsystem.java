@@ -7,23 +7,33 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
 
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import static edu.wpi.first.units.Units.*;
+import com.ctre.phoenix6.controls.Follower;
+import java.lang.Math;
+
+
 public class ElevatorSubsystem extends SubsystemBase {
 
   // Motor controller for the elevator
-  private final SparkFlex elevatorMotor;
 
-  // Encoder for the elevator
-  private final RelativeEncoder elevatorEncoder;
+ private final TalonFX elevatorMotor1 = new TalonFX( Elevator.LEFT_MOTOR_ID, "rio");
+ private final TalonFX elevatorMotor2 = new TalonFX( Elevator.RIGHT_MOTOR_ID, "rio");
 
   // PID controller for the elevator
   private final ProfiledPIDController pidController;
@@ -38,22 +48,35 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public ElevatorSubsystem() {
     // Initialize motor controller
-    elevatorMotor =
-        new SparkFlex(
-            Elevator.LEFT_MOTOR_ID, MotorType.kBrushless); // Replace with the correct CAN ID
 
-    // Initialize encoder
-    elevatorEncoder = elevatorMotor.getEncoder();
+    elevatorMotor2.setControl(new Follower(elevatorMotor1.getDeviceID(), true));
+
 
     // Configure encoder (adjust these values based on your setup)
-    SparkFlexConfig motorConfig = new SparkFlexConfig();
+
+    TalonFXConfiguration fx_cfg = new TalonFXConfiguration();
+    fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+
+    
+    fx_cfg.Slot0.kV = 1023.0/20660.0; //Old kF code from Phoenix v5 (Sample code had 0.12)
+    fx_cfg.Slot0.kP = 0.1;
+    fx_cfg.Slot0.kI = 0.001;
+    fx_cfg.Slot0.kD = 5;
+    fx_cfg.Slot0.kS = 0.1;
+
+    fx_cfg.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
+
+    elevatorMotor1.getConfigurator().apply(fx_cfg);
+
+
 
     // TODO: Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations.
     // Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
-    motorConfig.encoder.positionConversionFactor(1.0);
 
-    elevatorMotor.configure(
-        motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //motorConfig.encoder.positionConversionFactor(1.0);
+
+    // elevatorMotor.configure(
+    //     motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // Initialize PID controller
     pidController =
@@ -75,7 +98,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // Get the current encoder position
   public double getEncoderPosition() {
-    return elevatorEncoder.getPosition();
+    return elevatorMotor1.getRotorPosition().getValueAsDouble();
   }
 
   // Set the desired setpoint (elevator position)
@@ -110,7 +133,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private void setClampSpeed(double speed) {
-    elevatorMotor.set((Math.max(-1, Math.min(1, speed))));
+    elevatorMotor1.set((Math.max(-1, Math.min(1, speed))));
   }
 
   // Stop the elevator motor
@@ -119,8 +142,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void enable() {
-    PIDEnabled = true;
     pidController.reset(getEncoderPosition());
+    PIDEnabled = true;
+    
   }
 
   public void disable() {

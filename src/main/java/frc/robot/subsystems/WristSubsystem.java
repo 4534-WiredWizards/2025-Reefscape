@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
@@ -22,7 +25,7 @@ import frc.robot.Constants.Wrist;
 
 public class WristSubsystem extends SubsystemBase {
   /** Creates a new Wrist. */
-  private final SparkFlex wristMotor;
+  private final TalonFX wristMotor;
 
   private final SparkFlex rollerMotor;
 
@@ -46,21 +49,26 @@ public class WristSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(Wrist.MAX_VELOCITY, Wrist.MAX_ACCELERATION));
     pidController.setTolerance(Wrist.PID_POSITION_TOLERANCE, Wrist.PID_VELOCITY_TOLERANCE);
 
-    wristMotor = new SparkFlex(Wrist.PIVOT_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-    rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+    // wrist config
+    var fx_cfg = new TalonFXConfiguration();
+    fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+
+    wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
+
+    wristMotor.getConfigurator().apply(fx_cfg);
 
     absEncoder =
         new DutyCycleEncoder(
             Wrist.Encoder.PORT, Wrist.Encoder.FULL_RANGE, Wrist.Encoder.EXPECTED_ZERO);
 
+    // intake config
+    rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
     SparkFlexConfig brakeConfig = new SparkFlexConfig();
     SparkFlexConfig IdleConfig = new SparkFlexConfig();
 
     brakeConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(60);
     IdleConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60);
 
-    wristMotor.configure(
-        brakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     rollerMotor.configure(
         IdleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -69,7 +77,9 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public double getAngle() {
-    return ((((-1 * absEncoder.get()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * (2 * Math.PI));
+    //using motor encoder instead of absolute encoder for now
+    //return ((((-1 * absEncoder.get()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * (2 * Math.PI));
+    return ((((-1 * wristMotor.getRotorPosition().getValueAsDouble()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * 360);
   }
 
   public void setWristSetpoint(double setpoint) {
@@ -113,8 +123,9 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void enable() {
-    PIDEnabled = true;
     pidController.reset(getAngle());
+    PIDEnabled = true;
+    
   }
 
   public void disable() {
