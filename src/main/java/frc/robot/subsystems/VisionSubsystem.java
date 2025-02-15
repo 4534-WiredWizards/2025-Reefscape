@@ -90,6 +90,13 @@ public class VisionSubsystem extends SubsystemBase {
     System.out.println("Attempting to reset bot pose from Limelight...");
     for (String ll : limelights) {
       PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
+      
+      // Check if estimate is null before accessing its properties
+      if (estimate == null) {
+        System.out.println("No pose estimate available from " + ll);
+        continue;
+      }
+      
       if (estimate.tagCount == 0) {
         System.out.println("No tags detected for reset on " + ll);
         continue;
