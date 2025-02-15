@@ -44,10 +44,10 @@ public interface Constants {
     int CANdleLEDSegmentSize = 8;
   }
 
-  // Scoring Queue Subsystem 
+  // Scoring Queue Subsystem
   interface ScoringQueue {
-    double BLUECENTERX = 0.0;
-    double BLUECENTERY = 0.0;
+    double BLUECENTERX = 4.5;
+    double BLUECENTERY = 4;
   }
 
   /* Subsystem Constants */
