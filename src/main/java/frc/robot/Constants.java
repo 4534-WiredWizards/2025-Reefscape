@@ -125,9 +125,9 @@ public interface Constants {
 
     // Feedforward Constants
     double KS = 0;
-    double KG = 2.28;
-    double KV = 3.07;
-    double KA = 0.41;
+    double KG = 1.01;
+    double KV = 0.81;
+    double KA = 0.03;
 
     // Safety Limits
     double MAX_SAFE_ANGLE = 0;
