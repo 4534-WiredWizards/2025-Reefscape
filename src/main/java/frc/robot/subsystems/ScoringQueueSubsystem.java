@@ -53,11 +53,11 @@ public class ScoringQueueSubsystem extends SubsystemBase {
 
     // Need to determine zone based on pose
     //
-    if(pose > Zone1Leftbound && pose < Zone1LightBound){
+    // if(pose > Zone1Leftbound && pose < Zone1LightBound){
 
-    }else if( pose > Zone2LeftBound && pose < Zone2RightBound{
+    // }else if( pose > Zone2LeftBound && pose < Zone2RightBound{
     
-    }
+    // }
 
     
     commandQueue.add(new CoralScoringCommand(side, height));

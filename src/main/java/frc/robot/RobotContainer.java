@@ -39,7 +39,6 @@ import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ScoringQueueSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
@@ -63,7 +62,6 @@ public class RobotContainer {
   public final VisionSubsystem m_vision;
   private final WristSubsystem m_Wrist = new WristSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
-  private final ScoringQueueSubsystem scoringQueue = new ScoringQueueSubsystem();
 
   // Controller
   private final CommandXboxController Operatorcontroller = new CommandXboxController(0);
