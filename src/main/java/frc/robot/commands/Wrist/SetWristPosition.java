@@ -13,7 +13,12 @@ public class SetWristPosition extends Command {
   private final double targetPosition;
   private final boolean stopWhenAtSetpoint;
 
-  /** Creates a new SetWristPosition. */
+  /** Creates a new SetWristPosition with stopWhenAtSetpoint defaulting to true. */
+  public SetWristPosition(WristSubsystem m_wrist, double targetPosition) {
+    this(m_wrist, targetPosition, true); // Default stopWhenAtSetpoint to true
+  }
+
+  /** Creates a new SetWristPosition with a specified stopWhenAtSetpoint value. */
   public SetWristPosition(WristSubsystem m_wrist, double targetPosition, boolean stopWhenAtSetpoint) {
     this.m_wrist = m_wrist;
     this.targetPosition = targetPosition;
