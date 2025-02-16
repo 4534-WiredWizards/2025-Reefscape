@@ -197,6 +197,10 @@ public class Drive extends SubsystemBase {
         );
   }
 
+
+  // createDriveToPointCommand -- creates a command to drive to a specific point
+  
+
   @Override
   public void periodic() {
     odometryLock.lock(); // Prevents odometry updates while reading data
@@ -255,8 +259,8 @@ public class Drive extends SubsystemBase {
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
 
-    SmartDashboard.putNumber("EstimatedX", poseEstimator.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("EstimatedY", poseEstimator.getEstimatedPosition().getY());
+    Logger.recordOutput("Odometry/EstimatedX", poseEstimator.getEstimatedPosition().getX());
+    Logger.recordOutput("Odometry/EstimatedY", poseEstimator.getEstimatedPosition().getY());
 
     // Track Current Zone
     Logger.recordOutput("Drive/CurrentZone", getZone().ordinal() + 1);
