@@ -52,10 +52,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Autonomous;
+import frc.robot.Constants.FieldPosition;
 import frc.robot.Constants.Mode;
+import frc.robot.Constants.ReefZone;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
-// GyroIOInputsAutoLogged imports from build
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -111,6 +112,14 @@ public class Drive extends SubsystemBase {
       };
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+
+  // Zone detection constants
+  private final double[] lineSlopes =
+      new double[] {
+        Double.POSITIVE_INFINITY, // vertical line
+        1 / Math.tan(Math.toRadians(60)), // 60 degrees
+        1 / Math.tan(Math.toRadians(-60)), // -60 degrees
+      };
 
   public Drive(
       GyroIO gyroIO,
@@ -248,7 +257,9 @@ public class Drive extends SubsystemBase {
 
     SmartDashboard.putNumber("EstimatedX", poseEstimator.getEstimatedPosition().getX());
     SmartDashboard.putNumber("EstimatedY", poseEstimator.getEstimatedPosition().getY());
-    SmartDashboard.putNumber("OdometryX", getPose().getX()); // From regular odometry
+
+    // Track Current Zone
+    Logger.recordOutput("Drive/CurrentZone", getZone().ordinal() + 1);
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.CURRENT_MODE != Mode.SIM);
@@ -301,6 +312,36 @@ public class Drive extends SubsystemBase {
     }
     kinematics.resetHeadings(headings);
     stop();
+  }
+
+  /** Determines which side of a line a point lies on */
+  private double getSideOfLine(double x, double y, double slope) {
+    if (Double.isInfinite(slope)) {
+      return x - FieldPosition.Blue.Reef.CENTER_X; // Vertical line case
+    }
+    double relX = x - FieldPosition.Blue.Reef.CENTER_X;
+    double relY = y - FieldPosition.Blue.Reef.CENTER_Y;
+    return relY - slope * relX;
+  }
+
+  /** Returns the current zone based on the robot's pose */
+  public ReefZone getZone() {
+    Pose2d pose = getPose();
+    double x = pose.getX();
+    double y = pose.getY();
+
+    boolean[] sides = new boolean[3];
+    for (int i = 0; i < 3; i++) {
+      sides[i] = getSideOfLine(x, y, lineSlopes[i]) > 0;
+    }
+
+    if (sides[0]) { // Right of vertical
+      if (sides[1]) return ReefZone.ZONE_5;
+      else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
+    } else { // Left of vertical
+      if (sides[2]) return ReefZone.ZONE_6;
+      else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+    }
   }
 
   /** Returns a command to run a quasistatic test in the specified direction. */

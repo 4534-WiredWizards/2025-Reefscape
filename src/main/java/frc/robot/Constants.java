@@ -14,6 +14,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -44,12 +45,98 @@ public interface Constants {
     int CANdleLEDSegmentSize = 8;
   }
 
-  // Scoring Queue Subsystem
-  interface ScoringQueue {
-    double BLUECENTERX = 4.5;
-    double BLUECENTERY = 4;
-    double REDCENTERX = 13;
-    double REDCENTERY = 4;
+  // Field Positions
+  interface FieldPosition {
+    interface Blue {
+      interface Reef {
+        double CENTER_X = 4.5;
+        double CENTER_Y = 4.0;
+      }
+    }
+
+    interface Red {
+      interface Reef {
+        double CENTER_X = 13.0;
+        double CENTER_Y = 4.0;
+      }
+    }
+  }
+
+  // Scoring Enums
+  public enum ReefZone {
+    ZONE_1,
+    ZONE_2,
+    ZONE_3,
+    ZONE_4,
+    ZONE_5,
+    ZONE_6,
+  }
+
+  public enum ScoringSide {
+    LEFT,
+    RIGHT
+  }
+
+  public enum ScoringHeight {
+    L1(Elevator.L1_POS, Wrist.L1_ANGLE), // elevator position, wrist angle
+    L2(Elevator.L2_POS, Wrist.L2_ANGLE),
+    L3(Elevator.L3_POS, Wrist.L3_ANGLE),
+    L4(Elevator.L4_POS, Wrist.L4_ANGLE);
+
+    private final double elevatorPosition;
+    private final double wristAngle;
+
+    ScoringHeight(double elevatorPosition, double wristAngle) {
+      this.elevatorPosition = elevatorPosition;
+      this.wristAngle = wristAngle;
+    }
+
+    public double getElevatorPosition() {
+      return elevatorPosition;
+    }
+
+    public double getWristAngle() {
+      return wristAngle;
+    }
+  }
+
+  // Scoring Positions
+  interface ScoringPositions {
+    // Zone position configuration
+    record ZonePosition(double x, double y, double theta) {}
+
+    // Zone positions for each side (Left and Right)
+    static final Map<ReefZone, Map<ScoringSide, ZonePosition>> ZONE_POSITIONS =
+        Map.of(
+            ReefZone.ZONE_1,
+                Map.of(
+                    ScoringSide.LEFT, new ZonePosition(10.0, 2.0, 15.0), // x, y, theta
+                    ScoringSide.RIGHT, new ZonePosition(10.0, 4.0, -15.0)),
+            ReefZone.ZONE_2,
+                Map.of(
+                    ScoringSide.LEFT, new ZonePosition(12.0, 2.0, 15.0),
+                    ScoringSide.RIGHT, new ZonePosition(12.0, 4.0, -15.0)),
+            ReefZone.ZONE_3,
+                Map.of(
+                    ScoringSide.LEFT, new ZonePosition(14.0, 2.0, 15.0),
+                    ScoringSide.RIGHT, new ZonePosition(14.0, 4.0, -15.0)),
+            ReefZone.ZONE_4,
+                Map.of(
+                    ScoringSide.LEFT, new ZonePosition(16.0, 2.0, 15.0),
+                    ScoringSide.RIGHT, new ZonePosition(16.0, 4.0, -15.0)),
+            ReefZone.ZONE_5,
+                Map.of(
+                    ScoringSide.LEFT, new ZonePosition(18.0, 2.0, 15.0),
+                    ScoringSide.RIGHT, new ZonePosition(18.0, 4.0, -15.0)),
+            ReefZone.ZONE_6,
+                Map.of(
+                    ScoringSide.LEFT, new ZonePosition(20.0, 2.0, 15.0),
+                    ScoringSide.RIGHT, new ZonePosition(20.0, 4.0, -15.0)));
+
+    /** Returns the position for a given zone and side. */
+    static ZonePosition getZonePosition(ReefZone zone, ScoringSide side) {
+      return ZONE_POSITIONS.get(zone).get(side);
+    }
   }
 
   /* Subsystem Constants */
@@ -65,7 +152,6 @@ public interface Constants {
     double KP = 0.1;
     double KI = 0.0;
     double KD = 0.0;
-
 
     // Motion Profile Configuration
     double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
@@ -84,13 +170,13 @@ public interface Constants {
     double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
 
     // Preset Positions (TODO: Set actual values)
-    int TO_L1 = 0;
-    int TO_L2 = 0;
-    int TO_L3 = 0;
-    int TO_L4 = 0;
-    int CORAL_INTAKE_POSITION = 0;
-    int DRIVE_POSITION = 0;
-    int MAX_SAFE_HEIGHT = 0;
+    double L1_POS = 0.0;
+    double L2_POS = 0.0;
+    double L3_POS = 0.0;
+    double L4_POS = 0.0;
+    int CORAL_INTAKE_POS = 0;
+    int DRIVE_POS = 0;
+    int MAX_SAFE_POS = 0;
   }
 
   interface Wrist {
@@ -146,13 +232,11 @@ public interface Constants {
     int DRIVE_POSITION = 0;
 
     // Game Piece Switching Angles
-    // This is
     int CORAL_MAX_ANGLE = 270;
     int CORAL_MIN_ANGLE = 20;
   }
 
   interface Swerve {
-
     interface Drive {
       interface PID {
         double KP = 100.0;
@@ -201,7 +285,6 @@ public interface Constants {
 
     // Operator Controller (Xbox)
     interface Operator {
-
       // Buttons
       int ELEVATOR_HOME_BUTTON = 1; // A button
       int INTAKE_CORAL_BUTTON = 2; // B button

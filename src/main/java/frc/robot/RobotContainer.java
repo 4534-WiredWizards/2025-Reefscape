@@ -82,10 +82,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Wrist, false));
 
     // Event Triggers
-    new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L4));
-    new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L3));
-    new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L2));
-    new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, Elevator.TO_L1));
+    new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L4_POS));
+    new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L3_POS));
+    new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L2_POS));
+    new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L1_POS));
 
     new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
@@ -130,7 +130,7 @@ public class RobotContainer {
         break;
     }
     m_vision = new VisionSubsystem(drive);
-    m_scoringQueue = new ScoringQueueSubsystem(drive);
+    m_scoringQueue = new ScoringQueueSubsystem(drive, m_elevator, m_Wrist);
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 

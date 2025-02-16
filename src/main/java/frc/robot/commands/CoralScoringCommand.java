@@ -2,35 +2,93 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.ScoringQueueSubsystem.ReefZone;
-import frc.robot.subsystems.ScoringQueueSubsystem.ScoringHeight;
-import frc.robot.subsystems.ScoringQueueSubsystem.ScoringSide; // Add this import statement
+import frc.robot.Constants;
+import frc.robot.Constants.Elevator;
+import frc.robot.Constants.ScoringSide;
+import frc.robot.commands.Elevator.SetElevatorPosition;
+import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.SetWristPosition;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class CoralScoringCommand extends SequentialCommandGroup {
-  private final ScoringSide side;
-  private final ScoringHeight height;
-  private final ReefZone reefZone;
 
-  // TODO: Dynamically fetch zone when command is executed
-  // Get zone from ScoringQueueSubsystem.getZone()
-  public CoralScoringCommand(ScoringSide side, ScoringHeight height) {
-    super(
-        new InstantCommand(() -> System.out.println("STARTING CoralScoringCommand")),
-        new WaitCommand(0.1), // Small delay before marking completion
-        new InstantCommand(() -> System.out.println("Scored Coral: " + reefZone + " " + side + " " + height)),
-        new WaitCommand(0.1),
-        new InstantCommand(() -> System.out.println("FINISHED CoralScoringCommand")));
-    this.reefZone = reefZone;
+  private final ScoringSide side;
+  private final Constants.ScoringHeight height;
+  private final Drive drive;
+
+  public CoralScoringCommand(
+      Drive drive,
+      ElevatorSubsystem elevator,
+      WristSubsystem wrist,
+      ScoringSide side,
+      Constants.ScoringHeight height) {
+    this.drive = drive;
     this.side = side;
     this.height = height;
-  }
 
-  public ScoringSide getSide() {
-    return side;
-  }
+    addCommands(
+        // Dynamically determine the zone at execution time
+        new InstantCommand(
+            () -> {
+              // Log the start of the command
+              Logger.recordOutput("CoralScoringCommand/Status", "Starting");
+              Logger.recordOutput("CoralScoringCommand/Side", side.toString());
+              Logger.recordOutput("CoralScoringCommand/Height", height.toString());
 
-  public ScoringHeight getHeight() {
-    return height;
+              // Get the current zone
+              Constants.ReefZone reefZone = drive.getZone();
+              Logger.recordOutput("CoralScoringCommand/ReefZone", reefZone.toString());
+
+              // Get the target position
+              Constants.ScoringPositions.ZonePosition position =
+                  Constants.ScoringPositions.getZonePosition(reefZone, side);
+              Logger.recordOutput("CoralScoringCommand/TargetPosition/X", position.x());
+              Logger.recordOutput("CoralScoringCommand/TargetPosition/Y", position.y());
+              Logger.recordOutput("CoralScoringCommand/TargetPosition/Theta", position.theta());
+
+              // Drive to the target position
+              Logger.recordOutput("CoralScoringCommand/Status", "Driving to target position");
+              drive.driveToPoint(position.x(), position.y(), position.theta());
+            }),
+
+        // Set elevator height (from enum configuration)
+        new InstantCommand(
+                () -> {
+                  Logger.recordOutput("CoralScoringCommand/Status", "Setting elevator height");
+                  Logger.recordOutput(
+                      "CoralScoringCommand/ElevatorHeight", height.getElevatorPosition());
+                })
+            .andThen(new SetElevatorPosition(elevator, height.getElevatorPosition())),
+
+        // Set wrist angle (from enum configuration)
+        new InstantCommand(
+                () -> {
+                  Logger.recordOutput("CoralScoringCommand/Status", "Setting wrist angle");
+                  Logger.recordOutput("CoralScoringCommand/WristAngle", height.getWristAngle());
+                })
+            .andThen(new SetWristPosition(wrist, height.getWristAngle())),
+
+        // Score coral
+        new InstantCommand(
+                () -> {
+                  Logger.recordOutput("CoralScoringCommand/Status", "Scoring coral");
+                })
+            .andThen(new AdaptiveWrist(wrist, false)),
+
+        // Return to drive position
+        new InstantCommand(
+                () -> {
+                  Logger.recordOutput("CoralScoringCommand/Status", "Returning to drive position");
+                })
+            .andThen(new SetElevatorPosition(elevator, Elevator.DRIVE_POS)));
+
+    // Log the end of the command
+    new InstantCommand(
+        () -> {
+          Logger.recordOutput("CoralScoringCommand/Status", "Finished");
+        });
   }
 }

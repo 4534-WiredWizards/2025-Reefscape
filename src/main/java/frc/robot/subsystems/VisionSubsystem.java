@@ -50,7 +50,7 @@ public class VisionSubsystem extends SubsystemBase {
     PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
     if (mt2 == null) {
-      System.out.println("PoseEstimate is null for " + limelightName);
+      // System.out.println("PoseEstimate is null for " + limelightName);
       return;
     }
 
