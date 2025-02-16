@@ -19,26 +19,25 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
 
+import org.littletonrobotics.junction.Logger;
+
 public class WristSubsystem extends SubsystemBase {
-  /** Creates a new Wrist. */
   private final TalonFX wristMotor;
-
   private final SparkFlex rollerMotor;
-
   private DutyCycleEncoder absEncoder;
 
   private final ProfiledPIDController pidController;
-
   private boolean PIDEnabled = false;
 
   private final ArmFeedforward m_WristFeedforward =
       new ArmFeedforward(Wrist.KS, Wrist.KG, Wrist.KV, Wrist.KA);
 
   private double setpoint;
+  private double pidOutput = 0;
+  private double feedforward = 0;
 
   public WristSubsystem() {
     pidController =
@@ -49,37 +48,24 @@ public class WristSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(Wrist.MAX_VELOCITY, Wrist.MAX_ACCELERATION));
     pidController.setTolerance(Wrist.PID_POSITION_TOLERANCE, Wrist.PID_VELOCITY_TOLERANCE);
 
-    // wrist config
+    // Wrist config
     var fx_cfg = new TalonFXConfiguration();
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-
     wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
-
     wristMotor.getConfigurator().apply(fx_cfg);
 
-    absEncoder =
-        new DutyCycleEncoder(
-            Wrist.Encoder.PORT, Wrist.Encoder.FULL_RANGE, Wrist.Encoder.EXPECTED_ZERO);
+    absEncoder = new DutyCycleEncoder(Wrist.Encoder.PORT);
 
-    // intake config
+    // Intake config
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-    SparkFlexConfig brakeConfig = new SparkFlexConfig();
-    SparkFlexConfig IdleConfig = new SparkFlexConfig();
+    SparkFlexConfig idleConfig = new SparkFlexConfig();
+    idleConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60);
+    rollerMotor.configure(idleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    brakeConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(60);
-    IdleConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60);
-
-    rollerMotor.configure(
-        IdleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    // Set initial setpoint
     setpoint = getAngle();
   }
 
   public double getAngle() {
-    // using motor encoder instead of absolute encoder for now
-    // return ((((-1 * absEncoder.get()) + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * (2 *
-    // Math.PI));
     return ((((-1 * wristMotor.getRotorPosition().getValueAsDouble())
                 + Wrist.Encoder.ABSOLUTE_OFFSET
                 + 1)
@@ -97,13 +83,10 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void runPID() {
-    double pidoutput = pidController.calculate(getAngle());
-
-    double feedforward =
-        m_WristFeedforward.calculate(
-            Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
-
-    setClampSpeed(pidoutput + feedforward);
+    this.pidOutput = pidController.calculate(getAngle());
+    this.feedforward = m_WristFeedforward.calculate(
+        Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
+    setClampSpeed(pidOutput + feedforward);
   }
 
   public void moveManual(double speed) {
@@ -112,7 +95,7 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   private void setClampSpeed(double speed) {
-    wristMotor.set((Math.max(-1, Math.min(1, speed))));
+    wristMotor.set(Math.max(-1, Math.min(1, speed));
   }
 
   public void moveRoller(double speed) {
@@ -134,24 +117,33 @@ public class WristSubsystem extends SubsystemBase {
 
   public void disablePID() {
     PIDEnabled = false;
-    setWristSetpoint(getAngle()); // reset setpoint to current position
+    setWristSetpoint(getAngle());
     setClampSpeed(0);
+    pidOutput = 0;
+    feedforward = 0;
   }
 
   public boolean isEnabled() {
     return PIDEnabled;
   }
 
-  public void moveToPosition(double position) {
-    // TODO
-  }
-
   @Override
   public void periodic() {
-    if (PIDEnabled == true) {
+    if (PIDEnabled) {
       runPID();
     }
-    SmartDashboard.putNumber("Wrist Setpoint", setpoint);
-    SmartDashboard.putNumber("Wrist Position", getAngle());
+
+    // Log outputs using AdvantageKit
+    Logger.recordOutput("Wrist/Setpoint", setpoint);
+    Logger.recordOutput("Wrist/Position", getAngle());
+    Logger.recordOutput("Wrist/AbsoluteEncoder", absEncoder.get());
+    Logger.recordOutput("Wrist/PIDOutput", pidOutput);
+    Logger.recordOutput("Wrist/Feedforward", feedforward);
+    Logger.recordOutput("Wrist/TotalOutput", pidOutput + feedforward);
+    Logger.recordOutput("Wrist/MotorVoltage", wristMotor.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("Wrist/PIDEnabled", PIDEnabled);
+    Logger.recordOutput("Wrist/AtSetpoint", atSetpoint());
+    Logger.recordOutput("Wrist/RollerSpeed", rollerMotor.getAppliedOutput());
+    Logger.recordOutput("Wrist/RollerVoltage", rollerMotor.getBusVoltage());
   }
 }
