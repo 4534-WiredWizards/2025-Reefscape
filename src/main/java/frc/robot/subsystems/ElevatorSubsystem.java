@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
