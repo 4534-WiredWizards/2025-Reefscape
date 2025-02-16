@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.*;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
@@ -113,7 +113,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Move the elevator manually (for manual driving)
   public void moveManual(double speed) {
     // Disable PID control and set the motor speed directly
-    this.disable();
+    this.disablePID();
     setClampSpeed(speed);
   }
 
@@ -123,15 +123,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // Stop the elevator motor
   public void stop() {
-    this.disable();
+    this.disablePID();
   }
 
-  public void enable() {
+  public void enablePID() {
     pidController.reset(getEncoderPosition());
     PIDEnabled = true;
   }
 
-  public void disable() {
+  public void disablePID() {
     PIDEnabled = false;
     setSetpoint(getEncoderPosition()); // Reset setpoint to current position
     setClampSpeed(0);

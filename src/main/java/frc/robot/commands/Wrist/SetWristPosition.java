@@ -26,11 +26,13 @@ public class SetWristPosition extends Command {
     addRequirements(m_wrist);
   }
 
+  // FIXME: Needs to contain a boolean to stop when finished or maintain PID control
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_wrist.setWristSetpoint(targetPosition);
-    m_wrist.enable();
+    m_wrist.enablePID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,7 +45,7 @@ public class SetWristPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     m_wrist.stop();
-    m_wrist.disable();
+    m_wrist.disablePID();
   }
 
   // Returns true when the command should end.

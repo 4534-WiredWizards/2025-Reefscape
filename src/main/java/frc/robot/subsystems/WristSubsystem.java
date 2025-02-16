@@ -13,8 +13,8 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
-// import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -107,7 +107,7 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void moveManual(double speed) {
-    this.disable();
+    this.disablePID();
     setClampSpeed(speed);
   }
 
@@ -124,15 +124,15 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void stop() {
-    this.disable();
+    this.disablePID();
   }
 
-  public void enable() {
+  public void enablePID() {
     pidController.reset(getAngle());
     PIDEnabled = true;
   }
 
-  public void disable() {
+  public void disablePID() {
     PIDEnabled = false;
     setWristSetpoint(getAngle()); // reset setpoint to current position
     setClampSpeed(0);
