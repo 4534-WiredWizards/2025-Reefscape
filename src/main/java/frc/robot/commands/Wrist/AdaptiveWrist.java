@@ -26,6 +26,9 @@ public class AdaptiveWrist extends Command {
   @Override
   public void initialize() {}
 
+  // FIXME: Needs to contain way to check when finished
+  // Will be done with sensors attached to spark flex
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
