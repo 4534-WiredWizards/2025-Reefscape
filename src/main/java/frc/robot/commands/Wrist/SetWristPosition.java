@@ -7,17 +7,17 @@ package frc.robot.commands.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.WristSubsystem;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetWristPosition extends Command {
 
   private final WristSubsystem m_wrist;
   private final double targetPosition;
+  private final boolean stopWhenAtSetpoint;
 
   /** Creates a new SetWristPosition. */
-  public SetWristPosition(WristSubsystem m_wrist, double targetPosition) {
-
+  public SetWristPosition(WristSubsystem m_wrist, double targetPosition, boolean stopWhenAtSetpoint) {
     this.m_wrist = m_wrist;
     this.targetPosition = targetPosition;
+    this.stopWhenAtSetpoint = stopWhenAtSetpoint;
     addRequirements(m_wrist);
   }
 
@@ -32,7 +32,6 @@ public class SetWristPosition extends Command {
   @Override
   public void execute() {
     // The PID controller will run in the subsystem's periodic method
-
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +44,6 @@ public class SetWristPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_wrist.atSetpoint();
+    return stopWhenAtSetpoint && m_wrist.atSetpoint();
   }
 }
