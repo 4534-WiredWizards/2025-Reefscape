@@ -26,6 +26,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // PID controller for the elevator
   private final ProfiledPIDController pidController;
+  private double pidOutput;
+  private double feedforward;
 
   private boolean PIDEnabled = false;
 
@@ -100,11 +102,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Run the PID controller to move the elevator to the setpoint
   public void runPID() {
     // Calculate the PID output
-    double pidOutput = pidController.calculate(getEncoderPosition());
+     this.pidOutput = pidController.calculate(getEncoderPosition());
 
     // TODO: Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute
     // velocity/acceleration setpoints.
-    double feedforward = m_ElevatorFeedforward.calculate(pidController.getSetpoint().velocity);
+    this.feedforward = m_ElevatorFeedforward.calculate(pidController.getSetpoint().velocity);
 
     // Set the motor output
     setClampSpeed(pidOutput + feedforward);
@@ -149,7 +151,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     // Update SmartDashboard
-    SmartDashboard.putNumber("Elevator Setpoint", setpoint);
-    SmartDashboard.putNumber("Elevator Position", getEncoderPosition());
+    // Log outputs using AdvantageKit
+    Logger.recordOutput("Elevator/Setpoint", setpoint);
+    Logger.recordOutput("Elevator/Position", getEncoderPosition());
+    Logger.recordOutput("Elevator/Voltage", elevatorMotor1.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("Elevator/PIDEnabled", PIDEnabled);
+    Logger.recordOutput("Elevator/AtSetpoint", atSetpoint());
+    Logger.recordOutput("Elevator/PIDOutput", pidOutput);
+    Logger.recordOutput("Elevator/Feedforward", feedforward);
+    Logger.recordOutput("Elevator/TotalOutput", pidOutput + feedforward);
   }
 }
