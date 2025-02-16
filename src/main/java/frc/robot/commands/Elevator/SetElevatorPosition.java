@@ -13,7 +13,6 @@ public class SetElevatorPosition extends Command {
   private final ElevatorSubsystem m_elevator;
   private final double targetPosition;
 
-
   public SetElevatorPosition(ElevatorSubsystem m_elevator, double targetPosition) {
     this.m_elevator = m_elevator;
     this.targetPosition = targetPosition;

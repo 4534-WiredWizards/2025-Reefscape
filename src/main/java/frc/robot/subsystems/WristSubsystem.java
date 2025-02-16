@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -21,8 +23,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
-
-import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -60,7 +60,8 @@ public class WristSubsystem extends SubsystemBase {
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
     SparkFlexConfig idleConfig = new SparkFlexConfig();
     idleConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60);
-    rollerMotor.configure(idleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    rollerMotor.configure(
+        idleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     setpoint = getAngle();
   }
@@ -84,8 +85,9 @@ public class WristSubsystem extends SubsystemBase {
 
   public void runPID() {
     this.pidOutput = pidController.calculate(getAngle());
-    this.feedforward = m_WristFeedforward.calculate(
-        Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
+    this.feedforward =
+        m_WristFeedforward.calculate(
+            Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
     setClampSpeed(pidOutput + feedforward);
   }
 
@@ -95,7 +97,7 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   private void setClampSpeed(double speed) {
-    wristMotor.set(Math.max(-1, Math.min(1, speed));
+    wristMotor.set(Math.max(-1, Math.min(1, speed)));
   }
 
   public void moveRoller(double speed) {
