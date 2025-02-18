@@ -4,9 +4,10 @@
 
 package frc.robot.commands.Elevator;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
-import java.util.function.DoubleSupplier;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SimpleMoveElevator extends Command {
@@ -44,7 +45,6 @@ public class SimpleMoveElevator extends Command {
   @Override
   public boolean isFinished() {
     // This command runs continuously until interrupted
-
-    return false;
+    return m_elevator.isStalled();
   }
 }

@@ -4,25 +4,21 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Volts;
+import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-
-import org.littletonrobotics.junction.Logger;
-
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import frc.robot.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -63,11 +59,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     TalonFXConfiguration fx_cfg = new TalonFXConfiguration();
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
-    fx_cfg.Slot0.kV = 1023.0 / 20660.0; // Old kF code from Phoenix v5 (Sample code had 0.12)
-    fx_cfg.Slot0.kP = 0.1;
-    fx_cfg.Slot0.kI = 0.001;
-    fx_cfg.Slot0.kD = 5;
-    fx_cfg.Slot0.kS = 0.1;
+    fx_cfg.Slot0.kV = Elevator.MOTOR_KV;
+    fx_cfg.Slot0.kP = Elevator.MOTOR_KP;
+    fx_cfg.Slot0.kI = Elevator.MOTOR_KI;
+    fx_cfg.Slot0.kD = Elevator.MOTOR_KD;
+    fx_cfg.Slot0.kS = Elevator.MOTOR_KS;
 
     fx_cfg.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
 
@@ -171,6 +167,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   public boolean isEnabled() {
     return PIDEnabled;
   }
+
+  public boolean isStalled() {
+    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold is exceeded
+    double current = elevatorMotor1.getRotorVelocity().getValueAsDouble();
+    double velocity = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
+    return Math.abs(velocity) < Elevator.STALL_VELOCITY_THRESHOLD && current > Elevator.STALL_CURRENT_THRESHOLD;
+  }
+  
 
   @Override
   public void periodic() {

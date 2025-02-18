@@ -52,6 +52,6 @@ public class SetWristPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopWhenAtSetpoint && m_wrist.atSetpoint();
+    return (stopWhenAtSetpoint && m_wrist.atSetpoint()) || m_wrist.isStalled();
   }
 }

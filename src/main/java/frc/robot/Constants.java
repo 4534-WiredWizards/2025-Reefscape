@@ -15,9 +15,9 @@ package frc.robot;
 
 
 
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -150,27 +150,42 @@ public interface Constants {
     int BOTTOM_LIMIT_SWITCH_ID = 0;
 
     // PID Configuration
-    double PID_POSITION_TOLERANCE = 0.1;
-    double PID_VELOCITY_TOLERANCE = 1;
-    double KP = 0.1;
-    double KI = 0.0;
-    double KD = 0.0;
+
 
     // Motion Profile Configuration
     double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
     double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
     double TARGET_VELOCITY = 0.1;
 
+
+    // Internal Motor PID
+    double MOTOR_KP = 0.1;
+    double MOTOR_KI = 0.001;
+    double MOTOR_KD = 5.0;
+    double MOTOR_KV = 1023.0 / 20660.0; // Old kF code from Phoenix v5 (Sample code had 0.12)
+    double MOTOR_KS = 0.1;
+
     // Feedforward Constants
+
+    double PID_POSITION_TOLERANCE = 0.1;
+    double PID_VELOCITY_TOLERANCE = 1;
+    double KP = 0.1;
+    double KI = 0.0;
+    double KD = 0.0;
+
     double KS = 0;
     double KG = 0.46;
     double KV = 8.98;
     double KA = 0.05;
 
     // Operational Parameters
+    double STALL_VELOCITY_THRESHOLD = 0.1;
+    double STALL_CURRENT_THRESHOLD = 30;
+
     double MANUAL_SPEED = 0.2;
     double ELEVATOR_UP_DIR = 1.0;
     double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
+    
 
     // Preset Positions (TODO: Set actual values)
     double L1_POS = 0.0;
@@ -224,6 +239,9 @@ public interface Constants {
     // Safety Limits
     double MAX_SAFE_ANGLE = 0;
     double MIN_SAFE_ANGLE = 0;
+   // Operational Parameters
+   double STALL_VELOCITY_THRESHOLD = 0.1;
+   double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions (TODO: Set actual values)
     int L1_ANGLE = 0;
