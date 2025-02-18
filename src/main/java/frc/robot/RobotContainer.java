@@ -12,12 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
@@ -53,6 +49,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -209,55 +206,54 @@ public class RobotContainer {
     Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Wrist, false));
 
     Constants.ScoringPositions.ZonePosition position =
-        Constants.ScoringPositions.getZonePosition(Constants.ReefZone.ZONE_3, Constants.ScoringSide.LEFT);
+        Constants.ScoringPositions.getZonePosition(
+            Constants.ReefZone.ZONE_3, Constants.ScoringSide.LEFT);
     Pose2d targetPose = new Pose2d(position.x(), position.y(), new Rotation2d(position.theta()));
 
     // Operator on true button id SCORE_L1_BUTTON
-    Operatorcontroller
-        .button(Operator.SCORE_L1_BUTTON)
-        .onTrue(
-            new DriveToPoint(drive, targetPose));
+    Operatorcontroller.button(Operator.SCORE_L1_BUTTON) // X Button
+        .onTrue(new DriveToPoint(drive, targetPose));
 
     // Buttom/Axis Event Combos
     // Right Coral Side (using RIGHT_THUMB_AXIS)
-    Trigger rightLevel1 =
-        Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-            .and(Operatorcontroller.povDown());
-    Trigger rightLevel2 =
-        Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-            .and(Operatorcontroller.povLeft());
-    Trigger rightLevel3 =
-        Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-            .and(Operatorcontroller.povRight());
-    Trigger rightLevel4 =
-        Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-            .and(Operatorcontroller.povUp());
+    // Trigger rightLevel1 =
+    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+    //         .and(Operatorcontroller.povDown());
+    // Trigger rightLevel2 =
+    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+    //         .and(Operatorcontroller.povLeft());
+    // Trigger rightLevel3 =
+    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+    //         .and(Operatorcontroller.povRight());
+    // Trigger rightLevel4 =
+    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+    //         .and(Operatorcontroller.povUp());
 
-    // Now same for left side - also uses the right thumb axis
-    Trigger leftLevel1 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povDown());
-    Trigger leftLevel2 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povLeft());
-    Trigger leftLevel3 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povRight());
-    Trigger leftLevel4 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povUp());
+    // // Now same for left side - also uses the right thumb axis
+    // Trigger leftLevel1 =
+    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+    //         .and(Operatorcontroller.povDown());
+    // Trigger leftLevel2 =
+    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+    //         .and(Operatorcontroller.povLeft());
+    // Trigger leftLevel3 =
+    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+    //         .and(Operatorcontroller.povRight());
+    // Trigger leftLevel4 =
+    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+    //         .and(Operatorcontroller.povUp());
 
-    // Bind the combined trigger to a command
-    // Print test log to see if the triggers are working
-    rightLevel1.onTrue(Commands.runOnce(() -> System.out.println("Right Level 1"), drive));
-    rightLevel2.onTrue(Commands.runOnce(() -> System.out.println("Right Level 2"), drive));
-    rightLevel3.onTrue(Commands.runOnce(() -> System.out.println("Right Level 3"), drive));
-    rightLevel4.onTrue(Commands.runOnce(() -> System.out.println("Right Level 4"), drive));
+    // // Bind the combined trigger to a command
+    // // Print test log to see if the triggers are working
+    // rightLevel1.onTrue(Commands.runOnce(() -> System.out.println("Right Level 1"), drive));
+    // rightLevel2.onTrue(Commands.runOnce(() -> System.out.println("Right Level 2"), drive));
+    // rightLevel3.onTrue(Commands.runOnce(() -> System.out.println("Right Level 3"), drive));
+    // rightLevel4.onTrue(Commands.runOnce(() -> System.out.println("Right Level 4"), drive));
 
-    leftLevel1.onTrue(Commands.runOnce(() -> System.out.println("Left Level 1"), drive));
-    leftLevel2.onTrue(Commands.runOnce(() -> System.out.println("Left Level 2"), drive));
-    leftLevel3.onTrue(Commands.runOnce(() -> System.out.println("Left Level 3"), drive));
-    leftLevel4.onTrue(Commands.runOnce(() -> System.out.println("Left Level 4"), drive));
+    // leftLevel1.onTrue(Commands.runOnce(() -> System.out.println("Left Level 1"), drive));
+    // leftLevel2.onTrue(Commands.runOnce(() -> System.out.println("Left Level 2"), drive));
+    // leftLevel3.onTrue(Commands.runOnce(() -> System.out.println("Left Level 3"), drive));
+    // leftLevel4.onTrue(Commands.runOnce(() -> System.out.println("Left Level 4"), drive));
     // TODO: Change to
 
     // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
