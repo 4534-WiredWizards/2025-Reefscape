@@ -126,6 +126,13 @@ public class WristSubsystem extends SubsystemBase {
     this.disablePID();
   }
 
+  public boolean isStalled() {
+    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold is exceeded
+    double current = wristMotor.getRotorVelocity().getValueAsDouble();
+    double velocity = wristMotor.getRotorVelocity().getValueAsDouble();
+    return Math.abs(velocity) < Wrist.STALL_VELOCITY_THRESHOLD && Math.abs(current) > Wrist.STALL_CURRENT_THRESHOLD;
+  }
+
   public void enablePID() {
     pidController.reset(getAngle());
     PIDEnabled = true;
