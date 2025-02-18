@@ -10,12 +10,19 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
+
 import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import frc.robot.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -23,6 +30,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private final TalonFX elevatorMotor1 = new TalonFX(Elevator.LEFT_MOTOR_ID, "rio");
   private final TalonFX elevatorMotor2 = new TalonFX(Elevator.RIGHT_MOTOR_ID, "rio");
+
+  SoftwareLimitSwitchConfigs limitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+  .withForwardSoftLimitEnable(true)
+  .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
+  .withReverseSoftLimitEnable(true)
+  .withReverseSoftLimitThreshold(0);
+
+  
+  
 
   // PID controller for the elevator
   private final ProfiledPIDController pidController;
@@ -54,6 +70,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     fx_cfg.Slot0.kS = 0.1;
 
     fx_cfg.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
+
+    //limit switch
+    fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);  
+    elevatorMotor1.setNeutralMode(NeutralModeValue.Brake);
 
     elevatorMotor1.getConfigurator().apply(fx_cfg);
 
@@ -116,7 +136,16 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void moveManual(double speed) {
     // Disable PID control and set the motor speed directly
     this.disablePID();
+    // if(getEncoderPosition() < Elevator.MAX_SAFE_POS && getEncoderPosition() > 0){
     setClampSpeed(speed);
+  //   } else{
+  //     setClampSpeed(0);
+  //   }
+  //    if(getEncoderPosition() == 0){
+  //     if(speed > 0){
+  //       setClampSpeed(speed);
+  //     }
+  //    }
   }
 
   private void setClampSpeed(double speed) {
