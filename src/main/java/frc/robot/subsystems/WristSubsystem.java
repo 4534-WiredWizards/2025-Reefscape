@@ -58,18 +58,17 @@ public class WristSubsystem extends SubsystemBase {
     SoftwareLimitSwitchConfigs limitSwitches =
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(Wrist.MAX_SAFE_ANGLE)
+            .withForwardSoftLimitThreshold((Wrist.MAX_SAFE_ANGLE * Wrist.GEAR_RATIO))
             .withReverseSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(Wrist.MIN_SAFE_ANGLE);
+            .withReverseSoftLimitThreshold((Wrist.MIN_SAFE_ANGLE * Wrist.GEAR_RATIO));
 
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     fx_cfg.withSoftwareLimitSwitch(limitSwitches);
     fx_cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    
+
     wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
     wristMotor.getConfigurator().apply(fx_cfg);
     wristMotor.setNeutralMode(NeutralModeValue.Brake);
-
 
     absEncoder = new DutyCycleEncoder(Wrist.Encoder.PORT);
 
@@ -87,8 +86,6 @@ public class WristSubsystem extends SubsystemBase {
     double motorRotations = wristMotor.getRotorPosition().getValueAsDouble();
     double wristRotations = motorRotations * Wrist.GEAR_RATIO; // Adjust for gear ratio 45:1
     return (((-1 * wristRotations + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * 360);
-
-    
   }
 
   public void setWristSetpoint(double setpoint) {
@@ -114,7 +111,7 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   private void setClampSpeed(double speed) {
-    
+
     double newSpeed = Math.max(-1, Math.min(1, speed));
     Logger.recordOutput("SimpleMoveWrist/Clamp", "Clamp Speed: " + newSpeed);
     wristMotor.set(newSpeed);
