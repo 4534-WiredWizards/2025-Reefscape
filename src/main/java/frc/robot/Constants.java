@@ -188,7 +188,7 @@ public interface Constants {
     double L4_POS = 0.0;
     int CORAL_INTAKE_POS = 0;
     int DRIVE_POS = 0;
-    int MAX_SAFE_POS = 80;
+    int MAX_SAFE_POS = 216;
   }
 
   interface Wrist {
