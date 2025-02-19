@@ -195,7 +195,7 @@ public interface Constants {
   interface Wrist {
     // Motor Configurations
     int PIVOT_MOTOR_ID = 53;
-    double SPEED_SCALAR = 0.1;
+    double SPEED_SCALAR = 0.5;
 
     // Encoder Configuration
     interface Encoder {

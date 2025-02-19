@@ -65,8 +65,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     fx_cfg.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
 
-    //limit switch
-    fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);  
+    // limit switch
+    fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);
 
     // Invert parent motor
     fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
