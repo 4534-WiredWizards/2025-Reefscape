@@ -4,13 +4,14 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LimelightHelpers;
@@ -30,31 +31,52 @@ public class VisionSubsystem extends SubsystemBase {
 
   private void configureLimelights() {
     for (String ll : limelights) {
-      LimelightHelpers.SetFiducialIDFiltersOverride(ll, validAprilTagIDs);
-      LimelightHelpers.SetIMUMode(ll, 0);
+      try {
+        LimelightHelpers.SetFiducialIDFiltersOverride(ll, validAprilTagIDs);
+        LimelightHelpers.SetIMUMode(ll, 0);
+      } catch (Exception e) {
+        System.err.println("Error configuring Limelight " + ll + ": " + e.getMessage());
+        Logger.recordOutput("Limelight/" + ll + "/Connected", false);
+      }
     }
   }
 
   @Override
   public void periodic() {
     for (String ll : limelights) {
-      updateVisionPose(ll);
+      try {
+        updateVisionPose(ll);
+        Logger.recordOutput("Limelight/" + ll + "/Connected", true);
+      } catch (Exception e) {
+        System.err.println("Error updating pose from Limelight " + ll + ": " + e.getMessage());
+        Logger.recordOutput("Limelight/" + ll + "/Connected", false);
+      }
     }
   }
 
   private void updateVisionPose(String limelightName) {
     Pose2d currentEstimate = swerveDrive.getPose();
-    LimelightHelpers.SetRobotOrientation(
-        limelightName, currentEstimate.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-
-    PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-
-    if (mt2 == null) {
-      // System.out.println("PoseEstimate is null for " + limelightName);
+    try {
+      LimelightHelpers.SetRobotOrientation(
+          limelightName, currentEstimate.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    } catch (Exception e) {
+      System.err.println("Error setting orientation for " + limelightName + ": " + e.getMessage());
       return;
     }
 
-    SmartDashboard.putNumber("VisionTS", mt2.timestampSeconds);
+    PoseEstimate mt2;
+    try {
+      mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+    } catch (Exception e) {
+      System.err.println("Error getting pose from " + limelightName + ": " + e.getMessage());
+      return;
+    }
+
+    if (mt2 == null) {
+      return;
+    }
+
+    Logger.recordOutput("Vision/Timestamp", mt2.timestampSeconds);
 
     if (shouldAcceptMeasurement(mt2)) {
       Matrix<N3, N1> stdDevs = calculateMeasurementUncertainty(mt2);
@@ -80,45 +102,49 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   private Matrix<N3, N1> calculateMeasurementUncertainty(PoseEstimate estimate) {
-    // Dynamic uncertainty based on tag observations
     double xyStdDev = 0.01 * estimate.avgTagDist * (2.0 / estimate.tagCount);
     double rotStdDev = Math.toRadians(0.5 * estimate.avgTagDist * (2.0 / estimate.tagCount));
     return VecBuilder.fill(xyStdDev, xyStdDev, rotStdDev);
   }
 
   public void resetLimelightBotPoseBlue() {
-    System.out.println("Attempting to reset bot pose from Limelight...");
+    Logger.recordOutput("Vision/Status", "Attempting to reset bot pose from Limelight...");
     for (String ll : limelights) {
-      PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
+      try {
+        PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
 
-      // Check if estimate is null before accessing its properties
-      if (estimate == null) {
-        System.out.println("No pose estimate available from " + ll);
-        continue;
-      }
+        if (estimate == null) {
+          Logger.recordOutput("Vision/Status", "No pose estimate available from " + ll);
+          continue;
+        }
 
-      if (estimate.tagCount == 0) {
-        System.out.println("No tags detected for reset on " + ll);
-        continue;
+        if (estimate.tagCount == 0) {
+          Logger.recordOutput("Vision/Status", "No tags detected for reset on " + ll);
+          continue;
+        }
+        if (estimate.avgTagDist > 4.0) {
+          Logger.recordOutput(
+              "Vision/Status",
+              "Avg tag distance too far for reset on " + ll + ": " + estimate.avgTagDist);
+          continue;
+        }
+        double currentTime = Timer.getFPGATimestamp();
+        if (Math.abs(currentTime - estimate.timestampSeconds) > 0.3) {
+          Logger.recordOutput(
+              "Vision/Status",
+              "Stale data for reset on "
+                  + ll
+                  + ": Delta = "
+                  + (currentTime - estimate.timestampSeconds));
+          continue;
+        }
+        swerveDrive.setPose(estimate.pose);
+        Logger.recordOutput("Vision/Status", "Successfully reset pose to " + estimate.pose + " from " + ll);
+        return;
+      } catch (Exception e) {
+        Logger.recordOutput("Vision/Status", "Error during reset from " + ll + ": " + e.getMessage());
       }
-      if (estimate.avgTagDist > 4.0) {
-        System.out.println(
-            "Avg tag distance too far for reset on " + ll + ": " + estimate.avgTagDist);
-        continue;
-      }
-      double currentTime = Timer.getFPGATimestamp();
-      if (Math.abs(currentTime - estimate.timestampSeconds) > 0.3) {
-        System.out.println(
-            "Stale data for reset on "
-                + ll
-                + ": Delta = "
-                + (currentTime - estimate.timestampSeconds));
-        continue;
-      }
-      swerveDrive.setPose(estimate.pose);
-      System.out.println("Successfully reset pose to " + estimate.pose + " from " + ll);
-      return;
     }
-    System.out.println("Could not reset pose: no valid Limelight data found.");
+    Logger.recordOutput("Vision/Status", "Could not reset pose: no valid Limelight data found.");
   }
 }
