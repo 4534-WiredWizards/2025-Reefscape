@@ -38,6 +38,12 @@ public class SimpleMoveWrist extends Command {
     double speed = speedSupplier.getAsDouble();
     speed = speed * Wrist.SPEED_SCALAR;
     Logger.recordOutput("SimpleMoveWrist/execute", "Wrist Speed: " + speed);
+    Logger.recordOutput("SimpleMoveWrist/angle", "Wrist Angle: " + m_wrist.getAngle());
+
+
+    Logger.recordOutput("Wrist/GivenSpeed", speed);
+
+
     m_wrist.moveManual(speed);
   }
 
