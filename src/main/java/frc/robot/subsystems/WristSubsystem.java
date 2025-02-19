@@ -64,11 +64,12 @@ public class WristSubsystem extends SubsystemBase {
 
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     fx_cfg.withSoftwareLimitSwitch(limitSwitches);
-    fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-
+    fx_cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    
     wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
     wristMotor.getConfigurator().apply(fx_cfg);
     wristMotor.setNeutralMode(NeutralModeValue.Brake);
+
 
     absEncoder = new DutyCycleEncoder(Wrist.Encoder.PORT);
 
