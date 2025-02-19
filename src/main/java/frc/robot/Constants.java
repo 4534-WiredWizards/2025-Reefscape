@@ -250,8 +250,8 @@ public interface Constants {
     int DRIVE_POSITION = 0;
 
     // Game Piece Switching Angles
-    int CORAL_MAX_ANGLE = 270;
-    int CORAL_MIN_ANGLE = 20;
+    int CORAL_MAX_ANGLE = 93;
+    int CORAL_MIN_ANGLE = 0;
   }
 
   interface Swerve {
