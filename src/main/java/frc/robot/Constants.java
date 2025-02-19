@@ -13,9 +13,8 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -195,7 +194,7 @@ public interface Constants {
   interface Wrist {
     // Motor Configurations
     int PIVOT_MOTOR_ID = 53;
-    double SPEED_SCALAR = 0.5;
+    double SPEED_SCALAR = 0.8;
     double GEAR_RATIO = 125.0;
 
     // Encoder Configuration
@@ -234,8 +233,8 @@ public interface Constants {
     double KA = 0.03;
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 0 / 360.0; // Convert degrees to rotations
-    double MIN_SAFE_ANGLE = 180 / 360.0;
+    double MAX_SAFE_ANGLE = 180 / 360.0; // Convert degrees to rotations
+    double MIN_SAFE_ANGLE = 0 / 360.0;
 
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.1;

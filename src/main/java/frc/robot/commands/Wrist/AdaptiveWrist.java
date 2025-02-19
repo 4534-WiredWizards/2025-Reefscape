@@ -41,18 +41,18 @@ public class AdaptiveWrist extends Command {
       if (isCoralRange) {
         m_wrist.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
         System.out.println("AdaptiveWrist/Coral intake");
-            } else {
+      } else {
         m_wrist.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
         System.out.println("AdaptiveWrist/Coral outtake");
-            }
-          } else {
-            if (isCoralRange) {
+      }
+    } else {
+      if (isCoralRange) {
         m_wrist.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
         System.out.println("AdaptiveWrist/Algae intake");
-            } else {
+      } else {
         m_wrist.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
         System.out.println("AdaptiveWrist/Algae outtake");
-            }
+      }
     }
   }
 
