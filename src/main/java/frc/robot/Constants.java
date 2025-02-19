@@ -234,8 +234,8 @@ public interface Constants {
     double KA = 0.03;
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 300.0 / 360.0; // Convert degrees to rotations
-    double MIN_SAFE_ANGLE = 20.0 / 360.0;
+    double MAX_SAFE_ANGLE = 0 / 360.0; // Convert degrees to rotations
+    double MIN_SAFE_ANGLE = 180 / 360.0;
 
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.1;
