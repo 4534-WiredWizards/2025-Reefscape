@@ -54,7 +54,7 @@ public class AdaptiveWrist extends Command {
       System.out.println("Moving roller at ALGAE_OUTTAKE_SPEED");
       }
     }
-    }
+    
   }
 
   // Called once the command ends or is interrupted.
