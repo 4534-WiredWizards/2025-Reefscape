@@ -113,8 +113,11 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   private void setClampSpeed(double speed) {
-    Logger.recordOutput("SimpleMoveWrist/Clamp", "Clamp Speed: " + speed);
-    wristMotor.set(Math.max(-1, Math.min(1, speed)));
+    
+    double newSpeed = Math.max(-1, Math.min(1, speed));
+    Logger.recordOutput("SimpleMoveWrist/Clamp", "Clamp Speed: " + newSpeed);
+
+    wristMotor.set(newSpeed);
   }
 
   public void moveRoller(double speed) {
