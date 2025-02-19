@@ -85,8 +85,8 @@ public class WristSubsystem extends SubsystemBase {
 
   public double getAngle() {
     double motorRotations = wristMotor.getRotorPosition().getValueAsDouble();
-    double wristRotations = motorRotations * Wrist.GEAR_RATIO; // Adjust for gear ratio 45:1
-    return (((-1 * wristRotations + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * 360);
+    double wristRotations = motorRotations / Wrist.GEAR_RATIO; 
+    return wristRotations * 360;
 
     
   }
