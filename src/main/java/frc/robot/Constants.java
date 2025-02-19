@@ -195,7 +195,7 @@ public interface Constants {
   interface Wrist {
     // Motor Configurations
     int PIVOT_MOTOR_ID = 53;
-    double SPEED_SCALAR = 0.5;
+    double SPEED_SCALAR = 0.1;
 
     // Encoder Configuration
     interface Encoder {
@@ -236,7 +236,6 @@ public interface Constants {
     double MAX_SAFE_ANGLE = 300.0 / 360.0; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = 20.0 / 360.0;
 
-    
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.1;
     double STALL_CURRENT_THRESHOLD = 30;
