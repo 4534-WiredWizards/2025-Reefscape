@@ -37,6 +37,8 @@ public class AdaptiveWrist extends Command {
 
     boolean isCoralRange = wristAngle > Wrist.CORAL_MIN_ANGLE && wristAngle < Wrist.CORAL_MAX_ANGLE;
 
+    
+
     if (isPickup) {
       if (isCoralRange) {
         m_wrist.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
