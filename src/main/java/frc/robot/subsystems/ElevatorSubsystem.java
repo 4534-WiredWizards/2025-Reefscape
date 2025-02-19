@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -13,13 +13,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -28,14 +27,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final TalonFX elevatorMotor1 = new TalonFX(Elevator.LEFT_MOTOR_ID, "rio");
   private final TalonFX elevatorMotor2 = new TalonFX(Elevator.RIGHT_MOTOR_ID, "rio");
 
-  SoftwareLimitSwitchConfigs limitSwitchConfigs = new SoftwareLimitSwitchConfigs()
-  .withForwardSoftLimitEnable(true)
-  .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
-  .withReverseSoftLimitEnable(true)
-  .withReverseSoftLimitThreshold(0);
-
-  
-  
+  SoftwareLimitSwitchConfigs limitSwitchConfigs =
+      new SoftwareLimitSwitchConfigs()
+          .withForwardSoftLimitEnable(true)
+          .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
+          .withReverseSoftLimitEnable(true)
+          .withReverseSoftLimitThreshold(0);
 
   // PID controller for the elevator
   private final ProfiledPIDController pidController;
@@ -139,14 +136,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     this.disablePID();
     // if(getEncoderPosition() < Elevator.MAX_SAFE_POS && getEncoderPosition() > 0){
     setClampSpeed(speed);
-  //   } else{
-  //     setClampSpeed(0);
-  //   }
-  //    if(getEncoderPosition() == 0){
-  //     if(speed > 0){
-  //       setClampSpeed(speed);
-  //     }
-  //    }
+    //   } else{
+    //     setClampSpeed(0);
+    //   }
+    //    if(getEncoderPosition() == 0){
+    //     if(speed > 0){
+    //       setClampSpeed(speed);
+    //     }
+    //    }
   }
 
   private void setClampSpeed(double speed) {
@@ -174,12 +171,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean isStalled() {
-    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold is exceeded
+    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold
+    // is exceeded
     double current = elevatorMotor1.getRotorVelocity().getValueAsDouble();
     double velocity = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
-    return Math.abs(velocity) < Elevator.STALL_VELOCITY_THRESHOLD && current > Elevator.STALL_CURRENT_THRESHOLD;
+    return Math.abs(velocity) < Elevator.STALL_VELOCITY_THRESHOLD
+        && current > Elevator.STALL_CURRENT_THRESHOLD;
   }
-  
 
   @Override
   public void periodic() {
