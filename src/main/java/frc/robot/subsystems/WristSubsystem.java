@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,7 +15,6 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -25,6 +22,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -54,15 +52,15 @@ public class WristSubsystem extends SubsystemBase {
     var fx_cfg = new TalonFXConfiguration();
 
     // Software limit switch configuration
-    SoftwareLimitSwitchConfigs limitSwitches = new SoftwareLimitSwitchConfigs()
-    .withForwardSoftLimitEnable(true)
-    .withForwardSoftLimitThreshold(Wrist.MAX_SAFE_ANGLE)
-    .withReverseSoftLimitEnable(true)
-    .withReverseSoftLimitThreshold(Wrist.MIN_SAFE_ANGLE);
+    SoftwareLimitSwitchConfigs limitSwitches =
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(Wrist.MAX_SAFE_ANGLE)
+            .withReverseSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(Wrist.MIN_SAFE_ANGLE);
 
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     fx_cfg.withSoftwareLimitSwitch(limitSwitches);
-    
 
     wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
     wristMotor.getConfigurator().apply(fx_cfg);
@@ -127,10 +125,12 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public boolean isStalled() {
-    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold is exceeded
+    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold
+    // is exceeded
     double current = wristMotor.getRotorVelocity().getValueAsDouble();
     double velocity = wristMotor.getRotorVelocity().getValueAsDouble();
-    return Math.abs(velocity) < Wrist.STALL_VELOCITY_THRESHOLD && Math.abs(current) > Wrist.STALL_CURRENT_THRESHOLD;
+    return Math.abs(velocity) < Wrist.STALL_VELOCITY_THRESHOLD
+        && Math.abs(current) > Wrist.STALL_CURRENT_THRESHOLD;
   }
 
   public void enablePID() {

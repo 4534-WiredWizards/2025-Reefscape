@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -15,6 +13,7 @@ import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class CoralScoringCommand extends SequentialCommandGroup {
 
@@ -49,7 +48,11 @@ public class CoralScoringCommand extends SequentialCommandGroup {
 
               // Drive to the target position
               Logger.recordOutput("CoralScoringCommand/Status", "Driving to target position");
-              drive.driveToPoint(position.x(), position.y(), position.theta()); //FIXME: Needs to be a dynamic command with an isfinshed command
+              drive.driveToPoint(
+                  position.x(),
+                  position.y(),
+                  position
+                      .theta()); // FIXME: Needs to be a dynamic command with an isfinshed command
             }),
 
         // Set elevator height (from enum configuration)
@@ -70,8 +73,7 @@ public class CoralScoringCommand extends SequentialCommandGroup {
                   Logger.recordOutput("CoralScoringCommand/Status", "Setting wrist angle");
                   Logger.recordOutput("CoralScoringCommand/WristAngle", height.getWristAngle());
                 }),
-            new SetWristPosition(wrist, height.getWristAngle(), false)
-        ),
+            new SetWristPosition(wrist, height.getWristAngle(), false)),
 
         // Return to drive position
         new InstantCommand(

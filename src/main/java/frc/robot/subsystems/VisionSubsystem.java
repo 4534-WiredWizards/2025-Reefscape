@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LimelightHelpers;
 import frc.robot.util.LimelightHelpers.PoseEstimate;
+import org.littletonrobotics.junction.Logger;
 
 public class VisionSubsystem extends SubsystemBase {
   private final Drive swerveDrive;
@@ -139,10 +138,12 @@ public class VisionSubsystem extends SubsystemBase {
           continue;
         }
         swerveDrive.setPose(estimate.pose);
-        Logger.recordOutput("Vision/Status", "Successfully reset pose to " + estimate.pose + " from " + ll);
+        Logger.recordOutput(
+            "Vision/Status", "Successfully reset pose to " + estimate.pose + " from " + ll);
         return;
       } catch (Exception e) {
-        Logger.recordOutput("Vision/Status", "Error during reset from " + ll + ": " + e.getMessage());
+        Logger.recordOutput(
+            "Vision/Status", "Error during reset from " + ll + ": " + e.getMessage());
       }
     }
     Logger.recordOutput("Vision/Status", "Could not reset pose: no valid Limelight data found.");
