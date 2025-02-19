@@ -84,11 +84,9 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public double getAngle() {
-    return ((((-1 * wristMotor.getRotorPosition().getValueAsDouble())
-                + Wrist.Encoder.ABSOLUTE_OFFSET
-                + 1)
-            % 1.0)
-        * 360);
+    double motorRotations = wristMotor.getRotorPosition().getValueAsDouble();
+    double wristRotations = motorRotations * Wrist.GEAR_RATIO; // Adjust for gear ratio 45:1
+    return (((-1 * wristRotations + Wrist.Encoder.ABSOLUTE_OFFSET + 1) % 1.0) * 360);
 
     
   }
@@ -119,7 +117,6 @@ public class WristSubsystem extends SubsystemBase {
     
     double newSpeed = Math.max(-1, Math.min(1, speed));
     Logger.recordOutput("SimpleMoveWrist/Clamp", "Clamp Speed: " + newSpeed);
-
     wristMotor.set(newSpeed);
   }
 
