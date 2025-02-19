@@ -196,7 +196,7 @@ public interface Constants {
     // Motor Configurations
     int PIVOT_MOTOR_ID = 53;
     double SPEED_SCALAR = 0.5;
-    double GEAR_RATIO = 1/125.0;
+    double GEAR_RATIO = 125.0;
 
     // Encoder Configuration
     interface Encoder {
