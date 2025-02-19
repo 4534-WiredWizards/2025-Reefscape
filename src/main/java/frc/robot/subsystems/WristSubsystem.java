@@ -88,6 +88,8 @@ public class WristSubsystem extends SubsystemBase {
                 + 1)
             % 1.0)
         * 360);
+
+    
   }
 
   public void setWristSetpoint(double setpoint) {
@@ -166,15 +168,16 @@ public class WristSubsystem extends SubsystemBase {
 
     // Log outputs using AdvantageKit
     Logger.recordOutput("Wrist/Setpoint", setpoint);
-    Logger.recordOutput("Wrist/Position", getAngle());
-    Logger.recordOutput("Wrist/AbsoluteEncoder", absEncoder.get());
+    Logger.recordOutput("Wrist/CurrentAngle", getAngle());
+    Logger.recordOutput("Wrist/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
+    Logger.recordOutput("Wrist/AbsoluteEncoderValue", absEncoder.get());
     Logger.recordOutput("Wrist/PIDOutput", pidOutput);
-    Logger.recordOutput("Wrist/Feedforward", feedforward);
-    Logger.recordOutput("Wrist/TotalOutput", pidOutput + feedforward);
+    Logger.recordOutput("Wrist/FeedforwardOutput", feedforward);
+    Logger.recordOutput("Wrist/TotalMotorOutput", pidOutput + feedforward);
     Logger.recordOutput("Wrist/MotorVoltage", wristMotor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("Wrist/PIDEnabled", PIDEnabled);
     Logger.recordOutput("Wrist/AtSetpoint", atSetpoint());
-    Logger.recordOutput("Wrist/RollerSpeed", rollerMotor.getAppliedOutput());
-    Logger.recordOutput("Wrist/RollerVoltage", rollerMotor.getBusVoltage());
+    Logger.recordOutput("Wrist/RollerMotorSpeed", rollerMotor.getAppliedOutput());
+    Logger.recordOutput("Wrist/RollerMotorVoltage", rollerMotor.getBusVoltage());
   }
 }
