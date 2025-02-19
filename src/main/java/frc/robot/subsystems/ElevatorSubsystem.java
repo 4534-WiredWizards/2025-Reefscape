@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -69,6 +70,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     //limit switch
     fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);  
+
+    // Invert parent motor
+    fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
     elevatorMotor1.setNeutralMode(NeutralModeValue.Brake);
 
     elevatorMotor1.getConfigurator().apply(fx_cfg);

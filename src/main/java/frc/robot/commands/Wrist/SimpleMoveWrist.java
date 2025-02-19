@@ -7,6 +7,7 @@ package frc.robot.commands.Wrist;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.WristSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -33,6 +34,8 @@ public class SimpleMoveWrist extends Command {
   @Override
   public void execute() {
     double speed = speedSupplier.getAsDouble();
+    speed = speed*Wrist.SPEED_SCALAR;
+    System.out.println("Wrist Speed: " + speed);
     m_wrist.moveManual(speed);
   }
 

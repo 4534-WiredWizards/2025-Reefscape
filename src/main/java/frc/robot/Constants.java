@@ -194,12 +194,13 @@ public interface Constants {
     double L4_POS = 0.0;
     int CORAL_INTAKE_POS = 0;
     int DRIVE_POS = 0;
-    int MAX_SAFE_POS = 0;
+    int MAX_SAFE_POS = 80;
   }
 
   interface Wrist {
     // Motor Configurations
     int PIVOT_MOTOR_ID = 53;
+    double SPEED_SCALAR = 0.5;
 
     // Encoder Configuration
     interface Encoder {
@@ -237,11 +238,13 @@ public interface Constants {
     double KA = 0.03;
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 0;
-    double MIN_SAFE_ANGLE = 0;
-   // Operational Parameters
-   double STALL_VELOCITY_THRESHOLD = 0.1;
-   double STALL_CURRENT_THRESHOLD = 30;
+    double MAX_SAFE_ANGLE = 300.0 / 360.0; // Convert degrees to rotations
+    double MIN_SAFE_ANGLE = 20.0 / 360.0;
+
+    
+    // Operational Parameters
+    double STALL_VELOCITY_THRESHOLD = 0.1;
+    double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions (TODO: Set actual values)
     int L1_ANGLE = 0;

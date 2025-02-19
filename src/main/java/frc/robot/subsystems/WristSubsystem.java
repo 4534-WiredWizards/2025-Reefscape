@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -62,6 +63,7 @@ public class WristSubsystem extends SubsystemBase {
 
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     fx_cfg.withSoftwareLimitSwitch(limitSwitches);
+    fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     
 
     wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
