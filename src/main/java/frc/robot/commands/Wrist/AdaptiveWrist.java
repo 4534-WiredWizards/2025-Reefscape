@@ -4,6 +4,8 @@
 
 package frc.robot.commands.Wrist;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.WristSubsystem;
@@ -36,24 +38,25 @@ public class AdaptiveWrist extends Command {
     double wristAngle = m_wrist.getAngle();
 
     boolean isCoralRange = wristAngle > Wrist.CORAL_MIN_ANGLE && wristAngle < Wrist.CORAL_MAX_ANGLE;
+    Logger.recordOutput("Wrist/IsCoralrange", isCoralRange);
 
     
 
     if (isPickup) {
       if (isCoralRange) {
         m_wrist.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
-        System.out.println("AdaptiveWrist/Coral intake");
+        Logger.recordOutput("Wrist/IntakeStatus", "Coral intake");
       } else {
         m_wrist.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
-        System.out.println("AdaptiveWrist/Coral outtake");
+        Logger.recordOutput("Wrist/IntakeStatus", "Coral outtake");
       }
-    } else {
+        } else {
       if (isCoralRange) {
         m_wrist.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
-        System.out.println("AdaptiveWrist/Algae intake");
+        Logger.recordOutput("Wrist/IntakeStatus", "Algae intake");
       } else {
         m_wrist.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
-        System.out.println("AdaptiveWrist/Algae outtake");
+        Logger.recordOutput("Wrist/IntakeStatus", "Algae outtake");
       }
     }
   }

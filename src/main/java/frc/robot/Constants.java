@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -251,7 +252,7 @@ public interface Constants {
 
     // Game Piece Switching Angles
     int CORAL_MAX_ANGLE = 93;
-    int CORAL_MIN_ANGLE = 0;
+    int CORAL_MIN_ANGLE = -1;
   }
 
   interface Swerve {

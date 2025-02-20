@@ -65,8 +65,8 @@ public class WristSubsystem extends SubsystemBase {
             .withReverseSoftLimitEnable(true)
             .withReverseSoftLimitThreshold(reverseLimit);
 
-    Logger.recordOutput("SimpleMoveWrist/SoftForwardLimit", forwardLimit);
-    Logger.recordOutput("SimpleMoveWrist/SoftReverseLimit", reverseLimit);
+    Logger.recordOutput("Wrist/SoftForwardLimit", forwardLimit);
+    Logger.recordOutput("Wrist/SoftReverseLimit", reverseLimit);
 
     
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
