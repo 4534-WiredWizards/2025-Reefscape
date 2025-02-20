@@ -30,7 +30,7 @@ import frc.robot.Constants.Wrist;
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
   private final SparkFlex rollerMotor;
-  private DutyCycleEncoder absEncoder;
+  private final DutyCycleEncoder absEncoder;
 
   private final ProfiledPIDController pidController;
   private boolean PIDEnabled = false;

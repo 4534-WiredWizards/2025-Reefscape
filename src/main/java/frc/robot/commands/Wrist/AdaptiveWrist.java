@@ -34,32 +34,24 @@ public class AdaptiveWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     double wristAngle = m_wrist.getAngle();
+    boolean isCoralRange = wristAngle < Wrist.CORAL_MAX_ANGLE;
+    Logger.recordOutput("Wrist/IsCoralRange", isCoralRange);
 
-    boolean isCoralRange = wristAngle > Wrist.CORAL_MIN_ANGLE && wristAngle < Wrist.CORAL_MAX_ANGLE;
-    Logger.recordOutput("Wrist/IsCoralrange", isCoralRange);
+    String intakeStatus;
+    double rollerSpeed;
 
-    
-
-    if (isPickup) {
-      if (isCoralRange) {
-        m_wrist.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
-        Logger.recordOutput("Wrist/IntakeStatus", "Coral intake");
-      } else {
-        m_wrist.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
-        Logger.recordOutput("Wrist/IntakeStatus", "Coral outtake");
-      }
-        } else {
-      if (isCoralRange) {
-        m_wrist.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
-        Logger.recordOutput("Wrist/IntakeStatus", "Algae intake");
-      } else {
-        m_wrist.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
-        Logger.recordOutput("Wrist/IntakeStatus", "Algae outtake");
-      }
+    if (isCoralRange) {
+        rollerSpeed = isPickup ? Wrist.Roller.CORAL_INTAKE_SPEED : Wrist.Roller.CORAL_OUTTAKE_SPEED;
+        intakeStatus = isPickup ? "Coral intake" : "Coral outtake";
+    } else {
+        rollerSpeed = isPickup ? Wrist.Roller.ALGAE_INTAKE_SPEED : Wrist.Roller.ALGAE_OUTTAKE_SPEED;
+        intakeStatus = isPickup ? "Algae intake" : "Algae outtake";
     }
-  }
+
+    m_wrist.moveRoller(rollerSpeed);
+    Logger.recordOutput("Wrist/IntakeStatus", intakeStatus);
+}
 
   // Called once the command ends or is interrupted.
   @Override

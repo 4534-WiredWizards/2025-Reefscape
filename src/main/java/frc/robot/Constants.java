@@ -150,8 +150,8 @@ public interface Constants {
     // PID Configuration
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
-    double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
+    double MAX_VELOCITY = 3.0; // TODO: Set actual maximum
+    double MAX_ACCELERATION = 3.0; // TODO: Set actual maximum
     double TARGET_VELOCITY = 0.1;
 
     // Internal Motor PID
@@ -175,8 +175,8 @@ public interface Constants {
     double KA = 0.05;
 
     // Operational Parameters
-    double STALL_VELOCITY_THRESHOLD = 0.1;
-    double STALL_CURRENT_THRESHOLD = 30;
+    double STALL_VELOCITY_THRESHOLD = 0.05;
+    double STALL_CURRENT_THRESHOLD = 25;
 
     double MANUAL_SPEED = 0.2;
     double ELEVATOR_UP_DIR = 1.0;
@@ -193,68 +193,64 @@ public interface Constants {
   }
 
   interface Wrist {
-    // Motor Configurations
+    // Motor and Encoder Configurations
     int PIVOT_MOTOR_ID = 53;
     double SPEED_SCALAR = 0.8;
     double GEAR_RATIO = 125.0;
-
-    // Encoder Configuration
+  
     interface Encoder {
       int PORT = 1;
       int FULL_RANGE = 1024;
       int EXPECTED_ZERO = 0;
       double ABSOLUTE_OFFSET = 0.0; // TODO: Calibrate
     }
-
-    // Roller Configuration
-    interface Roller {
-      int MOTOR_ID = 54;
-      double CORAL_INTAKE_SPEED = .2;
-      double CORAL_OUTTAKE_SPEED = .2;
-
-      double ALGAE_INTAKE_SPEED = .1;
-      double ALGAE_OUTTAKE_SPEED = -.1;
-    }
-
-    // PID Configuration
+  
+    // PID and Feedforward Configuration
     double PID_POSITION_TOLERANCE = 0.1;
     double PID_VELOCITY_TOLERANCE = 1;
-    double KP = 0.1;
+    double KP = 0.05;
     double KI = 0.0;
-    double KD = 0.0;
-
+    double KD = 0.01;
+    double KS = 0;
+    double KG = 0.18; //V1 1.01
+    double KV = 2.25; //V1 0.81
+    double KA = 0.00; //V1 0.03
+  
     // Motion Profile Configuration
     double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
     double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
-
-    // Feedforward Constants
-    double KS = 0;
-    double KG = 1.01;
-    double KV = 0.81;
-    double KA = 0.03;
-
+  
     // Safety Limits
     double MAX_SAFE_ANGLE = 203 / 360.0; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = 0 / 360.0;
-
+  
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.1;
     double STALL_CURRENT_THRESHOLD = 30;
-
-    // Preset Positions (TODO: Set actual values)
+  
+    // Preset Positions and Angles
     int L1_ANGLE = 0;
-    int L2_ANGLE = 0;
-    int L3_ANGLE = 0;
-    int L4_ANGLE = 0;
+    int L2_ANGLE = 15;
+    int L3_ANGLE = 15;
+    int L4_ANGLE = 70;
     int CORAL_INTAKE_ANGLE = 0;
-    int BARGER_POSITION = 0;
+    int BARGER_POSITION = 165;
     int DRIVE_POSITION = 0;
-
+  
     // Game Piece Switching Angles
-    int CORAL_MAX_ANGLE = 93;
-    int CORAL_MIN_ANGLE = -1;
+    int CORAL_MAX_ANGLE = 103;
+  
+    // Roller Configuration
+    interface Roller {
+      int MOTOR_ID = 54;
+      double CORAL_INTAKE_SPEED = .3;
+      double CORAL_OUTTAKE_SPEED = .3;
+      double ALGAE_INTAKE_SPEED = .3;
+      double ALGAE_OUTTAKE_SPEED = -.3;
+    }
   }
-
+  
+  
   interface Swerve {
     interface Drive {
       interface PID {
