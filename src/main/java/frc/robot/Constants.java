@@ -163,8 +163,8 @@ public interface Constants {
 
     // Feedforward Constants
     double KS = 0;
-    double KG = 0.46;
-    double KV = 8.98;
+    double KG = 0.46; //V1
+    double KV = 4.49;
     double KA = 0.05;
 
     // Motion Profile Configuration
