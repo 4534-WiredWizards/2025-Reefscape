@@ -1,48 +1,283 @@
-# Reefscape 2025 Robot Code Repository
+# 🐠 Team 4534 Robot Code Repository
 
-## 🤖 Repository Structure
+**Next-gen FIRST robotics codebase for efficient reef scoring automation 😎**
 
-### Branch Strategy
-Base branch structure:
-- `Gillbert`: Swerve base code
-- `develop`: Active development and integration
-- `main`: Stable, compitition-ready code 🤖🥳
+---
 
-### Branch Management
-1. Set up branch protection rules
-2. Team development occurs in `develop` branch
-3. Max reviews all Pull Requests
-4. Merge from `develop` to `main` only after thorough testing
-5. Limit base branch modifications to Max and Greg
+## 📚 Table of Contents
+- [🎯 High-Level Goals](#-high-level-goals)
+- [🚀 Features & Progress](#-features--progress)
+  - [Elevator](#elevator)
+  - [Wrist](#wrist)
+  - [Drivetrain](#drivetrain)
+  - [Path Planning](#path-planning)
+  - [Vision Integration](#vision-integration)
+- [📖 Resources](#-resources)
+  - [Guides](#guides)
+  - [Subsystems](#subsystems)
+- [🌳 Repository Structure](#-repository-structure)
+  - [Branch Strategy](#branch-strategy)
+  - [Workflow](#workflow)
 
-## 🛠️ Code Setup
+---
 
-### Drivetrain
-- [ ] Import Advantage Kit drive code
-- [ ] Complete full diagnostic tuning for swerve
+## 🎯 High-Level Goals
 
-### Path Planning
-- [ ] Evaluate and select Path Planner or Choreo
-- [ ] Integrate chosen path planning solution
+- **Drivetrain**: Optimize swerve responsiveness + odometry accuracy.
+- **Path Planning**: Seamless autonomous navigation via Path Planner.
+- **Vision**: Real-time AprilTag tracking + multi-camera support.
 
-### Vision Integration
-- [ ] Implement Limelight setup from Advantage Kit base code
-- [ ] Configure forward and rear-facing camera
-- [ ] Decision: Use Limelight (preferred from previous year)
+---
 
-## 📋 Additional Configuration
+## 🚀 Features & Progress
 
-### Command Structure
-- [ ] Develop base structure and constants
-- [ ] Reference command list: [Reefscape Command Spreadsheet](https://docs.google.com/spreadsheets/d/1-hmzdXKS6qgACqeQ6U8RYg2TpfawPsJiIGIwLDxqnBw/edit?gid=1163826648#gid=1163826648)
+### **Elevator**
 
-## 🚀 Next Steps
-- Coordinate team development in `develop` branch
-- Ensure comprehensive testing before merging to `main`
-- Regularly review and update this README
-
-## Resources
-- [Advantage Kit Vision Integration Docs](https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template/#vision-integration)
+- Tune PID + feedforward
+- Real-world position conversion (meters via pulley ratios)
 
 
-maxs really awesome super neat change
+<details>
+<summary>✅ Completed Items</summary>
+
+- Subsystem framework
+- Manual + PID control commands
+- Motion profiling (`TrapezoidProfile`)
+- Safety: Software limits + output clamping
+
+</details>
+
+<details>
+<summary>📁 Code Snippets</summary>
+
+```java
+// Position conversion
+elevatorEncoder.setPositionConversionFactor(C_Elevator.ENCODER_DISTANCE_PER_PULSE);
+elevatorEncoder.setVelocityConversionFactor(C_Elevator.ENCODER_VELOCITY_FACTOR);
+
+
+```
+
+</details>
+
+---
+
+### **Wrist**
+
+- Tune PID + feedforward + motion profiling
+- Implement safety checks for mechanism limits
+- PID tuning
+<details>
+
+<summary>📁 Code Snippets</summary>
+
+```java
+// Separate logic for CoralIn and AlgaeOut
+if (mechanismType == MechanismType.ROLLER) {
+    // Roller-specific logic
+    rollerMotor.set(coralInSpeed);
+} else if (mechanismType == MechanismType.BELT) {
+    // Belt-specific logic
+    beltMotor.set(algaeOutSpeed);
+}
+
+// Safety checks
+if (isAtLimit()) {
+    motor.stop();
+} else {
+    motor.set(desiredSpeed);
+}
+```
+
+</details>
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- Subsystem setup
+    - Support main wrist joint movement
+    - Support actual intake mechanism (e.g., rollers, belts)
+- Manual + PID controls
+- Separate CoralIn/AlgaeOut logic if mechanisms differ (e.g., rollers vs. belts).
+
+</details>
+
+---
+
+### **Drivetrain**
+
+- Full swerve diagnostic tuning
+- Odometry calibration
+- Path following optimization
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- Swerve base code (Advantage Kit)
+
+</details>
+
+---
+
+### **Path Planning**
+
+- Constraint tuning
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- Path Planner evaluation
+- Integration of Path Planner into codebase and test creation of basic paths (TI)
+- Define robot constraints for path planning
+- Implement basic path commands
+- Implement basic event triggers for use in paths
+
+</details>
+
+---
+
+### **Vision Integration**
+
+
+- AssistedMove (e.g., aligning to AprilTags on the reef/barge)
+- PipelineCommand to dynamically switch vision pipelines for different targets
+
+<details>
+<summary>📁 Code Snippets</summary>
+
+```java
+// AssistedMove command
+public class AssistedMove extends CommandBase {
+    private final Drivetrain drivetrain;
+    private final VisionSubsystem vision;
+
+    public AssistedMove(Drivetrain drivetrain, VisionSubsystem vision) {
+        this.drivetrain = drivetrain;
+        this.vision = vision;
+        addRequirements(drivetrain, vision);
+    }
+
+    @Override
+    public void initialize() {
+        vision.enableAprilTagTracking();
+    }
+
+    @Override
+    public void execute() {
+        Pose2d targetPose = vision.getAprilTagPose();
+        drivetrain.alignToPose(targetPose);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        vision.disableAprilTagTracking();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return drivetrain.isAligned();
+    }
+}
+
+// PipelineCommand to switch vision pipelines
+public class PipelineCommand extends InstantCommand {
+    private final VisionSubsystem vision;
+    private final int pipeline;
+
+    public PipelineCommand(VisionSubsystem vision, int pipeline) {
+        this.vision = vision;
+        this.pipeline = pipeline;
+    }
+
+    @Override
+    public void initialize() {
+        vision.setPipeline(pipeline);
+    }
+}
+```
+
+</details>
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- Limelight selected (legacy compatibility)
+- Advantage Kit + Limelight setup (BM)
+- Dual camera configuration
+- AprilTag pose estimation
+
+</details>
+
+
+### **LED Strip**
+
+- Subsystem setup
+- Basic color control
+- Pattern animations (e.g., rainbow, chase)
+- Integrate with match events (e.g., alliance color, scoring feedback)
+
+<details>
+<summary>📁 Code Snippets</summary>
+
+```java
+// Basic color control
+public void setColor(Color color) {
+    ledStrip.set(color);
+}
+
+// Pattern animation example
+public void setRainbowPattern() {
+    // Implementation for rainbow pattern
+    for (int i = 0; i < ledStrip.length(); i++) {
+        ledStrip.set(i, Color.getHSBColor((i / (float) ledStrip.length()), 1.0, 1.0));
+    }
+    ledStrip.show();
+}
+```
+
+</details>
+
+<details>
+<summary>✅ Completed Items</summary>
+
+- None yet
+
+</details>
+
+---
+
+## 📖 Resources
+
+### **Guides**
+- [Advantage Kit Vision Docs](https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template/#vision-integration)
+- [Path Planner Tutorials](https://pathplanner.dev/home.html)
+- [Limelight Setup Guide](https://docs.limelightvision.io/en/latest/)
+- [REV Spark Flex API](https://codedocs.revrobotics.com/java/com/revrobotics/spark/sparkflex)
+
+### **Subsystems**
+
+- **Elevator**
+    - 🔗 [PID + Feedforward Tuning](https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html)
+    - 🔗 [SysId Best Practices](https://www.chiefdelphi.com/t/sysid-pid-and-feedfoward-tuning-for-elevator/482797)
+    - 🔗 [Driving an elevator and a wrist while having forbidden positions](https://www.chiefdelphi.com/t/controlling-a-wrist-on-an-elevator-while-avoiding-collisions/483756)
+- **Vision**
+  - 🔗 [AprilTag Filtering](https://www.chiefdelphi.com/t/how-to-check-which-april-tag-the-limelight-is-seeing/483990/2)
+
+---
+
+## 🌳 Repository Structure
+
+### **Branch Strategy**
+- `Gillbert`: Swerve prototype base 🧪
+- `develop`: Active integration + testing 🔄
+- `main`: Competition-ready stable releases 🏆
+
+### **Workflow**
+1. **Protect Branches**: Require PR reviews for `main`/`develop`.
+2. **Develop in `develop`**: All features tested here first.
+3. **PR Reviews**: Approved by leads (Max/Greg) before merging.
+4. **Release to `main`**: Only after rigorous validation.
+
+---
+
+**Made with ❤️ by Team 4534 - The Wired Wizards**

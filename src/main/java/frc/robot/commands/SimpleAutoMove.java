@@ -7,9 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ChangeWristAngle extends Command {
-  /** Creates a new ChangeWristAngle. */
-  public ChangeWristAngle(int position) {
+public class SimpleAutoMove extends Command {
+
+  /** Creates a new SimpleAutoMove. */
+  public SimpleAutoMove() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -1,19 +1,13 @@
-// Copyright (c) 2025 FRC 6328
+// Copyright (c) 2025 FRC 4534
 // http://github.com/Mechanical-Advantage
 //
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file at
 // the root directory of this project.
+package frc.robot;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Filesystem;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -177,41 +171,42 @@ public class FieldConstants {
     public final double pitch;
   }
 
+  //   TODO: Add AprilTag support -
+  // https://github.com/Mechanical-Advantage/RobotCode2025Public/blob/40daff17cb2c8a37f92ee959c5a9663511ec0095/src/main/deploy/apriltags/2025-official.json
+  //   public static final double aprilTagWidth = Units.inchesToMeters(6.50);
+  //   public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
+  //   public static final int aprilTagCount = 22;
 
-//   TODO: Add AprilTag support - https://github.com/Mechanical-Advantage/RobotCode2025Public/blob/40daff17cb2c8a37f92ee959c5a9663511ec0095/src/main/deploy/apriltags/2025-official.json
-//   public static final double aprilTagWidth = Units.inchesToMeters(6.50);
-//   public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
-//   public static final int aprilTagCount = 22;
+  //   @Getter
+  //   public enum AprilTagLayoutType {
+  //     OFFICIAL("2025-official");
 
-//   @Getter
-//   public enum AprilTagLayoutType {
-//     OFFICIAL("2025-official");
+  //     AprilTagLayoutType(String name) {
+  //       if (Constants.disableHAL) {
+  //         layout = null;
+  //       } else {
+  //         try {
+  //           layout =
+  //               new AprilTagFieldLayout(
+  //                   Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", name +
+  // ".json"));
+  //         } catch (IOException e) {
+  //           throw new RuntimeException(e);
+  //         }
+  //       }
+  //       if (layout == null) {
+  //         layoutString = "";
+  //       } else {
+  //         try {
+  //           layoutString = new ObjectMapper().writeValueAsString(layout);
+  //         } catch (JsonProcessingException e) {
+  //           throw new RuntimeException(
+  //               "Failed to serialize AprilTag layout JSON " + toString() + "for Northstar");
+  //         }
+  //       }
+  //     }
 
-//     AprilTagLayoutType(String name) {
-//       if (Constants.disableHAL) {
-//         layout = null;
-//       } else {
-//         try {
-//           layout =
-//               new AprilTagFieldLayout(
-//                   Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", name + ".json"));
-//         } catch (IOException e) {
-//           throw new RuntimeException(e);
-//         }
-//       }
-//       if (layout == null) {
-//         layoutString = "";
-//       } else {
-//         try {
-//           layoutString = new ObjectMapper().writeValueAsString(layout);
-//         } catch (JsonProcessingException e) {
-//           throw new RuntimeException(
-//               "Failed to serialize AprilTag layout JSON " + toString() + "for Northstar");
-//         }
-//       }
-//     }
-
-//     private final AprilTagFieldLayout layout;
-//     private final String layoutString;
-//   }
+  //     private final AprilTagFieldLayout layout;
+  //     private final String layoutString;
+  //   }
 }
