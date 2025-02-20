@@ -148,11 +148,11 @@ public interface Constants {
     int BOTTOM_LIMIT_SWITCH_ID = 0;
 
     // PID Configuration
-
-    // Motion Profile Configuration
-    double MAX_VELOCITY = 3.0; // TODO: Set actual maximum
-    double MAX_ACCELERATION = 3.0; // TODO: Set actual maximum
-    double TARGET_VELOCITY = 0.1;
+    double KP = 0.1;
+    double KI = 0.0;
+    double KD = 0.0;
+    double PID_POSITION_TOLERANCE = 0.1;
+    double PID_VELOCITY_TOLERANCE = 1;
 
     // Internal Motor PID
     double MOTOR_KP = 0.1;
@@ -162,22 +162,19 @@ public interface Constants {
     double MOTOR_KS = 0.1;
 
     // Feedforward Constants
-
-    double PID_POSITION_TOLERANCE = 0.1;
-    double PID_VELOCITY_TOLERANCE = 1;
-    double KP = 0.1;
-    double KI = 0.0;
-    double KD = 0.0;
-
     double KS = 0;
     double KG = 0.46;
     double KV = 8.98;
     double KA = 0.05;
 
+    // Motion Profile Configuration
+    double MAX_VELOCITY = 3.0; // TODO: Set actual maximum
+    double MAX_ACCELERATION = 3.0; // TODO: Set actual maximum
+    double TARGET_VELOCITY = 0.1;
+
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.05;
     double STALL_CURRENT_THRESHOLD = 25;
-
     double MANUAL_SPEED = 0.2;
     double ELEVATOR_UP_DIR = 1.0;
     double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
@@ -191,6 +188,7 @@ public interface Constants {
     int DRIVE_POS = 0;
     int MAX_SAFE_POS = 216;
   }
+
 
   interface Wrist {
     // Motor and Encoder Configurations
