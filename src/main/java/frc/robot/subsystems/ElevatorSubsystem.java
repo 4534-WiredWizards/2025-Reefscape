@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
@@ -23,19 +19,9 @@ import frc.robot.Constants.Elevator;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-  // Motor controller for the elevator
-
   private final TalonFX elevatorMotor1 = new TalonFX(Elevator.LEFT_MOTOR_ID, "rio");
   private final TalonFX elevatorMotor2 = new TalonFX(Elevator.RIGHT_MOTOR_ID, "rio");
 
-  SoftwareLimitSwitchConfigs limitSwitchConfigs =
-      new SoftwareLimitSwitchConfigs()
-          .withForwardSoftLimitEnable(true)
-          .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
-          .withReverseSoftLimitEnable(true)
-          .withReverseSoftLimitThreshold(0);
-
-  // PID controller for the elevator
   private final ProfiledPIDController pidController;
   private double pidOutput;
   private double feedforward;
@@ -45,15 +31,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final ElevatorFeedforward m_ElevatorFeedforward =
       new ElevatorFeedforward(Elevator.KS, Elevator.KG, Elevator.KV, Elevator.KA);
 
-  // Elevator setpoint (desired position)
   private double setpoint;
 
   public ElevatorSubsystem() {
-    // Initialize motor controller
-
     elevatorMotor2.setControl(new Follower(elevatorMotor1.getDeviceID(), true));
-
-    // Configure encoder (adjust these values based on your setup)
 
     TalonFXConfiguration fx_cfg = new TalonFXConfiguration();
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
@@ -66,25 +47,21 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     fx_cfg.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
 
-    // limit switch
+    SoftwareLimitSwitchConfigs limitSwitchConfigs =
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
+            .withReverseSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(0);
+
     fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);
 
-    // Invert parent motor
     fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     elevatorMotor1.setNeutralMode(NeutralModeValue.Brake);
 
     elevatorMotor1.getConfigurator().apply(fx_cfg);
 
-    // TODO: Position Conversion Factor: Setting it to 1.0 leaves encoder units as motor rotations.
-    // Convert to real-world units (e.g., meters) using gear ratios or pulley dimensions
-
-    // motorConfig.encoder.positionConversionFactor(1.0);
-
-    // elevatorMotor.configure(
-    //     motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    // Initialize PID controller
     pidController =
         new ProfiledPIDController(
             Elevator.KP,
@@ -92,79 +69,64 @@ public class ElevatorSubsystem extends SubsystemBase {
             Elevator.KD,
             new TrapezoidProfile.Constraints(Elevator.MAX_VELOCITY, Elevator.MAX_ACCELERATION));
 
-    pidController.setTolerance(
-        Elevator.PID_POSITION_TOLERANCE, Elevator.PID_VELOCITY_TOLERANCE); // Set the
-    // tolerance to
-    // 0.1 units
-    // (e.g., inches)
+    pidController.setTolerance(Elevator.PID_POSITION_TOLERANCE, Elevator.PID_VELOCITY_TOLERANCE);
 
-    // Set the initial setpoint to the current position
     setpoint = getEncoderPosition();
+
+    // Log initial configuration
+    Logger.recordOutput("Elevator/Config/MaxSafePos", Elevator.MAX_SAFE_POS);
+    Logger.recordOutput("Elevator/Config/PIDEnabled", PIDEnabled);
+    Logger.recordOutput("Elevator/Config/InitialSetpoint", setpoint);
   }
 
-  // Get the current encoder position
   public double getEncoderPosition() {
     return elevatorMotor1.getRotorPosition().getValueAsDouble();
   }
 
-  // Set the desired setpoint (elevator position)
   public void setSetpoint(double setpoint) {
     this.setpoint = Math.max(0, Math.min(Elevator.MAX_SAFE_POS, setpoint));
     pidController.setGoal(this.setpoint);
+    Logger.recordOutput("Elevator/Command/SetpointCommand", this.setpoint);
   }
 
-  // Function to check if PID method is complete
   public boolean atSetpoint() {
     return pidController.atSetpoint();
   }
 
-  // Run the PID controller to move the elevator to the setpoint
   public void runPID() {
-    // Calculate the PID output
     this.pidOutput = pidController.calculate(getEncoderPosition());
-
-    // TODO: Implement motion profiling (e.g., TrapezoidProfile) to dynamically compute
-    // velocity/acceleration setpoints.
     this.feedforward = m_ElevatorFeedforward.calculate(pidController.getSetpoint().velocity);
-
-    // Set the motor output
     setClampSpeed(pidOutput + feedforward);
   }
 
-  // Move the elevator manually (for manual driving)
   public void moveManual(double speed) {
-    // Disable PID control and set the motor speed directly
     this.disablePID();
-    // if(getEncoderPosition() < Elevator.MAX_SAFE_POS && getEncoderPosition() > 0){
     setClampSpeed(speed);
-    //   } else{
-    //     setClampSpeed(0);
-    //   }
-    //    if(getEncoderPosition() == 0){
-    //     if(speed > 0){
-    //       setClampSpeed(speed);
-    //     }
-    //    }
+    Logger.recordOutput("Elevator/Command/ManualSpeed", speed);
   }
 
   private void setClampSpeed(double speed) {
-    elevatorMotor1.set((Math.max(-1, Math.min(1, speed))));
+    double clampedSpeed = Math.max(-1, Math.min(1, speed));
+    elevatorMotor1.set(clampedSpeed);
+    Logger.recordOutput("Elevator/Control/ClampSpeed", clampedSpeed);
   }
 
-  // Stop the elevator motor
   public void stop() {
     this.disablePID();
+    Logger.recordOutput("Elevator/Command/Stop", true);
   }
 
   public void enablePID() {
     pidController.reset(getEncoderPosition());
     PIDEnabled = true;
+    Logger.recordOutput("Elevator/Control/PIDEnabled", true);
   }
 
   public void disablePID() {
     PIDEnabled = false;
-    setSetpoint(getEncoderPosition()); // Reset setpoint to current position
+    setSetpoint(getEncoderPosition());
     setClampSpeed(0);
+    Logger.recordOutput("Elevator/Control/PIDEnabled", false);
   }
 
   public boolean isEnabled() {
@@ -172,30 +134,30 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean isStalled() {
-    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold
-    // is exceeded
-    double current = elevatorMotor1.getRotorVelocity().getValueAsDouble();
-    double velocity = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
-    return Math.abs(velocity) < Elevator.STALL_VELOCITY_THRESHOLD
+    double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
+    double velocity = elevatorMotor1.getRotorVelocity().getValueAsDouble();
+    boolean stalled = Math.abs(velocity) < Elevator.STALL_VELOCITY_THRESHOLD
         && current > Elevator.STALL_CURRENT_THRESHOLD;
+    Logger.recordOutput("Elevator/Status/Stalled", stalled);
+    return stalled;
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    if (PIDEnabled == true) {
+    if (PIDEnabled) {
       runPID();
     }
 
-    // Update SmartDashboard
     // Log outputs using AdvantageKit
-    Logger.recordOutput("Elevator/Setpoint", setpoint);
-    Logger.recordOutput("Elevator/Position", getEncoderPosition());
-    Logger.recordOutput("Elevator/Voltage", elevatorMotor1.getMotorVoltage().getValueAsDouble());
-    Logger.recordOutput("Elevator/PIDEnabled", PIDEnabled);
-    Logger.recordOutput("Elevator/AtSetpoint", atSetpoint());
-    Logger.recordOutput("Elevator/PIDOutput", pidOutput);
-    Logger.recordOutput("Elevator/Feedforward", feedforward);
-    Logger.recordOutput("Elevator/TotalOutput", pidOutput + feedforward);
+    Logger.recordOutput("Elevator/Status/Setpoint", setpoint);
+    Logger.recordOutput("Elevator/Status/Position", getEncoderPosition());
+    Logger.recordOutput("Elevator/Status/Voltage", elevatorMotor1.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("Elevator/Status/Current", elevatorMotor1.getSupplyCurrent().getValueAsDouble());
+    Logger.recordOutput("Elevator/Status/Temperature", elevatorMotor1.getDeviceTemp().getValueAsDouble());
+    Logger.recordOutput("Elevator/Status/AtSetpoint", atSetpoint());
+    Logger.recordOutput("Elevator/Control/PIDOutput", pidOutput);
+    Logger.recordOutput("Elevator/Control/Feedforward", feedforward);
+    Logger.recordOutput("Elevator/Control/TotalOutput", pidOutput + feedforward);
+    Logger.recordOutput("Elevator/Status/Velocity", elevatorMotor1.getRotorVelocity().getValueAsDouble());
   }
 }

@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
@@ -65,10 +61,9 @@ public class WristSubsystem extends SubsystemBase {
             .withReverseSoftLimitEnable(true)
             .withReverseSoftLimitThreshold(reverseLimit);
 
-    Logger.recordOutput("Wrist/SoftForwardLimit", forwardLimit);
-    Logger.recordOutput("Wrist/SoftReverseLimit", reverseLimit);
+    Logger.recordOutput("Wrist/Config/SoftForwardLimit", forwardLimit);
+    Logger.recordOutput("Wrist/Config/SoftReverseLimit", reverseLimit);
 
-    
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     fx_cfg.withSoftwareLimitSwitch(limitSwitches);
     fx_cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -87,6 +82,11 @@ public class WristSubsystem extends SubsystemBase {
         idleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     setpoint = getAngle();
+
+    // Log initial configuration
+    Logger.recordOutput("Wrist/Config/PIDEnabled", PIDEnabled);
+    Logger.recordOutput("Wrist/Config/InitialSetpoint", setpoint);
+    Logger.recordOutput("Wrist/Config/GearRatio", Wrist.GEAR_RATIO);
   }
 
   public double getAngle() {
@@ -98,6 +98,7 @@ public class WristSubsystem extends SubsystemBase {
   public void setWristSetpoint(double setpoint) {
     this.setpoint = Math.max(Wrist.MIN_SAFE_ANGLE, Math.min(Wrist.MAX_SAFE_ANGLE, setpoint));
     pidController.setGoal(this.setpoint);
+    Logger.recordOutput("Wrist/Command/SetpointCommand", this.setpoint);
   }
 
   public boolean atSetpoint() {
@@ -115,39 +116,43 @@ public class WristSubsystem extends SubsystemBase {
   public void moveManual(double speed) {
     this.disablePID();
     setClampSpeed(speed);
+    Logger.recordOutput("Wrist/Command/ManualSpeed", speed);
   }
 
   private void setClampSpeed(double speed) {
-
     double newSpeed = Math.max(-1, Math.min(1, speed));
-    Logger.recordOutput("SimpleMoveWrist/Clamp", "Clamp Speed: " + newSpeed);
     wristMotor.set(newSpeed);
+    Logger.recordOutput("Wrist/Control/ClampSpeed", newSpeed);
   }
 
   public void moveRoller(double speed) {
     rollerMotor.set(speed);
+    Logger.recordOutput("Wrist/Control/RollerSpeed", speed);
   }
 
   public void stopRoller() {
     rollerMotor.set(0);
+    Logger.recordOutput("Wrist/Control/RollerSpeed", 0);
   }
 
   public void stop() {
     this.disablePID();
+    Logger.recordOutput("Wrist/Command/Stop", true);
   }
 
   public boolean isStalled() {
-    // Check stall condition - Stall velocity is less than defined constant & stallCurrentThreshold
-    // is exceeded
-    double current = wristMotor.getRotorVelocity().getValueAsDouble();
+    double current = wristMotor.getSupplyCurrent().getValueAsDouble();
     double velocity = wristMotor.getRotorVelocity().getValueAsDouble();
-    return Math.abs(velocity) < Wrist.STALL_VELOCITY_THRESHOLD
+    boolean stalled = Math.abs(velocity) < Wrist.STALL_VELOCITY_THRESHOLD
         && Math.abs(current) > Wrist.STALL_CURRENT_THRESHOLD;
+    Logger.recordOutput("Wrist/Status/Stalled", stalled);
+    return stalled;
   }
 
   public void enablePID() {
     pidController.reset(getAngle());
     PIDEnabled = true;
+    Logger.recordOutput("Wrist/Control/PIDEnabled", true);
   }
 
   public void disablePID() {
@@ -156,6 +161,7 @@ public class WristSubsystem extends SubsystemBase {
     setClampSpeed(0);
     pidOutput = 0;
     feedforward = 0;
+    Logger.recordOutput("Wrist/Control/PIDEnabled", false);
   }
 
   public boolean isEnabled() {
@@ -169,17 +175,20 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     // Log outputs using AdvantageKit
-    Logger.recordOutput("Wrist/Setpoint", setpoint);
-    Logger.recordOutput("Wrist/CurrentAngle", getAngle());
-    Logger.recordOutput("Wrist/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
-    Logger.recordOutput("Wrist/AbsoluteEncoderValue", absEncoder.get());
-    Logger.recordOutput("Wrist/PIDOutput", pidOutput);
-    Logger.recordOutput("Wrist/FeedforwardOutput", feedforward);
-    Logger.recordOutput("Wrist/TotalMotorOutput", pidOutput + feedforward);
-    Logger.recordOutput("Wrist/MotorVoltage", wristMotor.getMotorVoltage().getValueAsDouble());
-    Logger.recordOutput("Wrist/PIDEnabled", PIDEnabled);
-    Logger.recordOutput("Wrist/AtSetpoint", atSetpoint());
-    Logger.recordOutput("Wrist/RollerMotorSpeed", rollerMotor.getAppliedOutput());
-    Logger.recordOutput("Wrist/RollerMotorVoltage", rollerMotor.getBusVoltage());
+    Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
+    Logger.recordOutput("Wrist/Status/CurrentAngle", getAngle());
+    Logger.recordOutput("Wrist/Status/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
+    Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoder.get());
+    Logger.recordOutput("Wrist/Control/PIDOutput", pidOutput);
+    Logger.recordOutput("Wrist/Control/FeedforwardOutput", feedforward);
+    Logger.recordOutput("Wrist/Control/TotalMotorOutput", pidOutput + feedforward);
+    Logger.recordOutput("Wrist/Status/MotorVoltage", wristMotor.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("Wrist/Status/MotorCurrent", wristMotor.getSupplyCurrent().getValueAsDouble());
+    Logger.recordOutput("Wrist/Status/MotorTemperature", wristMotor.getDeviceTemp().getValueAsDouble());
+    Logger.recordOutput("Wrist/Status/AtSetpoint", atSetpoint());
+    Logger.recordOutput("Wrist/Status/RollerMotorSpeed", rollerMotor.getAppliedOutput());
+    Logger.recordOutput("Wrist/Status/RollerMotorVoltage", rollerMotor.getBusVoltage());
+    Logger.recordOutput("Wrist/Status/RollerMotorCurrent", rollerMotor.getOutputCurrent());
+    Logger.recordOutput("Wrist/Status/RollerMotorTemperature", rollerMotor.getMotorTemperature());
   }
 }
