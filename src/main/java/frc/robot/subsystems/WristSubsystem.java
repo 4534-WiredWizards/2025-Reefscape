@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
 
@@ -190,5 +191,13 @@ public class WristSubsystem extends SubsystemBase {
     Logger.recordOutput("Wrist/Status/RollerMotorVoltage", rollerMotor.getBusVoltage());
     Logger.recordOutput("Wrist/Status/RollerMotorCurrent", rollerMotor.getOutputCurrent());
     Logger.recordOutput("Wrist/Status/RollerMotorTemperature", rollerMotor.getMotorTemperature());
+
+    SmartDashboard.putNumber("Wrist/PID/p", pidController.getP());
+      SmartDashboard.putNumber("Elevator/PID/i", pidController.getI());
+      SmartDashboard.putNumber("Elevator/PID/d", pidController.getD());
+      SmartDashboard.putNumber("Elevator/PID/setpoint", pidController.getSetpoint().position);
+      SmartDashboard.putNumber("Elevator/PID/measurement", getEncoderPosition());
+      SmartDashboard.putNumber("Elevator/PID/error", pidController.getPositionError());
+
   }
 }
