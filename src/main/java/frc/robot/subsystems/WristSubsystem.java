@@ -169,6 +169,14 @@ public class WristSubsystem extends SubsystemBase {
     return PIDEnabled;
   }
 
+  public void updatePIDValues() {
+    double p = SmartDashboard.getNumber("Wrist/PID/p", pidController.getP());
+    double i = SmartDashboard.getNumber("Wrist/PID/i", pidController.getI());
+    double d = SmartDashboard.getNumber("Wrsit/PID/d", pidController.getD());
+    
+    pidController.setPID(p, i, d);
+  }
+
   @Override
   public void periodic() {
     if (PIDEnabled) {
@@ -193,11 +201,13 @@ public class WristSubsystem extends SubsystemBase {
     Logger.recordOutput("Wrist/Status/RollerMotorTemperature", rollerMotor.getMotorTemperature());
 
     SmartDashboard.putNumber("Wrist/PID/p", pidController.getP());
-      SmartDashboard.putNumber("Elevator/PID/i", pidController.getI());
-      SmartDashboard.putNumber("Elevator/PID/d", pidController.getD());
-      SmartDashboard.putNumber("Elevator/PID/setpoint", pidController.getSetpoint().position);
-      SmartDashboard.putNumber("Elevator/PID/measurement", getEncoderPosition());
-      SmartDashboard.putNumber("Elevator/PID/error", pidController.getPositionError());
+      SmartDashboard.putNumber("Wrist/PID/i", pidController.getI());
+      SmartDashboard.putNumber("Wrist/PID/d", pidController.getD());
+      SmartDashboard.putNumber("Wrist/PID/setpoint", pidController.getSetpoint().position);
+      SmartDashboard.putNumber("Wrist/PID/measurement", getAngle());
+      SmartDashboard.putNumber("Wrist/PID/error", pidController.getPositionError());
+
+      updatePIDValues();
 
   }
 }
