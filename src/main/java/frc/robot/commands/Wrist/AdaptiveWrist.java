@@ -4,11 +4,10 @@
 
 package frc.robot.commands.Wrist;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.WristSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AdaptiveWrist extends Command {
@@ -42,16 +41,16 @@ public class AdaptiveWrist extends Command {
     double rollerSpeed;
 
     if (isCoralRange) {
-        rollerSpeed = isPickup ? Wrist.Roller.CORAL_INTAKE_SPEED : Wrist.Roller.CORAL_OUTTAKE_SPEED;
-        intakeStatus = isPickup ? "Coral intake" : "Coral outtake";
+      rollerSpeed = isPickup ? Wrist.Roller.CORAL_INTAKE_SPEED : Wrist.Roller.CORAL_OUTTAKE_SPEED;
+      intakeStatus = isPickup ? "Coral intake" : "Coral outtake";
     } else {
-        rollerSpeed = isPickup ? Wrist.Roller.ALGAE_INTAKE_SPEED : Wrist.Roller.ALGAE_OUTTAKE_SPEED;
-        intakeStatus = isPickup ? "Algae intake" : "Algae outtake";
+      rollerSpeed = isPickup ? Wrist.Roller.ALGAE_INTAKE_SPEED : Wrist.Roller.ALGAE_OUTTAKE_SPEED;
+      intakeStatus = isPickup ? "Algae intake" : "Algae outtake";
     }
 
     m_wrist.moveRoller(rollerSpeed);
     Logger.recordOutput("Wrist/IntakeStatus", intakeStatus);
-}
+  }
 
   // Called once the command ends or is interrupted.
   @Override

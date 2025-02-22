@@ -13,9 +13,8 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -163,7 +162,7 @@ public interface Constants {
 
     // Feedforward Constants
     double KS = 0;
-    double KG = 0.46; //V1
+    double KG = 0.46; // V1
     double KV = 4.49;
     double KA = 0.05;
 
@@ -189,20 +188,19 @@ public interface Constants {
     int MAX_SAFE_POS = 216;
   }
 
-
   interface Wrist {
     // Motor and Encoder Configurations
     int PIVOT_MOTOR_ID = 53;
     double SPEED_SCALAR = 0.8;
     double GEAR_RATIO = 125.0;
-  
+
     interface Encoder {
       int PORT = 1;
       int FULL_RANGE = 1024;
       int EXPECTED_ZERO = 0;
       double ABSOLUTE_OFFSET = 0.0; // TODO: Calibrate
     }
-  
+
     // PID and Feedforward Configuration
     double PID_POSITION_TOLERANCE = 0.1;
     double PID_VELOCITY_TOLERANCE = 1;
@@ -210,22 +208,22 @@ public interface Constants {
     double KI = 0.0;
     double KD = 0.01;
     double KS = 0;
-    double KG = 0.18; //V1 1.01
-    double KV = 2.25; //V1 0.81
-    double KA = 0.00; //V1 0.03
-  
+    double KG = 0.18; // V1 1.01
+    double KV = 2.25; // V1 0.81
+    double KA = 0.00; // V1 0.03
+
     // Motion Profile Configuration
     double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
     double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
-  
+
     // Safety Limits
     double MAX_SAFE_ANGLE = 203 / 360.0; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = 0 / 360.0;
-  
+
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.1;
     double STALL_CURRENT_THRESHOLD = 30;
-  
+
     // Preset Positions and Angles
     int L1_ANGLE = 0;
     int L2_ANGLE = 15;
@@ -234,21 +232,20 @@ public interface Constants {
     int CORAL_INTAKE_ANGLE = 0;
     int BARGER_POSITION = 165;
     int DRIVE_POSITION = 0;
-  
+
     // Game Piece Switching Angles
     int CORAL_MAX_ANGLE = 103;
-  
+
     // Roller Configuration
     interface Roller {
       int MOTOR_ID = 54;
-      double CORAL_INTAKE_SPEED = .3;
-      double CORAL_OUTTAKE_SPEED = .3;
+      double CORAL_INTAKE_SPEED = -.3;
+      double CORAL_OUTTAKE_SPEED = -.3;
       double ALGAE_INTAKE_SPEED = .3;
       double ALGAE_OUTTAKE_SPEED = -.3;
     }
   }
-  
-  
+
   interface Swerve {
     interface Drive {
       interface PID {

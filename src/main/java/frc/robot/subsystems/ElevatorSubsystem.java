@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,14 +9,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import static edu.wpi.first.units.Units.Volts;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -137,8 +136,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   public boolean isStalled() {
     double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
     double velocity = elevatorMotor1.getRotorVelocity().getValueAsDouble();
-    boolean stalled = Math.abs(velocity) < Elevator.STALL_VELOCITY_THRESHOLD
-        && current > Elevator.STALL_CURRENT_THRESHOLD;
+    boolean stalled =
+        Math.abs(velocity) < Elevator.STALL_VELOCITY_THRESHOLD
+            && current > Elevator.STALL_CURRENT_THRESHOLD;
     Logger.recordOutput("Elevator/Status/Stalled", stalled);
     return stalled;
   }
@@ -147,21 +147,21 @@ public class ElevatorSubsystem extends SubsystemBase {
     double p = SmartDashboard.getNumber("Elevator/PID/p", pidController.getP());
     double i = SmartDashboard.getNumber("Elevator/PID/i", pidController.getI());
     double d = SmartDashboard.getNumber("Elevator/PID/d", pidController.getD());
-    
+
     pidController.setPID(p, i, d);
   }
 
   @Override
   public void periodic() {
-      // Send PID values to SmartDashboard
-      SmartDashboard.putNumber("Elevator/PID/p", pidController.getP());
-      SmartDashboard.putNumber("Elevator/PID/i", pidController.getI());
-      SmartDashboard.putNumber("Elevator/PID/d", pidController.getD());
-      SmartDashboard.putNumber("Elevator/PID/setpoint", pidController.getSetpoint().position);
-      SmartDashboard.putNumber("Elevator/PID/measurement", getEncoderPosition());
-      SmartDashboard.putNumber("Elevator/PID/error", pidController.getPositionError());
+    // Send PID values to SmartDashboard
+    SmartDashboard.putNumber("Elevator/PID/p", pidController.getP());
+    SmartDashboard.putNumber("Elevator/PID/i", pidController.getI());
+    SmartDashboard.putNumber("Elevator/PID/d", pidController.getD());
+    SmartDashboard.putNumber("Elevator/PID/setpoint", pidController.getSetpoint().position);
+    SmartDashboard.putNumber("Elevator/PID/measurement", getEncoderPosition());
+    SmartDashboard.putNumber("Elevator/PID/error", pidController.getPositionError());
 
-      updatePIDValues();
+    updatePIDValues();
 
     if (PIDEnabled) {
       runPID();
@@ -170,13 +170,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     // Log outputs using AdvantageKit
     Logger.recordOutput("Elevator/Status/Setpoint", setpoint);
     Logger.recordOutput("Elevator/Status/Position", getEncoderPosition());
-    Logger.recordOutput("Elevator/Status/Voltage", elevatorMotor1.getMotorVoltage().getValueAsDouble());
-    Logger.recordOutput("Elevator/Status/Current", elevatorMotor1.getSupplyCurrent().getValueAsDouble());
-    Logger.recordOutput("Elevator/Status/Temperature", elevatorMotor1.getDeviceTemp().getValueAsDouble());
+    Logger.recordOutput(
+        "Elevator/Status/Voltage", elevatorMotor1.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput(
+        "Elevator/Status/Current", elevatorMotor1.getSupplyCurrent().getValueAsDouble());
+    Logger.recordOutput(
+        "Elevator/Status/Temperature", elevatorMotor1.getDeviceTemp().getValueAsDouble());
     Logger.recordOutput("Elevator/Status/AtSetpoint", atSetpoint());
     Logger.recordOutput("Elevator/Control/PIDOutput", pidOutput);
     Logger.recordOutput("Elevator/Control/Feedforward", feedforward);
     Logger.recordOutput("Elevator/Control/TotalOutput", pidOutput + feedforward);
-    Logger.recordOutput("Elevator/Status/Velocity", elevatorMotor1.getRotorVelocity().getValueAsDouble());
+    Logger.recordOutput(
+        "Elevator/Status/Velocity", elevatorMotor1.getRotorVelocity().getValueAsDouble());
   }
 }
