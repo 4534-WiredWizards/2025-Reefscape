@@ -5,7 +5,9 @@
 package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.WristSubsystem;
 import java.util.function.DoubleSupplier;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -13,11 +15,15 @@ public class SimpleMoveElevator extends Command {
 
   private final ElevatorSubsystem m_elevator;
   private final DoubleSupplier speedSupplier;
+  private final WristSubsystem m_Wrist;
 
-  public SimpleMoveElevator(ElevatorSubsystem m_elevator, DoubleSupplier speedSupplier) {
+  public SimpleMoveElevator(
+      WristSubsystem wrist, ElevatorSubsystem m_elevator, DoubleSupplier speedSupplier) {
     this.m_elevator = m_elevator;
     this.speedSupplier = speedSupplier;
+    this.m_Wrist = wrist;
     addRequirements(m_elevator);
+    addRequirements(m_Wrist);
   }
 
   @Override
@@ -29,9 +35,14 @@ public class SimpleMoveElevator extends Command {
   @Override
   public void execute() {
     // Move the elevator manually based on the input speed
+    if (m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
+      m_Wrist.moveManual(.2);
+    } else {
+      m_Wrist.moveManual(0);
 
-    double speed = speedSupplier.getAsDouble();
-    m_elevator.moveManual(speed);
+      double speed = speedSupplier.getAsDouble();
+      m_elevator.moveManual(speed);
+    }
   }
 
   @Override

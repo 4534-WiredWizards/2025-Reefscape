@@ -192,7 +192,7 @@ public class TunerConstants {
   private static final int kFrontLeftDriveMotorId = 10;
   private static final int kFrontLeftSteerMotorId = 15;
   private static final int kFrontLeftEncoderId = 12;
-  private static final Angle kFrontLeftEncoderOffset = Rotations.of(-0.045654296875);
+  private static final Angle kFrontLeftEncoderOffset = Rotations.of(-0.232421875);
   private static final boolean kFrontLeftSteerMotorInverted = false;
   private static final boolean kFrontLeftEncoderInverted = false;
 
@@ -203,7 +203,7 @@ public class TunerConstants {
   private static final int kFrontRightDriveMotorId = 20;
   private static final int kFrontRightSteerMotorId = 25;
   private static final int kFrontRightEncoderId = 22;
-  private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.3505859375);
+  private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.397216796875);
   private static final boolean kFrontRightSteerMotorInverted = false;
   private static final boolean kFrontRightEncoderInverted = false;
 
@@ -214,7 +214,7 @@ public class TunerConstants {
   private static final int kBackLeftDriveMotorId = 30;
   private static final int kBackLeftSteerMotorId = 35;
   private static final int kBackLeftEncoderId = 32;
-  private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.230712890625);
+  private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.293701171875);
   private static final boolean kBackLeftSteerMotorInverted = false;
   private static final boolean kBackLeftEncoderInverted = false;
 
@@ -225,7 +225,7 @@ public class TunerConstants {
   private static final int kBackRightDriveMotorId = 40;
   private static final int kBackRightSteerMotorId = 45;
   private static final int kBackRightEncoderId = 42;
-  private static final Angle kBackRightEncoderOffset = Rotations.of(0.009765625);
+  private static final Angle kBackRightEncoderOffset = Rotations.of(-0.062255859375);
   private static final boolean kBackRightSteerMotorInverted = false;
   private static final boolean kBackRightEncoderInverted = false;
 

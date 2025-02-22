@@ -178,13 +178,13 @@ public interface Constants {
     double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
 
     // Preset Positions (TODO: Set actual values)
-    double L1_POS = 0.0;
-    double L2_POS = 0.0;
-    double L3_POS = 0.0;
-    double L4_POS = 0.0;
+    double L1_POS = 30.0;
+    double L2_POS = 60.0;
+    double L3_POS = 120.0;
+    double L4_POS = 160.0;
     int CORAL_INTAKE_POS = 0;
     int DRIVE_POS = 0;
-    int MAX_SAFE_POS = 216;
+    int MAX_SAFE_POS = 172;
   }
 
   interface Wrist {
@@ -216,8 +216,9 @@ public interface Constants {
     double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 203 / 360.0; // Convert degrees to rotations
+    double MAX_SAFE_ANGLE = 162 / 360.0; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = 0 / 360.0;
+    double MIN_CLEAR_ELEVATOR_ANGLE = 22.7 / 360.0;
 
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.1;

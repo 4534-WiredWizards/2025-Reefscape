@@ -34,6 +34,10 @@ public class SimpleMoveWrist extends Command {
   @Override
   public void execute() {
     double speed = speedSupplier.getAsDouble();
+    // deadband for joystick
+    if (speed < 0.1 && speed > -0.1) {
+      speed = 0;
+    }
     speed = speed * Wrist.SPEED_SCALAR;
     Logger.recordOutput("Wrist/GivenSpeed", speed);
 
