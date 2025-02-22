@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -14,14 +12,15 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -143,8 +142,9 @@ public class WristSubsystem extends SubsystemBase {
   public boolean isStalled() {
     double current = wristMotor.getSupplyCurrent().getValueAsDouble();
     double velocity = wristMotor.getRotorVelocity().getValueAsDouble();
-    boolean stalled = Math.abs(velocity) < Wrist.STALL_VELOCITY_THRESHOLD
-        && Math.abs(current) > Wrist.STALL_CURRENT_THRESHOLD;
+    boolean stalled =
+        Math.abs(velocity) < Wrist.STALL_VELOCITY_THRESHOLD
+            && Math.abs(current) > Wrist.STALL_CURRENT_THRESHOLD;
     Logger.recordOutput("Wrist/Status/Stalled", stalled);
     return stalled;
   }
@@ -177,18 +177,24 @@ public class WristSubsystem extends SubsystemBase {
     // Log outputs using AdvantageKit
     Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
     Logger.recordOutput("Wrist/Status/CurrentAngle", getAngle());
-    Logger.recordOutput("Wrist/Status/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
+    Logger.recordOutput(
+        "Wrist/Status/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
     Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoder.get());
     Logger.recordOutput("Wrist/Control/PIDOutput", pidOutput);
     Logger.recordOutput("Wrist/Control/FeedforwardOutput", feedforward);
     Logger.recordOutput("Wrist/Control/TotalMotorOutput", pidOutput + feedforward);
-    Logger.recordOutput("Wrist/Status/MotorVoltage", wristMotor.getMotorVoltage().getValueAsDouble());
-    Logger.recordOutput("Wrist/Status/MotorCurrent", wristMotor.getSupplyCurrent().getValueAsDouble());
-    Logger.recordOutput("Wrist/Status/MotorTemperature", wristMotor.getDeviceTemp().getValueAsDouble());
+    Logger.recordOutput(
+        "Wrist/Status/MotorVoltage", wristMotor.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput(
+        "Wrist/Status/MotorCurrent", wristMotor.getSupplyCurrent().getValueAsDouble());
+    Logger.recordOutput(
+        "Wrist/Status/MotorTemperature", wristMotor.getDeviceTemp().getValueAsDouble());
     Logger.recordOutput("Wrist/Status/AtSetpoint", atSetpoint());
     Logger.recordOutput("Wrist/Status/RollerMotorSpeed", rollerMotor.getAppliedOutput());
     Logger.recordOutput("Wrist/Status/RollerMotorVoltage", rollerMotor.getBusVoltage());
     Logger.recordOutput("Wrist/Status/RollerMotorCurrent", rollerMotor.getOutputCurrent());
     Logger.recordOutput("Wrist/Status/RollerMotorTemperature", rollerMotor.getMotorTemperature());
+
+    SmartDashboard.putData("Wrist/PID/", pidController);
   }
 }
