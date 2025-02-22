@@ -32,6 +32,8 @@ public class SetWristPosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println(
+        ".(SETWRISTPOS INIT *******************************************************************)");
     m_wrist.setWristSetpoint(targetPosition);
     m_wrist.enablePID();
   }
@@ -47,6 +49,7 @@ public class SetWristPosition extends Command {
   public void end(boolean interrupted) {
     m_wrist.stop();
     m_wrist.disablePID();
+    System.out.println(".(ENDED WRIST PID *****************************) " + interrupted);
   }
 
   // Returns true when the command should end.

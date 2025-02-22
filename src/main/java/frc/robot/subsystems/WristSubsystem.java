@@ -76,7 +76,7 @@ public class WristSubsystem extends SubsystemBase {
     // Intake config
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
     SparkFlexConfig idleConfig = new SparkFlexConfig();
-    idleConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60);
+    idleConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(60);
     rollerMotor.configure(
         idleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -108,7 +108,7 @@ public class WristSubsystem extends SubsystemBase {
     this.pidOutput = pidController.calculate(getAngle());
     this.feedforward =
         m_WristFeedforward.calculate(
-            Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
+            Units.degreesToRadians(getAngle() - 128), pidController.getSetpoint().velocity);
     setClampSpeed(pidOutput + feedforward);
   }
 

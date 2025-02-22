@@ -69,7 +69,12 @@ public class TunerConstants {
   // Final Kv = 0.12227 + 0.38012 = 0.50239
 
   private static final Slot0Configs driveGains =
-      new Slot0Configs().withKP(0.06134).withKI(0.0).withKD(0.0).withKS(0.19258).withKV(0.50239);
+      new Slot0Configs()
+          .withKP(0.06134)
+          .withKI(0.0)
+          .withKD(0.0)
+          .withKS(1.19258 /*0.19258*/)
+          .withKV(1.50239 /*0.50239*/);
   //   .withKA(0.01698);
 
   //   private static final Slot0Configs driveGains =

@@ -70,6 +70,9 @@ public class RobotContainer {
   private final CommandXboxController Operatorcontroller = new CommandXboxController(0);
   private final Joystick driverJoystick = new Joystick(1);
 
+  // test 2nd xboc controller
+  private final CommandXboxController TestController = new CommandXboxController(2);
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -197,14 +200,25 @@ public class RobotContainer {
     Operatorcontroller.leftBumper()
         .whileTrue(
             new SimpleMoveElevator(
-                m_elevator, () -> Elevator.ELEVATOR_DOWN_DIR * Elevator.MANUAL_SPEED));
+                m_Wrist, m_elevator, () -> Elevator.ELEVATOR_DOWN_DIR * Elevator.MANUAL_SPEED));
     Operatorcontroller.rightBumper()
         .whileTrue(
             new SimpleMoveElevator(
-                m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
+                m_Wrist, m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
 
     Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Wrist, true)); // Pickup
     Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Wrist, false)); // Outtake
+
+    // testcontroller button
+    TestController.a().onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+    TestController.b().onTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+    TestController.x().onTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+    TestController.y().onTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+
+    TestController.povDown().onTrue(new SetElevatorPosition(m_elevator, Elevator.L1_POS));
+    TestController.povRight().onTrue(new SetElevatorPosition(m_elevator, Elevator.L2_POS));
+    TestController.povLeft().onTrue(new SetElevatorPosition(m_elevator, Elevator.L3_POS));
+    TestController.povUp().onTrue(new SetElevatorPosition(m_elevator, Elevator.L4_POS));
 
     Constants.ScoringPositions.ZonePosition position =
         Constants.ScoringPositions.getZonePosition(

@@ -201,22 +201,22 @@ public interface Constants {
     }
 
     // PID and Feedforward Configuration
-    double PID_POSITION_TOLERANCE = 0.1;
+    double PID_POSITION_TOLERANCE = 1 / 360;
     double PID_VELOCITY_TOLERANCE = 1;
-    double KP = 0.05;
+    double KP = 0.001; // 0.05;
     double KI = 0.0;
-    double KD = 0.01;
+    double KD = 0.0; // 0.01;
     double KS = 0;
     double KG = 0.18; // V1 1.01
-    double KV = 2.25; // V1 0.81
+    double KV = 0.81; // V1 0.81
     double KA = 0.00; // V1 0.03
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 2.0; // TODO: Set actual maximum
-    double MAX_ACCELERATION = 2.0; // TODO: Set actual maximum
+    double MAX_VELOCITY = 1; // TODO: Set actual maximum
+    double MAX_ACCELERATION = 2; // TODO: Set actual maximum
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 162 / 360.0; // Convert degrees to rotations
+    double MAX_SAFE_ANGLE = 162; // 360; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = 0 / 360.0;
     double MIN_CLEAR_ELEVATOR_ANGLE = 22.7 / 360.0;
 
@@ -225,11 +225,11 @@ public interface Constants {
     double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions and Angles
-    int L1_ANGLE = 0;
-    int L2_ANGLE = 15;
-    int L3_ANGLE = 15;
-    int L4_ANGLE = 70;
-    int CORAL_INTAKE_ANGLE = 0;
+    double L1_ANGLE = 30.0; // / 360;
+    double L2_ANGLE = 60; // 360;
+    double L3_ANGLE = 60; // / 360;
+    double L4_ANGLE = 100; // / 360;
+    int CORAL_INTAKE_ANGLE = 98;
     int BARGER_POSITION = 165;
     int DRIVE_POSITION = 0;
 
