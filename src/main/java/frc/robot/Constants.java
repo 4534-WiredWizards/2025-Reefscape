@@ -145,7 +145,6 @@ public interface Constants {
     // Motor Configurations
     int LEFT_MOTOR_ID = 51;
     int RIGHT_MOTOR_ID = 52;
-    int BOTTOM_LIMIT_SWITCH_ID = 0;
 
     // PID Configuration
     double KP = 0.1;
