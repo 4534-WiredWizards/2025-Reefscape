@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Volts;
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,13 +9,14 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -143,25 +144,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     return stalled;
   }
 
-  public void updatePIDValues() {
-    double p = SmartDashboard.getNumber("Elevator/PID/p", pidController.getP());
-    double i = SmartDashboard.getNumber("Elevator/PID/i", pidController.getI());
-    double d = SmartDashboard.getNumber("Elevator/PID/d", pidController.getD());
-
-    pidController.setPID(p, i, d);
-  }
-
   @Override
   public void periodic() {
-    // Send PID values to SmartDashboard
-    SmartDashboard.putNumber("Elevator/PID/p", pidController.getP());
-    SmartDashboard.putNumber("Elevator/PID/i", pidController.getI());
-    SmartDashboard.putNumber("Elevator/PID/d", pidController.getD());
-    SmartDashboard.putNumber("Elevator/PID/setpoint", pidController.getSetpoint().position);
-    SmartDashboard.putNumber("Elevator/PID/measurement", getEncoderPosition());
-    SmartDashboard.putNumber("Elevator/PID/error", pidController.getPositionError());
-
-    updatePIDValues();
+    SmartDashboard.putData("Elevator/PID/", pidController);
 
     if (PIDEnabled) {
       runPID();
