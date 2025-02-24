@@ -95,7 +95,7 @@ public class WristSubsystem extends SubsystemBase {
     this.pidOutput = pidController.calculate(getAngle());
     this.feedforward =
         m_WristFeedforward.calculate(
-            Units.degreesToRadians(getAngle() - 128), pidController.getSetpoint().velocity);
+            Units.degreesToRadians(getAngle() - Wrist.HORIZONTAL_ANGLE), pidController.getSetpoint().velocity);
     setClampSpeed(pidOutput + feedforward);
   }
 
