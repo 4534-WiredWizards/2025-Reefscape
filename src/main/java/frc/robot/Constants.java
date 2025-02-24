@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -212,8 +213,8 @@ public interface Constants {
     double KA = 0.00; // V1 0.03
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 1; // TODO: Set actual maximum
-    double MAX_ACCELERATION = 2; // TODO: Set actual maximum
+    double MAX_VELOCITY = 1; 
+    double MAX_ACCELERATION = 2; 
 
     // Safety Limits
     double MAX_SAFE_ANGLE = 162; // 360; // Convert degrees to rotations
