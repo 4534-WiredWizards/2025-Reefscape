@@ -12,105 +12,7 @@
     {
       "name": "Test Driver 1",
       "grid_layout": {
-        "layouts": [
-          {
-            "title": "PID",
-            "x": 1568.0,
-            "y": 160.0,
-            "width": 256.0,
-            "height": 448.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "d",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Elevator/PID/d",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "error",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Elevator/PID/error",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "i",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Elevator/PID/i",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "measurement",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Elevator/PID/measurement",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "p",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Elevator/PID/p",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "setpoint",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/Elevator/PID/setpoint",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              }
-            ]
-          }
-        ],
+        "layouts": [],
         "containers": [
           {
             "title": "Field",
@@ -603,20 +505,6 @@
                 }
               },
               {
-                "title": "Setpoint",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Setpoint",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
                 "title": "Stalled",
                 "x": 0.0,
                 "y": 0.0,
@@ -782,13 +670,86 @@
           },
           {
             "title": "CurrentAngle",
-            "x": 1184.0,
-            "y": 288.0,
-            "width": 192.0,
-            "height": 128.0,
-            "type": "Text Display",
+            "x": 1216.0,
+            "y": 352.0,
+            "width": 320.0,
+            "height": 320.0,
+            "type": "Radial Gauge",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Wrist/Status/CurrentAngle",
+              "period": 0.033,
+              "data_type": "double",
+              "start_angle": -140.0,
+              "end_angle": 140.0,
+              "min_value": 0.0,
+              "max_value": 184.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "ClampSpeed",
+            "x": 912.0,
+            "y": 336.0,
+            "width": 304.0,
+            "height": 352.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/ClampSpeed",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "min_value": -1.0,
+              "max_value": 1.0,
+              "color": 4285060096,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Stalled",
+            "x": 576.0,
+            "y": 288.0,
+            "width": 240.0,
+            "height": 208.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Stalled",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "AtSetpoint",
+            "x": 576.0,
+            "y": 496.0,
+            "width": 240.0,
+            "height": 192.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AtSetpoint",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Setpoint",
+            "x": 896.0,
+            "y": 64.0,
+            "width": 240.0,
+            "height": 208.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Setpoint",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": false
@@ -1174,27 +1135,6 @@
             "properties": {
               "topic": "/FMSInfo",
               "period": 0.06
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Cams",
-      "grid_layout": {
-        "layouts": [],
-        "containers": [
-          {
-            "title": "limelight-back",
-            "x": 48.0,
-            "y": 16.0,
-            "width": 656.0,
-            "height": 672.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/limelight-back",
-              "period": 0.06,
-              "rotation_turns": 0
             }
           }
         ]
