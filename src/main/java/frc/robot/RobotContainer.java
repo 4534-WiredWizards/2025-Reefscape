@@ -12,9 +12,12 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -40,6 +43,7 @@ import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ScoringQueueSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -49,7 +53,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,6 +66,7 @@ public class RobotContainer {
   private final Drive drive;
   public final VisionSubsystem m_vision;
   private final WristSubsystem m_Wrist = new WristSubsystem();
+  private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   private final ScoringQueueSubsystem m_scoringQueue;
 
@@ -76,14 +80,19 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  // Named Command
+  public double getWristAngle() {
+    return m_Wrist.getAngle();
+  }
+
+
+  // Named Command0
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     // Register named commands
-    NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Wrist, true));
+    NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Intake, this::getWristAngle, true));
     NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
-    NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Wrist, false));
+    NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
 
     // Event Triggers
     new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L4_POS));
@@ -96,8 +105,8 @@ public class RobotContainer {
     new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
     new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
 
-    new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Wrist, false));
-    new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Wrist, true));
+    new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+    new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
 
     switch (Constants.CURRENT_MODE) {
       case REAL:
@@ -206,8 +215,8 @@ public class RobotContainer {
             new SimpleMoveElevator(
                 m_Wrist, m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
 
-    Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Wrist, true)); // Pickup
-    Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Wrist, false)); // Outtake
+    Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Pickup
+    Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
     // testcontroller button
     TestController.a().onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
