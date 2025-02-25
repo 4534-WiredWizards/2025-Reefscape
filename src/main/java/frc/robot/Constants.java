@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -227,10 +228,10 @@ public interface Constants {
     double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions and Angles
-    double L1_ANGLE = 30.0; // / 360;
+    double L1_ANGLE = 120; // / 360;
     double L2_ANGLE = 60; // 360;
     double L3_ANGLE = 60; // / 360;
-    double L4_ANGLE = 100; // / 360;
+    double L4_ANGLE = 0; // / 360;
     int CORAL_INTAKE_ANGLE = 98;
     int BARGER_POSITION = 165;
     int DRIVE_POSITION = 0;
