@@ -13,9 +13,8 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -213,11 +212,11 @@ public interface Constants {
     double KA = 0.00; // V1 0.03
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 1; 
-    double MAX_ACCELERATION = 2; 
+    double MAX_VELOCITY = 1;
+    double MAX_ACCELERATION = 2;
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 162; // 360; // Convert degrees to rotations
+    double MAX_SAFE_ANGLE = -162; // 360; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = 0 / 360.0;
     double MIN_CLEAR_ELEVATOR_ANGLE = 22.7 / 360.0;
     double HORIZONTAL_ANGLE = 128;
@@ -241,17 +240,14 @@ public interface Constants {
     // Roller Configuration
     interface Roller {
       int MOTOR_ID = 54;
-      int FIRST_SENSOR_ID = 0;
-      int SECOND_SENSOR_ID = 1;
+      int FIRST_SENSOR_ID = 2;
+      int SECOND_SENSOR_ID = 3;
 
       double CORAL_INTAKE_SPEED = -.3;
       double AFTER_FIRST_SENSOR_CORAL_SPEED = -.05;
       double CORAL_OUTTAKE_SPEED = -.3;
       double ALGAE_INTAKE_SPEED = .3;
       double ALGAE_OUTTAKE_SPEED = -.3;
-
-      
-
     }
   }
 

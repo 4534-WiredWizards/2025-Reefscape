@@ -1,35 +1,29 @@
 // IntakeSubsystem.java
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.ctre.phoenix6.configs.DigitalInputsConfigs;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase {
   private final SparkFlex rollerMotor;
-  //sensors
+  // sensors
   private final DigitalInput firstSensor;
   private final DigitalInput secondSensor;
-  
 
   public IntakeSubsystem() {
     // Intake config
 
     firstSensor = new DigitalInput(Wrist.Roller.FIRST_SENSOR_ID);
     secondSensor = new DigitalInput(Wrist.Roller.SECOND_SENSOR_ID);
-    
-    
+
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
     SparkFlexConfig idleConfig = new SparkFlexConfig();
     idleConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(60);
@@ -54,5 +48,4 @@ public class IntakeSubsystem extends SubsystemBase {
   public boolean getSecondSensor() {
     return secondSensor.get();
   }
-
 }
