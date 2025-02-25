@@ -32,23 +32,23 @@ public class AdaptiveWrist extends Command {
   public void execute() {
     double wristAngle = wristAngleSupplier.getAsDouble();
     boolean isCoralRange = wristAngle < Wrist.CORAL_MAX_ANGLE;
-    
+
     runIntake(isCoralRange);
   }
 
   private void runIntake(boolean isCoralRange) {
     if (isCoralRange) {
-        if (isPickup) {
-            coralIntake.runIntake();
-        } else {
-            m_intake.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
-        }
+      if (isPickup) {
+        coralIntake.runIntake();
+      } else {
+        m_intake.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
+      }
     } else {
-        if (isPickup) {
-            m_intake.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
-        } else {
-            m_intake.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
-        }
+      if (isPickup) {
+        m_intake.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
+      } else {
+        m_intake.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
+      }
     }
-}
+  }
 }

@@ -17,7 +17,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -85,8 +84,6 @@ public class RobotContainer {
     return m_Wrist.getAngle();
   }
 
-
-    
   // Named Command0
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -110,8 +107,6 @@ public class RobotContainer {
 
     new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
     new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
-
-    
 
     switch (Constants.CURRENT_MODE) {
       case REAL:
@@ -300,9 +295,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
-private void setupShuffleboardWidget() {
+
+  private void setupShuffleboardWidget() {
     ShuffleboardTab testTab = Shuffleboard.getTab("PID Tuning");
-    
+
     // Wrist Angle Entries
     testTab.add("Wrist L1 Angle", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     testTab.add("Wrist L2 Angle", Wrist.L2_ANGLE).getEntry();
@@ -315,6 +311,7 @@ private void setupShuffleboardWidget() {
     testTab.add("Elevator L3 Pos", Elevator.L3_POS).getEntry();
     testTab.add("Elevator L4 Pos", Elevator.L4_POS).getEntry();
   }
+
   public void updateDashboard() {
     SmartDashboard.getNumber("Match Time", DriverStation.getMatchTime());
 
