@@ -20,10 +20,13 @@ import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -85,6 +88,7 @@ public class RobotContainer {
   }
 
 
+    
   // Named Command0
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -107,6 +111,8 @@ public class RobotContainer {
 
     new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
     new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
+
+    
 
     switch (Constants.CURRENT_MODE) {
       case REAL:
@@ -293,8 +299,33 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
+private void setupShuffleboardWidget() {
+    ShuffleboardTab testTab = Shuffleboard.getTab("PID Tuning");
+    
+    // Wrist Angle Entries
+    testTab.add("Wrist L1 Angle", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+    testTab.add("Wrist L2 Angle", Wrist.L2_ANGLE).getEntry();
+    testTab.add("Wrist L3 Angle", Wrist.L3_ANGLE).getEntry();
+    testTab.add("Wrist L4 Angle", Wrist.L4_ANGLE).getEntry();
 
+    // Elevator Position Entries
+    testTab.add("Elevator L1 Pos", Elevator.L1_POS).getEntry();
+    testTab.add("Elevator L2 Pos", Elevator.L2_POS).getEntry();
+    testTab.add("Elevator L3 Pos", Elevator.L3_POS).getEntry();
+    testTab.add("Elevator L4 Pos", Elevator.L4_POS).getEntry();
+  }
   public void updateDashboard() {
     SmartDashboard.getNumber("Match Time", DriverStation.getMatchTime());
+
+    // Display Command buttons for Wrist and Elevator positions
+    SmartDashboard.putData("Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+    SmartDashboard.putData("Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+    SmartDashboard.putData("Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+    SmartDashboard.putData("Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+
+    SmartDashboard.putData("Elevator L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+    SmartDashboard.putData("Elevator L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+    SmartDashboard.putData("Elevator L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+    SmartDashboard.putData("Elevator L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
   }
 }

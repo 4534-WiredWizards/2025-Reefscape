@@ -15,11 +15,16 @@ public class AdaptiveWrist extends Command {
   private final IntakeSubsystem m_intake;
   private final DoubleSupplier wristAngleSupplier;
   private final boolean isPickup;
+  private final RunCoralIntake coralIntake;
+  private double speed;
 
   public AdaptiveWrist(IntakeSubsystem intake, DoubleSupplier wristAngleSupplier, boolean isPickup) {
     this.m_intake = intake;
     this.wristAngleSupplier = wristAngleSupplier;
     this.isPickup = isPickup;
+
+    coralIntake = new RunCoralIntake();
+
     addRequirements(m_intake);
   }
 
@@ -28,14 +33,22 @@ public class AdaptiveWrist extends Command {
     double wristAngle = wristAngleSupplier.getAsDouble();
     boolean isCoralRange = wristAngle < Wrist.CORAL_MAX_ANGLE;
     
-    double rollerSpeed = calculateSpeed(isCoralRange);
-    m_intake.moveRoller(rollerSpeed);
+    runIntake(isCoralRange);
   }
 
-  private double calculateSpeed(boolean isCoralRange) {
+  private void runIntake(boolean isCoralRange) {
     if (isCoralRange) {
-      return isPickup ? Wrist.Roller.CORAL_INTAKE_SPEED : Wrist.Roller.CORAL_OUTTAKE_SPEED;
+        if (isPickup) {
+            coralIntake.runIntake();
+        } else {
+            m_intake.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
+        }
+    } else {
+        if (isPickup) {
+            m_intake.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
+        } else {
+            m_intake.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
+        }
     }
-    return isPickup ? Wrist.Roller.ALGAE_INTAKE_SPEED : Wrist.Roller.ALGAE_OUTTAKE_SPEED;
-  }
+}
 }
