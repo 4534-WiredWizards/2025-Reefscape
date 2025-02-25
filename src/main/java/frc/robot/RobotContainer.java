@@ -224,9 +224,9 @@ public class RobotContainer {
                 m_Wrist, m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
 
     Operatorcontroller.leftTrigger()
-        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Pickup
+        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Outtake
     Operatorcontroller.rightTrigger()
-        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
+        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // pickup
 
     // testcontroller button
     // TestController.a().onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));

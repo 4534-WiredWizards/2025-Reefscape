@@ -1,14 +1,11 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -16,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -78,7 +76,7 @@ public class WristSubsystem extends SubsystemBase {
   public double getAngle() {
     double motorRotations = wristMotor.getRotorPosition().getValueAsDouble();
     double wristRotations = motorRotations / Wrist.GEAR_RATIO;
-    return (wristRotations * 360) - Wrist.TRUE_ZERO;
+    return (wristRotations * 360) + Wrist.TRUE_ZERO;
   }
 
   public void setWristSetpoint(double setpoint) {
@@ -95,8 +93,7 @@ public class WristSubsystem extends SubsystemBase {
     this.pidOutput = pidController.calculate(getAngle());
     this.feedforward =
         m_WristFeedforward.calculate(
-            Units.degreesToRadians(getAngle()),
-            pidController.getSetpoint().velocity);
+            Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
     setClampSpeed(pidOutput + feedforward);
   }
 
@@ -160,6 +157,6 @@ public class WristSubsystem extends SubsystemBase {
     Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoder.get());
     Logger.recordOutput("Wrist/Control/TotalMotorOutput", pidOutput + feedforward);
     Logger.recordOutput("Wrist/Status/AtSetpoint", atSetpoint());
-    Logger.recordOutput("Is In Coral Range :)", getAngle() < Wrist.CORAL_MAX_ANGLE);
+    Logger.recordOutput("Wrist/IsCoralRange", getAngle() > Wrist.CORAL_MAX_ANGLE);
   }
 }
