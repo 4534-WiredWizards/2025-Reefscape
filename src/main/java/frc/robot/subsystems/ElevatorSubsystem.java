@@ -145,7 +145,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putData("Elevator/PID/", pidController);
+    SmartDashboard.putData("Elevator/PID/Controller", pidController);
 
     if (PIDEnabled) {
       runPID();

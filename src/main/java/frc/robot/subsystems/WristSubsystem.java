@@ -1,21 +1,20 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -95,7 +94,8 @@ public class WristSubsystem extends SubsystemBase {
     this.pidOutput = pidController.calculate(getAngle());
     this.feedforward =
         m_WristFeedforward.calculate(
-            Units.degreesToRadians(getAngle() - Wrist.HORIZONTAL_ANGLE), pidController.getSetpoint().velocity);
+            Units.degreesToRadians(getAngle() - Wrist.HORIZONTAL_ANGLE),
+            pidController.getSetpoint().velocity);
     setClampSpeed(pidOutput + feedforward);
   }
 
@@ -151,21 +151,26 @@ public class WristSubsystem extends SubsystemBase {
       runPID();
     }
 
+    SmartDashboard.putData("Wrist/PID/Controller", pidController);
+
     // Log outputs using AdvantageKit
-    Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
+    // Log PID controller status
+    Logger.recordOutput("Wrist/PID/Setpoint", setpoint);
+    Logger.recordOutput("Wrist/PID/Output", pidOutput);
+    Logger.recordOutput("Wrist/PID/Feedforward", feedforward);
+    Logger.recordOutput("Wrist/PID/TotalOutput", pidOutput + feedforward);
+    Logger.recordOutput("Wrist/PID/AtSetpoint", atSetpoint());
+
+    // Log current wrist status
     Logger.recordOutput("Wrist/Status/CurrentAngle", getAngle());
     Logger.recordOutput(
         "Wrist/Status/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
     Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoder.get());
-    Logger.recordOutput("Wrist/Control/PIDOutput", pidOutput);
-    Logger.recordOutput("Wrist/Control/FeedforwardOutput", feedforward);
-    Logger.recordOutput("Wrist/Control/TotalMotorOutput", pidOutput + feedforward);
     Logger.recordOutput(
         "Wrist/Status/MotorVoltage", wristMotor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput(
         "Wrist/Status/MotorCurrent", wristMotor.getSupplyCurrent().getValueAsDouble());
     Logger.recordOutput(
         "Wrist/Status/MotorTemperature", wristMotor.getDeviceTemp().getValueAsDouble());
-    Logger.recordOutput("Wrist/Status/AtSetpoint", atSetpoint());
   }
 }

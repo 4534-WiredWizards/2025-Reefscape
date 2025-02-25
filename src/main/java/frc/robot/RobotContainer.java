@@ -12,12 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -56,6 +53,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -96,7 +94,8 @@ public class RobotContainer {
     // Register named commands
     NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Intake, this::getWristAngle, true));
     NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
-    NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+    NamedCommands.registerCommand(
+        "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
 
     // Event Triggers
     new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L4_POS));
@@ -149,7 +148,7 @@ public class RobotContainer {
         break;
     }
     m_vision = new VisionSubsystem(drive);
-    m_scoringQueue = new ScoringQueueSubsystem(drive, m_elevator, m_Wrist);
+    m_scoringQueue = new ScoringQueueSubsystem(drive, m_elevator, m_Wrist, m_Intake);
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -221,8 +220,10 @@ public class RobotContainer {
             new SimpleMoveElevator(
                 m_Wrist, m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
 
-    Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Pickup
-    Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
+    Operatorcontroller.leftTrigger()
+        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Pickup
+    Operatorcontroller.rightTrigger()
+        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
     // testcontroller button
     TestController.a().onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
