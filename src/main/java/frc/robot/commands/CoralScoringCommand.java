@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -16,6 +14,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class CoralScoringCommand extends SequentialCommandGroup {
 
@@ -70,7 +69,9 @@ public class CoralScoringCommand extends SequentialCommandGroup {
         // Use a DeadlineGroup to run AdaptiveWrist as the deadline
         new ParallelDeadlineGroup(
             // Add a 0.5-second delay before starting AdaptiveWrist
-            new WaitCommand(0.5).andThen(new AdaptiveWrist(m_Intake, ()->m_Wrist.getAngle(), false).withTimeout(2)),
+            new WaitCommand(0.5)
+                .andThen(
+                    new AdaptiveWrist(m_Intake, () -> m_Wrist.getAngle(), false).withTimeout(2)),
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("CoralScoringCommand/Status", "Setting wrist angle");

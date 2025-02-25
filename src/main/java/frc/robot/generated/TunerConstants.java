@@ -1,5 +1,12 @@
 package frc.robot.generated;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -18,16 +25,9 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -53,32 +53,29 @@ public class TunerConstants {
           .withKA(0.0)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
+  // When using closed-loop control, the drive motor uses the control
+  // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
+  // ********** Drive FF Characterization Results **********
+  // kS: 0.19335
+  // kV: 0.88251
 
-
-
-        // When using closed-loop control, the drive motor uses the control
-        // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
-        // ********** Drive FF Characterization Results **********
-        // kS: 0.19335
-        // kV: 0.88251
-
-        // SysId Module Characteristics Averages
-        // Ks: 0.19258
-        // Kv: 0.12227 //Diffrent than feedforward add 1/2 of diffrence(0.76024) which
-        // is 0.38012
-        // Ka: 0.01698
-        // Kp: 0.06134
-        // Kd: 0.00000
-        // Final Kv = 0.12227 + 0.38012 = 0.50239
+  // SysId Module Characteristics Averages
+  // Ks: 0.19258
+  // Kv: 0.12227 //Diffrent than feedforward add 1/2 of diffrence(0.76024) which
+  // is 0.38012
+  // Ka: 0.01698
+  // Kp: 0.06134
+  // Kd: 0.00000
+  // Final Kv = 0.12227 + 0.38012 = 0.50239
 
   private static final Slot0Configs driveGains =
       new Slot0Configs()
           .withKP(0.06134)
           .withKI(0.0)
           .withKD(0.0)
-        /* Drive Motor Characterization Values From SYSID */ 
+          /* Drive Motor Characterization Values From SYSID */
           .withKS(0.19258)
-          .withKV(1.50239) //Was  0.50239 but did not have enough powergt
+          .withKV(1.50239) // Was  0.50239 but did not have enough powergt
           .withKA(0.27);
 
   // The closed-loop output type to use for the steer motors;

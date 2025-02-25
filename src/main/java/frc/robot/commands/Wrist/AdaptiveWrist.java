@@ -4,11 +4,10 @@
 
 package frc.robot.commands.Wrist;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.IntakeSubsystem;
+import java.util.function.DoubleSupplier;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AdaptiveWrist extends Command {
@@ -16,7 +15,8 @@ public class AdaptiveWrist extends Command {
   private final DoubleSupplier wristAngleSupplier;
   private final boolean isPickup;
 
-  public AdaptiveWrist(IntakeSubsystem intake, DoubleSupplier wristAngleSupplier, boolean isPickup) {
+  public AdaptiveWrist(
+      IntakeSubsystem intake, DoubleSupplier wristAngleSupplier, boolean isPickup) {
     this.m_intake = intake;
     this.wristAngleSupplier = wristAngleSupplier;
     this.isPickup = isPickup;
@@ -27,7 +27,7 @@ public class AdaptiveWrist extends Command {
   public void execute() {
     double wristAngle = wristAngleSupplier.getAsDouble();
     boolean isCoralRange = wristAngle < Wrist.CORAL_MAX_ANGLE;
-    
+
     double rollerSpeed = calculateSpeed(isCoralRange);
     m_intake.moveRoller(rollerSpeed);
   }
