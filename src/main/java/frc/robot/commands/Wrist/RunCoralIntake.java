@@ -40,9 +40,11 @@ public class RunCoralIntake extends Command {
     // If first sensor hasn't been activated yet, run at intake speed
     if (!firstSensorActivated) {
       intakeSubsystem.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
+      System.out.println("First sensor not activated");
 
       // Check if first sensor is now activated
       if (intakeSubsystem.getFirstSensor()) {
+        System.out.println("First sensor activated");
         firstSensorActivated = true;
         intakeSubsystem.moveRoller(Wrist.Roller.AFTER_FIRST_SENSOR_CORAL_SPEED);
         timer.reset();
@@ -53,6 +55,7 @@ public class RunCoralIntake extends Command {
     else {
       // If 0.5 seconds have passed, stop the motor
       if (timer.get() >= 0.5) {
+        System.out.println("Stopping roller");
         intakeSubsystem.stopRoller();
         coralCentered = true;
       }
