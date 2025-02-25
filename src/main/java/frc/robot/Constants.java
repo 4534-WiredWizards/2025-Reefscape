@@ -173,7 +173,7 @@ public interface Constants {
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.05;
     double STALL_CURRENT_THRESHOLD = 25;
-    double MANUAL_SPEED = 0.2;
+    double MANUAL_SPEED = 0.6;
     double ELEVATOR_UP_DIR = 1.0;
     double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
 
@@ -245,7 +245,7 @@ public interface Constants {
       int SECOND_SENSOR_ID = 3;
 
       double CORAL_INTAKE_SPEED = -.1;
-      double AFTER_FIRST_SENSOR_CORAL_SPEED = -.05;
+      double AFTER_FIRST_SENSOR_CORAL_SPEED = -.02;
       double CORAL_OUTTAKE_SPEED = -.3;
       double ALGAE_INTAKE_SPEED = .3;
       double ALGAE_OUTTAKE_SPEED = -.3;
