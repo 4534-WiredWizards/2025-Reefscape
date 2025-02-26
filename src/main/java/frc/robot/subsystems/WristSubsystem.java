@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
 import org.littletonrobotics.junction.Logger;
@@ -66,11 +67,13 @@ public class WristSubsystem extends SubsystemBase {
     absEncoder = new DutyCycleEncoder(Wrist.Encoder.PORT);
 
     setpoint = getAngle();
+    Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
 
     // Log initial configuration
     Logger.recordOutput("Wrist/Config/PIDEnabled", PIDEnabled);
     Logger.recordOutput("Wrist/Config/InitialSetpoint", setpoint);
     Logger.recordOutput("Wrist/Config/GearRatio", Wrist.GEAR_RATIO);
+    SmartDashboard.putData("Wrist/pidController", pidController);
   }
 
   public double getAngle() {
@@ -80,9 +83,9 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void setWristSetpoint(double setpoint) {
-    this.setpoint = Math.max(Wrist.MIN_SAFE_ANGLE, Math.min(Wrist.MAX_SAFE_ANGLE, setpoint));
+    this.setpoint = setpoint;
+    Logger.recordOutput("Wrist/Status/Setpoint", this.setpoint);
     pidController.setGoal(this.setpoint);
-    Logger.recordOutput("Wrist/Command/SetpointCommand", this.setpoint);
   }
 
   public boolean atSetpoint() {
@@ -93,8 +96,9 @@ public class WristSubsystem extends SubsystemBase {
     this.pidOutput = pidController.calculate(getAngle());
     this.feedforward =
         m_WristFeedforward.calculate(
-            Units.degreesToRadians(getAngle()), pidController.getSetpoint().velocity);
-    setClampSpeed(pidOutput + feedforward);
+            Units.degreesToRadians(pidController.getSetpoint().position),
+            pidController.getSetpoint().velocity);
+    setClampSpeed(pidOutput /*+ feedforward*/);
   }
 
   public void moveManual(double speed) {
@@ -150,11 +154,14 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     // Log outputs using AdvantageKit
-    Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
     Logger.recordOutput("Wrist/Status/CurrentAngle", getAngle());
     Logger.recordOutput(
         "Wrist/Status/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
     Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoder.get());
+    Logger.recordOutput("Wrist/Control/PidOutput", pidOutput);
+    Logger.recordOutput("Wrist/Control/PidOutputVel", pidController.getSetpoint().velocity);
+    Logger.recordOutput("Wrist/Control/PidOutputPos", pidController.getSetpoint().position);
+    Logger.recordOutput("Wrist/Control/FeedForward", feedforward);
     Logger.recordOutput("Wrist/Control/TotalMotorOutput", pidOutput + feedforward);
     Logger.recordOutput("Wrist/Status/AtSetpoint", atSetpoint());
     Logger.recordOutput("Wrist/IsCoralRange", getAngle() > Wrist.CORAL_MAX_ANGLE);
