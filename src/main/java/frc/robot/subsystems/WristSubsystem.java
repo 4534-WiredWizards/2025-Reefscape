@@ -1,11 +1,14 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -14,7 +17,6 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
-import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -97,8 +99,8 @@ public class WristSubsystem extends SubsystemBase {
     this.feedforward =
         m_WristFeedforward.calculate(
             Units.degreesToRadians(pidController.getSetpoint().position),
-            pidController.getSetpoint().velocity);
-    setClampSpeed(pidOutput /*+ feedforward*/);
+            Units.degreesToRadians(pidController.getSetpoint().velocity));
+    setClampSpeed(pidOutput + feedforward); // Uncomment the feedforward
   }
 
   public void moveManual(double speed) {
