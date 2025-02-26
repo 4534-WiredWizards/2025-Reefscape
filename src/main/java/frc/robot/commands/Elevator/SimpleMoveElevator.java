@@ -23,7 +23,6 @@ public class SimpleMoveElevator extends Command {
     this.speedSupplier = speedSupplier;
     this.m_Wrist = wrist;
     addRequirements(m_elevator);
-    addRequirements(m_Wrist);
   }
 
   @Override
@@ -35,12 +34,12 @@ public class SimpleMoveElevator extends Command {
   @Override
   public void execute() {
     // Move the elevator manually based on the input speed
-    if (m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
-      m_Wrist.moveManual(.2);
-    } else {
-      m_Wrist.moveManual(0);
+    double speed = speedSupplier.getAsDouble();
 
-      double speed = speedSupplier.getAsDouble();
+    if (m_Wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
+      m_Wrist.moveManual(-.2);
+    } else {
+    
       m_elevator.moveManual(speed);
     }
   }
