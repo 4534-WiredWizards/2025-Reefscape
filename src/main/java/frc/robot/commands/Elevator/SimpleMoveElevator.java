@@ -39,7 +39,7 @@ public class SimpleMoveElevator extends Command {
     if (m_Wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
       m_Wrist.moveManual(-.2);
     } else {
-    
+
       m_elevator.moveManual(speed);
     }
   }

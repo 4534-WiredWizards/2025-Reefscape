@@ -13,9 +13,8 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -185,7 +184,7 @@ public interface Constants {
     double L4_POS = 160.0;
     int CORAL_INTAKE_POS = 0;
     int DRIVE_POS = 0;
-    int MAX_SAFE_POS = 172;
+    int MAX_SAFE_POS = 203;
   }
 
   interface Wrist {
@@ -204,13 +203,13 @@ public interface Constants {
     // PID and Feedforward Configuration
     double PID_POSITION_TOLERANCE = 1 / 360;
     double PID_VELOCITY_TOLERANCE = 1;
-    double KP = 0.011; 
+    double KP = 0.011;
     double KI = 0.0005;
     double KD = 0.0002;
     double KS = 0;
-    double KG = 1.01;
-    double KV = 0.81;
-    double KA = 0.03;
+    double KG = 0.36;
+    double KV = 2.25;
+    double KA = 0.01;
 
     // Motion Profile Configuration
     double MAX_VELOCITY = 60;
@@ -218,7 +217,7 @@ public interface Constants {
 
     // Safety Limits
     double MAX_SAFE_ANGLE = 0 / 360.0; // 360; // Convert degrees to rotations
-    double MIN_SAFE_ANGLE = -162 / 360.0;
+    double MIN_SAFE_ANGLE = -203 / 360.0;
 
     double MIN_CLEAR_ELEVATOR_ANGLE = 115;
     double TRUE_ZERO = 128;
@@ -228,10 +227,10 @@ public interface Constants {
     double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions and Angles
-    double L1_ANGLE = 120; // / 360;
-    double L2_ANGLE = 60; // 360;
-    double L3_ANGLE = 60; // / 360;
-    double L4_ANGLE = 0; // / 360;
+    double L1_ANGLE = 128; // / 360;
+    double L2_ANGLE = 105; // 360;
+    double L3_ANGLE = 105; // / 360;
+    double L4_ANGLE = 57; // / 360;
     int CORAL_INTAKE_ANGLE = 98;
     int BARGER_POSITION = 165;
     int DRIVE_POSITION = 0;

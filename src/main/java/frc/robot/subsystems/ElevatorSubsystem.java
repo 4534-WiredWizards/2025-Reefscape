@@ -52,7 +52,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             .withForwardSoftLimitEnable(true)
             .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
             .withReverseSoftLimitEnable(true)
-            .withReverseSoftLimitThreshold(0);
+            .withReverseSoftLimitThreshold(2);
 
     fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);
 
