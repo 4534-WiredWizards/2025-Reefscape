@@ -97,9 +97,9 @@
       this.feedforward =
           m_WristFeedforward.calculate(
               Units.degreesToRadians(pidController.getSetpoint().position),
-              pidController.getSetpoint().velocity);
-      setClampSpeed(pidOutput /*+ feedforward*/);
-    }
+              Units.degreesToRadians(pidController.getSetpoint().velocity));
+      setClampSpeed(pidOutput + feedforward); // Uncomment the feedforward
+    }  
 
     public void moveManual(double speed) {
       this.disablePID();

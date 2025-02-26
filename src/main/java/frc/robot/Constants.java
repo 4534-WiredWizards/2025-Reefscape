@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -203,9 +204,9 @@ public interface Constants {
     // PID and Feedforward Configuration
     double PID_POSITION_TOLERANCE = 1 / 360;
     double PID_VELOCITY_TOLERANCE = 1;
-    double KP = 0.011; // 0.05;
+    double KP = 0.011; 
     double KI = 0.0005;
-    double KD = 0.0; // 0.01;
+    double KD = 0.0002;
     double KS = 0;
     double KG = 1.01;
     double KV = 0.81;
