@@ -166,8 +166,14 @@ public interface Constants {
     double KA = 0.07;
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 50; // TODO: Set actual maximum
-    double MAX_ACCELERATION = 40; // TODO: Set actual maximum
+    double CRUISE_VELOCITY = 3.0; // TODO: Set actual maximum
+    double MAX_ACCELERATION = 3.0; // TODO: Set actual maximum
+    double JERK = 30;
+    double TARGET_VELOCITY = 0.1;
+
+    // Voltage
+    double PEAK_FORWARD_VOLTAGE = 12.0;
+    double PEAK_REVERSE_VOLTAGE = -12.0;
 
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.05;
