@@ -97,9 +97,8 @@ public class WristSubsystem extends SubsystemBase {
     this.feedforward =
         m_WristFeedforward.calculate(
             Units.degreesToRadians(pidController.getSetpoint().position),
-            pidController.getSetpoint().velocity
-        );
-    setClampSpeed(pidOutput + feedforward); //  Uncomment the feedforward
+            Units.degreesToRadians(pidController.getSetpoint().velocity));
+    setClampSpeed(pidOutput); //  Uncomment the feedforward
   }
 
   public void moveManual(double speed) {
@@ -159,6 +158,7 @@ public class WristSubsystem extends SubsystemBase {
     Logger.recordOutput(
         "Wrist/Status/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
     Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoder.get());
+    Logger.recordOutput("Wrist/Status/Voltage", wristMotor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("Wrist/Control/PidOutput", pidOutput);
     Logger.recordOutput("Wrist/Control/PidOutputVel", pidController.getSetpoint().velocity);
     Logger.recordOutput("Wrist/Control/PidOutputPos", pidController.getSetpoint().position);

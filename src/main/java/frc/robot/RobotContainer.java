@@ -169,6 +169,7 @@ public class RobotContainer {
     SmartDashboard.putData("TestCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
     SmartDashboard.putData("TestCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
     SmartDashboard.putData("TestCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+    SmartDashboard.putData("TestCommand/Bottom", new SetWristPosition(m_Wrist, -203));
 
     // SmartDashboard.putData("Elevator L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     // SmartDashboard.putData("Elevator L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
