@@ -162,9 +162,11 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     autoChooser.addOption(
-        "Wrist SysId (Dynamic Forward)", m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kForward));
-        autoChooser.addOption(
-        "Wrist SysId (Dynamic Reverse)", m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kReverse));
+        "Wrist SysId (Dynamic Forward)",
+        m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Wrist SysId (Dynamic Reverse)",
+        m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kReverse));
     autoChooser.addOption(
         "Wrist SysId (Quasistatic Forward)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(

@@ -205,8 +205,8 @@ public interface Constants {
     double PID_POSITION_TOLERANCE = 1 / 360;
     double PID_VELOCITY_TOLERANCE = 1;
     double KP = 0.012;
-    double KI = 0.00045 ;
-    double KD = 0.00;
+    double KI = 0.0005;
+    double KD = 0.0001;
 
     // Feedforward Constants
     double KS = 0.25;
