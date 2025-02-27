@@ -172,27 +172,23 @@ public class WristSubsystem extends SubsystemBase {
     return PIDEnabled;
   }
 
+  
   private void runCharacterization(double volts) {
     wristMotor.set(volts / 12.0); // Convert volts to a -1 to 1 motor output
     Logger.recordOutput("Wrist/SysIdVoltage", volts);
 }
 
-  // Method to initiate SysId tests
-public void runSysId(SysIdRoutine.Direction direction) {
-  wristSysId.quasistatic(direction);
-}
-
-public void runDynamicSysId(SysIdRoutine.Direction direction) {
-  wristSysId.dynamic(direction);
-}
-
-// Call this method in your command to trigger characterization
+// Call this method in your autoroutine to trigger characterization
 public Command sysIdCommand(SysIdRoutine.Direction direction) {
-    return new InstantCommand(() -> runSysId(direction));
+  return run(() -> runCharacterization(0.0))
+  .withTimeout(1.0)
+  .andThen(wristSysId.quasistatic(direction));
 }
 
 public Command dynamicSysIdCommand(SysIdRoutine.Direction direction) {
-    return new InstantCommand(() -> runDynamicSysId(direction));
+  return run(() -> runCharacterization(0.0))
+  .withTimeout(1.0)
+  .andThen(wristSysId.dynamic(direction));
 }
 
   @Override
