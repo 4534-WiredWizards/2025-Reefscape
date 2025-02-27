@@ -141,58 +141,54 @@ public interface Constants {
 
   /* Subsystem Constants */
   interface Elevator {
-    // Motor Configurations
-    int LEFT_MOTOR_ID = 51;
-    int RIGHT_MOTOR_ID = 52;
+     // Motor IDs
+    public static final int LEFT_MOTOR_ID = 10; // Adjust as needed
+    public static final int RIGHT_MOTOR_ID = 11; // Adjust as needed
+    
+    // Elevator Position Limits
+    public static final double MAX_SAFE_POS = 50.0; // Maximum safe position (adjust as needed)
+    public static final double MIN_SAFE_POS = 2.0; // Minimum safe position (adjust as needed)
+    
+    // Motion Magic Constants
+    public static final double CRUISE_VELOCITY = 40.0; // In rotations/sec (~39.58 in/s)
+    public static final double MAX_ACCELERATION = 80.0; // In rotations/sec²
+    public static final double JERK = 800.0; // In rotations/sec³
+    
+    // Voltage Limits
+      public static final double PEAK_FORWARD_VOLTAGE = 10.0;
+    public static final double PEAK_REVERSE_VOLTAGE = -10.0;
+    public static final double ZEROING_VOLTAGE = 2.0;
 
-    // PID Configuration
-    double KP = 0.1;
-    double KI = 0.0;
-    double KD = 0.0;
-    double PID_POSITION_TOLERANCE = 0.1;
-    double PID_VELOCITY_TOLERANCE = 1;
-
-    // Internal Motor PID
-    double MOTOR_KP = 0.1;
-    double MOTOR_KI = 0.001;
-    double MOTOR_KD = 5.0;
-    double MOTOR_KV = 1023.0 / 20660.0; // Old kF code from Phoenix v5 (Sample code had 0.12)
-    double MOTOR_KS = 0.1;
-
-    // Feedforward Constants
-    double KS = 0;
-    double KG = 0.71; // V1
-    double KV = 4.49;
-    double KA = 0.07;
-
-    // Motion Profile Configuration
-    double CRUISE_VELOCITY = 3.0; // TODO: Set actual maximum
-    double MAX_ACCELERATION = 3.0; // TODO: Set actual maximum
-    double JERK = 30;
-    double TARGET_VELOCITY = 0.1;
-
-    // Voltage
-    double PEAK_FORWARD_VOLTAGE = 12.0;
-    double PEAK_REVERSE_VOLTAGE = -12.0;
-
-    // Operational Parameters
-    double STALL_VELOCITY_THRESHOLD = 0.05;
-    double STALL_CURRENT_THRESHOLD = 25;
-
-    // Manual Control Configuration
-    double MANUAL_SPEED = 0.45;
-    double ELEVATOR_UP_DIR = 1.0;
-    double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
-
-    // Preset Positions (TODO: Set actual values)
-    double L1_POS = 30.0;
-    double L2_POS = 60.0;
-    double L3_POS = 120.0;
-    double L4_POS = 160.0;
-
-    int CORAL_INTAKE_POS = 0;
-    int DRIVE_POS = 0;
-    int MAX_SAFE_POS = 203;
+    // PID and Feedforward Constants
+    public static final double MOTOR_KP = 2.5; // Proportional gain
+    public static final double MOTOR_KI = 0.0; // Integral gain
+    public static final double MOTOR_KD = 0.1; // Derivative gain
+    public static final double MOTOR_KS = 0.25; // Static friction compensation
+    public static final double MOTOR_KV = 1.0; // Velocity feedforward
+    public static final double KA = 0.1; // Acceleration feedforward
+    public static final double KG = 0.25; // Gravity feedforward
+    
+    // Tolerance and Threshold Values
+    public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
+    public static final double STALL_POSITION_THRESHOLD = 0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
+    public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall detection
+    public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for stall detection
+    
+    // Elevator Stop Positions
+    // Define preset positions that the elevator can move to
+    public static final double POSITION_GROUND = 0.0;
+    public static final double POSITION_LOW = 10.0;
+    public static final double POSITION_MID = 25.0;
+    public static final double POSITION_HIGH = 203;
+    
+    // Physical Constants
+    public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
+    public static final double GEAR_RATIO = 15.0; // Verified 15:1 ratio
+    
+    // Conversion factors
+      // Conversion factors (recalculated based on new measurements)
+    public static final double ROTATIONS_TO_INCHES = (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO; // ~0.9896 in/rot
+    public static final double INCHES_TO_ROTATIONS = 1.0 / ROTATIONS_TO_INCHES; // ~1.0105 rot/in
   }
 
   interface Wrist {
