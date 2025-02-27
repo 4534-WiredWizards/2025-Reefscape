@@ -13,9 +13,8 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -162,19 +161,20 @@ public interface Constants {
 
     // Feedforward Constants
     double KS = 0;
-    double KG = 0.46; // V1
+    double KG = 0.71; // V1
     double KV = 4.49;
-    double KA = 0.05;
+    double KA = 0.07;
 
     // Motion Profile Configuration
-    double MAX_VELOCITY = 3.0; // TODO: Set actual maximum
-    double MAX_ACCELERATION = 3.0; // TODO: Set actual maximum
-    double TARGET_VELOCITY = 0.1;
+    double MAX_VELOCITY = 50; // TODO: Set actual maximum
+    double MAX_ACCELERATION = 40; // TODO: Set actual maximum
 
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.05;
     double STALL_CURRENT_THRESHOLD = 25;
-    double MANUAL_SPEED = 0.6;
+
+    // Manual Control Configuration
+    double MANUAL_SPEED = 0.45;
     double ELEVATOR_UP_DIR = 1.0;
     double ELEVATOR_DOWN_DIR = -ELEVATOR_UP_DIR;
 
@@ -183,6 +183,7 @@ public interface Constants {
     double L2_POS = 60.0;
     double L3_POS = 120.0;
     double L4_POS = 160.0;
+
     int CORAL_INTAKE_POS = 0;
     int DRIVE_POS = 0;
     int MAX_SAFE_POS = 203;

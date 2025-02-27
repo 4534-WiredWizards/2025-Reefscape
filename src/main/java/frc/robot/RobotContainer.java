@@ -175,11 +175,24 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    SmartDashboard.putData("TestCommand/Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
-    SmartDashboard.putData("TestCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    SmartDashboard.putData("TestCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    SmartDashboard.putData("TestCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-    SmartDashboard.putData("TestCommand/Bottom", new SetWristPosition(m_Wrist, -203));
+    SmartDashboard.putData(
+        "TestWristCommand/Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+    SmartDashboard.putData(
+        "TestWristCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+    SmartDashboard.putData(
+        "TestWristCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+    SmartDashboard.putData(
+        "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+    SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203));
+
+    SmartDashboard.putData(
+        "TestElevatorCommand/Elevator L4", new SetElevatorPosition(m_elevator, Elevator.L4_POS));
+    SmartDashboard.putData(
+        "TestElevatorCommand/Elevator L3", new SetElevatorPosition(m_elevator, Elevator.L3_POS));
+    SmartDashboard.putData(
+        "TestElevatorCommand/Elevator L2", new SetElevatorPosition(m_elevator, Elevator.L2_POS));
+    SmartDashboard.putData(
+        "TestElevatorCommand/Elevator L1", new SetElevatorPosition(m_elevator, Elevator.L1_POS));
 
     // SmartDashboard.putData("Elevator L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     // SmartDashboard.putData("Elevator L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
