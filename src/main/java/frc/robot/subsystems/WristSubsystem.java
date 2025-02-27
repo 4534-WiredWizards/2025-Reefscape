@@ -10,10 +10,18 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Wrist;
+
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
@@ -29,6 +37,8 @@ public class WristSubsystem extends SubsystemBase {
   private double setpoint;
   private double pidOutput = 0;
   private double feedforward = 0;
+
+  private SysIdRoutine wristSysId;
 
   public WristSubsystem() {
     pidController =
@@ -67,6 +77,20 @@ public class WristSubsystem extends SubsystemBase {
     absEncoder = new DutyCycleEncoder(Wrist.Encoder.PORT);
 
     setpoint = getAngle();
+
+
+    // Configure SysId
+    wristSysId = new SysIdRoutine(
+      new SysIdRoutine.Config(
+              null, // Use default config
+              null, // Use default timeout
+              null, // Use default ramp rate
+              (state) -> Logger.recordOutput("Wrist/SysIdState", state.toString())),
+      new SysIdRoutine.Mechanism(
+              (voltage) -> runCharacterization(voltage.in(Volts)),
+              null, // No additional logging required
+              this));
+
     Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
 
     // Log initial configuration
@@ -146,6 +170,29 @@ public class WristSubsystem extends SubsystemBase {
   public boolean isEnabled() {
     return PIDEnabled;
   }
+
+  private void runCharacterization(double volts) {
+    wristMotor.set(volts / 12.0); // Convert volts to a -1 to 1 motor output
+    Logger.recordOutput("Wrist/SysIdVoltage", volts);
+}
+
+  // Method to initiate SysId tests
+public void runSysId(SysIdRoutine.Direction direction) {
+  wristSysId.quasistatic(direction);
+}
+
+public void runDynamicSysId(SysIdRoutine.Direction direction) {
+  wristSysId.dynamic(direction);
+}
+
+// Call this method in your command to trigger characterization
+public Command sysIdCommand(SysIdRoutine.Direction direction) {
+    return new InstantCommand(() -> runSysId(direction));
+}
+
+public Command dynamicSysIdCommand(SysIdRoutine.Direction direction) {
+    return new InstantCommand(() -> runDynamicSysId(direction));
+}
 
   @Override
   public void periodic() {
