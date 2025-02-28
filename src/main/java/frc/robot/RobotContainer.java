@@ -24,9 +24,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.deadlineCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
@@ -37,6 +39,7 @@ import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
@@ -284,9 +287,28 @@ public class RobotContainer {
     // Operator PID control for Nuetral D-pad
     Operatorcontroller.povDown()
         .onTrue(
-            deadlineCommand(
+            new ParallelDeadlineGroup(
+                new RunCoralIntake(m_Intake, true),
+                new SetWristPosition(m_Wrist, Wrist.SAFE_WRIST_POSITION)
+                // new SequentialCommandGroup(
+                //     new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+                //     new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE))
+                ));
+    Operatorcontroller.povDown()
+        .onTrue(
+            new SequentialCommandGroup(
                 new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
-                new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)));
+                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE)));
+    Operatorcontroller.povUp()
+        .onTrue(
+            new ParallelCommandGroup(
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE),
+                new SetWristPosition(m_Wrist, Wrist.BARGE_POSITION)));
+    Operatorcontroller.povRight()
+        .onTrue(
+            new ParallelCommandGroup(
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+                new SetWristPosition(m_Wrist, Wrist.PROCESSOR_POSITION)));
 
     // Buttom/Axis Event Combos
     // Right Coral Side (using RIGHT_THUMB_AXIS)
