@@ -12,12 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -53,6 +50,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -95,10 +93,14 @@ public class RobotContainer {
         "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
 
     // Event Triggers
-    new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
-    new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
-    new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
-    new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
+    new EventTrigger("Elevator L4")
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
+    new EventTrigger("Elevator L3")
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
+    new EventTrigger("Elevator L2")
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
+    new EventTrigger("Elevator L1")
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
 
     new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
@@ -188,13 +190,17 @@ public class RobotContainer {
     SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203));
 
     SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L4", new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
+        "TestElevatorCommand/Elevator L4",
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
     SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
+        "TestElevatorCommand/Elevator L3",
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
     SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L2", new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
+        "TestElevatorCommand/Elevator L2",
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
     SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L1", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
+        "TestElevatorCommand/Elevator L1",
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
 
     // SmartDashboard.putData("Elevator L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     // SmartDashboard.putData("Elevator L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
@@ -247,9 +253,8 @@ public class RobotContainer {
     Operatorcontroller.rightBumper()
         .whileTrue(
             new SimpleMoveElevator(
-                m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)
-                
-        ));
+                m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)));
+
     Operatorcontroller.leftTrigger()
         .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Outtake
     Operatorcontroller.rightTrigger()
