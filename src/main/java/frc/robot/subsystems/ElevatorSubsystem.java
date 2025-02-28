@@ -54,9 +54,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     
     // Motion Magic configuration
-    fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Elevator.CRUISE_VELOCITY;
-    fx_cfg.MotionMagic.MotionMagicAcceleration = Elevator.MAX_ACCELERATION;
-    fx_cfg.MotionMagic.MotionMagicJerk = Elevator.JERK;
+    // fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Elevator.CRUISE_VELOCITY;
+    // fx_cfg.MotionMagic.MotionMagicAcceleration = Elevator.MAX_ACCELERATION;
+    // fx_cfg.MotionMagic.MotionMagicJerk = Elevator.JERK;
     
     // Voltage configuration
     fx_cfg.Voltage.PeakForwardVoltage = Elevator.PEAK_FORWARD_VOLTAGE;
