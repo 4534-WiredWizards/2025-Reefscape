@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -14,7 +16,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
-import org.littletonrobotics.junction.Logger;
 
 public class CoralScoringCommand extends SequentialCommandGroup {
 
@@ -84,7 +85,7 @@ public class CoralScoringCommand extends SequentialCommandGroup {
                 () -> {
                   Logger.recordOutput("CoralScoringCommand/Status", "Returning to drive position");
                 })
-            .andThen(new SetElevatorPosition(elevator, Elevator.DRIVE_POS)),
+            .andThen(new SetElevatorPosition(elevator, Elevator.POSITION_GROUND)),
 
         // Log the end of the command
         new InstantCommand(
