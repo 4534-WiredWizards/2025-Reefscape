@@ -898,71 +898,6 @@
             ]
           },
           {
-            "title": "TestCommand",
-            "x": 272.0,
-            "y": 16.0,
-            "width": 256.0,
-            "height": 464.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Wrist L1",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L1",
-                  "period": 0.06,
-                  "show_type": true
-                }
-              },
-              {
-                "title": "Wrist L2",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L2",
-                  "period": 0.06,
-                  "show_type": true
-                }
-              },
-              {
-                "title": "Wrist L3",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L3",
-                  "period": 0.06,
-                  "show_type": true
-                }
-              },
-              {
-                "title": "Wrist L4",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L4",
-                  "period": 0.06,
-                  "show_type": true
-                }
-              }
-            ]
-          },
-          {
             "title": "Status",
             "x": 800.0,
             "y": 16.0,
@@ -1041,33 +976,6 @@
                 "type": "Text Display",
                 "properties": {
                   "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Setpoint",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              }
-            ]
-          },
-          {
-            "title": "Control",
-            "x": 544.0,
-            "y": 400.0,
-            "width": 256.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "TotalMotorOutput",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/TotalMotorOutput",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
@@ -1160,13 +1068,91 @@
                 }
               }
             ]
+          },
+          {
+            "title": "TestCommand",
+            "x": 288.0,
+            "y": 16.0,
+            "width": 256.0,
+            "height": 528.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Bottom",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestCommand/Bottom",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L1",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestCommand/Wrist L1",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L2",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestCommand/Wrist L2",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L3",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestCommand/Wrist L3",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L4",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestCommand/Wrist L4",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              }
+            ]
           }
         ],
         "containers": [
           {
             "title": "CurrentAngle",
-            "x": 256.0,
-            "y": 480.0,
+            "x": 272.0,
+            "y": 544.0,
             "width": 272.0,
             "height": 208.0,
             "type": "Large Text Display",
@@ -1178,7 +1164,7 @@
           },
           {
             "title": "pidController",
-            "x": 528.0,
+            "x": 544.0,
             "y": 16.0,
             "width": 256.0,
             "height": 384.0,
@@ -1223,7 +1209,7 @@
           {
             "title": "PidOutput",
             "x": 48.0,
-            "y": 704.0,
+            "y": 752.0,
             "width": 384.0,
             "height": 128.0,
             "type": "Text Display",
@@ -1253,7 +1239,7 @@
           {
             "title": "PidOutputPos",
             "x": 448.0,
-            "y": 704.0,
+            "y": 768.0,
             "width": 368.0,
             "height": 128.0,
             "type": "Large Text Display",
@@ -1261,6 +1247,48 @@
               "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PidOutputPos",
               "period": 0.06,
               "data_type": "double"
+            }
+          },
+          {
+            "title": "TotalMotorOutput",
+            "x": 1504.0,
+            "y": 416.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/TotalMotorOutput",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "PidOutput",
+            "x": 1504.0,
+            "y": 544.0,
+            "width": 336.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PidOutput",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Voltage",
+            "x": 1504.0,
+            "y": 672.0,
+            "width": 352.0,
+            "height": 96.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Voltage",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]

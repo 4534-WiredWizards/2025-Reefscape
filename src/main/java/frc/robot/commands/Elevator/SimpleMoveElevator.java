@@ -28,7 +28,7 @@ public class SimpleMoveElevator extends Command {
   @Override
   public void initialize() {
     // Stop the PID controller when manual control starts
-    m_elevator.stop();
+    m_elevator.Stop();
   }
 
   @Override
@@ -48,7 +48,7 @@ public class SimpleMoveElevator extends Command {
   public void end(boolean interrupted) {
     // Stop the elevator when the command ends
 
-    m_elevator.stop();
+    m_elevator.Stop();
   }
 
   @Override

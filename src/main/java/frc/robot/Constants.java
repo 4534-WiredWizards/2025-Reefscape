@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -78,10 +79,10 @@ public interface Constants {
   }
 
   public enum ScoringHeight {
-    L1(Elevator.L1_POS, Wrist.L1_ANGLE), // elevator position, wrist angle
-    L2(Elevator.L2_POS, Wrist.L2_ANGLE),
-    L3(Elevator.L3_POS, Wrist.L3_ANGLE),
-    L4(Elevator.L4_POS, Wrist.L4_ANGLE);
+    L1(Elevator.POSITION_GROUND, Wrist.L1_ANGLE), // elevator position, wrist angle
+    L2(Elevator.POSITION_L2, Wrist.L2_ANGLE),
+    L3(Elevator.POSITION_L3, Wrist.L3_ANGLE),
+    L4(Elevator.POSITION_L4, Wrist.L4_ANGLE);
 
     private final double elevatorPosition;
     private final double wristAngle;
@@ -141,54 +142,64 @@ public interface Constants {
 
   /* Subsystem Constants */
   interface Elevator {
-     // Motor IDs
+    // Motor IDs
     public static final int LEFT_MOTOR_ID = 10; // Adjust as needed
     public static final int RIGHT_MOTOR_ID = 11; // Adjust as needed
-    
+
     // Elevator Position Limits
     public static final double MAX_SAFE_POS = 50.0; // Maximum safe position (adjust as needed)
     public static final double MIN_SAFE_POS = 2.0; // Minimum safe position (adjust as needed)
-    
+
     // Motion Magic Constants
     public static final double CRUISE_VELOCITY = 40.0; // In rotations/sec (~39.58 in/s)
     public static final double MAX_ACCELERATION = 80.0; // In rotations/sec²
     public static final double JERK = 800.0; // In rotations/sec³
-    
+
     // Voltage Limits
-      public static final double PEAK_FORWARD_VOLTAGE = 10.0;
-    public static final double PEAK_REVERSE_VOLTAGE = -10.0;
+    public static final double PEAK_FORWARD_VOLTAGE = 12.0;
+    public static final double PEAK_REVERSE_VOLTAGE = -12.0;
     public static final double ZEROING_VOLTAGE = 2.0;
 
     // PID and Feedforward Constants
-    public static final double MOTOR_KP = 2.5; // Proportional gain
-    public static final double MOTOR_KI = 0.0; // Integral gain
-    public static final double MOTOR_KD = 0.1; // Derivative gain
-    public static final double MOTOR_KS = 0.25; // Static friction compensation
-    public static final double MOTOR_KV = 1.0; // Velocity feedforward
+    public static final double KP = 2.5; // Proportional gain
+    public static final double KI = 0.0; // Integral gain
+    public static final double KD = 0.1; // Derivative gain
+
+    // Feedforward Constants
+    public static final double KS = 0.25; // Static friction compensation
+    public static final double KV = 1.0; // Velocity feedforward
     public static final double KA = 0.1; // Acceleration feedforward
     public static final double KG = 0.25; // Gravity feedforward
-    
-    // Tolerance and Threshold Values
-    public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
-    public static final double STALL_POSITION_THRESHOLD = 0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
-    public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall detection
-    public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for stall detection
-    
-    // Elevator Stop Positions
-    // Define preset positions that the elevator can move to
-    public static final double POSITION_GROUND = 0.0;
-    public static final double POSITION_LOW = 10.0;
-    public static final double POSITION_MID = 25.0;
-    public static final double POSITION_HIGH = 203;
-    
+
     // Physical Constants
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
     public static final double GEAR_RATIO = 15.0; // Verified 15:1 ratio
-    
+
     // Conversion factors
-      // Conversion factors (recalculated based on new measurements)
-    public static final double ROTATIONS_TO_INCHES = (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO; // ~0.9896 in/rot
+    // Conversion factors (recalculated based on new measurements)
+    public static final double ROTATIONS_TO_INCHES =
+        (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO; // ~0.9896 in/rot
     public static final double INCHES_TO_ROTATIONS = 1.0 / ROTATIONS_TO_INCHES; // ~1.0105 rot/in
+
+    // Tolerance and Threshold Values
+    public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
+    public static final double STALL_POSITION_THRESHOLD =
+        0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
+    // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
+    // detection
+    // public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for
+    // stall detection
+
+    // Elevator Stop Positions
+    // Define preset positions that the elevator can move to
+    public static final double POSITION_GROUND = 0.0;
+    public static final double POSITION_L2 = 10.0;
+    public static final double POSITION_L3 = 25.0;
+    public static final double POSITION_L4 = 203;
+
+    // Manual Control Constants
+    public static final double MANUAL_SPEED = 0.5; // Speed for manual control
+    public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
   interface Wrist {
