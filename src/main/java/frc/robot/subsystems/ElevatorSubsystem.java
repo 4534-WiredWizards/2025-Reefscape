@@ -61,7 +61,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     // Voltage configuration
     fx_cfg.Voltage.PeakForwardVoltage = Elevator.PEAK_FORWARD_VOLTAGE;
     fx_cfg.Voltage.PeakReverseVoltage = Elevator.PEAK_REVERSE_VOLTAGE;
-    fx_cfg.Voltage.withPeakForwardVoltage(Volts.of(8)).withPeakReverseVoltage(Volts.of(-8));
     
     // PID and feedforward configuration
 
