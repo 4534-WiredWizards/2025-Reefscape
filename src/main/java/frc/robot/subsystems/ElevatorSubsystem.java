@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
 import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
 import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -299,7 +300,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double temperature = elevatorMotor1.getDeviceTemp().getValueAsDouble();
 
     // Stall detection logic
-    boolean potentialStall = Math.abs(voltage) > 0.1 && Math.abs(velocity) < 0.1;
+    boolean potentialStall = Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
     
     if (potentialStall) {
       stallCount++;
