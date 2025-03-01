@@ -29,27 +29,30 @@ public class WristSubsystem extends SubsystemBase {
   private final DutyCycleEncoder absEncoder;
 
   private final ProfiledPIDController pidController;
-  private boolean PIDEnabled = false;
-
-  private final ArmFeedforward m_WristFeedforward = new ArmFeedforward(Wrist.KS, Wrist.KG, Wrist.KV, Wrist.KA);
+  private final ArmFeedforward m_WristFeedforward;
 
   private double setpoint;
   private double pidOutput = 0;
   private double feedforward = 0;
-
+  private boolean isPIDEnabled = false;
   private boolean isZeroed = false;
   private boolean isZeroing = false;
   private int stallCount = 0;
   private static final int STALL_COUNT_THRESHOLD = 10;
+  private double lastAngle = 0.0;
+  
+  // State tracking for logging
+  private String currentStatus = "Initialized";
+  private double commandedAngle = 0.0;
+  private double manualSpeed = 0.0;
 
-  private SysIdRoutine wristSysId;
-
-  ElevatorSubsystem elevator;
+  private final SysIdRoutine wristSysId;
+  private final ElevatorSubsystem elevator;
 
   public WristSubsystem(ElevatorSubsystem elevator) {
-
     this.elevator = elevator;
 
+    // Configure PID controller
     pidController = new ProfiledPIDController(
         Wrist.KP,
         Wrist.KI,
@@ -57,9 +60,63 @@ public class WristSubsystem extends SubsystemBase {
         new TrapezoidProfile.Constraints(Wrist.MAX_VELOCITY, Wrist.MAX_ACCELERATION));
     pidController.setTolerance(Wrist.PID_POSITION_TOLERANCE, Wrist.PID_VELOCITY_TOLERANCE);
 
-    // Wrist config
+    // Configure feedforward
+    m_WristFeedforward = new ArmFeedforward(Wrist.KS, Wrist.KG, Wrist.KV, Wrist.KA);
+
+    // Configure motor
+    wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
+    configureMotor();
+
+    // Configure absolute encoder
+    absEncoder = new DutyCycleEncoder(Wrist.Encoder.PORT);
+
+    // Initialize state
+    setpoint = getAngle();
+    lastAngle = setpoint;
+
+    // Configure SysId
+    wristSysId = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null, // Use default config
+            null, // Use default timeout
+            null, // Use default ramp rate
+            (state) -> Logger.recordOutput("Wrist/SysId/State", state.toString())),
+        new SysIdRoutine.Mechanism(
+            (voltage) -> runCharacterization(voltage.in(Volts)),
+            null, // No additional logging required
+            this));
+
+    // Add commands to dashboard
+    SmartDashboard.putData("Zero Wrist", zeroCommand());
+    SmartDashboard.putData("Wrist PID Controller", pidController);
+    
+    // Log initial configuration once at startup
+    logConfiguration();
+  }
+
+  /** Logs the static configuration parameters once at initialization */
+  private void logConfiguration() {
+    Logger.recordOutput("Wrist/Config/MaxSafeAngle", Wrist.MAX_SAFE_ANGLE);
+    Logger.recordOutput("Wrist/Config/MinSafeAngle", Wrist.MIN_SAFE_ANGLE);
+    Logger.recordOutput("Wrist/Config/MinClearElevatorAngle", Wrist.MIN_CLEAR_ELEVATOR_ANGLE);
+    Logger.recordOutput("Wrist/Config/GearRatio", Wrist.GEAR_RATIO);
+    Logger.recordOutput("Wrist/Config/TrueZero", Wrist.TRUE_ZERO);
+    Logger.recordOutput("Wrist/Config/CoralMaxAngle", Wrist.CORAL_MAX_ANGLE);
+    Logger.recordOutput("Wrist/Config/ZeroingSpeed", Wrist.ZEROING_SPEED);
+    Logger.recordOutput("Wrist/Config/PID/kP", Wrist.KP);
+    Logger.recordOutput("Wrist/Config/PID/kI", Wrist.KI);
+    Logger.recordOutput("Wrist/Config/PID/kD", Wrist.KD);
+    Logger.recordOutput("Wrist/Config/FF/kS", Wrist.KS);
+    Logger.recordOutput("Wrist/Config/FF/kG", Wrist.KG);
+    Logger.recordOutput("Wrist/Config/FF/kV", Wrist.KV);
+    Logger.recordOutput("Wrist/Config/FF/kA", Wrist.KA);
+  }
+
+  /** Configures the wrist motor with all necessary settings */
+  private void configureMotor() {
     var fx_cfg = new TalonFXConfiguration();
 
+    // Calculate software limits
     double forwardLimit = Wrist.MAX_SAFE_ANGLE * Wrist.GEAR_RATIO;
     double reverseLimit = Wrist.MIN_SAFE_ANGLE * Wrist.GEAR_RATIO;
 
@@ -70,213 +127,310 @@ public class WristSubsystem extends SubsystemBase {
         .withReverseSoftLimitEnable(true)
         .withReverseSoftLimitThreshold(reverseLimit);
 
+    // Feedback configuration
+    fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    
+    // Apply software limits
+    fx_cfg.withSoftwareLimitSwitch(limitSwitches);
+    
+    // Motor output configuration
+    fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    fx_cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    // Apply configuration
+    wristMotor.getConfigurator().apply(fx_cfg);
+    
+    // Log soft limits for debugging
     Logger.recordOutput("Wrist/Config/SoftForwardLimit", forwardLimit);
     Logger.recordOutput("Wrist/Config/SoftReverseLimit", reverseLimit);
-
-    fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    fx_cfg.withSoftwareLimitSwitch(limitSwitches);
-    fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-
-    wristMotor = new TalonFX(Wrist.PIVOT_MOTOR_ID);
-    wristMotor.getConfigurator().apply(fx_cfg);
-    wristMotor.setNeutralMode(NeutralModeValue.Brake);
-
-    absEncoder = new DutyCycleEncoder(Wrist.Encoder.PORT);
-
-    setpoint = getAngle();
-
-    // Configure SysId
-    wristSysId = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null, // Use default config
-            null, // Use default timeout
-            null, // Use default ramp rate
-            (state) -> Logger.recordOutput("Wrist/SysIdState", state.toString())),
-        new SysIdRoutine.Mechanism(
-            (voltage) -> runCharacterization(voltage.in(Volts)),
-            null, // No additional logging required
-            this));
-
-    Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
-
-    // Log initial configuration
-    Logger.recordOutput("Wrist/Config/PIDEnabled", PIDEnabled);
-    Logger.recordOutput("Wrist/Config/InitialSetpoint", setpoint);
-    Logger.recordOutput("Wrist/Config/GearRatio", Wrist.GEAR_RATIO);
-    SmartDashboard.putData("Wrist/pidController", pidController);
-    SmartDashboard.putData("Zero Wrist", zeroCommand());
   }
 
+  /**
+   * Gets the current angle of the wrist
+   * 
+   * @return The current angle in degrees
+   */
   public double getAngle() {
     double motorRotations = wristMotor.getRotorPosition().getValueAsDouble();
     double wristRotations = motorRotations / Wrist.GEAR_RATIO;
     return (wristRotations * 360) + Wrist.TRUE_ZERO;
   }
 
-  public void setWristSetpoint(double setpoint) {
-    this.setpoint = setpoint;
-    Logger.recordOutput("Wrist/Status/Setpoint", this.setpoint);
-
-    if ((elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
-        && setpoint > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
-        && elevator.getSpeed() > 0.1) ||
-        (elevator.getSetpoint() < Elevator.ELEVATOR_DANGER_LIMIT &&
-            setpoint > Wrist.MIN_CLEAR_ELEVATOR_ANGLE)) {
-
-      setpoint = Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
-
-    }
-
-    pidController.setGoal(this.setpoint);
+  /**
+   * Gets the velocity of the wrist
+   * 
+   * @return The current velocity in degrees per second
+   */
+  public double getVelocity() {
+    double motorVelocity = wristMotor.getRotorVelocity().getValueAsDouble();
+    return (motorVelocity / Wrist.GEAR_RATIO) * 360;
   }
 
+  /**
+   * Sets the wrist to a specific angle
+   * 
+   * @param angle The desired angle in degrees
+   */
+  public void setWristSetpoint(double angle) {
+    // Safety check against elevator position
+    if ((elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
+        && angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
+        && elevator.getSpeed() > 0.1) ||
+        (elevator.getSetpoint() < Elevator.ELEVATOR_DANGER_LIMIT &&
+            angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE)) {
+      angle = Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
+      currentStatus = "Limited to clear elevator";
+    } else {
+      currentStatus = "Moving to angle";
+    }
+
+    this.setpoint = angle;
+    commandedAngle = angle;
+    pidController.setGoal(this.setpoint);
+    
+    Logger.recordOutput("Wrist/Status/Setpoint", this.setpoint);
+  }
+
+  /**
+   * Runs the PID controller to maintain the current setpoint
+   */
+  public void runPID() {
+    double currentAngle = getAngle();
+    this.pidOutput = pidController.calculate(currentAngle);
+    this.feedforward = m_WristFeedforward.calculate(
+        Units.degreesToRadians(pidController.getSetpoint().position),
+        Units.degreesToRadians(pidController.getSetpoint().velocity));
+    
+    double totalOutput = pidOutput + feedforward;
+    setClampSpeed(totalOutput);
+    
+    currentStatus = "PID Control";
+  }
+
+  /**
+   * Manually move the wrist at a specified speed
+   * 
+   * @param speed Speed between -1.0 and 1.0
+   */
+  public void moveManual(double speed) {
+    disablePID();
+    double clampedSpeed = Math.max(-1, Math.min(1, speed));
+    setClampSpeed(clampedSpeed);
+    
+    manualSpeed = speed;
+    currentStatus = "Manual Control";
+  }
+
+  /**
+   * Sets a clamped motor speed
+   * 
+   * @param speed Speed between -1.0 and 1.0
+   */
+  private void setClampSpeed(double speed) {
+    double newSpeed = Math.max(-1, Math.min(1, speed));
+    wristMotor.set(newSpeed);
+    Logger.recordOutput("Wrist/Control/MotorOutput", newSpeed);
+  }
+
+  /**
+   * Stops the wrist motor
+   */
+  public void stop() {
+    disablePID();
+    wristMotor.stopMotor();
+    currentStatus = "Stopped";
+  }
+
+  /**
+   * Creates a command to stop the wrist
+   * 
+   * @return A command that stops the wrist
+   */
+  public Command Stop() {
+    return Commands.runOnce(
+        () -> {
+          stop();
+        },
+        this);
+  }
+
+  /**
+   * Enables PID control for the wrist
+   */
+  public void enablePID() {
+    pidController.reset(getAngle());
+    isPIDEnabled = true;
+    currentStatus = "PID Enabled";
+  }
+
+  /**
+   * Disables PID control for the wrist
+   */
+  public void disablePID() {
+    isPIDEnabled = false;
+    setpoint = getAngle();
+    wristMotor.stopMotor();
+    pidOutput = 0;
+    feedforward = 0;
+    currentStatus = "PID Disabled";
+  }
+
+  /**
+   * Checks if PID control is enabled
+   * 
+   * @return True if PID is enabled, false otherwise
+   */
+  public boolean isPIDEnabled() {
+    return isPIDEnabled;
+  }
+
+  /**
+   * Checks if the wrist is at the target position
+   * 
+   * @return True if at setpoint, false otherwise
+   */
   public boolean atSetpoint() {
     return pidController.atSetpoint();
   }
 
-  public void runPID() {
-    this.pidOutput = pidController.calculate(getAngle());
-    this.feedforward = m_WristFeedforward.calculate(
-        Units.degreesToRadians(pidController.getSetpoint().position),
-        Units.degreesToRadians(pidController.getSetpoint().velocity));
-    setClampSpeed(pidOutput); // Uncomment the feedforward
+  /**
+   * Creates a command to set the current position as zero
+   * 
+   * @return A command that sets the current position as zero
+   */
+  public Command setZeroCommand() {
+    return Commands.runOnce(
+            () -> {
+              isZeroed = true;
+              wristMotor.setPosition(0);
+              isZeroing = false;
+              stop();
+              currentStatus = "Zero set";
+            })
+        .ignoringDisable(true);
   }
-
 
   /**
- * Creates a command to set the current position as zero
- *
- * @return A command that sets the current position as zero
- */
-public Command setZeroCommand() {
-  return Commands.runOnce(
-          () -> {
-            isZeroed = true;
-            wristMotor.setPosition(0);
-            isZeroing = false;
-            stop();
-            Logger.recordOutput("Wrist/Status/Text", "Zero set");
-          })
-      .ignoringDisable(true);
-}
+   * Command to zero the wrist by moving it down until stall
+   * 
+   * @return A command that zeros the wrist
+   */
+  public Command zeroCommand() {
+    return Commands.sequence(
+        // Start zeroing process
+        Commands.runOnce(
+            () -> {
+              isZeroing = true;
+              currentStatus = "Zeroing started";
+            }),
+        // Move wrist until stalled
+        Commands.deadline(
+                Commands.waitUntil(this::isStalled),
+                Commands.run(() -> moveManual(-Wrist.ZEROING_SPEED), this))
+            .handleInterrupt(
+                () -> {
+                  isZeroing = false;
+                  stop();
+                }),
+        // Set current position as zero
+        setZeroCommand());
+  }
 
   /**
- * Command to zero the wrist by moving it down until stall
- *
- * @return A command that zeros the wrist
- */
-public Command zeroCommand() {
-  return Commands.sequence(
-      // Start zeroing process
-      Commands.runOnce(
-          () -> {
-            isZeroing = true;
-            Logger.recordOutput("Wrist/Status/Text", "Zeroing started");
-          }),
-      // Move wrist until stalled
-      Commands.deadline(
-              Commands.waitUntil(this::isStalled),
-              Commands.run(() -> moveManual(-Wrist.ZEROING_SPEED), this))
-          .handleInterrupt(
-              () -> {
-                isZeroing = false;
-                stop();
-              }),
-      // Set current position as zero
-      setZeroCommand());
-}
-
-/**
- * Enhanced stall detection for zeroing
- *
- * @return True if stalled for a certain number of cycles, false otherwise
- */
-public boolean isStalled() {
-  // double current = wristMotor.getSupplyCurrent().getValueAsDouble();
-  var velocity = wristMotor.getRotorVelocity().getValueAsDouble();
-  boolean potentialStall = Math.abs(wristMotor.getMotorVoltage().getValueAsDouble()) > 0.1 
-      && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
-  
-  if (potentialStall) {
-    stallCount++;
-  } else {
-    stallCount = 0;
-  }
-  
-  boolean stalled = stallCount >= STALL_COUNT_THRESHOLD;
-  Logger.recordOutput("Wrist/Status/Stalled", stalled);
-  Logger.recordOutput("Wrist/Status/StallCount", stallCount);
-  Logger.recordOutput("Wrist/Status/StallDetectionActive", potentialStall);
-  
-  return stalled;
-}
-
-/**
- * Checks if the wrist has been zeroed
- *
- * @return True if zeroed, false otherwise
- */
-public boolean isZeroed() {
-  return isZeroed;
-}
-
-  public void moveManual(double speed) {
-    this.disablePID();
-    setClampSpeed(speed);
-    Logger.recordOutput("Wrist/Command/ManualSpeed", speed);
+   * Command to move wrist to a specific angle
+   * 
+   * @param angle The desired angle
+   * @return A command that moves the wrist to the angle
+   */
+  public Command moveToAngleCommand(double angle) {
+    return Commands.sequence(
+        Commands.runOnce(
+            () -> {
+              enablePID();
+              setWristSetpoint(angle);
+              currentStatus = "Moving to angle: " + angle;
+            },
+            this),
+        Commands.waitUntil(this::atSetpoint),
+        Commands.runOnce(
+            () -> currentStatus = "At angle: " + angle));
   }
 
+  /**
+   * Enhanced stall detection for zeroing
+   * 
+   * @return True if stalled for a certain number of cycles, false otherwise
+   */
+  public boolean isStalled() {
+    double velocity = wristMotor.getRotorVelocity().getValueAsDouble();
+    boolean potentialStall = Math.abs(wristMotor.getMotorVoltage().getValueAsDouble()) > 0.1 
+        && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+    
+    if (potentialStall) {
+      stallCount++;
+      
+      // If stalled and not in zeroing process, stop the motor
+      if (isStalled() && !isZeroing) {
+        stop();
+        currentStatus = "Stalled - motor stopped";
+      }
+    } else {
+      stallCount = 0;
+    }
+    
+    return stallCount >= STALL_COUNT_THRESHOLD;
+  }
+
+  /**
+   * Checks if the wrist has been zeroed
+   * 
+   * @return True if zeroed, false otherwise
+   */
+  public boolean isZeroed() {
+    return isZeroed;
+  }
+
+  /**
+   * Safety method to ensure wrist moves out of danger zone when elevator is in certain positions
+   */
   private void moveOutOfDanger() {
     if (getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
         && elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
         && elevator.getSpeed() > 0.1) {
       setWristSetpoint(Wrist.MIN_CLEAR_ELEVATOR_ANGLE);
+      currentStatus = "Auto-moving out of danger";
     }
   }
 
-  private void setClampSpeed(double speed) {
-    double newSpeed = Math.max(-1, Math.min(1, speed));
-    wristMotor.set(newSpeed);
-    Logger.recordOutput("Wrist/Control/ClampSpeed", newSpeed);
-  }
-
-  public void stop() {
-    this.disablePID();
-    Logger.recordOutput("Wrist/Command/Stop", true);
-  }
-
-
-  public void enablePID() {
-    pidController.reset(getAngle());
-    PIDEnabled = true;
-    Logger.recordOutput("Wrist/Control/PIDEnabled", true);
-  }
-
-  public void disablePID() {
-    PIDEnabled = false;
-    setWristSetpoint(getAngle());
-    setClampSpeed(0);
-    pidOutput = 0;
-    feedforward = 0;
-    Logger.recordOutput("Wrist/Control/PIDEnabled", false);
-  }
-
-  public boolean isEnabled() {
-    return PIDEnabled;
-  }
-
+  /**
+   * Runs the wrist motor for system identification
+   * 
+   * @param volts Voltage to apply to the motor
+   */
   private void runCharacterization(double volts) {
     wristMotor.set(volts / 12.0); // Convert volts to a -1 to 1 motor output
-    Logger.recordOutput("Wrist/SysIdVoltage", volts);
+    Logger.recordOutput("Wrist/SysId/Voltage", volts);
+    currentStatus = "Running SysId characterization";
   }
 
-  // Call this method in your autoroutine to trigger characterization
+  /**
+   * Command for quasi-static system identification
+   * 
+   * @param direction The direction to run the test
+   * @return A command that runs the SysId test
+   */
   public Command sysIdCommand(SysIdRoutine.Direction direction) {
     return run(() -> runCharacterization(0.0))
         .withTimeout(1.0)
         .andThen(wristSysId.quasistatic(direction));
   }
 
+  /**
+   * Command for dynamic system identification
+   * 
+   * @param direction The direction to run the test
+   * @return A command that runs the SysId test
+   */
   public Command dynamicSysIdCommand(SysIdRoutine.Direction direction) {
     return run(() -> runCharacterization(0.0))
         .withTimeout(1.0)
@@ -285,25 +439,102 @@ public boolean isZeroed() {
 
   @Override
   public void periodic() {
+    // Get current values once to avoid multiple hardware calls
+    double currentAngle = getAngle();
+    double velocity = getVelocity();
+    double voltage = wristMotor.getMotorVoltage().getValueAsDouble();
+    double current = wristMotor.getSupplyCurrent().getValueAsDouble();
+    double temperature = wristMotor.getDeviceTemp().getValueAsDouble();
+    double motorPosition = wristMotor.getRotorPosition().getValueAsDouble();
+    double absEncoderValue = absEncoder.get();
 
+    // Safety check for elevator interaction
     moveOutOfDanger();
 
-    if (PIDEnabled) {
+    // Run PID if enabled
+    if (isPIDEnabled) {
       runPID();
     }
 
-    // Log outputs using AdvantageKit
-    Logger.recordOutput("Wrist/Status/CurrentAngle", getAngle());
-    Logger.recordOutput(
-        "Wrist/Status/RawEncoderValue", wristMotor.getRotorPosition().getValueAsDouble());
-    Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoder.get());
-    Logger.recordOutput("Wrist/Status/Voltage", wristMotor.getMotorVoltage().getValueAsDouble());
-    Logger.recordOutput("Wrist/Control/PidOutput", pidOutput);
-    Logger.recordOutput("Wrist/Control/PidOutputVel", pidController.getSetpoint().velocity);
-    Logger.recordOutput("Wrist/Control/PidOutputPos", pidController.getSetpoint().position);
-    Logger.recordOutput("Wrist/Control/FeedForward", feedforward);
-    Logger.recordOutput("Wrist/Control/TotalMotorOutput", pidOutput + feedforward);
+    // Stall detection logic
+    boolean potentialStall = Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+    
+    if (potentialStall) {
+      stallCount++;
+      
+      // If stalled and not in zeroing process, stop the motor
+      if (isStalled() && !isZeroing) {
+        stop();
+        currentStatus = "Stalled - motor stopped";
+      }
+    } else {
+      stallCount = 0;
+    }
+
+    // Log all data in structured categories
+    logStatusData(currentAngle, velocity, voltage, current, temperature, motorPosition, absEncoderValue);
+    logCommandData();
+    logPIDData();
+    logStallData(potentialStall);
+    
+    // Log angle error when in position control mode
+    if (currentStatus.contains("Moving to angle") || currentStatus.contains("At angle") || isPIDEnabled) {
+      Logger.recordOutput("Wrist/Status/AngleError", setpoint - currentAngle);
+    }
+    
+    // Track for next iteration
+    lastAngle = currentAngle;
+  }
+  
+  /**
+   * Logs basic status data about the wrist
+   */
+  private void logStatusData(double angle, double velocity, double voltage, 
+                           double current, double temperature, double motorPosition, double absEncoderValue) {
+    Logger.recordOutput("Wrist/Status/Text", currentStatus);
+    Logger.recordOutput("Wrist/Status/Angle", angle);
+    Logger.recordOutput("Wrist/Status/Velocity", velocity);
+    Logger.recordOutput("Wrist/Status/Voltage", voltage);
+    Logger.recordOutput("Wrist/Status/Current", current);
+    Logger.recordOutput("Wrist/Status/Temperature", temperature);
+    Logger.recordOutput("Wrist/Status/Setpoint", setpoint);
+    Logger.recordOutput("Wrist/Status/IsZeroed", isZeroed);
+    Logger.recordOutput("Wrist/Status/IsZeroing", isZeroing);
     Logger.recordOutput("Wrist/Status/AtSetpoint", atSetpoint());
-    Logger.recordOutput("Wrist/IsCoralRange", getAngle() > Wrist.CORAL_MAX_ANGLE);
+    Logger.recordOutput("Wrist/Status/RawMotorPosition", motorPosition);
+    Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoderValue);
+    Logger.recordOutput("Wrist/Status/IsInCoralRange", angle > Wrist.CORAL_MAX_ANGLE);
+  }
+  
+  /**
+   * Logs command-related data
+   */
+  private void logCommandData() {
+    Logger.recordOutput("Wrist/Command/Angle", commandedAngle);
+    Logger.recordOutput("Wrist/Command/ManualSpeed", manualSpeed);
+  }
+  
+  /**
+   * Logs PID and feedforward related data
+   */
+  private void logPIDData() {
+    Logger.recordOutput("Wrist/Control/PIDEnabled", isPIDEnabled);
+    Logger.recordOutput("Wrist/Control/PIDOutput", pidOutput);
+    Logger.recordOutput("Wrist/Control/FeedForward", feedforward);
+    Logger.recordOutput("Wrist/Control/TotalOutput", pidOutput + feedforward);
+    
+    if (isPIDEnabled) {
+      Logger.recordOutput("Wrist/Control/PIDSetpointPosition", pidController.getSetpoint().position);
+      Logger.recordOutput("Wrist/Control/PIDSetpointVelocity", pidController.getSetpoint().velocity);
+    }
+  }
+  
+  /**
+   * Logs stall detection related data
+   */
+  private void logStallData(boolean potentialStall) {
+    Logger.recordOutput("Wrist/Status/StallDetectionActive", potentialStall);
+    Logger.recordOutput("Wrist/Status/StallCount", stallCount);
+    Logger.recordOutput("Wrist/Status/IsStalled", isStalled());
   }
 }
