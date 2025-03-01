@@ -189,7 +189,7 @@ public class WristSubsystem extends SubsystemBase {
             Units.degreesToRadians(pidController.getSetpoint().position),
             Units.degreesToRadians(pidController.getSetpoint().velocity));
 
-    double totalOutput = pidOutput + feedforward;
+    double totalOutput = pidOutput;
     setClampSpeed(totalOutput);
 
     currentStatus = "PID Control";

@@ -42,6 +42,7 @@ public class SetWristPosition extends Command {
   @Override
   public void execute() {
     // The PID controller will run in the subsystem's periodic method
+    System.out.println("Running Wrist PID");
   }
 
   // Called once the command ends or is interrupted.
@@ -55,6 +56,7 @@ public class SetWristPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println("Finished WRIST PID");
     return (stopWhenAtSetpoint && m_wrist.atSetpoint()) || m_wrist.isStalled();
   }
 }

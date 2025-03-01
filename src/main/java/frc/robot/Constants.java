@@ -12,9 +12,8 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -153,8 +152,8 @@ public interface Constants {
     public static final int RIGHT_MOTOR_ID = 52; // Adjust as needed
 
     // Elevator Position Limits
-    public static final double MAX_SAFE_POS = 190.0; // Maximum safe position (adjust as needed)
-    public static final double MIN_SAFE_POS = 1.0; // Minimum safe position (adjust as needed)
+    public static final double MAX_SAFE_POS = 128.0; // Maximum safe position (adjust as needed)
+    public static final double MIN_SAFE_POS = 0; // Minimum safe position (adjust as needed)
 
     // Motion Magic Constants
     public static final double CRUISE_VELOCITY = 40.0; // In rotations/sec (~39.58 in/s)
@@ -164,7 +163,7 @@ public interface Constants {
     // Voltage Limits
     public static final double PEAK_FORWARD_VOLTAGE = 12.0;
     public static final double PEAK_REVERSE_VOLTAGE = -12.0;
-    public static final double ZEROING_VOLTAGE = 1.5;
+    public static final double ZEROING_VOLTAGE = 2.5;
 
     // PID and Feedforward Constants
     public static final double KP = 2.5; // Proportional gain
@@ -173,13 +172,13 @@ public interface Constants {
 
     // Feedforward Constants
     public static final double KS = 0.25; // Static friction compensation
-    public static final double KV = 1.0; // Velocity feedforward
-    public static final double KA = 0.1; // Acceleration feedforward
-    public static final double KG = 0.25; // Gravity feedforward
+    public static final double KV = 1.50; // Velocity feedforward
+    public static final double KA = 0.06; // Acceleration feedforward //Was .12
+    public static final double KG = 1.18; // Gravity feedforward
 
     // Physical Constants
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
-    public static final double GEAR_RATIO = 15.0; // Verified 15:1 ratio
+    public static final double GEAR_RATIO = 9; // Verified 15:1 ratio
 
     // Conversion factors
     // Conversion factors (recalculated based on new measurements)
@@ -189,22 +188,22 @@ public interface Constants {
 
     // Tolerance and Threshold Values
     public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
-    public static final double STALL_VELOCITY_THRESHOLD = 0.1; // Rotations/sec
+    public static final double STALL_VELOCITY_THRESHOLD = 0.05; // Rotations/sec
 
     // Safety Limits
-    public static final double ELEVATOR_DANGER_LIMIT = 100.0;
+    public static final double ELEVATOR_DANGER_LIMIT = 12.0;
 
     // Elevator Stop Positions
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = 0.0;
-    public static final double POSITION_L1 = 0.0;
+    public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 14.6;
     public static final double POSITION_L3 = 43.8;
     public static final double POSITION_L4 = 107;
-    public static final double POSITION_BARGE = 27;
+    public static final double POSITION_BARGE = 127;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.6; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.4; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
@@ -247,27 +246,26 @@ public interface Constants {
     double MAX_SAFE_ANGLE = 0 / 360.0; // Upper limit (in rotations) (uses relative encoder)
     double MIN_SAFE_ANGLE = -270 / 360.0; // Lower limit (in rotations) (uses relative encoder)
     double TRUE_ZERO = 216; // Offset for zero position
-    double MIN_CLEAR_ELEVATOR_ANGLE = 138; // Minimum angle to clear elevator
+    double MIN_CLEAR_ELEVATOR_ANGLE = 130; // Minimum angle to clear elevator
 
     // Stall Detection
-    double STALL_VELOCITY_THRESHOLD = 0.1;
+    double STALL_VELOCITY_THRESHOLD = .01;
     double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions
     // Level Positions
-    double L1_ANGLE = 128;
+    double L1_ANGLE = 136;
     double L2_ANGLE = 136;
     double L3_ANGLE = 136;
     double L4_ANGLE = 94;
 
     // Operational Positions
-    int CORAL_INTAKE_ANGLE = 212;
-    int BARGER_POSITION = 21;
-    int DRIVE_POSITION = 216;
-    
+    int CORAL_INTAKE_ANGLE = 193;
+    int BARGER_POSITION = 27;
+    int DRIVE_POSITION = 212;
 
     // Game Piece Handling
-    int CORAL_MAX_ANGLE = 30;
+    int CORAL_MAX_ANGLE = 75;
 
     // Roller Subsystem
     interface Roller {
@@ -277,9 +275,8 @@ public interface Constants {
       int SECOND_SENSOR_ID = 3;
 
       // Intake/Outtake Speeds
-      double CORAL_INTAKE_SPEED = -0.1;
-      double AFTER_FIRST_SENSOR_CORAL_SPEED = -0.02;
-      double CORAL_OUTTAKE_SPEED = -0.3;
+      double CORAL_INTAKE_SPEED = 0.4;
+      double CORAL_OUTTAKE_SPEED = -0.5;
       double ALGAE_INTAKE_SPEED = 0.3;
       double ALGAE_OUTTAKE_SPEED = -0.3;
     }
