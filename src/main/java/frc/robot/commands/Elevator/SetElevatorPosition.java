@@ -37,7 +37,7 @@ public class SetElevatorPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     if (interrupted) {
-      m_elevator.Stop();
+      m_elevator.stop();
       Logger.recordOutput("Elevator/Command/Interrupted", true);
     }
   }

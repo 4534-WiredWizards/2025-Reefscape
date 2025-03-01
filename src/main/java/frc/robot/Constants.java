@@ -184,7 +184,7 @@ public interface Constants {
     public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
     public static final double STALL_POSITION_THRESHOLD = .5;
     // 0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
-    // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
+w    // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
     // detection
     // public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for
     // stall detection
@@ -195,6 +195,7 @@ public interface Constants {
     public static final double POSITION_L2 = 10.0;
     public static final double POSITION_L3 = 25.0;
     public static final double POSITION_L4 = 203;
+    public static final double POSITION_BARGE = 203;
 
     // Manual Control Constants
     public static final double MANUAL_SPEED = 0.2; // Speed for manual control
@@ -248,8 +249,10 @@ public interface Constants {
     double L3_ANGLE = 105; // / 360;
     double L4_ANGLE = 57; // / 360;
     int CORAL_INTAKE_ANGLE = 98;
-    int BARGER_POSITION = 165;
+    int BARGE_POSITION = 165;
+    double PROCESSOR_POSITION = 165;
     int DRIVE_POSITION = 0;
+    double SAFE_WRIST_POSITION = 100;
 
     // Game Piece Switching Angles
     int CORAL_MAX_ANGLE = 30;
@@ -260,7 +263,7 @@ public interface Constants {
       int FIRST_SENSOR_ID = 2;
       int SECOND_SENSOR_ID = 3;
 
-      double CORAL_INTAKE_SPEED = -.1;
+      double CORAL_INTAKE_SPEED = .1;
       double AFTER_FIRST_SENSOR_CORAL_SPEED = -.02;
       double CORAL_OUTTAKE_SPEED = -.3;
       double ALGAE_INTAKE_SPEED = .3;

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
+import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -11,14 +12,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
-import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -153,19 +152,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   /** Stops the elevator motors */
-  private void stop() {
+  public void stop() {
     elevatorMotor1.stopMotor();
     Logger.recordOutput("Elevator/Status", "Stopped");
   }
 
   // Public motor stopping command
-  public Command Stop() {
-    return Commands.runOnce(
-        () -> {
-          Logger.recordOutput("Elevator/Status", "Stopping the elevator");
-          stop();
-        });
-  }
 
   /**
    * Creates a command to set the current position as zero
@@ -177,6 +169,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             () -> {
               isZeroed = true;
               elevatorMotor1.setPosition(0);
+              isZeroing = false;
+              stop();
               Logger.recordOutput("Elevator/Status", "Set as Zero");
               Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
             })
@@ -206,9 +200,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                   stop();
                 }),
         // Set current position as zero
-        setZeroCommand(),
-        Stop()
-        );
+        setZeroCommand());
   }
 
   /**
@@ -266,7 +258,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     double velocity = elevatorMotor1.getRotorVelocity().getValueAsDouble();
     double voltage = elevatorMotor1.getMotorVoltage().getValueAsDouble();
     double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
-
 
     // Stall detection logic
     if (Math.abs(voltage) > 0.1 && Math.abs(velocity) < 0.1) {

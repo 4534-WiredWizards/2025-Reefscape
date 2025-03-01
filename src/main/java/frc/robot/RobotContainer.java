@@ -283,9 +283,28 @@ public class RobotContainer {
     // Operator PID control for Nuetral D-pad
     // Operatorcontroller.povDown()
     //     .onTrue(
-    //         deadlineCommand(
+    //         new ParallelDeadlineGroup(
+    //             new RunCoralIntake(m_Intake, true),
+    //             new SetWristPosition(m_Wrist, Wrist.SAFE_WRIST_POSITION)
+    //             // new SequentialCommandGroup(
+    //             //     new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+    //             //     new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE))
+    //             ));
+    // Operatorcontroller.povDown()
+    //     .onTrue(
+    //         new SequentialCommandGroup(
     //             new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
-    //             new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)));
+    //             new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE)));
+    // Operatorcontroller.povUp()
+    //     .onTrue(
+    //         new ParallelCommandGroup(
+    //             new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE),
+    //             new SetWristPosition(m_Wrist, Wrist.BARGE_POSITION)));
+    // Operatorcontroller.povRight()
+    //     .onTrue(
+    //         new ParallelCommandGroup(
+    //             new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+    //             new SetWristPosition(m_Wrist, Wrist.PROCESSOR_POSITION)));
 
     // Buttom/Axis Event Combos
     // Right Coral Side (using RIGHT_THUMB_AXIS)

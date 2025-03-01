@@ -27,7 +27,7 @@ public class SimpleMoveElevator extends Command {
   @Override
   public void initialize() {
     // Stop the PID controller when manual control starts
-    m_elevator.Stop();
+    m_elevator.stop();
   }
 
   @Override
@@ -35,6 +35,7 @@ public class SimpleMoveElevator extends Command {
     // Move the elevator manually based on the input speed
     double speed = speedSupplier.getAsDouble();
     m_elevator.moveManual(speed);
+    System.out.println("Running elevator");
     // if (m_Wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
     //   m_Wrist.moveManual(-.2);
     // } else {
@@ -47,7 +48,8 @@ public class SimpleMoveElevator extends Command {
   public void end(boolean interrupted) {
     // Stop the elevator when the command ends
 
-    m_elevator.Stop();
+    m_elevator.stop();
+    System.out.println("Ran stop elevator");
   }
 
   @Override
