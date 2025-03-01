@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
@@ -21,14 +20,13 @@ import java.util.Map;
  * subsystem configurations, and controller mappings.
  */
 public interface Constants {
+
   /* Runtime Mode Configuration */
   public static enum Mode {
     /** Running on a real robot */
     REAL,
-
     /** Running in physics simulation */
     SIM,
-
     /** Replaying from log file */
     REPLAY
   }
@@ -38,6 +36,7 @@ public interface Constants {
 
   // LED constants
   interface LEDConstants {
+
     int LED_ID = 26;
     double brightnessScalar = 0.4;
     int timeoutMs = 100;
@@ -47,15 +46,20 @@ public interface Constants {
 
   // Field Positions
   interface FieldPosition {
+
     interface Blue {
+
       interface Reef {
+
         double CENTER_X = 4.5;
         double CENTER_Y = 4.0;
       }
     }
 
     interface Red {
+
       interface Reef {
+
         double CENTER_X = 13.0;
         double CENTER_Y = 4.0;
       }
@@ -103,35 +107,36 @@ public interface Constants {
   // Scoring Positions
   interface ScoringPositions {
     // Zone position configuration
+
     record ZonePosition(double x, double y, double theta) {}
 
     // Zone positions for each side (Left and Right)
     static final Map<ReefZone, Map<ScoringSide, ZonePosition>> ZONE_POSITIONS =
         Map.of(
             ReefZone.ZONE_1,
-                Map.of(
-                    ScoringSide.LEFT, new ZonePosition(3.083, 4.189, 0.0), // x, y, theta
-                    ScoringSide.RIGHT, new ZonePosition(3.083, 3.859, 0.0)),
+            Map.of(
+                ScoringSide.LEFT, new ZonePosition(3.083, 4.189, 0.0), // x, y, theta
+                ScoringSide.RIGHT, new ZonePosition(3.083, 3.859, 0.0)),
             ReefZone.ZONE_2,
-                Map.of(
-                    ScoringSide.LEFT, new ZonePosition(3.647, 2.914, 60.0),
-                    ScoringSide.RIGHT, new ZonePosition(3.946, 2.754, 60.0)),
+            Map.of(
+                ScoringSide.LEFT, new ZonePosition(3.647, 2.914, 60.0),
+                ScoringSide.RIGHT, new ZonePosition(3.946, 2.754, 60.0)),
             ReefZone.ZONE_3,
-                Map.of(
-                    ScoringSide.LEFT, new ZonePosition(5.034, 2.742, 120.0),
-                    ScoringSide.RIGHT, new ZonePosition(5.316, 2.923, 120.0)),
+            Map.of(
+                ScoringSide.LEFT, new ZonePosition(5.034, 2.742, 120.0),
+                ScoringSide.RIGHT, new ZonePosition(5.316, 2.923, 120.0)),
             ReefZone.ZONE_4,
-                Map.of(
-                    ScoringSide.LEFT, new ZonePosition(5.894, 3.858, 180.0),
-                    ScoringSide.RIGHT, new ZonePosition(5.894, 4.189, 180.0)),
+            Map.of(
+                ScoringSide.LEFT, new ZonePosition(5.894, 3.858, 180.0),
+                ScoringSide.RIGHT, new ZonePosition(5.894, 4.189, 180.0)),
             ReefZone.ZONE_5,
-                Map.of(
-                    ScoringSide.LEFT, new ZonePosition(5.314, 5.127, -120.0),
-                    ScoringSide.RIGHT, new ZonePosition(5.022, 5.268, -120.0)),
+            Map.of(
+                ScoringSide.LEFT, new ZonePosition(5.314, 5.127, -120.0),
+                ScoringSide.RIGHT, new ZonePosition(5.022, 5.268, -120.0)),
             ReefZone.ZONE_6,
-                Map.of(
-                    ScoringSide.LEFT, new ZonePosition(3.957, 5.263, -60.0),
-                    ScoringSide.RIGHT, new ZonePosition(3.673, 5.108, -60.0)));
+            Map.of(
+                ScoringSide.LEFT, new ZonePosition(3.957, 5.263, -60.0),
+                ScoringSide.RIGHT, new ZonePosition(3.673, 5.108, -60.0)));
 
     /** Returns the position for a given zone and side. */
     static ZonePosition getZonePosition(ReefZone zone, ScoringSide side) {
@@ -142,6 +147,7 @@ public interface Constants {
   /* Subsystem Constants */
   interface Elevator {
     // Motor IDs
+
     public static final int LEFT_MOTOR_ID = 51; // Adjust as needed
     public static final int RIGHT_MOTOR_ID = 52; // Adjust as needed
 
@@ -157,7 +163,7 @@ public interface Constants {
     // Voltage Limits
     public static final double PEAK_FORWARD_VOLTAGE = 12.0;
     public static final double PEAK_REVERSE_VOLTAGE = -12.0;
-    public static final double ZEROING_VOLTAGE = 2.0;
+    public static final double ZEROING_VOLTAGE = 1.5;
 
     // PID and Feedforward Constants
     public static final double KP = 2.5; // Proportional gain
@@ -182,12 +188,7 @@ public interface Constants {
 
     // Tolerance and Threshold Values
     public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
-    public static final double STALL_POSITION_THRESHOLD = .5;
-    // 0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
-    // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
-    // detection
-    // public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for
-    // stall detection
+    public static final double STALL_VELOCITY_THRESHOLD = 0.1; // Rotations/sec
 
     // Safety Limits
     public static final double ELEVATOR_DANGER_LIMIT = 100.0;
@@ -205,19 +206,24 @@ public interface Constants {
   }
 
   interface Wrist {
-    // Motor and Encoder Configurations
+    // Hardware Configuration
+
     int PIVOT_MOTOR_ID = 53;
     double SPEED_SCALAR = 0.8;
     double GEAR_RATIO = 125.0;
+    double ZEROING_SPEED = 0.1;
 
+    // Encoder Configuration
     interface Encoder {
+
       int PORT = 1;
       int FULL_RANGE = 1024;
       int EXPECTED_ZERO = 0;
       double ABSOLUTE_OFFSET = 0.0; // TODO: Calibrate
     }
 
-    // PID and Feedforward Configuration
+    // Control System Constants
+    // PID Configuration
     double PID_POSITION_TOLERANCE = 1 / 360;
     double PID_VELOCITY_TOLERANCE = 1;
     double KP = 0.012;
@@ -225,55 +231,62 @@ public interface Constants {
     double KD = 0.0001;
 
     // Feedforward Constants
-    double KS = 0.25;
-    double KG = 0.15;
-    double KV = 2.25;
-    double KA = 0.01;
+    double KS = 0.25; // Static friction compensation
+    double KG = 0.15; // Gravity compensation
+    double KV = 2.25; // Velocity feedforward
+    double KA = 0.01; // Acceleration feedforward
 
     // Motion Profile Configuration
     double MAX_VELOCITY = 410;
     double MAX_ACCELERATION = 350;
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 0 / 360.0; // 360; // Convert degrees to rotations
-    double MIN_SAFE_ANGLE = -270 / 360.0;
+    double MAX_SAFE_ANGLE = 0 / 360.0; // Upper limit (in rotations) (uses relative encoder)
+    double MIN_SAFE_ANGLE = -270 / 360.0; // Lower limit (in rotations) (uses relative encoder)
+    double TRUE_ZERO = 216; // Offset for zero position
+    double MIN_CLEAR_ELEVATOR_ANGLE = 115; // Minimum angle to clear elevator
 
-    double MIN_CLEAR_ELEVATOR_ANGLE = 115;
-    double TRUE_ZERO = 216;
-
-    // Operational Parameters
+    // Stall Detection
     double STALL_VELOCITY_THRESHOLD = 0.1;
     double STALL_CURRENT_THRESHOLD = 30;
 
-    // Preset Positions and Angles
-    double L1_ANGLE = 140; // / 360;
-    double L2_ANGLE = 132; // 360;
-    double L3_ANGLE = 132; // / 360;
-    double L4_ANGLE = 85; // / 360;
+    // Preset Positions
+    // Level Positions
+    double L1_ANGLE = 128;
+    double L2_ANGLE = 105;
+    double L3_ANGLE = 105;
+    double L4_ANGLE = 57;
+
+    // Operational Positions
     int CORAL_INTAKE_ANGLE = 98;
     int BARGER_POSITION = 21;
     int DRIVE_POSITION = 216;
 
-    // Game Piece Switching Angles
-    int CORAL_MAX_ANGLE = 87;
+    // Game Piece Handling
+    int CORAL_MAX_ANGLE = 30;
 
-    // Roller Configuration
+    // Roller Subsystem
     interface Roller {
+
       int MOTOR_ID = 54;
       int FIRST_SENSOR_ID = 2;
       int SECOND_SENSOR_ID = 3;
 
-      double CORAL_INTAKE_SPEED = 0.2;
-      double AFTER_FIRST_SENSOR_CORAL_SPEED = 0.5;
-      double CORAL_OUTTAKE_SPEED = -.3;
-      double ALGAE_INTAKE_SPEED = .3;
-      double ALGAE_OUTTAKE_SPEED = -.3;
+      // Intake/Outtake Speeds
+      double CORAL_INTAKE_SPEED = -0.1;
+      double AFTER_FIRST_SENSOR_CORAL_SPEED = -0.02;
+      double CORAL_OUTTAKE_SPEED = -0.3;
+      double ALGAE_INTAKE_SPEED = 0.3;
+      double ALGAE_OUTTAKE_SPEED = -0.3;
     }
   }
 
   interface Swerve {
+
     interface Drive {
+
       interface PID {
+
         double KP = 100.0;
         double KI = 0.0;
         double KD = 0.5;
@@ -284,7 +297,9 @@ public interface Constants {
     }
 
     interface Steer {
+
       interface PID {
+
         double KP = 0.0097625642;
         double KI = 0.0;
         double KD = 0.0;
@@ -298,12 +313,14 @@ public interface Constants {
   /* Input/Output Configuration */
   interface IO {
     // Controller Port Configuration
+
     static final int DRIVER_CONTROLLER_PORT = 0;
     static final int OPERATOR_CONTROLLER_PORT = 1;
 
     // Driver Controller (Xbox)
     interface Driver {
       // Axes
+
       int DRIVE_X_AXIS = 0;
       int DRIVE_Y_AXIS = 1;
       int DRIVE_ROTATE_AXIS = 3;
@@ -321,6 +338,7 @@ public interface Constants {
     // Operator Controller (Xbox)
     interface Operator {
       // Buttons
+
       int ELEVATOR_HOME_BUTTON = 1; // A button
       int INTAKE_CORAL_BUTTON = 2; // B button
       int SCORE_L1_BUTTON = 3; // X button
@@ -334,12 +352,14 @@ public interface Constants {
   /* Autonomous Configuration */
   interface Autonomous {
     // Pathfinding Constants
+
     double ROBOT_MASS_KG = 74.088;
     double ROBOT_MOI = 6.883;
     double WHEEL_COF = 1.2;
 
     // PID Constants
     interface PID {
+
       double DRIVE_KP = 5.0;
       double DRIVE_KI = 0.0;
       double DRIVE_KD = 0.0;
