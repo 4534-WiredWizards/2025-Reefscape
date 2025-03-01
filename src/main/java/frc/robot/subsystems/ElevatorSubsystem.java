@@ -92,7 +92,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
             .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
-            .withReverseSoftLimitEnable(false)
+            .withReverseSoftLimitEnable(false) //Disable reverse soft limit to enable stall zeroing && to prevent bottom shake due to soft limit
             .withReverseSoftLimitThreshold(Elevator.MIN_SAFE_POS);
 
     fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);
@@ -111,7 +111,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor2.setControl(new Follower(elevatorMotor1.getDeviceID(), true));
 
     // Add the zeroings command to smart dashboard
-    SmartDashboard.putData("Zero Elevator", zeroCommand());
+    SmartDashboard.putData("Elevator/Zero Elevator", zeroCommand());
   }
 
   /**

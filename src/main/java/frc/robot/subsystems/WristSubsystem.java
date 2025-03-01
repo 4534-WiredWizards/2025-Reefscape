@@ -87,8 +87,8 @@ public class WristSubsystem extends SubsystemBase {
             this));
 
     // Add commands to dashboard
-    SmartDashboard.putData("Zero Wrist", zeroCommand());
-    SmartDashboard.putData("Wrist PID Controller", pidController);
+    SmartDashboard.putData("Wrist/Zero Wrist", zeroCommand());
+    SmartDashboard.putData("Wrist/Wrist PID Controller", pidController);
     
     // Log initial configuration once at startup
     logConfiguration();
