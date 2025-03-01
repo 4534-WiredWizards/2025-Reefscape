@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import static edu.wpi.first.units.Units.Volts;
+import static frc.robot.Constants.Wrist.STALL_VELOCITY_THRESHOLD;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -8,12 +9,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.Wrist;
-import static frc.robot.Constants.Wrist.STALL_VELOCITY_THRESHOLD;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -40,7 +39,7 @@ public class WristSubsystem extends SubsystemBase {
   private int stallCount = 0;
   private static final int STALL_COUNT_THRESHOLD = 10;
   private double lastAngle = 0.0;
-  
+
   // State tracking for logging
   private String currentStatus = "Initialized";
   private double commandedAngle = 0.0;
@@ -53,11 +52,12 @@ public class WristSubsystem extends SubsystemBase {
     this.elevator = elevator;
 
     // Configure PID controller
-    pidController = new ProfiledPIDController(
-        Wrist.KP,
-        Wrist.KI,
-        Wrist.KD,
-        new TrapezoidProfile.Constraints(Wrist.MAX_VELOCITY, Wrist.MAX_ACCELERATION));
+    pidController =
+        new ProfiledPIDController(
+            Wrist.KP,
+            Wrist.KI,
+            Wrist.KD,
+            new TrapezoidProfile.Constraints(Wrist.MAX_VELOCITY, Wrist.MAX_ACCELERATION));
     pidController.setTolerance(Wrist.PID_POSITION_TOLERANCE, Wrist.PID_VELOCITY_TOLERANCE);
 
     // Configure feedforward
@@ -75,21 +75,22 @@ public class WristSubsystem extends SubsystemBase {
     lastAngle = setpoint;
 
     // Configure SysId
-    wristSysId = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null, // Use default config
-            null, // Use default timeout
-            null, // Use default ramp rate
-            (state) -> Logger.recordOutput("Wrist/SysId/State", state.toString())),
-        new SysIdRoutine.Mechanism(
-            (voltage) -> runCharacterization(voltage.in(Volts)),
-            null, // No additional logging required
-            this));
+    wristSysId =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null, // Use default config
+                null, // Use default timeout
+                null, // Use default ramp rate
+                (state) -> Logger.recordOutput("Wrist/SysId/State", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> runCharacterization(voltage.in(Volts)),
+                null, // No additional logging required
+                this));
 
     // Add commands to dashboard
     SmartDashboard.putData("Wrist/Zero Wrist", zeroCommand());
-    SmartDashboard.putData("Wrist/Wrist PID Controller", pidController);
-    
+    SmartDashboard.putData("Wrist PID Controller", pidController);
+
     // Log initial configuration once at startup
     logConfiguration();
   }
@@ -121,25 +122,26 @@ public class WristSubsystem extends SubsystemBase {
     double reverseLimit = Wrist.MIN_SAFE_ANGLE * Wrist.GEAR_RATIO;
 
     // Software limit switch configuration
-    SoftwareLimitSwitchConfigs limitSwitches = new SoftwareLimitSwitchConfigs()
-        .withForwardSoftLimitEnable(true)
-        .withForwardSoftLimitThreshold(forwardLimit)
-        .withReverseSoftLimitEnable(true)
-        .withReverseSoftLimitThreshold(reverseLimit);
+    SoftwareLimitSwitchConfigs limitSwitches =
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(forwardLimit)
+            .withReverseSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(reverseLimit);
 
     // Feedback configuration
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    
+
     // Apply software limits
     fx_cfg.withSoftwareLimitSwitch(limitSwitches);
-    
+
     // Motor output configuration
     fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     fx_cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     // Apply configuration
     wristMotor.getConfigurator().apply(fx_cfg);
-    
+
     // Log soft limits for debugging
     Logger.recordOutput("Wrist/Config/SoftForwardLimit", forwardLimit);
     Logger.recordOutput("Wrist/Config/SoftReverseLimit", reverseLimit);
@@ -147,7 +149,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Gets the current angle of the wrist
-   * 
+   *
    * @return The current angle in degrees
    */
   public double getAngle() {
@@ -158,7 +160,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Gets the velocity of the wrist
-   * 
+   *
    * @return The current velocity in degrees per second
    */
   public double getVelocity() {
@@ -168,16 +170,16 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Sets the wrist to a specific angle
-   * 
+   *
    * @param angle The desired angle in degrees
    */
   public void setWristSetpoint(double angle) {
     // Safety check against elevator position
     if ((elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
-        && angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
-        && elevator.getSpeed() > 0.1) ||
-        (elevator.getSetpoint() < Elevator.ELEVATOR_DANGER_LIMIT &&
-            angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE)) {
+            && angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
+            && elevator.getSpeed() > 0.1)
+        || (elevator.getSetpoint() < Elevator.ELEVATOR_DANGER_LIMIT
+            && angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE)) {
       angle = Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
       currentStatus = "Limited to clear elevator";
     } else {
@@ -187,43 +189,42 @@ public class WristSubsystem extends SubsystemBase {
     this.setpoint = angle;
     commandedAngle = angle;
     pidController.setGoal(this.setpoint);
-    
+
     Logger.recordOutput("Wrist/Status/Setpoint", this.setpoint);
   }
 
-  /**
-   * Runs the PID controller to maintain the current setpoint
-   */
+  /** Runs the PID controller to maintain the current setpoint */
   public void runPID() {
     double currentAngle = getAngle();
     this.pidOutput = pidController.calculate(currentAngle);
-    this.feedforward = m_WristFeedforward.calculate(
-        Units.degreesToRadians(pidController.getSetpoint().position),
-        Units.degreesToRadians(pidController.getSetpoint().velocity));
-    
+    this.feedforward =
+        m_WristFeedforward.calculate(
+            Units.degreesToRadians(pidController.getSetpoint().position),
+            Units.degreesToRadians(pidController.getSetpoint().velocity));
+
     double totalOutput = pidOutput + feedforward;
     setClampSpeed(totalOutput);
-    
+
     currentStatus = "PID Control";
   }
 
   /**
    * Manually move the wrist at a specified speed
-   * 
+   *
    * @param speed Speed between -1.0 and 1.0
    */
   public void moveManual(double speed) {
     disablePID();
     double clampedSpeed = Math.max(-1, Math.min(1, speed));
     setClampSpeed(clampedSpeed);
-    
+
     manualSpeed = speed;
     currentStatus = "Manual Control";
   }
 
   /**
    * Sets a clamped motor speed
-   * 
+   *
    * @param speed Speed between -1.0 and 1.0
    */
   private void setClampSpeed(double speed) {
@@ -232,9 +233,7 @@ public class WristSubsystem extends SubsystemBase {
     Logger.recordOutput("Wrist/Control/MotorOutput", newSpeed);
   }
 
-  /**
-   * Stops the wrist motor
-   */
+  /** Stops the wrist motor */
   public void stop() {
     disablePID();
     wristMotor.stopMotor();
@@ -243,7 +242,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Creates a command to stop the wrist
-   * 
+   *
    * @return A command that stops the wrist
    */
   public Command Stop() {
@@ -254,18 +253,14 @@ public class WristSubsystem extends SubsystemBase {
         this);
   }
 
-  /**
-   * Enables PID control for the wrist
-   */
+  /** Enables PID control for the wrist */
   public void enablePID() {
     pidController.reset(getAngle());
     isPIDEnabled = true;
     currentStatus = "PID Enabled";
   }
 
-  /**
-   * Disables PID control for the wrist
-   */
+  /** Disables PID control for the wrist */
   public void disablePID() {
     isPIDEnabled = false;
     setpoint = getAngle();
@@ -277,7 +272,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Checks if PID control is enabled
-   * 
+   *
    * @return True if PID is enabled, false otherwise
    */
   public boolean isPIDEnabled() {
@@ -286,7 +281,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Checks if the wrist is at the target position
-   * 
+   *
    * @return True if at setpoint, false otherwise
    */
   public boolean atSetpoint() {
@@ -295,7 +290,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Creates a command to set the current position as zero
-   * 
+   *
    * @return A command that sets the current position as zero
    */
   public Command setZeroCommand() {
@@ -312,7 +307,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Command to zero the wrist by moving it down until stall
-   * 
+   *
    * @return A command that zeros the wrist
    */
   public Command zeroCommand() {
@@ -338,7 +333,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Command to move wrist to a specific angle
-   * 
+   *
    * @param angle The desired angle
    * @return A command that moves the wrist to the angle
    */
@@ -352,23 +347,23 @@ public class WristSubsystem extends SubsystemBase {
             },
             this),
         Commands.waitUntil(this::atSetpoint),
-        Commands.runOnce(
-            () -> currentStatus = "At angle: " + angle));
+        Commands.runOnce(() -> currentStatus = "At angle: " + angle));
   }
 
   /**
    * Enhanced stall detection for zeroing
-   * 
+   *
    * @return True if stalled for a certain number of cycles, false otherwise
    */
   public boolean isStalled() {
     double velocity = wristMotor.getRotorVelocity().getValueAsDouble();
-    boolean potentialStall = Math.abs(wristMotor.getMotorVoltage().getValueAsDouble()) > 0.1 
-        && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
-    
+    boolean potentialStall =
+        Math.abs(wristMotor.getMotorVoltage().getValueAsDouble()) > 0.1
+            && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+
     if (potentialStall) {
       stallCount++;
-      
+
       // If stalled and not in zeroing process, stop the motor
       if (isStalled() && !isZeroing) {
         stop();
@@ -377,13 +372,13 @@ public class WristSubsystem extends SubsystemBase {
     } else {
       stallCount = 0;
     }
-    
+
     return stallCount >= STALL_COUNT_THRESHOLD;
   }
 
   /**
    * Checks if the wrist has been zeroed
-   * 
+   *
    * @return True if zeroed, false otherwise
    */
   public boolean isZeroed() {
@@ -404,7 +399,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Runs the wrist motor for system identification
-   * 
+   *
    * @param volts Voltage to apply to the motor
    */
   private void runCharacterization(double volts) {
@@ -415,7 +410,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Command for quasi-static system identification
-   * 
+   *
    * @param direction The direction to run the test
    * @return A command that runs the SysId test
    */
@@ -427,7 +422,7 @@ public class WristSubsystem extends SubsystemBase {
 
   /**
    * Command for dynamic system identification
-   * 
+   *
    * @param direction The direction to run the test
    * @return A command that runs the SysId test
    */
@@ -457,11 +452,12 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     // Stall detection logic
-    boolean potentialStall = Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
-    
+    boolean potentialStall =
+        Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+
     if (potentialStall) {
       stallCount++;
-      
+
       // If stalled and not in zeroing process, stop the motor
       if (isStalled() && !isZeroing) {
         stop();
@@ -472,25 +468,32 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     // Log all data in structured categories
-    logStatusData(currentAngle, velocity, voltage, current, temperature, motorPosition, absEncoderValue);
+    logStatusData(
+        currentAngle, velocity, voltage, current, temperature, motorPosition, absEncoderValue);
     logCommandData();
     logPIDData();
     logStallData(potentialStall);
-    
+
     // Log angle error when in position control mode
-    if (currentStatus.contains("Moving to angle") || currentStatus.contains("At angle") || isPIDEnabled) {
+    if (currentStatus.contains("Moving to angle")
+        || currentStatus.contains("At angle")
+        || isPIDEnabled) {
       Logger.recordOutput("Wrist/Status/AngleError", setpoint - currentAngle);
     }
-    
+
     // Track for next iteration
     lastAngle = currentAngle;
   }
-  
-  /**
-   * Logs basic status data about the wrist
-   */
-  private void logStatusData(double angle, double velocity, double voltage, 
-                           double current, double temperature, double motorPosition, double absEncoderValue) {
+
+  /** Logs basic status data about the wrist */
+  private void logStatusData(
+      double angle,
+      double velocity,
+      double voltage,
+      double current,
+      double temperature,
+      double motorPosition,
+      double absEncoderValue) {
     Logger.recordOutput("Wrist/Status/Text", currentStatus);
     Logger.recordOutput("Wrist/Status/Angle", angle);
     Logger.recordOutput("Wrist/Status/Velocity", velocity);
@@ -505,33 +508,29 @@ public class WristSubsystem extends SubsystemBase {
     Logger.recordOutput("Wrist/Status/AbsoluteEncoderValue", absEncoderValue);
     Logger.recordOutput("Wrist/Status/IsInCoralRange", angle > Wrist.CORAL_MAX_ANGLE);
   }
-  
-  /**
-   * Logs command-related data
-   */
+
+  /** Logs command-related data */
   private void logCommandData() {
     Logger.recordOutput("Wrist/Command/Angle", commandedAngle);
     Logger.recordOutput("Wrist/Command/ManualSpeed", manualSpeed);
   }
-  
-  /**
-   * Logs PID and feedforward related data
-   */
+
+  /** Logs PID and feedforward related data */
   private void logPIDData() {
     Logger.recordOutput("Wrist/Control/PIDEnabled", isPIDEnabled);
     Logger.recordOutput("Wrist/Control/PIDOutput", pidOutput);
     Logger.recordOutput("Wrist/Control/FeedForward", feedforward);
     Logger.recordOutput("Wrist/Control/TotalOutput", pidOutput + feedforward);
-    
+
     if (isPIDEnabled) {
-      Logger.recordOutput("Wrist/Control/PIDSetpointPosition", pidController.getSetpoint().position);
-      Logger.recordOutput("Wrist/Control/PIDSetpointVelocity", pidController.getSetpoint().velocity);
+      Logger.recordOutput(
+          "Wrist/Control/PIDSetpointPosition", pidController.getSetpoint().position);
+      Logger.recordOutput(
+          "Wrist/Control/PIDSetpointVelocity", pidController.getSetpoint().velocity);
     }
   }
-  
-  /**
-   * Logs stall detection related data
-   */
+
+  /** Logs stall detection related data */
   private void logStallData(boolean potentialStall) {
     Logger.recordOutput("Wrist/Status/StallDetectionActive", potentialStall);
     Logger.recordOutput("Wrist/Status/StallCount", stallCount);
