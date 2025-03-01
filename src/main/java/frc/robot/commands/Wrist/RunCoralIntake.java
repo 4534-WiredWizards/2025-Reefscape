@@ -41,17 +41,17 @@ public class RunCoralIntake extends Command {
     // If first sensor hasn't been activated yet, run at intake speed
     if (!secondSensorActivated) {
       intakeSubsystem.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
-      System.out.println("second sensor not activated");}
+      System.out.println("second sensor not activated");
+    }
 
-      // Check if first sensor is now activated
-      
-      // If 0.5 seconds have passed, stop the motor
-      if (secondSensorActivated) {
-        System.out.println("Stopping roller");
-        intakeSubsystem.stopRoller();
-        coralCentered = true;
-      }
-    
+    // Check if first sensor is now activated
+
+    // If 0.5 seconds have passed, stop the motor
+    if (secondSensorActivated) {
+      System.out.println("Stopping roller");
+      intakeSubsystem.stopRoller();
+      coralCentered = true;
+    }
   }
 
   // Called once the command ends or is interrupted.

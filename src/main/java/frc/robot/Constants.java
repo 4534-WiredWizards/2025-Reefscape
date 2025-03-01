@@ -12,8 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -178,7 +179,7 @@ public interface Constants {
 
     // Physical Constants
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
-    public static final double GEAR_RATIO = 15.0; // Verified 15:1 ratio
+    public static final double GEAR_RATIO = 9; // Verified 15:1 ratio
 
     // Conversion factors
     // Conversion factors (recalculated based on new measurements)
@@ -196,12 +197,13 @@ public interface Constants {
     // Elevator Stop Positions
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = 0.0;
-    public static final double POSITION_L2 = 10.0;
-    public static final double POSITION_L3 = 25.0;
+    public static final double POSITION_L1 = 0;
+    public static final double POSITION_L2 = 17;
+    public static final double POSITION_L3 = 46.0;
     public static final double POSITION_L4 = 203;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.6; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.1; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 

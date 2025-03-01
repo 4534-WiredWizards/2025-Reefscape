@@ -12,12 +12,14 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static frc.robot.Constants.Elevator.ELEVATOR_DANGER_LIMIT;
+import static frc.robot.Constants.Elevator.POSITION_GROUND;
+import static frc.robot.Constants.Wrist.CORAL_INTAKE_ANGLE;
+import static frc.robot.Constants.Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,13 +38,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
-import static frc.robot.Constants.Elevator.ELEVATOR_DANGER_LIMIT;
-import static frc.robot.Constants.Elevator.POSITION_GROUND;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.Wrist;
-import static frc.robot.Constants.Wrist.CORAL_INTAKE_ANGLE;
-import static frc.robot.Constants.Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -63,6 +61,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -200,9 +199,13 @@ public class RobotContainer {
     SmartDashboard.putData(
         "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
     SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203));
-    SmartDashboard.putData("TestWristCommand/Wrist Coral Intake", new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
-    SmartDashboard.putData("TestWristCommand/Wrist Barger", new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION));
-    SmartDashboard.putData("TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION));
+    SmartDashboard.putData(
+        "TestWristCommand/Wrist Coral Intake",
+        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
+    SmartDashboard.putData(
+        "TestWristCommand/Wrist Barger", new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION));
+    SmartDashboard.putData(
+        "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION));
 
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator L4",
@@ -296,21 +299,21 @@ public class RobotContainer {
         .onTrue(new DriveToPoint(drive, targetPose));
 
     // Operator PID control for Nuetral D-pad
-    Operatorcontroller.povDown().onTrue(new SequentialCommandGroup(
-        // Step 1: Clear the elevator
-        new SetWristPosition(m_Wrist, MIN_CLEAR_ELEVATOR_ANGLE, true),
-            // .withTimeout(2), // Add a timeout to ensure the command ends
-    
-        // Step 2: Move elevator down, prepare wrist, and run intake
-        new ParallelDeadlineGroup(
-            new RunCoralIntake(m_Intake, true),
-            new SetElevatorPosition(m_elevator, POSITION_GROUND),
+    Operatorcontroller.povDown()
+        .onTrue(
             new SequentialCommandGroup(
-                new WaitUntilCommand(() -> m_elevator.getEncoderPosition() < ELEVATOR_DANGER_LIMIT),
-                new SetWristPosition(m_Wrist, CORAL_INTAKE_ANGLE, false)
-            )
-        )
-    ));
+                // Step 1: Clear the elevator
+                new SetWristPosition(m_Wrist, MIN_CLEAR_ELEVATOR_ANGLE, true),
+                // .withTimeout(2), // Add a timeout to ensure the command ends
+
+                // Step 2: Move elevator down, prepare wrist, and run intake
+                new ParallelDeadlineGroup(
+                    new RunCoralIntake(m_Intake, true),
+                    new SetElevatorPosition(m_elevator, POSITION_GROUND),
+                    new SequentialCommandGroup(
+                        new WaitUntilCommand(
+                            () -> m_elevator.getEncoderPosition() < ELEVATOR_DANGER_LIMIT),
+                        new SetWristPosition(m_Wrist, CORAL_INTAKE_ANGLE, false)))));
     // Operatorcontroller.povDown()
     //     .onTrue(
     //         new SequentialCommandGroup(
@@ -363,50 +366,38 @@ public class RobotContainer {
     // rightLevel3.onTrue(Commands.runOnce(() -> System.out.println("Right Level 3"), drive));
     // rightLevel4.onTrue(Commands.runOnce(() -> System.out.println("Right Level 4"), drive));
 
-    leftLevel1.onTrue(Commands.runOnce(() -> 
-      new SequentialCommandGroup(
-        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-
-        new ParallelCommandGroup(
-            new SetElevatorPosition(m_elevator, Elevator.POSITION_L1),
-            new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)
-        )
-        )
-        )
-      );
-    leftLevel2.onTrue(Commands.runOnce(() -> 
-    new SequentialCommandGroup(
-        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-
-        new ParallelCommandGroup(
-            new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
-            new SetWristPosition(m_Wrist, Wrist.L2_ANGLE)
-        )
-        )
-        )
-        );
-    leftLevel3.onTrue(Commands.runOnce(() -> 
-    new SequentialCommandGroup(
-        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-
-        new ParallelCommandGroup(
-            new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
-            new SetWristPosition(m_Wrist, Wrist.L3_ANGLE)
-        )
-        )
-        )
-        );
-    leftLevel4.onTrue(Commands.runOnce(() -> 
-    new SequentialCommandGroup(
-        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-
-        new ParallelCommandGroup(
-            new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
-            new SetWristPosition(m_Wrist, Wrist.L4_ANGLE)
-        )
-        )
-        )
-        );
+    leftLevel1.onTrue(
+        Commands.runOnce(
+            () ->
+                new SequentialCommandGroup(
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+                    new ParallelCommandGroup(
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L1),
+                        new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)))));
+    leftLevel2.onTrue(
+        Commands.runOnce(
+            () ->
+                new SequentialCommandGroup(
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+                    new ParallelCommandGroup(
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
+                        new SetWristPosition(m_Wrist, Wrist.L2_ANGLE)))));
+    leftLevel3.onTrue(
+        Commands.runOnce(
+            () ->
+                new SequentialCommandGroup(
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+                    new ParallelCommandGroup(
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
+                        new SetWristPosition(m_Wrist, Wrist.L3_ANGLE)))));
+    leftLevel4.onTrue(
+        Commands.runOnce(
+            () ->
+                new SequentialCommandGroup(
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+                    new ParallelCommandGroup(
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
+                        new SetWristPosition(m_Wrist, Wrist.L4_ANGLE)))));
     // TODO: Change to
 
     // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
