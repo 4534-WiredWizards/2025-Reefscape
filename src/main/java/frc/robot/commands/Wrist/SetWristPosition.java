@@ -56,9 +56,12 @@ public class SetWristPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if((stopWhenAtSetpoint && m_wrist.atSetpoint()) || m_wrist.isStalled()) {
-      System.out.println("Finished WRIST PID");
+    boolean finish = (stopWhenAtSetpoint && m_wrist.atSetpoint()) || m_wrist.isStalled();
+    if (finish) {
+      System.out.println(".(FINISHED WRIST PID)");
+      return finish;
+    } else {
+      return false;
     }
-    return (stopWhenAtSetpoint && m_wrist.atSetpoint()) || m_wrist.isStalled();
   }
 }
