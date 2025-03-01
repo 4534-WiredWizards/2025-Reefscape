@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
 import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
 import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
-import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -35,23 +34,35 @@ public class ElevatorSubsystem extends SubsystemBase {
   private int stallCount = 0;
   private static final int STALL_COUNT_THRESHOLD = 10;
   private double lastPosition = 0.0;
+  
+  // State tracking for logging
+  private String currentStatus = "Initialized";
+  private double commandedPosition = 0.0;
+  private double commandedVoltage = 0.0;
+  private double manualSpeed = 0.0;
 
   public ElevatorSubsystem() {
     configureMotors();
     setpoint = getEncoderPosition();
     lastPosition = setpoint;
+    
+    // Log initial configuration once at startup
+    logConfiguration();
+  }
 
-    // Log initial configuration
-    Logger.recordOutput("Elevator/Config/MaxSafePos", Elevator.MAX_SAFE_POS);
-    Logger.recordOutput("Elevator/Config/InitialSetpoint", setpoint);
-    Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
-
-    // Add configs of elevator
-    // Logger.recordOutput("Elevator/Config/Pulley Diameter (in)", Elevator.PULLEY_DIAMETER);
-    // Logger.recordOutput("Elevator/Config/Gear Ratio", Elevator.GEAR_RATIO);
-    // Logger.recordOutput("Elevator/Config/Rotations to Inches", Elevator.ROTATIONS_TO_INCHES);
-    // Logger.recordOutput("Elevator/Config/Inches to Rotations", Elevator.INCHES_TO_ROTATIONS);
-
+  /** Logs the static configuration parameters once at initialization */
+  private void logConfiguration() {
+    Logger.recordOutput("Elevator/Config/MaxSafePos", MAX_SAFE_POS);
+    Logger.recordOutput("Elevator/Config/MinSafePos", MIN_SAFE_POS);
+    Logger.recordOutput("Elevator/Config/PositionTolerance", Elevator.POSITION_TOLERANCE);
+    Logger.recordOutput("Elevator/Config/ZeroingVoltage", Elevator.ZEROING_VOLTAGE);
+    Logger.recordOutput("Elevator/Config/PID/kP", Elevator.KP);
+    Logger.recordOutput("Elevator/Config/PID/kI", Elevator.KI);
+    Logger.recordOutput("Elevator/Config/PID/kD", Elevator.KD);
+    Logger.recordOutput("Elevator/Config/FF/kV", Elevator.KV);
+    Logger.recordOutput("Elevator/Config/FF/kS", Elevator.KS);
+    Logger.recordOutput("Elevator/Config/FF/kA", Elevator.KA);
+    Logger.recordOutput("Elevator/Config/FF/kG", Elevator.KG);
   }
 
   /** Configures the elevator motors with all necessary settings */
@@ -61,17 +72,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     // Feedback configuration
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
-    // Motion Magic configuration
-    // fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Elevator.CRUISE_VELOCITY;
-    // fx_cfg.MotionMagic.MotionMagicAcceleration = Elevator.MAX_ACCELERATION;
-    // fx_cfg.MotionMagic.MotionMagicJerk = Elevator.JERK;
-
     // Voltage configuration
     fx_cfg.Voltage.PeakForwardVoltage = Elevator.PEAK_FORWARD_VOLTAGE;
     fx_cfg.Voltage.PeakReverseVoltage = Elevator.PEAK_REVERSE_VOLTAGE;
 
     // PID and feedforward configuration
-
     fx_cfg.Slot0.kP = Elevator.KP;
     fx_cfg.Slot0.kI = Elevator.KI;
     fx_cfg.Slot0.kD = Elevator.KD;
@@ -117,7 +122,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     double clampedPosition = Math.max(MIN_SAFE_POS, Math.min(MAX_SAFE_POS, position));
     setpoint = clampedPosition;
     elevatorMotor1.setControl(positionVoltage.withPosition(position));
-    Logger.recordOutput("Elevator/Command/SetPosition", position);
+    
+    // Track for logging in periodic
+    commandedPosition = position;
+    currentStatus = "Moving to position";
   }
 
   /**
@@ -138,7 +146,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     return elevatorMotor1.getRotorPosition().getValueAsDouble();
   }
 
-  // 
   /**
    * Gets the current speed (velocity) of the elevator
    *
@@ -156,8 +163,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void moveManual(double speed) {
     double clampedSpeed = Math.max(-1, Math.min(1, speed));
     elevatorMotor1.set(clampedSpeed);
-    Logger.recordOutput("Elevator/Command/ManualSpeed", speed);
-    Logger.recordOutput("Elevator/Control/ClampSpeed", clampedSpeed);
+    
+    // Track for logging in periodic
+    manualSpeed = speed;
+    currentStatus = "Manual control";
   }
 
   /**
@@ -167,20 +176,22 @@ public class ElevatorSubsystem extends SubsystemBase {
    */
   public void setVoltage(double voltage) {
     elevatorMotor1.setControl(voltageOut.withOutput(voltage));
-    Logger.recordOutput("Elevator/Command/SetVoltage", voltage);
+    
+    // Track for logging in periodic
+    commandedVoltage = voltage;
+    currentStatus = "Voltage control";
   }
 
   /** Stops the elevator motors */
   public void stop() {
     elevatorMotor1.stopMotor();
-    Logger.recordOutput("Elevator/Status", "Stopped");
+    currentStatus = "Stopped";
   }
 
   // Public motor stopping command
   public Command Stop() {
     return Commands.runOnce(
         () -> {
-          Logger.recordOutput("Elevator/Status", "Stopping the elevator");
           stop();
         },
         this);
@@ -198,8 +209,7 @@ public class ElevatorSubsystem extends SubsystemBase {
               elevatorMotor1.setPosition(0);
               isZeroing = false;
               stop();
-              Logger.recordOutput("Elevator/Status", "Set as Zero");
-              Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
+              currentStatus = "Zero set";
             })
         .ignoringDisable(true);
   }
@@ -215,7 +225,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         Commands.runOnce(
             () -> {
               isZeroing = true;
-              Logger.recordOutput("Elevator/Status", "Zeroing Started");
+              currentStatus = "Zeroing started";
             }),
         // Lower elevator until stalled
         Commands.deadline(
@@ -241,12 +251,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         Commands.runOnce(
             () -> {
               setPosition(position);
-              Logger.recordOutput("Elevator/Status", "Moving to position: " + position);
+              currentStatus = "Moving to position: " + position;
             },
             this),
         Commands.waitUntil(() -> isAtPosition(position)),
         Commands.runOnce(
-            () -> Logger.recordOutput("Elevator/Status", "Reached position: " + position)));
+            () -> currentStatus = "At position: " + position));
   }
 
   /**
@@ -281,49 +291,71 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // Get current values once to avoid multiple hardware calls
     double currentPosition = getEncoderPosition();
     double velocity = elevatorMotor1.getRotorVelocity().getValueAsDouble();
     double voltage = elevatorMotor1.getMotorVoltage().getValueAsDouble();
     double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
+    double temperature = elevatorMotor1.getDeviceTemp().getValueAsDouble();
 
     // Stall detection logic
-    if (Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD) {
+    boolean potentialStall = Math.abs(voltage) > 0.1 && Math.abs(velocity) < 0.1;
+    
+    if (potentialStall) {
       stallCount++;
-
-      // Log potential stall condition
-      if (stallCount > 0) {
-        Logger.recordOutput("Elevator/Status/StallDetectionActive", true);
-        Logger.recordOutput("Elevator/Status/StallCount", stallCount);
-      }
-
+      
       // If stalled and not in zeroing process, stop the motor
       if (isStalled() && !isZeroing) {
         stop();
-        Logger.recordOutput("Elevator/Status", "Motor stopped due to stall detection");
+        currentStatus = "Stalled - motor stopped";
       }
     } else {
       stallCount = 0;
-      Logger.recordOutput("Elevator/Status/StallDetectionActive", false);
-      Logger.recordOutput("Elevator/Status/StallCount", 0);
     }
 
-    // Update last position for next iteration
-    lastPosition = currentPosition;
 
-    // Record detailed logs for debugging and telemetry
-    Logger.recordOutput("Elevator/Status/Setpoint", setpoint);
-    Logger.recordOutput("Elevator/Status/Position", currentPosition);
+    // Log all data in structured categories
+    logStatusData(currentPosition, velocity, voltage, current, temperature);
+    logCommandData();
+    logStallData(potentialStall);
+    
+    // Log position error when in position control mode
+    if (currentStatus.contains("Moving to position") || currentStatus.contains("At position")) {
+      Logger.recordOutput("Elevator/Status/PositionError", setpoint - currentPosition);
+    }
+  }
+  
+  /**
+   * Logs basic status data about the elevator
+   */
+  private void logStatusData(double position, double velocity, double voltage, 
+                              double current, double temperature) {
+    Logger.recordOutput("Elevator/Status/Text", currentStatus);
+    Logger.recordOutput("Elevator/Status/Position", position);
     Logger.recordOutput("Elevator/Status/Velocity", velocity);
     Logger.recordOutput("Elevator/Status/Voltage", voltage);
     Logger.recordOutput("Elevator/Status/Current", current);
-    Logger.recordOutput(
-        "Elevator/Status/Temperature", elevatorMotor1.getDeviceTemp().getValueAsDouble());
-    Logger.recordOutput("Elevator/Status/IsZeroing", isZeroing);
+    Logger.recordOutput("Elevator/Status/Temperature", temperature);
+    Logger.recordOutput("Elevator/Status/Setpoint", setpoint);
     Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
-
-    // Log position error when setpoint is active
-    if (Math.abs(voltage) > 0.1) {
-      Logger.recordOutput("Elevator/Status/PositionError", setpoint - currentPosition);
-    }
+    Logger.recordOutput("Elevator/Status/IsZeroing", isZeroing);
+  }
+  
+  /**
+   * Logs command-related data
+   */
+  private void logCommandData() {
+    Logger.recordOutput("Elevator/Command/Position", commandedPosition);
+    Logger.recordOutput("Elevator/Command/Voltage", commandedVoltage);
+    Logger.recordOutput("Elevator/Command/ManualSpeed", manualSpeed);
+  }
+  
+  /**
+   * Logs stall detection related data
+   */
+  private void logStallData(boolean potentialStall) {
+    Logger.recordOutput("Elevator/Status/StallDetectionActive", potentialStall);
+    Logger.recordOutput("Elevator/Status/StallCount", stallCount);
+    Logger.recordOutput("Elevator/Status/IsStalled", isStalled());
   }
 }
