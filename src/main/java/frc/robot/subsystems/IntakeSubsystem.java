@@ -23,9 +23,12 @@ public class IntakeSubsystem extends SubsystemBase {
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
     firstSensor = rollerMotor.getForwardLimitSwitch();
-    secondSensor = rollerMotor.getForwardLimitSwitch();
+    secondSensor = rollerMotor.getReverseLimitSwitch();
 
     SparkFlexConfig idleConfig = new SparkFlexConfig();
+    idleConfig.limitSwitch.forwardLimitSwitchEnabled(false);
+    idleConfig.limitSwitch.reverseLimitSwitchEnabled(false);
+
     idleConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(60);
     rollerMotor.configure(
         idleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

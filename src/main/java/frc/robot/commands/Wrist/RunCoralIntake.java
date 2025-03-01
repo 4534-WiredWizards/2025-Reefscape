@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.commands.Wrist;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -15,23 +14,18 @@ public class RunCoralIntake extends Command {
 
   private final boolean autoStop;
   private boolean coralCentered = false;
-  private final Timer timer;
   private boolean secondSensorActivated = false;
 
   public RunCoralIntake(IntakeSubsystem intakeSubsystem, boolean autoStop) {
     this.intakeSubsystem = intakeSubsystem;
     this.autoStop = autoStop;
-    timer = new Timer();
     addRequirements(intakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    coralCentered = false;
     secondSensorActivated = false;
-    timer.stop();
-    timer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,22 +36,15 @@ public class RunCoralIntake extends Command {
     if (!secondSensorActivated) {
       intakeSubsystem.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
       System.out.println("second sensor not activated");
-    }
-
-    // Check if first sensor is now activated
-
-    // If 0.5 seconds have passed, stop the motor
-    if (secondSensorActivated) {
+    } else {
       System.out.println("Stopping roller");
       intakeSubsystem.stopRoller();
-      coralCentered = true;
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    timer.stop();
     if (interrupted) {
       intakeSubsystem.stopRoller();
     }
@@ -66,7 +53,8 @@ public class RunCoralIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (autoStop && coralCentered) {
+    if (autoStop && secondSensorActivated) {
+      System.out.println("Finished run coral intake");
       return true;
     }
     return false;
