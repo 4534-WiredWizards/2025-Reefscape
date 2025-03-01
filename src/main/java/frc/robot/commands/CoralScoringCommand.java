@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -48,48 +50,57 @@ public class CoralScoringCommand extends SequentialCommandGroup {
               Constants.ScoringPositions.ZonePosition position =
                   Constants.ScoringPositions.getZonePosition(reefZone, side);
 
+              Pose2d targetPose = new Pose2d(position.x(), position.y(), Rotation2d.fromDegrees(position.theta()));
+
               // Drive to the target position
               Logger.recordOutput("CoralScoringCommand/Status", "Driving to target position");
-              drive.driveToPoint(
-                  position.x(),
-                  position.y(),
-                  position
-                      .theta()); // FIXME: Needs to be a dynamic command with an isfinshed command
-            }),
+
+              new DriveToPoint(drive, targetPose);
+
+              
+
+              // drive.driveToPoint(
+              //     position.x(),
+              //     position.y(),
+              //     position
+              //         .theta()); // FIXME: Needs to be a dynamic command with an isfinshed command
+            })
+            //,
 
         // Set elevator height (from enum configuration)
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput("CoralScoringCommand/Status", "Setting elevator height");
-                  Logger.recordOutput(
-                      "CoralScoringCommand/ElevatorHeight", height.getElevatorPosition());
-                })
-            .andThen(new SetElevatorPosition(elevator, height.getElevatorPosition())),
+        // new InstantCommand(
+        //         () -> {
+        //           Logger.recordOutput("CoralScoringCommand/Status", "Setting elevator height");
+        //           Logger.recordOutput(
+        //               "CoralScoringCommand/ElevatorHeight", height.getElevatorPosition());
+        //         })
+        //     .andThen(new SetElevatorPosition(elevator, height.getElevatorPosition())),
 
-        // Use a DeadlineGroup to run AdaptiveWrist as the deadline
-        new ParallelDeadlineGroup(
-            // Add a 0.5-second delay before starting AdaptiveWrist
-            new WaitCommand(0.5)
-                .andThen(
-                    new AdaptiveWrist(m_Intake, () -> m_Wrist.getAngle(), false).withTimeout(2)),
-            new InstantCommand(
-                () -> {
-                  Logger.recordOutput("CoralScoringCommand/Status", "Setting wrist angle");
-                  Logger.recordOutput("CoralScoringCommand/WristAngle", height.getWristAngle());
-                }),
-            new SetWristPosition(m_Wrist, height.getWristAngle(), false)),
+        // // Use a DeadlineGroup to run AdaptiveWrist as the deadline
+        // new ParallelDeadlineGroup(
+        //     // Add a 0.5-second delay before starting AdaptiveWrist
+        //     new WaitCommand(0.5)
+        //         .andThen(
+        //             new AdaptiveWrist(m_Intake, () -> m_Wrist.getAngle(), false).withTimeout(2)),
+        //     new InstantCommand(
+        //         () -> {
+        //           Logger.recordOutput("CoralScoringCommand/Status", "Setting wrist angle");
+        //           Logger.recordOutput("CoralScoringCommand/WristAngle", height.getWristAngle());
+        //         }),
+        //     new SetWristPosition(m_Wrist, height.getWristAngle(), false)),
 
-        // Return to drive position
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput("CoralScoringCommand/Status", "Returning to drive position");
-                })
-            .andThen(new SetElevatorPosition(elevator, Elevator.POSITION_GROUND)),
+        // // Return to drive position
+        // new InstantCommand(
+        //         () -> {
+        //           Logger.recordOutput("CoralScoringCommand/Status", "Returning to drive position");
+        //         })
+        //     .andThen(new SetElevatorPosition(elevator, Elevator.POSITION_GROUND)),
 
-        // Log the end of the command
-        new InstantCommand(
-            () -> {
-              Logger.recordOutput("CoralScoringCommand/Status", "Finished");
-            }));
+        // // Log the end of the command
+        // new InstantCommand(
+        //     () -> {
+        //       Logger.recordOutput("CoralScoringCommand/Status", "Finished");
+        //     })
+        );
   }
 }
