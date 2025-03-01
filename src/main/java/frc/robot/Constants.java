@@ -13,9 +13,8 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -201,7 +200,7 @@ public interface Constants {
     public static final double POSITION_L4 = 203;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.2; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.6; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
@@ -239,7 +238,6 @@ public interface Constants {
     double MAX_SAFE_ANGLE = 0 / 360.0; // 360; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = -270 / 360.0;
 
-
     double MIN_CLEAR_ELEVATOR_ANGLE = 115;
     double TRUE_ZERO = 216;
 
@@ -248,16 +246,16 @@ public interface Constants {
     double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions and Angles
-    double L1_ANGLE = 128; // / 360;
-    double L2_ANGLE = 105; // 360;
-    double L3_ANGLE = 105; // / 360;
-    double L4_ANGLE = 57; // / 360;
+    double L1_ANGLE = 140; // / 360;
+    double L2_ANGLE = 132; // 360;
+    double L3_ANGLE = 132; // / 360;
+    double L4_ANGLE = 85; // / 360;
     int CORAL_INTAKE_ANGLE = 98;
-    int BARGER_POSITION = 165;
-    int DRIVE_POSITION = 0;
+    int BARGER_POSITION = 21;
+    int DRIVE_POSITION = 216;
 
     // Game Piece Switching Angles
-    int CORAL_MAX_ANGLE = 30;
+    int CORAL_MAX_ANGLE = 87;
 
     // Roller Configuration
     interface Roller {
@@ -265,8 +263,8 @@ public interface Constants {
       int FIRST_SENSOR_ID = 2;
       int SECOND_SENSOR_ID = 3;
 
-      double CORAL_INTAKE_SPEED = -.1;
-      double AFTER_FIRST_SENSOR_CORAL_SPEED = -.02;
+      double CORAL_INTAKE_SPEED = 0.2;
+      double AFTER_FIRST_SENSOR_CORAL_SPEED = 0.5;
       double CORAL_OUTTAKE_SPEED = -.3;
       double ALGAE_INTAKE_SPEED = .3;
       double ALGAE_OUTTAKE_SPEED = -.3;
