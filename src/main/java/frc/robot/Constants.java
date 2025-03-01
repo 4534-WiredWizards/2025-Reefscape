@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -146,8 +147,8 @@ public interface Constants {
     public static final int RIGHT_MOTOR_ID = 11; // Adjust as needed
 
     // Elevator Position Limits
-    public static final double MAX_SAFE_POS = 50.0; // Maximum safe position (adjust as needed)
-    public static final double MIN_SAFE_POS = 2.0; // Minimum safe position (adjust as needed)
+    public static final double MAX_SAFE_POS = 190.0; // Maximum safe position (adjust as needed)
+    public static final double MIN_SAFE_POS = 1.0; // Minimum safe position (adjust as needed)
 
     // Motion Magic Constants
     public static final double CRUISE_VELOCITY = 40.0; // In rotations/sec (~39.58 in/s)
@@ -189,13 +190,15 @@ public interface Constants {
     // public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for
     // stall detection
 
+    // Safety Limits
+    public static final double ELEVATOR_DANGER_LIMIT = 100.0;
+
     // Elevator Stop Positions
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = 0.0;
     public static final double POSITION_L2 = 10.0;
     public static final double POSITION_L3 = 25.0;
     public static final double POSITION_L4 = 203;
-    public static final double POSITION_BARGE = 203;
 
     // Manual Control Constants
     public static final double MANUAL_SPEED = 0.5; // Speed for manual control
@@ -236,6 +239,7 @@ public interface Constants {
     double MAX_SAFE_ANGLE = 0 / 360.0; // 360; // Convert degrees to rotations
     double MIN_SAFE_ANGLE = -203 / 360.0;
 
+
     double MIN_CLEAR_ELEVATOR_ANGLE = 115;
     double TRUE_ZERO = 128;
 
@@ -249,10 +253,8 @@ public interface Constants {
     double L3_ANGLE = 105; // / 360;
     double L4_ANGLE = 57; // / 360;
     int CORAL_INTAKE_ANGLE = 98;
-    int BARGE_POSITION = 165;
-    double PROCESSOR_POSITION = 165;
+    int BARGER_POSITION = 165;
     int DRIVE_POSITION = 0;
-    double SAFE_WRIST_POSITION = 100;
 
     // Game Piece Switching Angles
     int CORAL_MAX_ANGLE = 30;
@@ -263,7 +265,7 @@ public interface Constants {
       int FIRST_SENSOR_ID = 2;
       int SECOND_SENSOR_ID = 3;
 
-      double CORAL_INTAKE_SPEED = .1;
+      double CORAL_INTAKE_SPEED = -.1;
       double AFTER_FIRST_SENSOR_CORAL_SPEED = -.02;
       double CORAL_OUTTAKE_SPEED = -.3;
       double ALGAE_INTAKE_SPEED = .3;
