@@ -32,7 +32,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private boolean isZeroed = false;
   private boolean isZeroing = false;
   private int stallCount = 0;
-  private static final int STALL_COUNT_THRESHOLD = 5;
+  private static final int STALL_COUNT_THRESHOLD = 10;
   private double lastPosition = 0.0;
 
   public ElevatorSubsystem() {
@@ -44,6 +44,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator/Config/MaxSafePos", Elevator.MAX_SAFE_POS);
     Logger.recordOutput("Elevator/Config/InitialSetpoint", setpoint);
     Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
+
+    // Add configs of elevator
+    // Logger.recordOutput("Elevator/Config/Pulley Diameter (in)", Elevator.PULLEY_DIAMETER);
+    // Logger.recordOutput("Elevator/Config/Gear Ratio", Elevator.GEAR_RATIO);
+    // Logger.recordOutput("Elevator/Config/Rotations to Inches", Elevator.ROTATIONS_TO_INCHES);
+    // Logger.recordOutput("Elevator/Config/Inches to Rotations", Elevator.INCHES_TO_ROTATIONS);
+    // // Log  Elevator.STALL_POSITION_THRESHOLD
+    // Logger.recordOutput(
+    //     "Elevator/Config/StallPositionThreshold", Elevator.STALL_POSITION_THRESHOLD);
   }
 
   /** Configures the elevator motors with all necessary settings */
@@ -163,7 +172,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   /** Stops the elevator motors */
-  private void stop() {
+  public void stop() {
     elevatorMotor1.stopMotor();
     Logger.recordOutput("Elevator/Status", "Stopped");
   }
@@ -188,6 +197,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             () -> {
               isZeroed = true;
               elevatorMotor1.setPosition(0);
+              isZeroing = false;
+              stop();
               Logger.recordOutput("Elevator/Status", "Set as Zero");
               Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
             })
@@ -277,8 +288,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
 
     // Stall detection logic
-    if (Math.abs(voltage) > 0.1
-        && Math.abs(currentPosition - lastPosition) < Elevator.STALL_POSITION_THRESHOLD) {
+    if (Math.abs(voltage) > 0.1 && Math.abs(velocity) < 0.1) {
       stallCount++;
 
       // Log potential stall condition
