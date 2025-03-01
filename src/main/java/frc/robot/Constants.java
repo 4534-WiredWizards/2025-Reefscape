@@ -12,8 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -200,6 +201,7 @@ public interface Constants {
     public static final double POSITION_L2 = 14.6;
     public static final double POSITION_L3 = 43.8;
     public static final double POSITION_L4 = 107;
+    public static final double POSITION_BARGE = 27;
 
     // Manual Control Constants
     public static final double MANUAL_SPEED = 0.6; // Speed for manual control
