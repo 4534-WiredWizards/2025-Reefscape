@@ -408,9 +408,14 @@ public class WristSubsystem extends SubsystemBase {
       runPID();
     }
 
+    boolean voltageApplied = Math.abs(voltage) > 0.1;
+    boolean velocityLow = Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+    boolean farPIDSetpoint = Math.abs(setpoint - getAngle()) > Wrist.PID_POSITION_TOLERANCE;
+
     // Stall detection logic
     boolean potentialStall =
-        Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+        (voltageApplied && velocityLow && !isPIDEnabled) || 
+        (voltageApplied && velocityLow && isPIDEnabled && farPIDSetpoint);
 
     if (potentialStall) {
       stallCount++;
