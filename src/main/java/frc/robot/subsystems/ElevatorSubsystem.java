@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
 import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
 import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -50,9 +51,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // Logger.recordOutput("Elevator/Config/Gear Ratio", Elevator.GEAR_RATIO);
     // Logger.recordOutput("Elevator/Config/Rotations to Inches", Elevator.ROTATIONS_TO_INCHES);
     // Logger.recordOutput("Elevator/Config/Inches to Rotations", Elevator.INCHES_TO_ROTATIONS);
-    // // Log  Elevator.STALL_POSITION_THRESHOLD
-    // Logger.recordOutput(
-    //     "Elevator/Config/StallPositionThreshold", Elevator.STALL_POSITION_THRESHOLD);
+
   }
 
   /** Configures the elevator motors with all necessary settings */
@@ -288,7 +287,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
 
     // Stall detection logic
-    if (Math.abs(voltage) > 0.1 && Math.abs(velocity) < 0.1) {
+    if (Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD) {
       stallCount++;
 
       // Log potential stall condition

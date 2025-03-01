@@ -183,12 +183,7 @@ public interface Constants {
 
     // Tolerance and Threshold Values
     public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
-    public static final double STALL_POSITION_THRESHOLD = .5;
-    // 0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
-    // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
-    // detection
-    // public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for
-    // stall detection
+    public static final double STALL_VELOCITY_THRESHOLD = 0.1; // Rotations/sec
 
     // Safety Limits
     public static final double ELEVATOR_DANGER_LIMIT = 100.0;
