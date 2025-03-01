@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
-import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -12,12 +11,14 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
+import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -31,7 +32,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private boolean isZeroed = false;
   private boolean isZeroing = false;
   private int stallCount = 0;
-  private static final int STALL_COUNT_THRESHOLD = 5;
+  private static final int STALL_COUNT_THRESHOLD = 10;
   private double lastPosition = 0.0;
 
   public ElevatorSubsystem() {
@@ -43,6 +44,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator/Config/MaxSafePos", Elevator.MAX_SAFE_POS);
     Logger.recordOutput("Elevator/Config/InitialSetpoint", setpoint);
     Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
+
+    // Add configs of elevator
+    // Logger.recordOutput("Elevator/Config/Pulley Diameter (in)", Elevator.PULLEY_DIAMETER);
+    // Logger.recordOutput("Elevator/Config/Gear Ratio", Elevator.GEAR_RATIO);
+    // Logger.recordOutput("Elevator/Config/Rotations to Inches", Elevator.ROTATIONS_TO_INCHES);
+    // Logger.recordOutput("Elevator/Config/Inches to Rotations", Elevator.INCHES_TO_ROTATIONS);
+    // // Log  Elevator.STALL_POSITION_THRESHOLD
+    // Logger.recordOutput(
+    //     "Elevator/Config/StallPositionThreshold", Elevator.STALL_POSITION_THRESHOLD);
   }
 
   /** Configures the elevator motors with all necessary settings */
@@ -196,7 +206,9 @@ public class ElevatorSubsystem extends SubsystemBase {
                   stop();
                 }),
         // Set current position as zero
-        setZeroCommand());
+        setZeroCommand(),
+        Stop()
+        );
   }
 
   /**
@@ -255,9 +267,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     double voltage = elevatorMotor1.getMotorVoltage().getValueAsDouble();
     double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
 
+
     // Stall detection logic
-    if (Math.abs(voltage) > 0.1
-        && Math.abs(currentPosition - lastPosition) < Elevator.STALL_POSITION_THRESHOLD) {
+    if (Math.abs(voltage) > 0.1 && Math.abs(velocity) < 0.1) {
       stallCount++;
 
       // Log potential stall condition

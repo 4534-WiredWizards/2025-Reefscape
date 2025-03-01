@@ -142,12 +142,12 @@ public interface Constants {
   /* Subsystem Constants */
   interface Elevator {
     // Motor IDs
-    public static final int LEFT_MOTOR_ID = 10; // Adjust as needed
-    public static final int RIGHT_MOTOR_ID = 11; // Adjust as needed
+    public static final int LEFT_MOTOR_ID = 51; // Adjust as needed
+    public static final int RIGHT_MOTOR_ID = 52; // Adjust as needed
 
     // Elevator Position Limits
-    public static final double MAX_SAFE_POS = 50.0; // Maximum safe position (adjust as needed)
-    public static final double MIN_SAFE_POS = 2.0; // Minimum safe position (adjust as needed)
+    public static final double MAX_SAFE_POS = 203.0; // Maximum safe position (adjust as needed)
+    public static final double MIN_SAFE_POS = 0; // Minimum safe position (adjust as needed)
 
     // Motion Magic Constants
     public static final double CRUISE_VELOCITY = 40.0; // In rotations/sec (~39.58 in/s)
@@ -182,8 +182,8 @@ public interface Constants {
 
     // Tolerance and Threshold Values
     public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
-    public static final double STALL_POSITION_THRESHOLD =
-        0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
+    public static final double STALL_POSITION_THRESHOLD = .5;
+    // 0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
     // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
     // detection
     // public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for
@@ -197,7 +197,7 @@ public interface Constants {
     public static final double POSITION_L4 = 203;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.5; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.2; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
@@ -233,10 +233,10 @@ public interface Constants {
 
     // Safety Limits
     double MAX_SAFE_ANGLE = 0 / 360.0; // 360; // Convert degrees to rotations
-    double MIN_SAFE_ANGLE = -203 / 360.0;
+    double MIN_SAFE_ANGLE = -270 / 360.0;
 
     double MIN_CLEAR_ELEVATOR_ANGLE = 115;
-    double TRUE_ZERO = 128;
+    double TRUE_ZERO = 216;
 
     // Operational Parameters
     double STALL_VELOCITY_THRESHOLD = 0.1;

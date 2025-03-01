@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.deadlineCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
@@ -282,11 +281,11 @@ public class RobotContainer {
         .onTrue(new DriveToPoint(drive, targetPose));
 
     // Operator PID control for Nuetral D-pad
-    Operatorcontroller.povDown()
-        .onTrue(
-            deadlineCommand(
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
-                new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)));
+    // Operatorcontroller.povDown()
+    //     .onTrue(
+    //         deadlineCommand(
+    //             new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+    //             new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)));
 
     // Buttom/Axis Event Combos
     // Right Coral Side (using RIGHT_THUMB_AXIS)

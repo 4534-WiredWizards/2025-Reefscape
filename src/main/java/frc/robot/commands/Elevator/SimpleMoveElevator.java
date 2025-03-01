@@ -5,7 +5,6 @@
 package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import java.util.function.DoubleSupplier;
@@ -35,13 +34,13 @@ public class SimpleMoveElevator extends Command {
   public void execute() {
     // Move the elevator manually based on the input speed
     double speed = speedSupplier.getAsDouble();
+    m_elevator.moveManual(speed);
+    // if (m_Wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
+    //   m_Wrist.moveManual(-.2);
+    // } else {
 
-    if (m_Wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
-      m_Wrist.moveManual(-.2);
-    } else {
-
-      m_elevator.moveManual(speed);
-    }
+    //
+    // }
   }
 
   @Override
