@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.Constants.Wrist.STALL_VELOCITY_THRESHOLD;
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,10 +8,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.Wrist;
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.Wrist.STALL_VELOCITY_THRESHOLD;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -175,21 +176,9 @@ public class WristSubsystem extends SubsystemBase {
    */
   public void setWristSetpoint(double angle) {
     // Safety check against elevator position
-    if ((elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
-            && angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
-            && elevator.getSpeed() > 0.1)
-        || (elevator.getSetpoint() < Elevator.ELEVATOR_DANGER_LIMIT
-            && angle > Wrist.MIN_CLEAR_ELEVATOR_ANGLE)) {
-      angle = Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
-      currentStatus = "Limited to clear elevator";
-    } else {
-      currentStatus = "Moving to angle";
-    }
-
     this.setpoint = angle;
     commandedAngle = angle;
     pidController.setGoal(this.setpoint);
-
     Logger.recordOutput("Wrist/Status/Setpoint", this.setpoint);
   }
 
