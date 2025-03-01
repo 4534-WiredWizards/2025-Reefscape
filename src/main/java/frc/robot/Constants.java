@@ -173,9 +173,9 @@ public interface Constants {
 
     // Feedforward Constants
     public static final double KS = 0.25; // Static friction compensation
-    public static final double KV = 1.0; // Velocity feedforward
-    public static final double KA = 0.1; // Acceleration feedforward
-    public static final double KG = 0.25; // Gravity feedforward
+    public static final double KV = 1.50; // Velocity feedforward
+    public static final double KA = 0.12; // Acceleration feedforward
+    public static final double KG = 1.18; // Gravity feedforward
 
     // Physical Constants
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
@@ -203,7 +203,7 @@ public interface Constants {
     public static final double POSITION_L4 = 203;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.1; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.3; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
@@ -249,15 +249,15 @@ public interface Constants {
     double MIN_CLEAR_ELEVATOR_ANGLE = 115; // Minimum angle to clear elevator
 
     // Stall Detection
-    double STALL_VELOCITY_THRESHOLD = 0.1;
+    double STALL_VELOCITY_THRESHOLD = .01;
     double STALL_CURRENT_THRESHOLD = 30;
 
     // Preset Positions
     // Level Positions
     double L1_ANGLE = 128;
-    double L2_ANGLE = 105;
-    double L3_ANGLE = 105;
-    double L4_ANGLE = 57;
+    double L2_ANGLE = 120;
+    double L3_ANGLE = 120;
+    double L4_ANGLE = 94;
 
     // Operational Positions
     int CORAL_INTAKE_ANGLE = 98;
@@ -265,7 +265,7 @@ public interface Constants {
     int DRIVE_POSITION = 216;
 
     // Game Piece Handling
-    int CORAL_MAX_ANGLE = 30;
+    int CORAL_MAX_ANGLE = 75;
 
     // Roller Subsystem
     interface Roller {
@@ -275,9 +275,8 @@ public interface Constants {
       int SECOND_SENSOR_ID = 3;
 
       // Intake/Outtake Speeds
-      double CORAL_INTAKE_SPEED = -0.1;
-      double AFTER_FIRST_SENSOR_CORAL_SPEED = -0.02;
-      double CORAL_OUTTAKE_SPEED = -0.3;
+      double CORAL_INTAKE_SPEED = 0.4;
+      double CORAL_OUTTAKE_SPEED = -0.5;
       double ALGAE_INTAKE_SPEED = 0.3;
       double ALGAE_OUTTAKE_SPEED = -0.3;
     }
