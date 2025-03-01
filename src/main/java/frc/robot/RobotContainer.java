@@ -27,18 +27,27 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
+import static frc.robot.Constants.Elevator.ELEVATOR_DANGER_LIMIT;
+import static frc.robot.Constants.Elevator.POSITION_GROUND;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.Wrist;
+import static frc.robot.Constants.Wrist.CORAL_INTAKE_ANGLE;
+import static frc.robot.Constants.Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
@@ -283,15 +292,21 @@ public class RobotContainer {
         .onTrue(new DriveToPoint(drive, targetPose));
 
     // Operator PID control for Nuetral D-pad
-    // Operatorcontroller.povDown()
-    //     .onTrue(
-    //         new ParallelDeadlineGroup(
-    //             new RunCoralIntake(m_Intake, true),
-    //             new SetWristPosition(m_Wrist, Wrist.SAFE_WRIST_POSITION)
-    //             // new SequentialCommandGroup(
-    //             //     new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
-    //             //     new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE))
-    //             ));
+    Operatorcontroller.povDown().onTrue(new SequentialCommandGroup(
+        // Step 1: Clear the elevator
+        new SetWristPosition(m_Wrist, MIN_CLEAR_ELEVATOR_ANGLE, true),
+            // .withTimeout(2), // Add a timeout to ensure the command ends
+    
+        // Step 2: Move elevator down, prepare wrist, and run intake
+        new ParallelDeadlineGroup(
+            new RunCoralIntake(m_Intake, true),
+            new SetElevatorPosition(m_elevator, POSITION_GROUND),
+            new SequentialCommandGroup(
+                new WaitUntilCommand(() -> m_elevator.getEncoderPosition() < ELEVATOR_DANGER_LIMIT),
+                new SetWristPosition(m_Wrist, CORAL_INTAKE_ANGLE, false)
+            )
+        )
+    ));
     // Operatorcontroller.povDown()
     //     .onTrue(
     //         new SequentialCommandGroup(
