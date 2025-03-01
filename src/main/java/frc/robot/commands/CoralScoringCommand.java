@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -44,13 +42,14 @@ public class CoralScoringCommand extends SequentialCommandGroup {
               Constants.ScoringPositions.ZonePosition position =
                   Constants.ScoringPositions.getZonePosition(reefZone, side);
 
-              Pose2d targetPose =
-                  new Pose2d(position.x(), position.y(), Rotation2d.fromDegrees(position.theta()));
+              // Pose2d targetPose =
+              //     new Pose2d(position.x(), position.y(),
+              // Rotation2d.fromDegrees(position.theta()));
 
-              // Drive to the target position
-              Logger.recordOutput("CoralScoringCommand/Status", "Driving to target position");
+              // // Drive to the target position
+              // Logger.recordOutput("CoralScoringCommand/Status", "Driving to target position");
 
-              addCommands(new DriveToPoint(drive, targetPose));
+              // addCommands(new DriveToPoint(drive, targetPose));
 
               // drive.driveToPoint(
               //     position.x(),
