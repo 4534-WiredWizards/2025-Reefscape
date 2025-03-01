@@ -36,12 +36,6 @@ public class SimpleMoveElevator extends Command {
     // Move the elevator manually based on the input speed
     double speed = speedSupplier.getAsDouble();
     m_elevator.moveManual(speed);
-    // if (m_Wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
-    //   m_Wrist.moveManual(-.2);
-    // } else {
-
-    //
-    // }
   }
 
   @Override
