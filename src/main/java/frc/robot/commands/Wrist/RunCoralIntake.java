@@ -16,7 +16,7 @@ public class RunCoralIntake extends Command {
   private final boolean autoStop;
   private boolean coralCentered = false;
   private final Timer timer;
-  private boolean firstSensorActivated = false;
+  private boolean secondSensorActivated = false;
 
   public RunCoralIntake(IntakeSubsystem intakeSubsystem, boolean autoStop) {
     this.intakeSubsystem = intakeSubsystem;
@@ -29,7 +29,7 @@ public class RunCoralIntake extends Command {
   @Override
   public void initialize() {
     coralCentered = false;
-    firstSensorActivated = false;
+    secondSensorActivated = false;
     timer.stop();
     timer.reset();
   }
@@ -37,28 +37,21 @@ public class RunCoralIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    secondSensorActivated = intakeSubsystem.getSecondSensor();
     // If first sensor hasn't been activated yet, run at intake speed
-    if (!firstSensorActivated) {
+    if (!secondSensorActivated) {
       intakeSubsystem.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
-      System.out.println("First sensor not activated");
+      System.out.println("second sensor not activated");}
 
       // Check if first sensor is now activated
-      if (intakeSubsystem.getFirstSensor()) {
-        System.out.println("First sensor activated");
-        firstSensorActivated = true;
-        intakeSubsystem.moveRoller(Wrist.Roller.AFTER_FIRST_SENSOR_CORAL_SPEED);
-        timer.reset();
-        timer.start();
-      }
-    }
-    // If first sensor has been activated, start timing
-    else {
+      
       // If 0.5 seconds have passed, stop the motor
-      if (timer.get() >= 1) {
+      if (secondSensorActivated) {
+        System.out.println("Stopping roller");
         intakeSubsystem.stopRoller();
         coralCentered = true;
       }
-    }
+    
   }
 
   // Called once the command ends or is interrupted.
