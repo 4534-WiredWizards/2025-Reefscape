@@ -12,9 +12,12 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -50,7 +53,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,9 +65,9 @@ public class RobotContainer {
 
   private final Drive drive;
   public final VisionSubsystem m_vision;
-  private final WristSubsystem m_Wrist = new WristSubsystem();
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+  private final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
   private final ScoringQueueSubsystem m_scoringQueue;
 
   // Controller
@@ -188,6 +190,9 @@ public class RobotContainer {
     SmartDashboard.putData(
         "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
     SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203));
+    SmartDashboard.putData("TestWristCommand/Wrist Coral Intake", new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
+    SmartDashboard.putData("TestWristCommand/Wrist Barger", new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION));
+    SmartDashboard.putData("TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION));
 
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator L4",
