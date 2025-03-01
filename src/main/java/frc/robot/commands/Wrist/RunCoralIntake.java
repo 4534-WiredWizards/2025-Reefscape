@@ -54,8 +54,7 @@ public class RunCoralIntake extends Command {
     // If first sensor has been activated, start timing
     else {
       // If 0.5 seconds have passed, stop the motor
-      if (timer.get() >= 0.2) {
-        System.out.println("Stopping roller");
+      if (timer.get() >= 1) {
         intakeSubsystem.stopRoller();
         coralCentered = true;
       }
