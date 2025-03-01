@@ -1,22 +1,17 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.Constants.Elevator;
 import frc.robot.Constants.ScoringSide;
-import frc.robot.commands.Elevator.SetElevatorPosition;
-import frc.robot.commands.Wrist.AdaptiveWrist;
-import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
-import org.littletonrobotics.junction.Logger;
 
 public class CoralScoringCommand extends SequentialCommandGroup {
 
@@ -50,22 +45,22 @@ public class CoralScoringCommand extends SequentialCommandGroup {
               Constants.ScoringPositions.ZonePosition position =
                   Constants.ScoringPositions.getZonePosition(reefZone, side);
 
-              Pose2d targetPose = new Pose2d(position.x(), position.y(), Rotation2d.fromDegrees(position.theta()));
+              Pose2d targetPose =
+                  new Pose2d(position.x(), position.y(), Rotation2d.fromDegrees(position.theta()));
 
               // Drive to the target position
               Logger.recordOutput("CoralScoringCommand/Status", "Driving to target position");
 
-              new DriveToPoint(drive, targetPose);
-
-              
+              addCommands(new DriveToPoint(drive, targetPose));
 
               // drive.driveToPoint(
               //     position.x(),
               //     position.y(),
               //     position
-              //         .theta()); // FIXME: Needs to be a dynamic command with an isfinshed command
+              //         .theta()); // FIXME: Needs to be a dynamic command with an isfinshed
+              // command
             })
-            //,
+        // ,
 
         // Set elevator height (from enum configuration)
         // new InstantCommand(
@@ -92,7 +87,8 @@ public class CoralScoringCommand extends SequentialCommandGroup {
         // // Return to drive position
         // new InstantCommand(
         //         () -> {
-        //           Logger.recordOutput("CoralScoringCommand/Status", "Returning to drive position");
+        //           Logger.recordOutput("CoralScoringCommand/Status", "Returning to drive
+        // position");
         //         })
         //     .andThen(new SetElevatorPosition(elevator, Elevator.POSITION_GROUND)),
 
