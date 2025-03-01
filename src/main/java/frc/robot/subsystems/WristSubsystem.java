@@ -374,17 +374,6 @@ public class WristSubsystem extends SubsystemBase {
     return isZeroed;
   }
 
-  /**
-   * Safety method to ensure wrist moves out of danger zone when elevator is in certain positions
-   */
-  private void moveOutOfDanger() {
-    if (getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
-        && elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
-        && elevator.getSpeed() > 0.1) {
-      setWristSetpoint(Wrist.MIN_CLEAR_ELEVATOR_ANGLE);
-      currentStatus = "Auto-moving out of danger";
-    }
-  }
 
   /**
    * Runs the wrist motor for system identification
@@ -433,7 +422,6 @@ public class WristSubsystem extends SubsystemBase {
     double absEncoderValue = absEncoder.get();
 
     // Safety check for elevator interaction
-    moveOutOfDanger();
 
     // Run PID if enabled
     if (isPIDEnabled) {
