@@ -222,6 +222,7 @@ public interface Constants {
         int PIVOT_MOTOR_ID = 53;
         double SPEED_SCALAR = 0.8;
         double GEAR_RATIO = 125.0;
+        double ZEROING_SPEED = 0.1;
 
         // Encoder Configuration
         interface Encoder {
@@ -251,10 +252,12 @@ public interface Constants {
         double MAX_ACCELERATION = 350;
 
         // Safety Limits
-        double MAX_SAFE_ANGLE = 0 / 360.0;     // Upper limit (in rotations)
-        double MIN_SAFE_ANGLE = -270 / 360.0;  // Lower limit (in rotations)
+        double MAX_SAFE_ANGLE = 0 / 360.0;     // Upper limit (in rotations) (uses relative encoder)
+        double MIN_SAFE_ANGLE = -270 / 360.0;  // Lower limit (in rotations) (uses relative encoder)
+        double TRUE_ZERO = 216;                // Offset for zero position
         double MIN_CLEAR_ELEVATOR_ANGLE = 115; // Minimum angle to clear elevator
-        double TRUE_ZERO = 216;                // Reference zero position
+
+
 
         // Stall Detection
         double STALL_VELOCITY_THRESHOLD = 0.1;
