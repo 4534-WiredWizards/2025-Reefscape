@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
+import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -11,15 +13,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
-import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
-import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -35,7 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private int stallCount = 0;
   private static final int STALL_COUNT_THRESHOLD = 10;
   private double lastPosition = 0.0;
-  
+
   // State tracking for logging
   private String currentStatus = "Initialized";
   private double commandedPosition = 0.0;
@@ -46,7 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     configureMotors();
     setpoint = getEncoderPosition();
     lastPosition = setpoint;
-    
+
     // Log initial configuration once at startup
     logConfiguration();
   }
@@ -92,7 +91,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         new SoftwareLimitSwitchConfigs()
             .withForwardSoftLimitEnable(true)
             .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
-            .withReverseSoftLimitEnable(false) //Disable reverse soft limit to enable stall zeroing && to prevent bottom shake due to soft limit
+            .withReverseSoftLimitEnable(
+                false) // Disable reverse soft limit to enable stall zeroing && to prevent bottom
+            // shake due to soft limit
             .withReverseSoftLimitThreshold(Elevator.MIN_SAFE_POS);
 
     fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);
@@ -123,7 +124,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double clampedPosition = Math.max(MIN_SAFE_POS, Math.min(MAX_SAFE_POS, position));
     setpoint = clampedPosition;
     elevatorMotor1.setControl(positionVoltage.withPosition(position));
-    
+
     // Track for logging in periodic
     commandedPosition = position;
     currentStatus = "Moving to position";
@@ -164,7 +165,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void moveManual(double speed) {
     double clampedSpeed = Math.max(-1, Math.min(1, speed));
     elevatorMotor1.set(clampedSpeed);
-    
+
     // Track for logging in periodic
     manualSpeed = speed;
     currentStatus = "Manual control";
@@ -177,7 +178,7 @@ public class ElevatorSubsystem extends SubsystemBase {
    */
   public void setVoltage(double voltage) {
     elevatorMotor1.setControl(voltageOut.withOutput(voltage));
-    
+
     // Track for logging in periodic
     commandedVoltage = voltage;
     currentStatus = "Voltage control";
@@ -256,8 +257,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             },
             this),
         Commands.waitUntil(() -> isAtPosition(position)),
-        Commands.runOnce(
-            () -> currentStatus = "At position: " + position));
+        Commands.runOnce(() -> currentStatus = "At position: " + position));
   }
 
   /**
@@ -300,11 +300,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     double temperature = elevatorMotor1.getDeviceTemp().getValueAsDouble();
 
     // Stall detection logic
-    boolean potentialStall = Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
-    
+    boolean potentialStall =
+        Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+
     if (potentialStall) {
       stallCount++;
-      
+
       // If stalled and not in zeroing process, stop the motor
       if (isStalled() && !isZeroing) {
         stop();
@@ -314,23 +315,20 @@ public class ElevatorSubsystem extends SubsystemBase {
       stallCount = 0;
     }
 
-
     // Log all data in structured categories
     logStatusData(currentPosition, velocity, voltage, current, temperature);
     logCommandData();
     logStallData(potentialStall);
-    
+
     // Log position error when in position control mode
     if (currentStatus.contains("Moving to position") || currentStatus.contains("At position")) {
       Logger.recordOutput("Elevator/Status/PositionError", setpoint - currentPosition);
     }
   }
-  
-  /**
-   * Logs basic status data about the elevator
-   */
-  private void logStatusData(double position, double velocity, double voltage, 
-                              double current, double temperature) {
+
+  /** Logs basic status data about the elevator */
+  private void logStatusData(
+      double position, double velocity, double voltage, double current, double temperature) {
     Logger.recordOutput("Elevator/Status/Text", currentStatus);
     Logger.recordOutput("Elevator/Status/Position", position);
     Logger.recordOutput("Elevator/Status/Velocity", velocity);
@@ -341,19 +339,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     Logger.recordOutput("Elevator/Status/IsZeroed", isZeroed);
     Logger.recordOutput("Elevator/Status/IsZeroing", isZeroing);
   }
-  
-  /**
-   * Logs command-related data
-   */
+
+  /** Logs command-related data */
   private void logCommandData() {
     Logger.recordOutput("Elevator/Command/Position", commandedPosition);
     Logger.recordOutput("Elevator/Command/Voltage", commandedVoltage);
     Logger.recordOutput("Elevator/Command/ManualSpeed", manualSpeed);
   }
-  
-  /**
-   * Logs stall detection related data
-   */
+
+  /** Logs stall detection related data */
   private void logStallData(boolean potentialStall) {
     Logger.recordOutput("Elevator/Status/StallDetectionActive", potentialStall);
     Logger.recordOutput("Elevator/Status/StallCount", stallCount);
