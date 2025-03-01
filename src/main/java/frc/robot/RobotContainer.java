@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import static frc.robot.Constants.Elevator.ELEVATOR_DANGER_LIMIT;
@@ -341,19 +342,19 @@ public class RobotContainer {
     //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
     //         .and(Operatorcontroller.povUp());
 
-    // // Now same for left side - also uses the right thumb axis
-    // Trigger leftLevel1 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povDown());
-    // Trigger leftLevel2 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povLeft());
-    // Trigger leftLevel3 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povRight());
-    // Trigger leftLevel4 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povUp());
+    // Now same for left side - also uses the right thumb axis
+    Trigger leftLevel1 =
+        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(Operatorcontroller.povDown());
+    Trigger leftLevel2 =
+        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(Operatorcontroller.povLeft());
+    Trigger leftLevel3 =
+        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(Operatorcontroller.povRight());
+    Trigger leftLevel4 =
+        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(Operatorcontroller.povUp());
 
     // // Bind the combined trigger to a command
     // // Print test log to see if the triggers are working
@@ -362,10 +363,50 @@ public class RobotContainer {
     // rightLevel3.onTrue(Commands.runOnce(() -> System.out.println("Right Level 3"), drive));
     // rightLevel4.onTrue(Commands.runOnce(() -> System.out.println("Right Level 4"), drive));
 
-    // leftLevel1.onTrue(Commands.runOnce(() -> System.out.println("Left Level 1"), drive));
-    // leftLevel2.onTrue(Commands.runOnce(() -> System.out.println("Left Level 2"), drive));
-    // leftLevel3.onTrue(Commands.runOnce(() -> System.out.println("Left Level 3"), drive));
-    // leftLevel4.onTrue(Commands.runOnce(() -> System.out.println("Left Level 4"), drive));
+    leftLevel1.onTrue(Commands.runOnce(() -> 
+      new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+
+        new ParallelCommandGroup(
+            new SetElevatorPosition(m_elevator, Elevator.POSITION_L1),
+            new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)
+        )
+        )
+        )
+      );
+    leftLevel2.onTrue(Commands.runOnce(() -> 
+    new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+
+        new ParallelCommandGroup(
+            new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
+            new SetWristPosition(m_Wrist, Wrist.L2_ANGLE)
+        )
+        )
+        )
+        );
+    leftLevel3.onTrue(Commands.runOnce(() -> 
+    new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+
+        new ParallelCommandGroup(
+            new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
+            new SetWristPosition(m_Wrist, Wrist.L3_ANGLE)
+        )
+        )
+        )
+        );
+    leftLevel4.onTrue(Commands.runOnce(() -> 
+    new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+
+        new ParallelCommandGroup(
+            new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
+            new SetWristPosition(m_Wrist, Wrist.L4_ANGLE)
+        )
+        )
+        )
+        );
     // TODO: Change to
 
     // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
