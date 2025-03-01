@@ -12,8 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -163,7 +164,7 @@ public interface Constants {
     // Voltage Limits
     public static final double PEAK_FORWARD_VOLTAGE = 12.0;
     public static final double PEAK_REVERSE_VOLTAGE = -12.0;
-    public static final double ZEROING_VOLTAGE = 2.0;
+    public static final double ZEROING_VOLTAGE = 1.5;
 
     // PID and Feedforward Constants
     public static final double KP = 2.5; // Proportional gain
