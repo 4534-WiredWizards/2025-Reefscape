@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -184,7 +185,7 @@ public interface Constants {
     public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
     public static final double STALL_POSITION_THRESHOLD = .5;
     // 0.5 * INCHES_TO_ROTATIONS; // ~0.5 in movement
-w    // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
+    // public static final double STALL_CURRENT_THRESHOLD = 25.0; // Current threshold for stall
     // detection
     // public static final double STALL_POSITION_THRESHOLD = 0.01; // Position change threshold for
     // stall detection
