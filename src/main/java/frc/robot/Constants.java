@@ -154,7 +154,7 @@ public interface Constants {
 
     // Elevator Position Limits
     public static final double MAX_SAFE_POS = 190.0; // Maximum safe position (adjust as needed)
-    public static final double MIN_SAFE_POS = 1.0; // Minimum safe position (adjust as needed)
+    public static final double MIN_SAFE_POS = 0; // Minimum safe position (adjust as needed)
 
     // Motion Magic Constants
     public static final double CRUISE_VELOCITY = 40.0; // In rotations/sec (~39.58 in/s)
@@ -201,6 +201,7 @@ public interface Constants {
     public static final double POSITION_L2 = 17;
     public static final double POSITION_L3 = 46.0;
     public static final double POSITION_L4 = 203;
+    public static final double POSITION_BARGE = 210;
 
     // Manual Control Constants
     public static final double MANUAL_SPEED = 0.3; // Speed for manual control

@@ -12,14 +12,12 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import static frc.robot.Constants.Elevator.ELEVATOR_DANGER_LIMIT;
-import static frc.robot.Constants.Elevator.POSITION_GROUND;
-import static frc.robot.Constants.Wrist.CORAL_INTAKE_ANGLE;
-import static frc.robot.Constants.Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,9 +36,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
+import static frc.robot.Constants.Elevator.ELEVATOR_DANGER_LIMIT;
+import static frc.robot.Constants.Elevator.POSITION_GROUND;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.Wrist;
+import static frc.robot.Constants.Wrist.CORAL_INTAKE_ANGLE;
+import static frc.robot.Constants.Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -61,7 +63,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -207,6 +208,9 @@ public class RobotContainer {
     SmartDashboard.putData(
         "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION));
 
+    SmartDashboard.putData(
+        "TestElevatorCommand/Elevator Barge",
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE));
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator L4",
         new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
