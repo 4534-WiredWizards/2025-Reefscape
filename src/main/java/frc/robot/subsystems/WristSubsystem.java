@@ -345,23 +345,6 @@ public class WristSubsystem extends SubsystemBase {
    * @return True if stalled for a certain number of cycles, false otherwise
    */
   public boolean isStalled() {
-    double velocity = wristMotor.getRotorVelocity().getValueAsDouble();
-    boolean potentialStall =
-        Math.abs(wristMotor.getMotorVoltage().getValueAsDouble()) > 0.1
-            && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
-
-    if (potentialStall) {
-      stallCount++;
-
-      // If stalled and not in zeroing process, stop the motor
-      if (isStalled() && !isZeroing) {
-        stop();
-        currentStatus = "Stalled - motor stopped";
-      }
-    } else {
-      stallCount = 0;
-    }
-
     return stallCount >= STALL_COUNT_THRESHOLD;
   }
 
