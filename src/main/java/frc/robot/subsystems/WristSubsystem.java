@@ -18,7 +18,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Wrist;
+import frc.robot.Constants.Elevator;
+
 import org.littletonrobotics.junction.Logger;
+
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -36,7 +39,12 @@ public class WristSubsystem extends SubsystemBase {
 
   private SysIdRoutine wristSysId;
 
-  public WristSubsystem() {
+  ElevatorSubsystem elevator;
+
+  public WristSubsystem(ElevatorSubsystem elevator) {
+
+    this.elevator = elevator;
+
     pidController =
         new ProfiledPIDController(
             Wrist.KP,
@@ -105,6 +113,18 @@ public class WristSubsystem extends SubsystemBase {
   public void setWristSetpoint(double setpoint) {
     this.setpoint = setpoint;
     Logger.recordOutput("Wrist/Status/Setpoint", this.setpoint);
+
+    if((elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT 
+    && setpoint > Wrist.MIN_CLEAR_ELEVATOR_ANGLE
+    && elevator.getSpeed() > 0.1) || 
+    (elevator.getSetpoint() < Elevator.ELEVATOR_DANGER_LIMIT && 
+    setpoint > Wrist.MIN_CLEAR_ELEVATOR_ANGLE))
+    {
+      
+      setpoint = Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
+
+    }
+
     pidController.setGoal(this.setpoint);
   }
 
@@ -125,6 +145,15 @@ public class WristSubsystem extends SubsystemBase {
     this.disablePID();
     setClampSpeed(speed);
     Logger.recordOutput("Wrist/Command/ManualSpeed", speed);
+  }
+
+  private void moveOutOfDanger() {
+    if(getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE 
+    && elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT 
+    && elevator.getSpeed() > 0.1)
+    {
+      setWristSetpoint(Wrist.MIN_CLEAR_ELEVATOR_ANGLE);
+    }
   }
 
   private void setClampSpeed(double speed) {
@@ -187,6 +216,9 @@ public class WristSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    moveOutOfDanger();
+
     if (PIDEnabled) {
       runPID();
     }

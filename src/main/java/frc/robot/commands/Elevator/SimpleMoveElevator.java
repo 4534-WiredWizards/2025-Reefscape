@@ -41,13 +41,14 @@ public class SimpleMoveElevator extends Command {
     } else {
 
       m_elevator.moveManual(speed);
+
     }
   }
 
   @Override
   public void end(boolean interrupted) {
     // Stop the elevator when the command ends
-
+    System.out.println("Elevator Stopped");
     m_elevator.Stop();
   }
 
