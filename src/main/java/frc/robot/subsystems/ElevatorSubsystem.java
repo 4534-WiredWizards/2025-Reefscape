@@ -86,6 +86,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     fx_cfg.Slot0.kA = Elevator.KA;
     fx_cfg.Slot0.kG = Elevator.KG;
 
+    // Motion Magic Configuration
+
+    // fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Elevator.CRUISE_VELOCITY;
+    // fx_cfg.MotionMagic.MotionMagicAcceleration = Elevator.MAX_ACCELERATION;
+    // fx_cfg.MotionMagic.MotionMagicJerk = Elevator.JERK;
+
+
     // Soft limits configuration
     SoftwareLimitSwitchConfigs limitSwitchConfigs =
         new SoftwareLimitSwitchConfigs()
