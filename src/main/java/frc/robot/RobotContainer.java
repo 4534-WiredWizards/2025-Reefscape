@@ -319,6 +319,8 @@ public class RobotContainer {
                             () -> m_elevator.getEncoderPosition() < ELEVATOR_DANGER_LIMIT),
                         new SetWristPosition(m_Wrist, CORAL_INTAKE_ANGLE, false)))));
 
+
+
     Operatorcontroller.x().onTrue(new DriveToPoint(drive, new Pose2d(3.083, 4.189, Rotation2d.fromDegrees(0.0))));
 
     // Operatorcontroller.povDown()
@@ -356,15 +358,15 @@ public class RobotContainer {
     Trigger leftLevel1 =
         Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
             .and(Operatorcontroller.povDown());
-    Trigger leftLevel2 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povLeft());
-    Trigger leftLevel3 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povRight());
-    Trigger leftLevel4 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povUp());
+    // Trigger leftLevel2 =
+    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+    //         .and(Operatorcontroller.povLeft());
+    // Trigger leftLevel3 =
+    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+    //         .and(Operatorcontroller.povRight());
+    // Trigger leftLevel4 =
+    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+    //         .and(Operatorcontroller.povUp());
 
     // // Bind the combined trigger to a command
     // // Print test log to see if the triggers are working
@@ -381,30 +383,30 @@ public class RobotContainer {
                     new ParallelCommandGroup(
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_L1),
                         new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)))));
-    leftLevel2.onTrue(
-        Commands.runOnce(
-            () ->
-                new SequentialCommandGroup(
-                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-                    new ParallelCommandGroup(
-                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
-                        new SetWristPosition(m_Wrist, Wrist.L2_ANGLE)))));
-    leftLevel3.onTrue(
-        Commands.runOnce(
-            () ->
-                new SequentialCommandGroup(
-                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-                    new ParallelCommandGroup(
-                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
-                        new SetWristPosition(m_Wrist, Wrist.L3_ANGLE)))));
-    leftLevel4.onTrue(
-        Commands.runOnce(
-            () ->
-                new SequentialCommandGroup(
-                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-                    new ParallelCommandGroup(
-                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
-                        new SetWristPosition(m_Wrist, Wrist.L4_ANGLE)))));
+    // leftLevel2.onTrue(
+    //     Commands.runOnce(
+    //         () ->
+    //             new SequentialCommandGroup(
+    //                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+    //                 new ParallelCommandGroup(
+    //                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
+    //                     new SetWristPosition(m_Wrist, Wrist.L2_ANGLE)))));
+    // leftLevel3.onTrue(
+    //     Commands.runOnce(
+    //         () ->
+    //             new SequentialCommandGroup(
+    //                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+    //                 new ParallelCommandGroup(
+    //                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
+    //                     new SetWristPosition(m_Wrist, Wrist.L3_ANGLE)))));
+    // leftLevel4.onTrue(
+    //     Commands.runOnce(
+    //         () ->
+    //             new SequentialCommandGroup(
+    //                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+    //                 new ParallelCommandGroup(
+    //                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
+    //                     new SetWristPosition(m_Wrist, Wrist.L4_ANGLE)))));
     // TODO: Change to
 
     // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
