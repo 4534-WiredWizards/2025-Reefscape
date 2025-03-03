@@ -414,8 +414,8 @@ public class WristSubsystem extends SubsystemBase {
 
     // Stall detection logic
     boolean potentialStall =
-        (voltageApplied && velocityLow && !isPIDEnabled) || 
-        (voltageApplied && velocityLow && isPIDEnabled && farPIDSetpoint);
+        (voltageApplied && velocityLow && !isPIDEnabled)
+            || (voltageApplied && velocityLow && isPIDEnabled && farPIDSetpoint);
 
     if (potentialStall) {
       stallCount++;

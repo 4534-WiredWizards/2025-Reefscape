@@ -12,8 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -277,9 +278,9 @@ public interface Constants {
       // Intake/Outtake Speeds
       double CORAL_INTAKE_SPEED = 0.4;
       double CORAL_OUTTAKE_SPEED = -0.5;
-      double ALGAE_INTAKE_SPEED = 0.3;
+      double ALGAE_INTAKE_SPEED = 0.1;
       double ALGAE_OUTTAKE_SPEED = -0.3;
-    }
+  }
   }
 
   interface Swerve {
