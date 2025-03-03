@@ -355,7 +355,7 @@ public interface Constants {
   interface Autonomous {
     // Pathfinding Constants
 
-    double ROBOT_MASS_KG = 74.088;
+    double ROBOT_MASS_KG = 55.79;
     double ROBOT_MOI = 6.883;
     double WHEEL_COF = 1.2;
 
