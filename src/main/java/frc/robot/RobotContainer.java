@@ -300,8 +300,8 @@ public class RobotContainer {
     Pose2d targetPose = new Pose2d(position.x(), position.y(), new Rotation2d(position.theta()));
 
     // Operator on true button id SCORE_L1_BUTTON
-    Operatorcontroller.button(Operator.SCORE_L1_BUTTON) // X Button
-        .onTrue(new DriveToPoint(drive, targetPose));
+    // Operatorcontroller.button(Operator.SCORE_L1_BUTTON) // X Button
+    //     .onTrue(new DriveToPoint(drive, targetPose));
 
     // Operator PID control for Nuetral D-pad
     Operatorcontroller.povDown()
@@ -318,6 +318,9 @@ public class RobotContainer {
                         new WaitUntilCommand(
                             () -> m_elevator.getEncoderPosition() < ELEVATOR_DANGER_LIMIT),
                         new SetWristPosition(m_Wrist, CORAL_INTAKE_ANGLE, false)))));
+
+    Operatorcontroller.x().onTrue(new DriveToPoint(drive, new Pose2d(3.083, 4.189, Rotation2d.fromDegrees(0.0))));
+
     // Operatorcontroller.povDown()
     //     .onTrue(
     //         new SequentialCommandGroup(
