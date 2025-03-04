@@ -50,14 +50,14 @@
 <summary>📁 Code Snippets</summary>
 
 ```java
-// Position conversion  
-elevatorEncoder.setPositionConversionFactor(C_Elevator.ENCODER_DISTANCE_PER_PULSE);  
+// Position conversion
+elevatorEncoder.setPositionConversionFactor(C_Elevator.ENCODER_DISTANCE_PER_PULSE);
 elevatorEncoder.setVelocityConversionFactor(C_Elevator.ENCODER_VELOCITY_FACTOR);
 
-// Clamping motor output 
-double output = pidOutput + feedforward;  
-output = Math.max(-1, Math.min(1, output));  
-elevatorMotor.set(output); 
+// Clamping motor output
+double output = pidOutput + feedforward;
+output = Math.max(-1, Math.min(1, output));
+elevatorMotor.set(output);
 ```
 
 </details>
@@ -115,7 +115,7 @@ if (isAtLimit()) {
 
 - Swerve base code (Advantage Kit)
 
-</details> 
+</details>
 
 ---
 

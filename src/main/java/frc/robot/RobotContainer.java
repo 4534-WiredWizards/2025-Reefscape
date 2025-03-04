@@ -23,7 +23,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.moveManualClimb;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -41,15 +43,19 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final climb m_Climb;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
-
+  private final CommandXboxController controller2 = new CommandXboxController(1);
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Instantiate subsystems
+    m_Climb = new climb();
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -122,7 +128,7 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
-
+    m_Climb.setDefaultCommand(new moveManualClimb(m_Climb, () -> -controller2.getLeftX()));
     // Lock to 0° when A button is held
     controller
         .a()
