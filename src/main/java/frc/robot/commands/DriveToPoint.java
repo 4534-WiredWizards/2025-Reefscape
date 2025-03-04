@@ -29,7 +29,6 @@ public class DriveToPoint extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
 
     PathConstraints constraints =
         new PathConstraints(

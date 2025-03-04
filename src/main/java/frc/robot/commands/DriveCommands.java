@@ -13,6 +13,14 @@
 
 package frc.robot.commands;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -29,13 +37,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
@@ -89,6 +90,7 @@ public class DriveCommands {
           omega = Math.copySign(omega * omega, omega);
 
           turningSpeed = drive.getMaxAngularSpeedRadPerSec();
+          turningSpeed = turningSpeed / 2;
           if (slowTurn.getAsBoolean()) {
             turningSpeed /= 2;
           }
@@ -107,7 +109,7 @@ public class DriveCommands {
 
           // Convert to field relative speeds & send command
           ChassisSpeeds speeds =
-              new ChassisSpeeds(xDirectionSpeed, yDirectionSpeed, omega * turningSpeed);
+              new ChassisSpeeds(xDirectionSpeed, yDirectionSpeed, (omega * turningSpeed));
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;

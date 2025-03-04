@@ -12,14 +12,12 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import static frc.robot.Constants.Elevator.ELEVATOR_DANGER_LIMIT;
-import static frc.robot.Constants.Elevator.POSITION_GROUND;
-import static frc.robot.Constants.Wrist.CORAL_INTAKE_ANGLE;
-import static frc.robot.Constants.Wrist.MIN_CLEAR_ELEVATOR_ANGLE;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -61,372 +59,414 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls). Instead, the structure of the robot (including subsystems,
+ * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // Subsystems
+    // Subsystems
 
-  private final Drive drive;
-  public final VisionSubsystem m_vision;
-  private final IntakeSubsystem m_Intake = new IntakeSubsystem();
-  private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
-  private final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
-  private final ScoringQueueSubsystem m_scoringQueue;
+    private final Drive drive;
+    public final VisionSubsystem m_vision;
+    private final IntakeSubsystem m_Intake = new IntakeSubsystem();
+    private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+    private final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
+    private final ScoringQueueSubsystem m_scoringQueue;
 
-  // Controller
-  private final CommandXboxController Operatorcontroller = new CommandXboxController(0);
-  private final Joystick driverJoystick = new Joystick(1);
+    // Controller
+    private final CommandXboxController Operatorcontroller = new CommandXboxController(0);
+    private final Joystick driverJoystick = new Joystick(1);
 
-  // test 2nd xboc controller
-  //   private final CommandXboxController TestController = new CommandXboxController(2);
+    // test 2nd xboc controller
+    // private final CommandXboxController TestController = new
+    // CommandXboxController(2);
+    // Dashboard inputs
+    private final LoggedDashboardChooser<Command> autoChooser;
 
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
-
-  public double getWristAngle() {
-    return m_Wrist.getAngle();
-  }
-
-  // Named Command0
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-
-    // Register named commands
-    NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Intake, this::getWristAngle, true));
-    NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
-    NamedCommands.registerCommand(
-        "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
-
-    // Event Triggers
-    new EventTrigger("Elevator L4")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
-    new EventTrigger("Elevator L3")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
-    new EventTrigger("Elevator L2")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1));
-    new EventTrigger("Elevator L1")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
-    new EventTrigger("Elevator Ground")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
-
-    new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
-    new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-
-    new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
-    new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
-
-    switch (Constants.CURRENT_MODE) {
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
-        break;
-
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
-        break;
-
-      default:
-        // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
-        break;
+    public double getWristAngle() {
+        return m_Wrist.getAngle();
     }
-    m_vision = new VisionSubsystem(drive);
-    m_scoringQueue = new ScoringQueueSubsystem(drive, m_elevator, m_Wrist, m_Intake);
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Set up SysId routines
-    // TODO: Comment out after characterization
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Wrist SysId (Dynamic Forward)",
-        m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Wrist SysId (Dynamic Reverse)",
-        m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Wrist SysId (Quasistatic Forward)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Wrist SysId (Quasistatic Reverse)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kReverse));
+    // Named Command0
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and
+     * commands.
+     */
+    public RobotContainer() {
 
-    // Configure the button bindings
-    configureButtonBindings();
+        // Register named commands
+        NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Intake, this::getWristAngle, true));
+        NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
+        NamedCommands.registerCommand(
+                "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
 
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-    SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist Coral Intake",
-        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist Barger", new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION));
+        // Event Triggers
+        new EventTrigger("Elevator L4")
+                .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
+        new EventTrigger("Elevator L3")
+                .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
+        new EventTrigger("Elevator L2")
+                .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1));
+        new EventTrigger("Elevator L1")
+                .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
+        new EventTrigger("Elevator Ground")
+                .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
 
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator Barge",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L4",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L3",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L2",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L1",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
+        new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+        new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+        new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+        new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
 
-    // SmartDashboard.putData("Elevator L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
-    // SmartDashboard.putData("Elevator L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    // SmartDashboard.putData("Elevator L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    // SmartDashboard.putData("Elevator L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-  }
+        new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+        new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses null ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    // Default command, normal field-relative drive
+        switch (Constants.CURRENT_MODE) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                drive = new Drive(
+                        new GyroIOPigeon2(),
+                        new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                        new ModuleIOTalonFX(TunerConstants.FrontRight),
+                        new ModuleIOTalonFX(TunerConstants.BackLeft),
+                        new ModuleIOTalonFX(TunerConstants.BackRight));
+                break;
 
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
-            () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
-            () -> driverJoystick.getRawButton(Driver.SLOW_MODE_TOGGLE),
-            () -> driverJoystick.getRawButton(Driver.FIELD_RELATIVE_TOGGLE)));
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                drive = new Drive(
+                        new GyroIO() {
+                },
+                        new ModuleIOSim(TunerConstants.FrontLeft),
+                        new ModuleIOSim(TunerConstants.FrontRight),
+                        new ModuleIOSim(TunerConstants.BackLeft),
+                        new ModuleIOSim(TunerConstants.BackRight));
+                break;
 
-    // Lock to 0° when A button is held TODO
-    // lockAngle
-    new JoystickButton(driverJoystick, Driver.LOCK_ANGLE_BUTTON)
-        .toggleOnTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -driverJoystick.getY(),
-                () -> -driverJoystick.getX(),
-                () -> new Rotation2d()));
+            default:
+                // Replayed robot, disable IO implementations
+                drive = new Drive(
+                        new GyroIO() {
+                },
+                        new ModuleIO() {
+                },
+                        new ModuleIO() {
+                },
+                        new ModuleIO() {
+                },
+                        new ModuleIO() {
+                });
+                break;
+        }
+        m_vision = new VisionSubsystem(drive);
+        m_scoringQueue = new ScoringQueueSubsystem(drive, m_elevator, m_Wrist, m_Intake);
+        // Set up auto routines
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Switch to X pattern when X button is pressed
-    // TODO make this button 8 on flight controller
-    new JoystickButton(driverJoystick, Driver.STOP_WITH_X_BUTTON)
-        .toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
+        // Set up SysId routines
+        // TODO: Comment out after characterization
+        autoChooser.addOption(
+                "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+        autoChooser.addOption(
+                "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+        autoChooser.addOption(
+                "Drive SysId (Quasistatic Forward)",
+                drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+                "Drive SysId (Quasistatic Reverse)",
+                drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption(
+                "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+                "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption(
+                "Wrist SysId (Dynamic Forward)",
+                m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+                "Wrist SysId (Dynamic Reverse)",
+                m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption(
+                "Wrist SysId (Quasistatic Forward)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+                "Wrist SysId (Quasistatic Reverse)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kReverse));
 
-    // Zero gyro when Y button is pressed
-    new JoystickButton(driverJoystick, Driver.ZERO_GYRO_BUTTON)
-        .onTrue(Commands.runOnce(() -> drive.resetGyro()).ignoringDisable(true));
+        // Configure the button bindings
+        configureButtonBindings();
 
-    Operatorcontroller.leftBumper()
-        .whileTrue(
-            new SimpleMoveElevator(
-                m_Wrist, m_elevator, () -> Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED));
-    Operatorcontroller.rightBumper()
-        .whileTrue(
-            new SimpleMoveElevator(
-                m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)));
+        SmartDashboard.putData(
+                "TestWristCommand/Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+        SmartDashboard.putData(
+                "TestWristCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+        SmartDashboard.putData(
+                "TestWristCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+        SmartDashboard.putData(
+                "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+        SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203));
+        SmartDashboard.putData(
+                "TestWristCommand/Wrist Coral Intake",
+                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
+        SmartDashboard.putData(
+                "TestWristCommand/Wrist Barger", new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION));
+        SmartDashboard.putData(
+                "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION));
 
-    Operatorcontroller.leftTrigger()
-        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Outtake
-    Operatorcontroller.rightTrigger()
-        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // pickup
+        SmartDashboard.putData(
+                "TestElevatorCommand/Elevator Barge",
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE));
+        SmartDashboard.putData(
+                "TestElevatorCommand/Elevator L4",
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
+        SmartDashboard.putData(
+                "TestElevatorCommand/Elevator L3",
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
+        SmartDashboard.putData(
+                "TestElevatorCommand/Elevator L2",
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
+        SmartDashboard.putData(
+                "TestElevatorCommand/Elevator L1",
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
 
-    // testcontroller button
-    // TestController.a().onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-    // TestController.b().onTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    // TestController.x().onTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    // TestController.y().onTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+        // SmartDashboard.putData("Elevator L4", new SetWristPosition(m_Wrist,
+        // Wrist.L4_ANGLE));
+        // SmartDashboard.putData("Elevator L3", new SetWristPosition(m_Wrist,
+        // Wrist.L3_ANGLE));
+        // SmartDashboard.putData("Elevator L2", new SetWristPosition(m_Wrist,
+        // Wrist.L2_ANGLE));
+        // SmartDashboard.putData("Elevator L1", new SetWristPosition(m_Wrist,
+        // Wrist.L1_ANGLE));
+    }
 
-    // TestController.povDown().onTrue(new SetElevatorPosition(m_elevator, Elevator.L1_POS));
-    // TestController.povRight().onTrue(new SetElevatorPosition(m_elevator, Elevator.L2_POS));
-    // TestController.povLeft().onTrue(new SetElevatorPosition(m_elevator, Elevator.L3_POS));
-    // TestController.povUp().onTrue(new SetElevatorPosition(m_elevator, Elevator.L4_POS));
+    /**
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by instantiating a {@link GenericHID} or one of its subclasses
+     * null ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+     * passing it to a {@link
+     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    private void configureButtonBindings() {
+        // Default command, normal field-relative drive
 
-    Constants.ScoringPositions.ZonePosition position =
-        Constants.ScoringPositions.getZonePosition(
-            Constants.ReefZone.ZONE_3, Constants.ScoringSide.LEFT);
-    Pose2d targetPose = new Pose2d(position.x(), position.y(), new Rotation2d(position.theta()));
+        drive.setDefaultCommand(
+                DriveCommands.joystickDrive(
+                        drive,
+                        () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
+                        () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
+                        () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
+                        () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
+                        () -> driverJoystick.getRawButton(Driver.SLOW_MODE_TOGGLE),
+                        () -> driverJoystick.getRawButton(Driver.FIELD_RELATIVE_TOGGLE)));
 
-    // Operator on true button id SCORE_L1_BUTTON
-    // Operatorcontroller.button(Operator.SCORE_L1_BUTTON) // X Button
-    //     .onTrue(new DriveToPoint(drive, targetPose));
+        // Lock to 0° when A button is held TODO
+        // lockAngle
+        new JoystickButton(driverJoystick, Driver.LOCK_ANGLE_BUTTON)
+                .toggleOnTrue(
+                        DriveCommands.joystickDriveAtAngle(
+                                drive,
+                                () -> -driverJoystick.getY(),
+                                () -> -driverJoystick.getX(),
+                                () -> new Rotation2d()));
 
-    // Operator PID control for Nuetral D-pad
-    Operatorcontroller.povDown()
-        .onTrue(
-            new SequentialCommandGroup(
-                // Step 1: Clear the elevator
-                new SetWristPosition(m_Wrist, MIN_CLEAR_ELEVATOR_ANGLE, true),
+        // Switch to X pattern when X button is pressed
+        // TODO make this button 8 on flight controller
+        new JoystickButton(driverJoystick, Driver.STOP_WITH_X_BUTTON)
+                .toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
 
-                // Step 2: Move elevator down, prepare wrist, and run intake
-                new ParallelDeadlineGroup(
-                    new RunCoralIntake(m_Intake, true),
-                    new SetElevatorPosition(m_elevator, POSITION_GROUND),
+        // Zero gyro when Y button is pressed
+        new JoystickButton(driverJoystick, Driver.ZERO_GYRO_BUTTON)
+                .onTrue(Commands.runOnce(() -> drive.resetGyro()).ignoringDisable(true));
+
+        Operatorcontroller.leftBumper()
+                .whileTrue(
+                        new SimpleMoveElevator(
+                                m_Wrist, m_elevator, () -> Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED));
+        Operatorcontroller.rightBumper()
+                .whileTrue(
+                        new SimpleMoveElevator(
+                                m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)));
+
+        Operatorcontroller.leftTrigger()
+                .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Outtake
+        Operatorcontroller.rightTrigger()
+                .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // pickup
+
+        // testcontroller button
+        // TestController.a().onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+        // TestController.b().onTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+        // TestController.x().onTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+        // TestController.y().onTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+        // TestController.povDown().onTrue(new SetElevatorPosition(m_elevator,
+        // Elevator.L1_POS));
+        // TestController.povRight().onTrue(new SetElevatorPosition(m_elevator,
+        // Elevator.L2_POS));
+        // TestController.povLeft().onTrue(new SetElevatorPosition(m_elevator,
+        // Elevator.L3_POS));
+        // TestController.povUp().onTrue(new SetElevatorPosition(m_elevator,
+        // Elevator.L4_POS));
+        Constants.ScoringPositions.ZonePosition position = Constants.ScoringPositions.getZonePosition(
+                Constants.ReefZone.ZONE_3, Constants.ScoringSide.LEFT);
+        Pose2d targetPose = new Pose2d(position.x(), position.y(), new Rotation2d(position.theta()));
+
+        // Operator on true button id SCORE_L1_BUTTON
+        // Operatorcontroller.button(Operator.SCORE_L1_BUTTON) // X Button
+        // .onTrue(new DriveToPoint(drive, targetPose));
+        // Operator PID control for Nuetral D-pad
+        Operatorcontroller.povDown()
+                .onTrue(
+                        new SequentialCommandGroup(
+                                // Step 1: Clear the elevator
+                                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                                // Step 2: Move elevator down, prepare wrist, and run intake
+                                new ParallelDeadlineGroup(
+                                        new RunCoralIntake(m_Intake, true),
+                                        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+                                        new SequentialCommandGroup(
+                                                new WaitUntilCommand(
+                                                        () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                                                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))));
+        // L2
+        Operatorcontroller.povLeft()
+            .onTrue(
                     new SequentialCommandGroup(
-                        new WaitUntilCommand(
-                            () -> m_elevator.getEncoderPosition() < ELEVATOR_DANGER_LIMIT),
-                        new SetWristPosition(m_Wrist, CORAL_INTAKE_ANGLE, false)))));
+                            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                            new ParallelDeadlineGroup(
+                                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
+                                    new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false)
+                            )
+                    ));
 
+        // L3
+        Operatorcontroller.povRight()
+            .onTrue(
+                    new SequentialCommandGroup(
+                            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                            new ParallelDeadlineGroup(
+                                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
+                                    new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false)
+                            )
+                    ));
 
+        // L4
+        Operatorcontroller.povUp()
+            .onTrue(
+                    new SequentialCommandGroup(
+                            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                            new ParallelDeadlineGroup(
+                                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
+                                    new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false)
+                            )
+                    ));
 
-    Operatorcontroller.x().onTrue(new DriveToPoint(drive, new Pose2d(3.083, 4.189, Rotation2d.fromDegrees(0.0))));
+     
 
-    // Operatorcontroller.povDown()
-    //     .onTrue(
-    //         new SequentialCommandGroup(
-    //             new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
-    //             new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE)));
-    // Operatorcontroller.povUp()
-    //     .onTrue(
-    //         new ParallelCommandGroup(
-    //             new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE),
-    //             new SetWristPosition(m_Wrist, Wrist.BARGE_POSITION)));
-    // Operatorcontroller.povRight()
-    //     .onTrue(
-    //         new ParallelCommandGroup(
-    //             new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
-    //             new SetWristPosition(m_Wrist, Wrist.PROCESSOR_POSITION)));
+        Operatorcontroller.x()
+                .onTrue(new DriveToPoint(drive, new Pose2d(3.083, 4.189, Rotation2d.fromDegrees(0.0))));
 
-    // Buttom/Axis Event Combos
-    // Right Coral Side (using RIGHT_THUMB_AXIS)
-    // Trigger rightLevel1 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povDown());
-    // Trigger rightLevel2 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povLeft());
-    // Trigger rightLevel3 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povRight());
-    // Trigger rightLevel4 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povUp());
+        // Operatorcontroller.povDown()
+        // .onTrue(
+        // new SequentialCommandGroup(
+        // new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+        // new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE)));
+        // Operatorcontroller.povUp()
+        // .onTrue(
+        // new ParallelCommandGroup(
+        // new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE),
+        // new SetWristPosition(m_Wrist, Wrist.BARGE_POSITION)));
+        // Operatorcontroller.povRight()
+        // .onTrue(
+        // new ParallelCommandGroup(
+        // new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+        // new SetWristPosition(m_Wrist, Wrist.PROCESSOR_POSITION)));
+        // Buttom/Axis Event Combos
+        // Right Coral Side (using RIGHT_THUMB_AXIS)
+        // Trigger rightLevel1 =
+        // Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+        // .and(Operatorcontroller.povDown());
+        // Trigger rightLevel2 =
+        // Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+        // .and(Operatorcontroller.povLeft());
+        // Trigger rightLevel3 =
+        // Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+        // .and(Operatorcontroller.povRight());
+        // Trigger rightLevel4 =
+        // Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+        // .and(Operatorcontroller.povUp());
+        // Now same for left side - also uses the right thumb axis
+        Trigger leftLevel1 = Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                .and(Operatorcontroller.povDown());
+        // Trigger leftLevel2 =
+        // Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+        // .and(Operatorcontroller.povLeft());
+        // Trigger leftLevel3 =
+        // Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+        // .and(Operatorcontroller.povRight());
+        // Trigger leftLevel4 =
+        // Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+        // .and(Operatorcontroller.povUp());
 
-    // Now same for left side - also uses the right thumb axis
-    Trigger leftLevel1 =
-        Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-            .and(Operatorcontroller.povDown());
-    // Trigger leftLevel2 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povLeft());
-    // Trigger leftLevel3 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povRight());
-    // Trigger leftLevel4 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povUp());
+        // // Bind the combined trigger to a command
+        // // Print test log to see if the triggers are working
+        // rightLevel1.onTrue(Commands.runOnce(() -> System.out.println("Right Level
+        // 1"), drive));
+        // rightLevel2.onTrue(Commands.runOnce(() -> System.out.println("Right Level
+        // 2"), drive));
+        // rightLevel3.onTrue(Commands.runOnce(() -> System.out.println("Right Level
+        // 3"), drive));
+        // rightLevel4.onTrue(Commands.runOnce(() -> System.out.println("Right Level
+        // 4"), drive));
+        leftLevel1.onTrue(
+                Commands.runOnce(
+                        () -> new SequentialCommandGroup(
+                                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+                                new ParallelCommandGroup(
+                                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L1),
+                                        new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)))));
+        // leftLevel2.onTrue(
+        // Commands.runOnce(
+        // () ->
+        // new SequentialCommandGroup(
+        // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+        // new ParallelCommandGroup(
+        // new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
+        // new SetWristPosition(m_Wrist, Wrist.L2_ANGLE)))));
+        // leftLevel3.onTrue(
+        // Commands.runOnce(
+        // () ->
+        // new SequentialCommandGroup(
+        // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+        // new ParallelCommandGroup(
+        // new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
+        // new SetWristPosition(m_Wrist, Wrist.L3_ANGLE)))));
+        // leftLevel4.onTrue(
+        // Commands.runOnce(
+        // () ->
+        // new SequentialCommandGroup(
+        // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+        // new ParallelCommandGroup(
+        // new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
+        // new SetWristPosition(m_Wrist, Wrist.L4_ANGLE)))));
+        // TODO: Change to
 
-    // // Bind the combined trigger to a command
-    // // Print test log to see if the triggers are working
-    // rightLevel1.onTrue(Commands.runOnce(() -> System.out.println("Right Level 1"), drive));
-    // rightLevel2.onTrue(Commands.runOnce(() -> System.out.println("Right Level 2"), drive));
-    // rightLevel3.onTrue(Commands.runOnce(() -> System.out.println("Right Level 3"), drive));
-    // rightLevel4.onTrue(Commands.runOnce(() -> System.out.println("Right Level 4"), drive));
+        // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
+        // degree postions
+        m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> Operatorcontroller.getLeftX()));
+    }
 
-    leftLevel1.onTrue(
-        Commands.runOnce(
-            () ->
-                new SequentialCommandGroup(
-                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-                    new ParallelCommandGroup(
-                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L1),
-                        new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)))));
-    // leftLevel2.onTrue(
-    //     Commands.runOnce(
-    //         () ->
-    //             new SequentialCommandGroup(
-    //                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-    //                 new ParallelCommandGroup(
-    //                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
-    //                     new SetWristPosition(m_Wrist, Wrist.L2_ANGLE)))));
-    // leftLevel3.onTrue(
-    //     Commands.runOnce(
-    //         () ->
-    //             new SequentialCommandGroup(
-    //                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-    //                 new ParallelCommandGroup(
-    //                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
-    //                     new SetWristPosition(m_Wrist, Wrist.L3_ANGLE)))));
-    // leftLevel4.onTrue(
-    //     Commands.runOnce(
-    //         () ->
-    //             new SequentialCommandGroup(
-    //                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-    //                 new ParallelCommandGroup(
-    //                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
-    //                     new SetWristPosition(m_Wrist, Wrist.L4_ANGLE)))));
-    // TODO: Change to
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        return autoChooser.get();
+    }
 
-    // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
-    // degree postions
-    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> Operatorcontroller.getLeftX()));
-  }
+    public void updateDashboard() {
+        SmartDashboard.getNumber("Match Time", DriverStation.getMatchTime());
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
-  }
-
-  public void updateDashboard() {
-    SmartDashboard.getNumber("Match Time", DriverStation.getMatchTime());
-
-    // Display Command buttons for Wrist and Elevator positions
-
-  }
+        // Display Command buttons for Wrist and Elevator positions
+    }
 }

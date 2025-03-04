@@ -30,8 +30,8 @@
  },
  "params":{
   "waypoints":[
-    {"x":{"exp":"7.566094398498535 m", "val":7.566094398498535}, "y":{"exp":"0.7637295722961426 m", "val":0.7637295722961426}, "heading":{"exp":"3.1282640864545983 rad", "val":3.1282640864545983}, "intervals":35, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"6.265859127044678 m", "val":6.265859127044678}, "y":{"exp":"1.8780100345611572 m", "val":1.8780100345611572}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":155, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
+    {"x":{"exp":"7.566094398498535 m", "val":7.566094398498535}, "y":{"exp":"0.7637295722961426 m", "val":0.7637295722961426}, "heading":{"exp":"3.1282640864545983 rad", "val":3.1282640864545983}, "intervals":38, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"5.808609962463379 m", "val":5.808609962463379}, "y":{"exp":"2.2914185523986816 m", "val":2.2914185523986816}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":15, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"5.093061447143555 m", "val":5.093061447143555}, "y":{"exp":"2.87418532371521 m", "val":2.87418532371521}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":15, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"4.497125625610352 m", "val":4.497125625610352}, "y":{"exp":"2.185757875442505 m", "val":2.185757875442505}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":36, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"1.5985480546951294 m", "val":1.5985480546951294}, "y":{"exp":"0.6532577872276306 m", "val":0.6532577872276306}, "heading":{"exp":"0.9067501569667059 rad", "val":0.906750156966706}, "intervals":30, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
@@ -47,12 +47,12 @@
     {"from":5, "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":7, "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":6, "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
-    {"from":1, "to":2, "data":{"type":"PointAt", "props":{"x":{"exp":"4.845326900482178 m", "val":4.845326900482178}, "y":{"exp":"3.4402379989624023 m", "val":3.4402379989624023}, "tolerance":{"exp":"2 deg", "val":0.03490658503988659}, "flip":false}}, "enabled":true},
+    {"from":2, "to":2, "data":{"type":"PointAt", "props":{"x":{"exp":"4.845326900482178 m", "val":4.845326900482178}, "y":{"exp":"3.4402379989624023 m", "val":3.4402379989624023}, "tolerance":{"exp":"2 deg", "val":0.03490658503988659}, "flip":false}}, "enabled":true},
     {"from":0, "to":2, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.12922480467097894 m", "val":0.12922480467097894}}}, "enabled":true},
     {"from":3, "to":4, "data":{"type":"PointAt", "props":{"x":{"exp":"1.004191517829895 m", "val":1.004191517829895}, "y":{"exp":"12.345617637038231 mm", "val":0.012345617637038233}, "tolerance":{"exp":"2 deg", "val":0.03490658503988659}, "flip":true}}, "enabled":true},
     {"from":4, "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":2, "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
-    {"from":1, "to":2, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"0.2 m / s", "val":0.2}}}, "enabled":true}],
+    {"from":2, "to":2, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"0.2 m / s", "val":0.2}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
    "val":0.05
@@ -402,5 +402,9 @@
     {"t":6.69756, "x":3.67008, "y":2.99239, "heading":0.94531, "vx":0.0, "vy":0.0, "omega":0.0, "ax":0.0, "ay":0.0, "alpha":0.0, "fx":[0.0,0.0,0.0,0.0], "fy":[0.0,0.0,0.0,0.0]}],
   "splits":[0]
  },
- "events":[]
+ "events":[
+   {"name":"Marker", "from":{"target":0, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Marker", "from":{"target":3, "targetTimestamp":null, "offset":{"exp":"0 s", "val":0.0}}, "event":null},
+   {"name":"Marker", "from":{"target":1, "targetTimestamp":null, "offset":{"exp":"1 s", "val":1.0}}, "event":{"type":"sequential", "data":{"commands":[
+       {"type":"named", "data":{"name":"El-L4"}}]}}}]
 }
