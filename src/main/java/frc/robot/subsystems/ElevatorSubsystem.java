@@ -1,32 +1,33 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
+import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
-import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
-import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
   private final TalonFX elevatorMotor1 = new TalonFX(Elevator.LEFT_MOTOR_ID, "rio");
   private final TalonFX elevatorMotor2 = new TalonFX(Elevator.RIGHT_MOTOR_ID, "rio");
 
-  private final PositionVoltage positionVoltage = new PositionVoltage(0.0).withEnableFOC(true);
+  // private final PositionVoltage positionVoltage = new PositionVoltage(0.0).withEnableFOC(true);
+  private final MotionMagicVoltage positionVoltage = new MotionMagicVoltage(0.0);
+
   private final VoltageOut voltageOut = new VoltageOut(0).withEnableFOC(true);
 
   private double setpoint;

@@ -155,11 +155,6 @@ public interface Constants {
     public static final double MAX_SAFE_POS = 128.0; // Maximum safe position (adjust as needed)
     public static final double MIN_SAFE_POS = 0; // Minimum safe position (adjust as needed)
 
-    // Motion Magic Constants
-    public static final double CRUISE_VELOCITY = 40.0; // In rotations/sec (~39.58 in/s)
-    public static final double MAX_ACCELERATION = 80.0; // In rotations/sec²
-    public static final double JERK = 800.0; // In rotations/sec³
-
     // Voltage Limits
     public static final double PEAK_FORWARD_VOLTAGE = 12.0;
     public static final double PEAK_REVERSE_VOLTAGE = -12.0;
@@ -172,9 +167,14 @@ public interface Constants {
 
     // Feedforward Constants
     public static final double KS = 0.25; // Static friction compensation
-    public static final double KV = 1.50; // Velocity feedforward
+    public static final double KV = 0.60; // Velocity feedforward
     public static final double KA = 0.06; // Acceleration feedforward //Was .12
     public static final double KG = 1.18; // Gravity feedforward
+
+    // Motion Magic Constants
+    public static final double CRUISE_VELOCITY = 110.0; // In rotations/sec (~39.58 in/s)
+    public static final double MAX_ACCELERATION = 80.0; // In rotations/sec²
+    public static final double JERK = 600.0; // In rotations/sec³
 
     // Physical Constants
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
@@ -275,7 +275,7 @@ public interface Constants {
       int SECOND_SENSOR_ID = 3;
 
       // Intake/Outtake Speeds
-      double CORAL_INTAKE_SPEED = 0.22;
+      double CORAL_INTAKE_SPEED = 0.4;
       double CORAL_OUTTAKE_SPEED = -0.5;
       double ALGAE_INTAKE_SPEED = 0.1;
       double ALGAE_OUTTAKE_SPEED = -0.3;
