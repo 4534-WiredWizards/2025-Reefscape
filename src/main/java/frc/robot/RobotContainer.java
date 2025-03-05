@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -34,12 +35,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
+import frc.robot.Constants.ReefZone;
+import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
@@ -218,14 +222,94 @@ public class RobotContainer {
         "TestElevatorCommand/Elevator L1",
         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
 
-    // SmartDashboard.putData("Elevator L4", new SetWristPosition(m_Wrist,
-    // Wrist.L4_ANGLE));
-    // SmartDashboard.putData("Elevator L3", new SetWristPosition(m_Wrist,
-    // Wrist.L3_ANGLE));
-    // SmartDashboard.putData("Elevator L2", new SetWristPosition(m_Wrist,
-    // Wrist.L2_ANGLE));
-    // SmartDashboard.putData("Elevator L1", new SetWristPosition(m_Wrist,
-    // Wrist.L1_ANGLE));
+    // Drive to point test commands
+
+    Constants.ScoringPositions.ZonePosition zone1Left =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_1, ScoringSide.LEFT);
+    Pose2d targetPose1Left =
+        new Pose2d(zone1Left.x(), zone1Left.y(), new Rotation2d(zone1Left.theta()));
+
+    // Now do zone 1 right
+    Constants.ScoringPositions.ZonePosition zone1Right =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_1, ScoringSide.RIGHT);
+    Pose2d targetPose1Right =
+        new Pose2d(zone1Right.x(), zone1Right.y(), new Rotation2d(zone1Right.theta()));
+
+    // Now do zone 2 left
+    Constants.ScoringPositions.ZonePosition zone2Left =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_2, ScoringSide.LEFT);
+    Pose2d targetPose2Left =
+        new Pose2d(zone2Left.x(), zone2Left.y(), new Rotation2d(zone2Left.theta()));
+
+    // Now do zone 2 right
+    Constants.ScoringPositions.ZonePosition zone2Right =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_2, ScoringSide.RIGHT);
+    Pose2d targetPose2Right =
+        new Pose2d(zone2Right.x(), zone2Right.y(), new Rotation2d(zone2Right.theta()));
+
+    // Now do zone 3 left
+    Constants.ScoringPositions.ZonePosition zone3Left =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_3, ScoringSide.LEFT);
+    Pose2d targetPose3Left =
+        new Pose2d(zone3Left.x(), zone3Left.y(), new Rotation2d(zone3Left.theta()));
+
+    // Now do zone 3 right
+    Constants.ScoringPositions.ZonePosition zone3Right =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_3, ScoringSide.RIGHT);
+    Pose2d targetPose3Right =
+        new Pose2d(zone3Right.x(), zone3Right.y(), new Rotation2d(zone3Right.theta()));
+
+    // Now do zone 4 left
+    Constants.ScoringPositions.ZonePosition zone4Left =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_4, ScoringSide.LEFT);
+    Pose2d targetPose4Left =
+        new Pose2d(zone4Left.x(), zone4Left.y(), new Rotation2d(zone4Left.theta()));
+
+    // Now do zone 4 right
+    Constants.ScoringPositions.ZonePosition zone4Right =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_4, ScoringSide.RIGHT);
+    Pose2d targetPose4Right =
+        new Pose2d(zone4Right.x(), zone4Right.y(), new Rotation2d(zone4Right.theta()));
+
+    // Now do zone 5 left
+    Constants.ScoringPositions.ZonePosition zone5Left =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_5, ScoringSide.LEFT);
+    Pose2d targetPose5Left =
+        new Pose2d(zone5Left.x(), zone5Left.y(), new Rotation2d(zone5Left.theta()));
+
+    // Now do zone 5 right
+    Constants.ScoringPositions.ZonePosition zone5Right =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_5, ScoringSide.RIGHT);
+    Pose2d targetPose5Right =
+        new Pose2d(zone5Right.x(), zone5Right.y(), new Rotation2d(zone5Right.theta()));
+
+    // Now do zone 6 left
+    Constants.ScoringPositions.ZonePosition zone6Left =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_6, ScoringSide.LEFT);
+    Pose2d targetPose6Left =
+        new Pose2d(zone6Left.x(), zone6Left.y(), new Rotation2d(zone6Left.theta()));
+
+    // Now do zone 6 right
+    Constants.ScoringPositions.ZonePosition zone6Right =
+        Constants.ScoringPositions.getZonePosition(ReefZone.ZONE_6, ScoringSide.RIGHT);
+    Pose2d targetPose6Right =
+        new Pose2d(zone6Right.x(), zone6Right.y(), new Rotation2d(zone6Right.theta()));
+
+    SmartDashboard.putData("TestDrive/Zone1/Left", new DriveToPoint(drive, targetPose1Left));
+    SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPoint(drive, targetPose1Right));
+    SmartDashboard.putData("TestDrive/Zone2/Left", new DriveToPoint(drive, targetPose2Left));
+    SmartDashboard.putData("TestDrive/Zone2/Right", new DriveToPoint(drive, targetPose2Right));
+    SmartDashboard.putData("TestDrive/Zone3/Left", new DriveToPoint(drive, targetPose3Left));
+    SmartDashboard.putData("TestDrive/Zone3/Right", new DriveToPoint(drive, targetPose3Right));
+
+    // Out because next to pool :(
+    // SmartDashboard.putData("TestDrive/Zone4/Left", new DriveToPoint(drive, targetPose4Left));
+    // SmartDashboard.putData("TestDrive/Zone4/Right", new DriveToPoint(drive, targetPose4Right));
+    // SmartDashboard.putData("TestDrive/Zone5/Left", new DriveToPoint(drive, targetPose5Left));
+    // SmartDashboard.putData("TestDrive/Zone5/Right", new DriveToPoint(drive, targetPose5Right));
+    // SmartDashboard.putData("TestDrive/Zone6/Left", new DriveToPoint(drive, targetPose6Left));
+    // SmartDashboard.putData("TestDrive/Zone6/Right", new DriveToPoint(drive, targetPose6Right));
+
   }
 
   /**
@@ -302,57 +386,51 @@ public class RobotContainer {
     // Operatorcontroller.button(Operator.SCORE_L1_BUTTON) // X Button
     // .onTrue(new DriveToPoint(drive, targetPose));
     // Operator PID control for Nuetral D-pad
-    // Operatorcontroller.povDown()
-    //     .onTrue(
-    //         new SequentialCommandGroup(
-    //             // Step 1: Clear the elevator
-    //             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-    //             // Step 2: Move elevator down, prepare wrist, and run intake
-    //             new ParallelDeadlineGroup(
-    //                 new RunCoralIntake(m_Intake, true),
-    //                 new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
-    //                 new SequentialCommandGroup(
-    //                     new WaitUntilCommand(
-    //                         () -> m_elevator.getEncoderPosition() <
-    // Elevator.ELEVATOR_DANGER_LIMIT),
-    //                     new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))));
-
-    // INtake
-
     Operatorcontroller.povDown()
         .onTrue(
             new SequentialCommandGroup(
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND)));
+                // Step 1: Clear the elevator
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                // Step 2: Move elevator down, prepare wrist, and run intake
+                new ParallelDeadlineGroup(
+                    new RunCoralIntake(m_Intake, true),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+                    new SequentialCommandGroup(
+                        new WaitUntilCommand(
+                            () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))));
+    // INtake
+    // Operatorcontroller.povDown()
+    //     .onTrue(
+    //         new SequentialCommandGroup(
+    //             new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND)));
 
     // L2
     Operatorcontroller.povLeft()
         .onTrue(
             new SequentialCommandGroup(
-                // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2)
-                    // new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false)
-                    )));
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
+                    new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))));
 
     // L3
     Operatorcontroller.povRight()
         .onTrue(
             new SequentialCommandGroup(
-                // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3)
-                    // new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false)
-                    )));
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
+                    new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false))));
 
     // L4
     Operatorcontroller.povUp()
         .onTrue(
             new SequentialCommandGroup(
-                // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4)
-                    // new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false)
-                    )));
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
+                    new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false))));
 
     Operatorcontroller.x()
         .onTrue(new DriveToPoint(drive, new Pose2d(3.083, 4.189, Rotation2d.fromDegrees(0.0))));

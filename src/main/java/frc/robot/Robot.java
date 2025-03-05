@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Music;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -175,7 +174,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void testInit() {
 
- // Cancels all running commands at the start of test mode
+    // Cancels all running commands at the start of test mode
     CommandScheduler.getInstance().cancelAll();
 
     // FIXME: Music to be added back as a command or when doesnt brick the motors

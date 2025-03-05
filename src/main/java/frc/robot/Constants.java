@@ -199,7 +199,7 @@ public interface Constants {
     public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 14.6;
     public static final double POSITION_L3 = 43.8;
-    public static final double POSITION_L4 = 107;
+    public static final double POSITION_L4 = 112;
     public static final double POSITION_BARGE = 127;
 
     // Manual Control Constants
@@ -213,7 +213,7 @@ public interface Constants {
     int PIVOT_MOTOR_ID = 53;
     double SPEED_SCALAR = 0.8;
     double GEAR_RATIO = 125.0;
-    double ZEROING_SPEED = 0.1;
+    double ZEROING_SPEED = -0.1;
 
     // Encoder Configuration
     interface Encoder {
@@ -226,10 +226,10 @@ public interface Constants {
 
     // Control System Constants
     // PID Configuration
-    double PID_POSITION_TOLERANCE = 1 / 360;
+    double PID_POSITION_TOLERANCE = 1;
     double PID_VELOCITY_TOLERANCE = 1;
     double KP = 0.012;
-    double KI = 0.0005;
+    double KI = 0.002;
     double KD = 0.0001;
 
     // Feedforward Constants
@@ -246,7 +246,7 @@ public interface Constants {
     double MAX_SAFE_ANGLE = 0 / 360.0; // Upper limit (in rotations) (uses relative encoder)
     double MIN_SAFE_ANGLE = -270 / 360.0; // Lower limit (in rotations) (uses relative encoder)
     double TRUE_ZERO = 216; // Offset for zero position
-    double MIN_CLEAR_ELEVATOR_ANGLE = 130; // Minimum angle to clear elevator
+    double MIN_CLEAR_ELEVATOR_ANGLE = 150; // Minimum angle to clear elevator
 
     // Stall Detection
     double STALL_VELOCITY_THRESHOLD = .01;
@@ -285,6 +285,7 @@ public interface Constants {
   interface Swerve {
 
     interface Drive {
+      double ROTATION_SPEED_SCALAR = (8.0 / 12.0);
 
       interface PID {
 

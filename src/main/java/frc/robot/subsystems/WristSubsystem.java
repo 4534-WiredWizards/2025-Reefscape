@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
+import static edu.wpi.first.units.Units.Volts;
+import static frc.robot.Constants.Wrist.STALL_VELOCITY_THRESHOLD;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -8,12 +9,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Wrist;
-import static frc.robot.Constants.Wrist.STALL_VELOCITY_THRESHOLD;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase {
   private final TalonFX wristMotor;
@@ -75,9 +74,7 @@ public class WristSubsystem extends SubsystemBase {
                 null,
                 (state) -> Logger.recordOutput("Wrist/SysId/State", state.toString())),
             new SysIdRoutine.Mechanism(
-                (voltage) -> runCharacterization(voltage.in(Volts)),
-                null,
-                this));
+                (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
 
     SmartDashboard.putData("Wrist/Zero Wrist", zeroCommand());
     SmartDashboard.putData("Wrist PID Controller", pidController);
@@ -152,7 +149,7 @@ public class WristSubsystem extends SubsystemBase {
             Units.degreesToRadians(pidController.getSetpoint().position),
             Units.degreesToRadians(pidController.getSetpoint().velocity));
 
-    setClampSpeed(pidOutput + feedforward);
+    setClampSpeed(pidOutput);
     currentStatus = "PID Control";
   }
 
@@ -233,11 +230,13 @@ public class WristSubsystem extends SubsystemBase {
 
   public Command moveToAngleCommand(double angle) {
     return Commands.sequence(
-        Commands.runOnce(() -> {
-          enablePID();
-          setWristSetpoint(angle);
-          currentStatus = "Moving to angle: " + angle;
-        }, this),
+        Commands.runOnce(
+            () -> {
+              enablePID();
+              setWristSetpoint(angle);
+              currentStatus = "Moving to angle: " + angle;
+            },
+            this),
         Commands.waitUntil(this::atSetpoint),
         Commands.runOnce(() -> currentStatus = "At angle: " + angle));
   }
@@ -284,23 +283,24 @@ public class WristSubsystem extends SubsystemBase {
 
     // Modified stall detection (only active during zeroing)
     if (isZeroing) {
-        boolean potentialStall = Math.abs(voltage) > 0.1 
-                               && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
-        if (potentialStall) {
-            stallCount++;
-        } else {
-            stallCount = 0;
-        }
+      boolean potentialStall =
+          Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
+      if (potentialStall) {
+        stallCount++;
+      } else {
+        stallCount = 0;
+      }
     } else {
-        stallCount = 0; // Reset when not zeroing
+      stallCount = 0; // Reset when not zeroing
     }
 
-    logStatusData(currentAngle, velocity, voltage, current, temperature, motorPosition, absEncoderValue);
+    logStatusData(
+        currentAngle, velocity, voltage, current, temperature, motorPosition, absEncoderValue);
     logCommandData();
     logPIDData();
     logStallData(isZeroing && (stallCount > 0));
 
-    if (currentStatus.contains("Moving to angle") 
+    if (currentStatus.contains("Moving to angle")
         || currentStatus.contains("At angle")
         || isPIDEnabled) {
       Logger.recordOutput("Wrist/Status/AngleError", setpoint - currentAngle);
@@ -342,8 +342,10 @@ public class WristSubsystem extends SubsystemBase {
     Logger.recordOutput("Wrist/Control/TotalOutput", pidOutput + feedforward);
 
     if (isPIDEnabled) {
-      Logger.recordOutput("Wrist/Control/PIDSetpointPosition", pidController.getSetpoint().position);
-      Logger.recordOutput("Wrist/Control/PIDSetpointVelocity", pidController.getSetpoint().velocity);
+      Logger.recordOutput(
+          "Wrist/Control/PIDSetpointPosition", pidController.getSetpoint().position);
+      Logger.recordOutput(
+          "Wrist/Control/PIDSetpointVelocity", pidController.getSetpoint().velocity);
     }
   }
 

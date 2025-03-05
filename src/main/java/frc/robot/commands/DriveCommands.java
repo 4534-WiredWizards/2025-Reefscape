@@ -89,7 +89,6 @@ public class DriveCommands {
           omega = Math.copySign(omega * omega, omega);
 
           turningSpeed = drive.getMaxAngularSpeedRadPerSec();
-          turningSpeed = turningSpeed / 2;
           if (slowTurn.getAsBoolean()) {
             turningSpeed /= 2;
           }
