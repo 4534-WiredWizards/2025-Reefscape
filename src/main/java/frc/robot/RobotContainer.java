@@ -102,15 +102,15 @@ public class RobotContainer {
 
     // Event Triggers
     new EventTrigger("Elevator L4")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
     new EventTrigger("Elevator L3")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
     new EventTrigger("Elevator L2")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1));
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
     new EventTrigger("Elevator L1")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
     new EventTrigger("Elevator Ground")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
     new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
@@ -208,19 +208,19 @@ public class RobotContainer {
 
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator Barge",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE));
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist));
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator L4",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L4));
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator L3",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L3));
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator L2",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L2));
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator L1",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND));
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
     // Drive to point test commands
 
@@ -494,7 +494,7 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                     new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
                     new ParallelCommandGroup(
-                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L1),
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist),
                         new SetWristPosition(m_Wrist, Wrist.L1_ANGLE)))));
     // leftLevel2.onTrue(
     // Commands.runOnce(
