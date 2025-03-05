@@ -12,8 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import java.util.Map;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -111,37 +114,36 @@ public interface Constants {
     record ZonePosition(double x, double y, double theta) {}
 
     // Zone positions for each side (Left and Right)
-    static final Map<ReefZone, Map<ScoringSide, ZonePosition>> ZONE_POSITIONS =
+    static final Map<ReefZone, Map<ScoringSide, Pose2d>> ZONE_POSITIONS =
+      Map.of(
+        ReefZone.ZONE_1,
         Map.of(
-            ReefZone.ZONE_1,
-            Map.of(
-                ScoringSide.LEFT, new ZonePosition(3.083, 4.189, 0.0), // x, y, theta
-                ScoringSide.RIGHT, new ZonePosition(3.083, 3.859, 0.0)),
-            ReefZone.ZONE_2,
-            Map.of(
-                ScoringSide.LEFT, new ZonePosition(3.647, 2.914, 60.0),
-                ScoringSide.RIGHT, new ZonePosition(3.946, 2.754, 60.0)),
-            ReefZone.ZONE_3,
-            Map.of(
-                ScoringSide.LEFT, new ZonePosition(5.034, 2.742, 120.0),
-                ScoringSide.RIGHT, new ZonePosition(5.316, 2.923, 120.0)),
-            ReefZone.ZONE_4,
-            Map.of(
-                ScoringSide.LEFT, new ZonePosition(5.894, 3.858, 180.0),
-                ScoringSide.RIGHT, new ZonePosition(5.894, 4.189, 180.0)),
-            ReefZone.ZONE_5,
-            Map.of(
-                ScoringSide.LEFT, new ZonePosition(5.314, 5.127, -120.0),
-                ScoringSide.RIGHT, new ZonePosition(5.022, 5.268, -120.0)),
-            ReefZone.ZONE_6,
-            Map.of(
-                ScoringSide.LEFT, new ZonePosition(3.957, 5.263, -60.0),
-                ScoringSide.RIGHT, new ZonePosition(3.673, 5.108, -60.0)));
+          ScoringSide.LEFT, new Pose2d(3.083, 4.189, new Rotation2d(0.0)), // x, y, theta
+          ScoringSide.RIGHT, new Pose2d(3.083, 3.859, new Rotation2d(0.0))),
+        ReefZone.ZONE_2,
+        Map.of(
+          ScoringSide.LEFT, new Pose2d(3.647, 2.914, new Rotation2d(Math.toRadians(60.0))),
+          ScoringSide.RIGHT, new Pose2d(3.946, 2.754, new Rotation2d(Math.toRadians(60.0)))),
+        ReefZone.ZONE_3,
+        Map.of(
+          ScoringSide.LEFT, new Pose2d(5.034, 2.742, new Rotation2d(Math.toRadians(120.0))),
+          ScoringSide.RIGHT, new Pose2d(5.316, 2.923, new Rotation2d(Math.toRadians(120.0)))),
+        ReefZone.ZONE_4,
+        Map.of(
+          ScoringSide.LEFT, new Pose2d(5.894, 3.858, new Rotation2d(Math.toRadians(180.0))),
+          ScoringSide.RIGHT, new Pose2d(5.894, 4.189, new Rotation2d(Math.toRadians(180.0)))),
+        ReefZone.ZONE_5,
+        Map.of(
+          ScoringSide.LEFT, new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
+          ScoringSide.RIGHT, new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
+        ReefZone.ZONE_6,
+        Map.of(
+          ScoringSide.LEFT, new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
+          ScoringSide.RIGHT, new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
 
-    /** Returns the position for a given zone and side. */
-    static ZonePosition getZonePosition(ReefZone zone, ScoringSide side) {
-      return ZONE_POSITIONS.get(zone).get(side);
-    }
+      static Pose2d getPose(ReefZone zone, ScoringSide side) {
+        return ZONE_POSITIONS.get(zone).get(side);
+      }
   }
 
   /* Subsystem Constants */
@@ -366,8 +368,8 @@ public interface Constants {
       double DRIVE_KI = 0.0;
       double DRIVE_KD = 0.0;
 
-      double TURN_KP = 5.0;
-      double TURN_KI = 0.0;
+      double TURN_KP = 2.0;
+      double TURN_KI = 1.0;
       double TURN_KD = 0.0;
     }
   }
