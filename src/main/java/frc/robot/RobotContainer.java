@@ -394,7 +394,7 @@ public class RobotContainer {
                 // Step 2: Move elevator down, prepare wrist, and run intake
                 new ParallelDeadlineGroup(
                     new RunCoralIntake(m_Intake, true),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
                     new SequentialCommandGroup(
                         new WaitUntilCommand(
                             () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
@@ -411,7 +411,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist),
                     new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))));
 
     // L3
@@ -420,7 +420,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist),
                     new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false))));
 
     // L4
@@ -429,7 +429,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist),
                     new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false))));
 
     Operatorcontroller.x()
