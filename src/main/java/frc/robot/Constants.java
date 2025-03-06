@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -115,35 +114,37 @@ public interface Constants {
 
     // Zone positions for each side (Left and Right)
     static final Map<ReefZone, Map<ScoringSide, Pose2d>> ZONE_POSITIONS =
-      Map.of(
-        ReefZone.ZONE_1,
         Map.of(
-          ScoringSide.LEFT, new Pose2d(3.083, 4.189, new Rotation2d(0.0)), // x, y, theta
-          ScoringSide.RIGHT, new Pose2d(3.083, 3.859, new Rotation2d(0.0))),
-        ReefZone.ZONE_2,
-        Map.of(
-          ScoringSide.LEFT, new Pose2d(3.647, 2.914, new Rotation2d(Math.toRadians(60.0))),
-          ScoringSide.RIGHT, new Pose2d(3.946, 2.754, new Rotation2d(Math.toRadians(60.0)))),
-        ReefZone.ZONE_3,
-        Map.of(
-          ScoringSide.LEFT, new Pose2d(5.034, 2.742, new Rotation2d(Math.toRadians(120.0))),
-          ScoringSide.RIGHT, new Pose2d(5.316, 2.923, new Rotation2d(Math.toRadians(120.0)))),
-        ReefZone.ZONE_4,
-        Map.of(
-          ScoringSide.LEFT, new Pose2d(5.894, 3.858, new Rotation2d(Math.toRadians(180.0))),
-          ScoringSide.RIGHT, new Pose2d(5.894, 4.189, new Rotation2d(Math.toRadians(180.0)))),
-        ReefZone.ZONE_5,
-        Map.of(
-          ScoringSide.LEFT, new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
-          ScoringSide.RIGHT, new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
-        ReefZone.ZONE_6,
-        Map.of(
-          ScoringSide.LEFT, new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
-          ScoringSide.RIGHT, new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
+            ReefZone.ZONE_1,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(3.083, 4.189, new Rotation2d(0.0)), // x, y, theta
+                ScoringSide.RIGHT, new Pose2d(3.083, 3.859, new Rotation2d(0.0))),
+            ReefZone.ZONE_2,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(3.647, 2.914, new Rotation2d(Math.toRadians(60.0))),
+                ScoringSide.RIGHT, new Pose2d(3.946, 2.754, new Rotation2d(Math.toRadians(60.0)))),
+            ReefZone.ZONE_3,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(5.034, 2.742, new Rotation2d(Math.toRadians(120.0))),
+                ScoringSide.RIGHT, new Pose2d(5.316, 2.923, new Rotation2d(Math.toRadians(120.0)))),
+            ReefZone.ZONE_4,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(5.894, 3.858, new Rotation2d(Math.toRadians(180.0))),
+                ScoringSide.RIGHT, new Pose2d(5.894, 4.189, new Rotation2d(Math.toRadians(180.0)))),
+            ReefZone.ZONE_5,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
+                ScoringSide.RIGHT,
+                    new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
+            ReefZone.ZONE_6,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
+                ScoringSide.RIGHT,
+                    new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
 
-      static Pose2d getPose(ReefZone zone, ScoringSide side) {
-        return ZONE_POSITIONS.get(zone).get(side);
-      }
+    static Pose2d getPose(ReefZone zone, ScoringSide side) {
+      return ZONE_POSITIONS.get(zone).get(side);
+    }
   }
 
   /* Subsystem Constants */
@@ -199,8 +200,8 @@ public interface Constants {
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = 0.0;
     public static final double POSITION_L1 = 0;
-    public static final double POSITION_L2 = 14.6;
-    public static final double POSITION_L3 = 43.8;
+    public static final double POSITION_L2 = 18.3;
+    public static final double POSITION_L3 = 55;
     public static final double POSITION_L4 = 112;
     public static final double POSITION_BARGE = 127;
 
@@ -229,26 +230,31 @@ public interface Constants {
     // Control System Constants
     // PID Configuration
     double PID_POSITION_TOLERANCE = 1;
-    double PID_VELOCITY_TOLERANCE = 1;
-    double KP = 0.012;
-    double KI = 0.002;
-    double KD = 0.0001;
+    double KP = 2.75;
+    double KI = 0.0;
+    double KD = 0.15;
 
     // Feedforward Constants
     double KS = 0.25; // Static friction compensation
-    double KG = 0.15; // Gravity compensation
-    double KV = 2.25; // Velocity feedforward
+    double KG = 0.13; // Gravity compensation
+    double KV = 0.5; // Velocity feedforward
     double KA = 0.01; // Acceleration feedforward
 
     // Motion Profile Configuration
-    double CRUISE_VELOCITY = 410;
-    double ACCELERATION = 350;
+    double CRUISE_VELOCITY = 30; // In raw encoder vlues/s
+    double ACCELERATION = 60; // In raw encoder values/s/s
+    double JERK = 0;
 
     // Safety Limits
-    double MAX_SAFE_ANGLE = 0; // Upper limit (in rotations) (uses relative encoder)
-    double MIN_SAFE_ANGLE = -270; // Lower limit (in rotations) (uses relative encoder)
+    double MAX_SAFE_VAL = 0.1; // Upper limit (in rotations) (uses relative encoder)
+    double MIN_SAFE_VAL = -65.0; // Lower limit (in rotations) (uses relative encoder)
+
+    // PID Saftey Angles
+    double MIN_SAFE_ANGLE = 20.0;
+    double MAX_SAFE_ANGLE = 218.0;
+
     double TRUE_ZERO = 216; // Offset for zero position
-    double MIN_CLEAR_ELEVATOR_ANGLE = 150; // Minimum angle to clear elevator
+    double MIN_CLEAR_ELEVATOR_ANGLE = 136; // Minimum angle to clear elevator
 
     // Stall Detection
     double STALL_VELOCITY_THRESHOLD = .01;

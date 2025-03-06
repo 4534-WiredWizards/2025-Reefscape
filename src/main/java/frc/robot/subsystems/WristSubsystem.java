@@ -70,6 +70,9 @@ public class WristSubsystem extends SubsystemBase {
   private void logConfiguration() {
     Logger.recordOutput("Wrist/Config/MaxSafeAngle", Wrist.MAX_SAFE_ANGLE);
     Logger.recordOutput("Wrist/Config/MinSafeAngle", Wrist.MIN_SAFE_ANGLE);
+    Logger.recordOutput("Wrist/Config/MinSafeEncoderVal", Wrist.MIN_SAFE_VAL);
+    Logger.recordOutput("Wrist/Config/MaxSafeEncoderVal", Wrist.MAX_SAFE_VAL);
+
     Logger.recordOutput("Wrist/Config/MinClearElevatorAngle", Wrist.MIN_CLEAR_ELEVATOR_ANGLE);
     Logger.recordOutput("Wrist/Config/GearRatio", Wrist.GEAR_RATIO);
     Logger.recordOutput("Wrist/Config/TrueZero", Wrist.TRUE_ZERO);
@@ -87,8 +90,8 @@ public class WristSubsystem extends SubsystemBase {
   private void configureMotor() {
     var fx_cfg = new TalonFXConfiguration();
 
-    double forwardLimit = Wrist.MAX_SAFE_ANGLE * Wrist.GEAR_RATIO / 360.0;
-    double reverseLimit = Wrist.MIN_SAFE_ANGLE * Wrist.GEAR_RATIO / 360.0;
+    double forwardLimit = Wrist.MAX_SAFE_VAL;
+    double reverseLimit = Wrist.MIN_SAFE_VAL;
 
     SoftwareLimitSwitchConfigs limitSwitches =
         new SoftwareLimitSwitchConfigs()
@@ -117,8 +120,9 @@ public class WristSubsystem extends SubsystemBase {
     fx_cfg.Slot0.kA = Wrist.KA;
 
     // Motion Magic settings
-    fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Wrist.CRUISE_VELOCITY / 360.0 * Wrist.GEAR_RATIO;
-    fx_cfg.MotionMagic.MotionMagicAcceleration = Wrist.ACCELERATION / 360.0 * Wrist.GEAR_RATIO;
+    fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Wrist.CRUISE_VELOCITY;
+    fx_cfg.MotionMagic.MotionMagicAcceleration = Wrist.ACCELERATION;
+    fx_cfg.MotionMagic.MotionMagicJerk = Wrist.JERK;
 
     wristMotor.getConfigurator().apply(fx_cfg);
 
