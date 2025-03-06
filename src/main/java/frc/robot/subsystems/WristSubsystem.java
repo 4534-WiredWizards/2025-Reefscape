@@ -117,8 +117,8 @@ public class WristSubsystem extends SubsystemBase {
     fx_cfg.Slot0.kA = Wrist.KA;
 
     // Motion Magic settings
-    fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Wrist.MAX_VELOCITY / 360.0 * Wrist.GEAR_RATIO;
-    fx_cfg.MotionMagic.MotionMagicAcceleration = Wrist.MAX_ACCELERATION / 360.0 * Wrist.GEAR_RATIO;
+    fx_cfg.MotionMagic.MotionMagicCruiseVelocity = Wrist.CRUISE_VELOCITY / 360.0 * Wrist.GEAR_RATIO;
+    fx_cfg.MotionMagic.MotionMagicAcceleration = Wrist.ACCELERATION / 360.0 * Wrist.GEAR_RATIO;
 
     wristMotor.getConfigurator().apply(fx_cfg);
 
