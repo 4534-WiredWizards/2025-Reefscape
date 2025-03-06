@@ -12,12 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -62,6 +59,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -193,21 +191,22 @@ public class RobotContainer {
     configureButtonBindings();
 
     SmartDashboard.putData(
-        "TestWristCommand/Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+        "TestWristCommand/Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
     SmartDashboard.putData(
-        "TestWristCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+        "TestWristCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false));
     SmartDashboard.putData(
-        "TestWristCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+        "TestWristCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false));
     SmartDashboard.putData(
-        "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-    SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203));
+        "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false));
+    SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203, false));
     SmartDashboard.putData(
         "TestWristCommand/Wrist Coral Intake",
         new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
     SmartDashboard.putData(
-        "TestWristCommand/Wrist Barger", new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION));
+        "TestWristCommand/Wrist Barger",
+        new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION, false));
     SmartDashboard.putData(
-        "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION));
+        "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION, false));
 
     SmartDashboard.putData(
         "TestElevatorCommand/Elevator Barge",
@@ -226,12 +225,24 @@ public class RobotContainer {
         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
     // Drive to point test commands
-    SmartDashboard.putData("TestDrive/Zone1/Left", new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_1, ScoringSide.LEFT)));
-    SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_1, ScoringSide.RIGHT)));
-    SmartDashboard.putData("TestDrive/Zone2/Left", new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_2, ScoringSide.LEFT)));
-    SmartDashboard.putData("TestDrive/Zone2/Right", new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_2, ScoringSide.RIGHT)));
-    SmartDashboard.putData("TestDrive/Zone3/Left", new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_3, ScoringSide.LEFT)));
-    SmartDashboard.putData("TestDrive/Zone3/Right", new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_3, ScoringSide.RIGHT)));
+    SmartDashboard.putData(
+        "TestDrive/Zone1/Left",
+        new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_1, ScoringSide.LEFT)));
+    SmartDashboard.putData(
+        "TestDrive/Zone1/Right",
+        new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_1, ScoringSide.RIGHT)));
+    SmartDashboard.putData(
+        "TestDrive/Zone2/Left",
+        new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_2, ScoringSide.LEFT)));
+    SmartDashboard.putData(
+        "TestDrive/Zone2/Right",
+        new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_2, ScoringSide.RIGHT)));
+    SmartDashboard.putData(
+        "TestDrive/Zone3/Left",
+        new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_3, ScoringSide.LEFT)));
+    SmartDashboard.putData(
+        "TestDrive/Zone3/Right",
+        new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_3, ScoringSide.RIGHT)));
 
     // Out because next to pool :(
     // SmartDashboard.putData("TestDrive/Zone4/Left", new DriveToPoint(drive, targetPose4Left));

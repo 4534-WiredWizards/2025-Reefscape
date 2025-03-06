@@ -6,11 +6,8 @@ package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Elevator;
-import frc.robot.Constants.Wrist;
-
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
-
 import org.littletonrobotics.junction.Logger;
 
 public class SetElevatorPosition extends Command {
@@ -19,12 +16,16 @@ public class SetElevatorPosition extends Command {
   private final boolean stopWhenAtSetpoint;
   private final WristSubsystem m_wrist;
 
-  public SetElevatorPosition(ElevatorSubsystem elevator, double targetPosition, WristSubsystem wrist) {
+  public SetElevatorPosition(
+      ElevatorSubsystem elevator, double targetPosition, WristSubsystem wrist) {
     this(elevator, targetPosition, wrist, true); // Default stopWhenAtSetpoint to true
   }
 
   public SetElevatorPosition(
-      ElevatorSubsystem elevator, double targetPosition, WristSubsystem wrist, boolean stopWhenAtSetpoint) {
+      ElevatorSubsystem elevator,
+      double targetPosition,
+      WristSubsystem wrist,
+      boolean stopWhenAtSetpoint) {
     this.m_elevator = elevator;
     this.m_targetPosition = targetPosition;
     this.stopWhenAtSetpoint = stopWhenAtSetpoint;
@@ -36,12 +37,11 @@ public class SetElevatorPosition extends Command {
   public void initialize() {
     double safePosition =
         Math.min(Elevator.MAX_SAFE_POS, Math.max(Elevator.MIN_SAFE_POS, m_targetPosition));
-    if(m_wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
-      m_elevator.setPosition(safePosition);
-    } else{
-      end(true);
-    }
-    
+    // if (m_wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
+    m_elevator.setPosition(safePosition);
+    // } else {
+    //   end(true);
+    // }
   }
 
   @Override
