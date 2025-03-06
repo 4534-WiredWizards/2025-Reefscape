@@ -339,7 +339,10 @@ public class RobotContainer {
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist),
-                    new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))));
+                    new ParallelDeadlineGroup(
+                        new WaitUntilCommand(() -> m_Intake.getSecondSensor()), 
+                    new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))
+                    )));
 
     // L3
     Operatorcontroller.povRight()
