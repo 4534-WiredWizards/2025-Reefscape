@@ -12,6 +12,9 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
@@ -57,6 +60,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -69,9 +75,11 @@ public class RobotContainer {
   // Subsystems
 
   private final Drive drive;
+  private final Vision vision;
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   private final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
+  //   private final ClimbSubsystem m_climb = new ClimbSubsystem();
   private final ScoringQueueSubsystem m_scoringQueue;
 
   // Controller
@@ -128,6 +136,12 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOLimelight(camera0Name, drive::getRotation),
+                new VisionIOLimelight(camera1Name, drive::getRotation));
         break;
 
       case SIM:
@@ -139,6 +153,8 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+
         break;
 
       default:
@@ -150,6 +166,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
     m_scoringQueue = new ScoringQueueSubsystem(drive, m_elevator, m_Wrist, m_Intake);
@@ -199,8 +216,8 @@ public class RobotContainer {
         "TestWristCommand/Wrist Coral Intake",
         new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
     SmartDashboard.putData(
-        "TestWristCommand/Wrist Barger",
-        new SetWristPosition(m_Wrist, Wrist.BARGER_POSITION, false));
+        "TestWristCommand/Wrist MIN_CLEAR_ELEVATOR_ANGLE",
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false));
     SmartDashboard.putData(
         "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION, false));
 
@@ -338,19 +355,13 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist),
-                    new ParallelDeadlineGroup(
-                        new WaitUntilCommand(
-                            () ->
-                                !m_Intake
-                                    .getFirstSensor()), // Stops wrist command after coral is out of
-                        // the way
-                        new SetWristPosition(
-                            m_Wrist,
-                            Wrist.L2_ANGLE,
-                            false) // Sets wrist angle in parallel with waiting for the coral to be
-                        // out of the way
-                        ))));
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist, false),
+                    new SetWristPosition(
+                        m_Wrist,
+                        Wrist.L2_ANGLE,
+                        false) // Sets wrist angle in parallel with waiting for the coral to be
+                    )));
 
     // L3
     Operatorcontroller.povRight()
@@ -358,40 +369,29 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist),
-                    new ParallelDeadlineGroup(
-                        new WaitUntilCommand(
-                            () ->
-                                !m_Intake
-                                    .getFirstSensor()), // Stops wrist command after coral is out of
-                        // the way
-                        new SetWristPosition(
-                            m_Wrist,
-                            Wrist.L3_ANGLE,
-                            false) // Sets wrist angle in parallel with waiting for the coral to be
-                        // out of the way
-                        ))));
-
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist, false),
+                    new SetWristPosition(
+                        m_Wrist,
+                        Wrist.L3_ANGLE,
+                        false) // Sets wrist angle in parallel with waiting for the coral to be
+                    )));
     // L4
     Operatorcontroller.povUp()
         .onTrue(
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist),
-                    new ParallelDeadlineGroup(
-                        new WaitUntilCommand(
-                            () ->
-                                !m_Intake
-                                    .getFirstSensor()), // Stops wrist command after coral is out of
-                        // the way
-                        new SetWristPosition(
-                            m_Wrist,
-                            Wrist.L4_ANGLE,
-                            false) // Sets wrist angle in parallel with waiting for the coral to be
-                        // out of the way
-                        ))));
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist, false),
+                    new SetWristPosition(
+                        m_Wrist,
+                        Wrist.L4_ANGLE,
+                        false) // Sets wrist angle in parallel with waiting for the coral to be
+                    )));
 
+    // Operatorcontroller.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.5));
+    // Operatorcontroller.a().whileTrue(new SimpleMoveClimb(m_climb, () -> 1));
     // Operatorcontroller.povDown()
     // .onTrue(
     // new SequentialCommandGroup(
