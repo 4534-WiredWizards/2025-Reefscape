@@ -12,10 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -175,11 +176,16 @@ public interface Constants {
     public static final double KG = 1.18; // Gravity feedforward
 
     // Motion Magic Constants
-    public static final double CRUISE_VELOCITY = 110.0; // In rotations/sec (~39.58 in/s)
-    public static final double MAX_ACCELERATION = 80.0; // In rotations/sec²
-    public static final double JERK = 600.0; // In rotations/sec³
+    // public static final double CRUISE_VELOCITY = 110.0; // In rotations/sec (~39.58 in/s)
+    // public static final double MAX_ACCELERATION = 80.0; // In rotations/sec²
+    // public static final double JERK = 600.0; // In rotations/sec³
 
-    // Physical Constants
+    // Oh- We are going fast as HECK
+    public static final double CRUISE_VELOCITY = 128.0; // In units/sec full speed for 1s bottom to top
+    public static final double MAX_ACCELERATION = 256.0; // In units/sec²
+    public static final double JERK = 800.0; // In units/sec³
+
+    // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
     public static final double GEAR_RATIO = 9; // Verified 15:1 ratio
 
