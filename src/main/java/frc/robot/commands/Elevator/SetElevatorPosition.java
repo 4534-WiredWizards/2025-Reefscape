@@ -4,13 +4,12 @@
 
 package frc.robot.commands.Elevator;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class SetElevatorPosition extends Command {
   private final ElevatorSubsystem m_elevator;
@@ -40,9 +39,9 @@ public class SetElevatorPosition extends Command {
     double safePosition =
         Math.min(Elevator.MAX_SAFE_POS, Math.max(Elevator.MIN_SAFE_POS, m_targetPosition));
     if (m_wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
-        end(true);
+      end(true);
     } else {
-        m_elevator.setPosition(safePosition);
+      m_elevator.setPosition(safePosition);
     }
   }
 

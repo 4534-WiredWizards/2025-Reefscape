@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -181,7 +180,8 @@ public interface Constants {
     // public static final double JERK = 600.0; // In rotations/sec³
 
     // Oh- We are going fast as HECK
-    public static final double CRUISE_VELOCITY = 128.0; // In units/sec full speed for 1s bottom to top
+    public static final double CRUISE_VELOCITY =
+        128.0; // In units/sec full speed for 1s bottom to top
     public static final double MAX_ACCELERATION = 256.0; // In units/sec²
     public static final double JERK = 800.0; // In units/sec³
 
