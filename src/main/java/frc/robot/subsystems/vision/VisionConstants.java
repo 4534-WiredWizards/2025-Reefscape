@@ -22,8 +22,8 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "limelight_front";
-  public static String camera1Name = "limelight_back";
+  public static String camera0Name = "limelight-front";
+  public static String camera1Name = "limelight-back";
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;
@@ -39,7 +39,7 @@ public class VisionConstants {
   public static double[] cameraStdDevFactors =
       new double[] {
         1.0, // Camera 0
-        1.0 // Camera 1
+        0.5 // Camera 1
       };
 
   // Multipliers to apply for MegaTag 2 observations
