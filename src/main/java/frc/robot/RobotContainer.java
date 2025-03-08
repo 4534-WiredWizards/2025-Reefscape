@@ -18,7 +18,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -349,12 +348,7 @@ public class RobotContainer {
                                                 new WaitUntilCommand(
                                                         () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
                                                 new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))));
-        // INtake
-        // Operatorcontroller.povDown()
-        //     .onTrue(
-        //         new SequentialCommandGroup(
-        //             new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND)));
-
+     
         // L2
         Operatorcontroller.povLeft()
             .onTrue(
@@ -363,7 +357,7 @@ public class RobotContainer {
                     new ParallelDeadlineGroup(
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist),
                         new ParallelDeadlineGroup(
-                            new WaitUntilCommand(() -> !m_Intake.getSecondSensor()), //Stops wrist command after coral is out of the way
+                            new WaitUntilCommand(() -> !m_Intake.getFirstSensor()), //Stops wrist command after coral is out of the way
                             new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false) //Sets wrist angle in parallel with waiting for the coral to be out of the way
                         )
                     )
@@ -378,7 +372,7 @@ public class RobotContainer {
                     new ParallelDeadlineGroup(
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist),
                         new ParallelDeadlineGroup(
-                            new WaitUntilCommand(() -> !m_Intake.getSecondSensor()), //Stops wrist command after coral is out of the way
+                            new WaitUntilCommand(() -> !m_Intake.getFirstSensor()), //Stops wrist command after coral is out of the way
                             new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false) //Sets wrist angle in parallel with waiting for the coral to be out of the way
                         )
                     )
@@ -393,15 +387,12 @@ public class RobotContainer {
                     new ParallelDeadlineGroup(
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist),
                         new ParallelDeadlineGroup(
-                            new WaitUntilCommand(() -> !m_Intake.getSecondSensor()), //Stops wrist command after coral is out of the way
+                            new WaitUntilCommand(() -> !m_Intake.getFirstSensor()), //Stops wrist command after coral is out of the way
                             new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false) //Sets wrist angle in parallel with waiting for the coral to be out of the way
                         )
                     )
                 )
             );
-
-        Operatorcontroller.x()
-                .onTrue(new DriveToPoint(drive, new Pose2d(3.083, 4.189, Rotation2d.fromDegrees(0.0))));
 
         // Operatorcontroller.povDown()
         // .onTrue(
