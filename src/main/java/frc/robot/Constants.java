@@ -206,9 +206,9 @@ public interface Constants {
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = 0.0;
     public static final double POSITION_L1 = 0;
-    public static final double POSITION_L2 = 18.3;
+    public static final double POSITION_L2 = 25;
     public static final double POSITION_L3 = 55;
-    public static final double POSITION_L4 = 112;
+    public static final double POSITION_L4 = 115;
     public static final double POSITION_BARGE = 127;
 
     // Manual Control Constants
@@ -271,10 +271,10 @@ public interface Constants {
     double L1_ANGLE = 136;
     double L2_ANGLE = 136;
     double L3_ANGLE = 136;
-    double L4_ANGLE = 94;
+    double L4_ANGLE = 108;
 
     // Operational Positions
-    int CORAL_INTAKE_ANGLE = 193;
+    int CORAL_INTAKE_ANGLE = 205;
     int BARGER_POSITION = 27;
     int DRIVE_POSITION = 212;
 
@@ -290,7 +290,7 @@ public interface Constants {
 
       // Intake/Outtake Speeds
       double CORAL_INTAKE_SPEED = 0.4;
-      double CORAL_OUTTAKE_SPEED = -0.5;
+      double CORAL_OUTTAKE_SPEED = -0.2;
       double ALGAE_INTAKE_SPEED = 0.1;
       double ALGAE_OUTTAKE_SPEED = -0.3;
     }
@@ -299,7 +299,7 @@ public interface Constants {
   interface Swerve {
 
     interface Drive {
-      double ROTATION_SPEED_SCALAR = (8.0 / 12.0);
+      double ROTATION_SPEED_SCALAR = (6.0 / 12.0);
 
       interface PID {
 
@@ -324,6 +324,16 @@ public interface Constants {
         double KA = 0.0027024509;
       }
     }
+  }
+
+  interface Climb {
+    // Motor ID
+    int MOTOR_ID = 55;
+
+    int GEAR_RATIO = 25;
+
+    // Manual Speed Scalar
+    double MANUAL_SPEED_SCALAR = 0.5;
   }
 
   /* Input/Output Configuration */
