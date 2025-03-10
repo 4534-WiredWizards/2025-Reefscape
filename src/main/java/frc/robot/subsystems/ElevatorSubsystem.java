@@ -31,6 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double setpoint;
   private boolean isZeroed = false;
   private boolean isZeroing = false;
+  private boolean lookForStalled = false;
   private int stallCount = 0;
   private static final int STALL_COUNT_THRESHOLD = 10;
 
@@ -194,6 +195,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return isZeroed;
   }
 
+  public void setLookForStalled(boolean lookForStalled) {
+    this.lookForStalled = lookForStalled;
+  }
+
   @Override
   public void periodic() {
     double currentPosition = getEncoderPosition();
@@ -204,7 +209,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // Modified stall detection logic (only active during zeroing)
     boolean potentialStall = false;
-    if (isZeroing) {
+    if (isZeroing || lookForStalled) {
       potentialStall = Math.abs(voltage) > 0.1 && Math.abs(velocity) < STALL_VELOCITY_THRESHOLD;
 
       if (potentialStall) {
