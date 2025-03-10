@@ -264,6 +264,9 @@ public class Drive extends SubsystemBase {
     // Track Current Zone
     Logger.recordOutput("Drive/CurrentZone", getZone().ordinal() + 1);
 
+    // Record getMaxAngularSpeedRadPerSec
+    Logger.recordOutput("Drive/MaxAngularSpeedRadPerSec", getMaxAngularSpeedRadPerSec());
+
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.CURRENT_MODE != Mode.SIM);
   }
