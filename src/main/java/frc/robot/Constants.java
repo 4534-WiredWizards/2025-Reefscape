@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -167,12 +166,12 @@ public interface Constants {
     // PID and Feedforward Constants
     public static final double KP = 2.5; // Proportional gain
     public static final double KI = 0.0; // Integral gain
-    public static final double KD = 0.1; // Derivative gain
+    public static final double KD = 0.15; // Derivative gain
 
     // Feedforward Constants
     public static final double KS = 0.25; // Static friction compensation
-    public static final double KV = 0.60; // Velocity feedforward
-    public static final double KA = 0.06; // Acceleration feedforward //Was .12
+    public static final double KV = 0.64; // Velocity feedforward
+    public static final double KA = 0.05; // Acceleration feedforward //Was .12
     public static final double KG = 1.18; // Gravity feedforward
 
     // Motion Magic Constants
@@ -181,9 +180,9 @@ public interface Constants {
     // public static final double JERK = 600.0; // In rotations/sec³
 
     // Oh- We are going fast as HECK
-    public static final double CRUISE_VELOCITY = 128.0; // In units/sec full speed for 1s bottom to top
-    public static final double MAX_ACCELERATION = 256.0; // In units/sec²
-    public static final double JERK = 800.0; // In units/sec³
+    public static final double CRUISE_VELOCITY = 90; // In units/sec full speed for 1s bottom to top
+    public static final double MAX_ACCELERATION = 128.0; // In units/sec²
+    public static final double JERK = 600.0; // In units/sec³
 
     // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
@@ -206,9 +205,9 @@ public interface Constants {
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = 0.0;
     public static final double POSITION_L1 = 0;
-    public static final double POSITION_L2 = 18.3;
+    public static final double POSITION_L2 = 25;
     public static final double POSITION_L3 = 55;
-    public static final double POSITION_L4 = 112;
+    public static final double POSITION_L4 = 115;
     public static final double POSITION_BARGE = 127;
 
     // Manual Control Constants
@@ -271,10 +270,10 @@ public interface Constants {
     double L1_ANGLE = 136;
     double L2_ANGLE = 136;
     double L3_ANGLE = 136;
-    double L4_ANGLE = 94;
+    double L4_ANGLE = 108;
 
     // Operational Positions
-    int CORAL_INTAKE_ANGLE = 193;
+    int CORAL_INTAKE_ANGLE = 205;
     int BARGER_POSITION = 27;
     int DRIVE_POSITION = 212;
 
@@ -290,7 +289,7 @@ public interface Constants {
 
       // Intake/Outtake Speeds
       double CORAL_INTAKE_SPEED = 0.4;
-      double CORAL_OUTTAKE_SPEED = -0.5;
+      double CORAL_OUTTAKE_SPEED = -0.2;
       double ALGAE_INTAKE_SPEED = 0.1;
       double ALGAE_OUTTAKE_SPEED = -0.3;
     }
@@ -299,7 +298,7 @@ public interface Constants {
   interface Swerve {
 
     interface Drive {
-      double ROTATION_SPEED_SCALAR = (8.0 / 12.0);
+      double ROTATION_SPEED_SCALAR = (6.0 / 12.0);
 
       interface PID {
 
@@ -324,6 +323,16 @@ public interface Constants {
         double KA = 0.0027024509;
       }
     }
+  }
+
+  interface Climb {
+    // Motor ID
+    int MOTOR_ID = 55;
+
+    int GEAR_RATIO = 25;
+
+    // Manual Speed Scalar
+    double MANUAL_SPEED_SCALAR = 0.5;
   }
 
   /* Input/Output Configuration */
