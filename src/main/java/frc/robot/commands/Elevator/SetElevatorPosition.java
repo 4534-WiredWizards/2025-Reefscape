@@ -37,6 +37,12 @@ public class SetElevatorPosition extends Command {
   public void initialize() {
     double safePosition =
         Math.min(Elevator.MAX_SAFE_POS, Math.max(Elevator.MIN_SAFE_POS, m_targetPosition));
+
+    if (m_targetPosition == Elevator.POSITION_GROUND) {
+      m_elevator.setLookForStalled(true);
+    } else {
+      m_elevator.setLookForStalled(false);
+    }
     // if (m_wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
     // end(true);
     // } else {
@@ -59,11 +65,20 @@ public class SetElevatorPosition extends Command {
     if (interrupted) {
       m_elevator.stop();
       Logger.recordOutput("Elevator/Command/Interrupted", true);
+    } else if (m_targetPosition == Elevator.POSITION_GROUND) {
+      m_elevator.setZeroCommand().schedule();
     }
+
+    m_elevator.setLookForStalled(false);
   }
 
   @Override
   public boolean isFinished() {
-    return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
+    if (m_targetPosition == Elevator.POSITION_GROUND) {
+      return (stopWhenAtSetpoint
+          && (m_elevator.isAtPosition(m_targetPosition) || m_elevator.isStalled()));
+    } else {
+      return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
+    }
   }
 }

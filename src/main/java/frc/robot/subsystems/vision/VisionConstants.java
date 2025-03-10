@@ -26,7 +26,7 @@ public class VisionConstants {
   public static String camera1Name = "limelight-back";
 
   // Basic filtering thresholds
-  public static double maxAmbiguity = 0.3; //Increase if rejectiing to many
+  public static double maxAmbiguity = 0.3; // Increase if rejectiing to many
   public static double maxZError = 0.75;
 
   // Standard deviation baselines, for 1 meter distance and 1 tag
@@ -37,7 +37,7 @@ public class VisionConstants {
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
   // (lower standard deviation = higher trust)
-  public static double[] cameraStdDevFactors = 
+  public static double[] cameraStdDevFactors =
       new double[] {
         0.5, // Camera 0
         0.8 // Camera 1
