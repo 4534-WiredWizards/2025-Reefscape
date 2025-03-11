@@ -40,7 +40,14 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "WE-CoralIntake",
+      "waypointRelativePos": 0.24017488895939135,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.5,
@@ -54,7 +61,7 @@
     "rotation": -126.0
   },
   "reversed": false,
-  "folder": "Coral Station 2",
+  "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 120.22923549781876

@@ -64,7 +64,7 @@
     "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Coral Station 2",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -126.0

@@ -53,7 +53,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.0520646319569107,
+      "minWaypointRelativePos": 0.9361503322259134,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -66,7 +66,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "WE-L4",
+      "waypointRelativePos": 0.943878173828125,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.5,
@@ -80,7 +87,7 @@
     "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Coral Station 2",
+  "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -126.0

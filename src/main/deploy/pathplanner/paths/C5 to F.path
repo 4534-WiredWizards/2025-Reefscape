@@ -50,7 +50,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "WE-L4",
+      "waypointRelativePos": 0.6026629917512685,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.5,
@@ -64,7 +71,7 @@
     "rotation": 120.22923549781876
   },
   "reversed": false,
-  "folder": "Starting Moves",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 137.48955292199923

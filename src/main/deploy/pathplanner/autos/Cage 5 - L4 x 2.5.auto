@@ -5,15 +5,35 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "C5 to F"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "F to CS2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "F to CS2"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.6
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "RunCoralIntake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -26,12 +46,6 @@
           "type": "path",
           "data": {
             "pathName": "D to CS2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CS2 to C"
           }
         }
       ]

@@ -3,9 +3,7 @@
   "robotLength": 0.86995,
   "holonomicMode": true,
   "pathFolders": [
-    "Coral Station 2",
-    "Coral Station 1",
-    "Starting Moves"
+    "Done"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.0,

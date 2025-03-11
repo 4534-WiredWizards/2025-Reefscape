@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C1 to I"
+            "pathName": "C5 to F"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "I to CS1"
+            "pathName": "F to CS2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CS1 to L"
+            "pathName": "CS2 to D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L to CS1"
+            "pathName": "D to CS2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CS1 to K"
+            "pathName": "CS2 to C"
           }
         }
       ]

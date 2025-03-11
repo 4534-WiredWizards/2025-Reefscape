@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.001315789473684,
-        "y": 6.016694078947369
+        "x": 1.7400213392146826,
+        "y": 5.314290622019008
       },
       "isLocked": false,
       "linkedName": "Coral Station 1"
@@ -20,24 +20,24 @@
         "y": 5.064144736842105
       },
       "prevControl": {
-        "x": 3.0115953947368417,
-        "y": 6.3149671052631575
+        "x": 2.8274059073768427,
+        "y": 6.505621792766228
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef Post L"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7562893081760991,
+      "waypointRelativePos": 0.6355571546052632,
       "rotationDegrees": -59.99999999999999
     }
   ],
   "constraintZones": [
     {
       "name": "Slow Place",
-      "minWaypointRelativePos": 0.8366247755834829,
+      "minWaypointRelativePos": 0.7556322674418604,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -64,7 +64,7 @@
     "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "Coral Station 1",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 126.384351815836
