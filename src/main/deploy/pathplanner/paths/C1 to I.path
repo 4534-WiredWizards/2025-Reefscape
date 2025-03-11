@@ -3,41 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.183,
-        "y": 0.956
+        "x": 6.985361842105262,
+        "y": 6.988486842105263
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.183,
-        "y": 0.9559999999999995
+        "x": 5.670083606486552,
+        "y": 5.501708955013459
       },
       "isLocked": false,
-      "linkedName": "Coral Station 2"
+      "linkedName": "Starting Cage 1"
     },
     {
       "anchor": {
-        "x": 3.7037841660519173,
-        "y": 2.9814049399496247
+        "x": 5.263075657894737,
+        "y": 5.044901315789473
       },
       "prevControl": {
-        "x": 3.361070450351022,
-        "y": 2.4839172881257436
+        "x": 5.53771395036583,
+        "y": 5.333628911680524
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef Post C"
+      "linkedName": "Reef Post I"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.636363636363637,
-      "rotationDegrees": 60.54460000000001
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7728813559322029,
+      "minWaypointRelativePos": 0.47755834829443483,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -61,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -118.70595254340117
   },
   "reversed": false,
-  "folder": "Coral Station 2",
+  "folder": "Starting Moves",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -126.0
+    "rotation": -129.14398641457092
   },
   "useDefaultConstraints": true
 }
