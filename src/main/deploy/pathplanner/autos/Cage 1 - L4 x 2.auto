@@ -15,6 +15,12 @@
           "data": {
             "pathName": "I to CS1"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS1 to L"
+          }
         }
       ]
     }
