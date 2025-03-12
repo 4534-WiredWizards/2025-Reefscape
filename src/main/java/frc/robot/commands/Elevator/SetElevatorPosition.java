@@ -75,10 +75,12 @@ public class SetElevatorPosition extends Command {
 
   @Override
   public boolean isFinished() {
-    if (m_targetPosition == Elevator.POSITION_GROUND) {
-      return (stopWhenAtSetpoint && (m_elevator.isAtPosition(m_targetPosition) || m_elevator.isStalled()));
-    } else {
-      return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
-    }
+
+        return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
+    // if (m_targetPosition == Elevator.POSITION_GROUND) {
+    //   return (stopWhenAtSetpoint && (m_elevator.isAtPosition(m_targetPosition) || m_elevator.isStalled()));
+    // } else {
+    //   return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
+    // }
   }
 }
