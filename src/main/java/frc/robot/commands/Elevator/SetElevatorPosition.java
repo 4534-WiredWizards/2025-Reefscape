@@ -4,11 +4,12 @@
 
 package frc.robot.commands.Elevator;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class SetElevatorPosition extends Command {
   private final ElevatorSubsystem m_elevator;
@@ -75,8 +76,7 @@ public class SetElevatorPosition extends Command {
   @Override
   public boolean isFinished() {
     if (m_targetPosition == Elevator.POSITION_GROUND) {
-      return (stopWhenAtSetpoint
-          && (m_elevator.isAtPosition(m_targetPosition) || m_elevator.isStalled()));
+      return (stopWhenAtSetpoint && (m_elevator.isAtPosition(m_targetPosition) || m_elevator.isStalled()));
     } else {
       return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
     }
