@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -27,7 +33,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.6
+                        "waitTime": 1.7
                       }
                     },
                     {
@@ -49,9 +55,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "2R to CS2"
+            "name": "RunCoralOutake"
           }
         }
       ]

@@ -3,58 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.183,
-        "y": 0.956
+        "x": 7.01422697368421,
+        "y": 1.8889802631578947
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0198048834889977,
-        "y": 2.4969062301780935
+        "x": 6.7368026856639185,
+        "y": 2.0511967084089853
       },
       "isLocked": false,
-      "linkedName": "Coral Station 2"
+      "linkedName": "Starting Cage 5"
     },
     {
       "anchor": {
-        "x": 3.4408818493151436,
-        "y": 2.019071061647529
+        "x": 5.278,
+        "y": 2.997
       },
       "prevControl": {
-        "x": 3.2959978674203505,
-        "y": 1.8153343889783473
-      },
-      "nextControl": {
-        "x": 4.290809759849662,
-        "y": 3.2142444841084954
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.97,
-        "y": 2.8236837771285663
-      },
-      "prevControl": {
-        "x": 3.8030706842100104,
-        "y": 2.6375800331310697
+        "x": 5.714073452515839,
+        "y": 2.279798050309088
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef Post D"
+      "linkedName": "Reef Post F"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8181818181818166,
-      "rotationDegrees": 59.99999999999999
+      "waypointRelativePos": 0.5943396226415063,
+      "rotationDegrees": 125.00000000000001
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9361503322259134,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.7525423728813555,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
         "maxAcceleration": 3.0,
@@ -69,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "WE-L4",
-      "waypointRelativePos": 0.943878173828125,
+      "waypointRelativePos": 0.6026629917512685,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -83,14 +67,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 59.99999999999999
+    "velocity": 0,
+    "rotation": 120.22923549781876
   },
   "reversed": false,
-  "folder": "Done",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -126.0
+    "rotation": 137.48955292199923
   },
   "useDefaultConstraints": true
 }
