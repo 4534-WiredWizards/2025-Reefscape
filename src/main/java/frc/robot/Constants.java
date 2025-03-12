@@ -12,10 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -166,12 +167,12 @@ public interface Constants {
     // PID and Feedforward Constants
     public static final double KP = 2.5; // Proportional gain
     public static final double KI = 0.0; // Integral gain
-    public static final double KD = 0.15; // Derivative gain
+    public static final double KD = 0.1; // Derivative gain
 
     // Feedforward Constants
     public static final double KS = 0.25; // Static friction compensation
-    public static final double KV = 0.64; // Velocity feedforward
-    public static final double KA = 0.05; // Acceleration feedforward //Was .12
+    public static final double KV = 0.60; // Velocity feedforward
+    public static final double KA = 0.06; // Acceleration feedforward //Was .12
     public static final double KG = 1.18; // Gravity feedforward
 
     // Motion Magic Constants
@@ -180,9 +181,23 @@ public interface Constants {
     // public static final double JERK = 600.0; // In rotations/sec³
 
     // Oh- We are going fast as HECK
-    public static final double CRUISE_VELOCITY = 90; // In units/sec full speed for 1s bottom to top
-    public static final double MAX_ACCELERATION = 128.0; // In units/sec²
-    public static final double JERK = 600.0; // In units/sec³
+
+    public static final double CRUISE_VELOCITY = 128.0; // In units/sec full speed for 1s bottom to top
+    public static final double MAX_ACCELERATION = 256.0; // In units/sec²
+    public static final double JERK = 800.0; // In units/sec³
+
+
+   
+
+
+    // Maxs New values
+    // public static final double CRUISE_VELOCITY = 90; // In units/sec full speed for 1s bottom to top
+    // public static final double MAX_ACCELERATION = 128.0; // In units/sec²
+    // public static final double JERK = 600.0; // In units/sec³
+    // public static final double KV = 0.64; // Velocity feedforward
+    // public static final double KA = 0.05; // Acceleration feedforward //Was .12
+    // public static final double KD = 0.15; // Derivative gain
+
 
     // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
