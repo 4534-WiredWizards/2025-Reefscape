@@ -8,39 +8,55 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.06132551276524,
-        "y": 2.5481962164560183
+        "x": 6.048413245912432,
+        "y": 1.305536223521278
+      },
+      "isLocked": false,
+      "linkedName": "Starting Cage 5"
+    },
+    {
+      "anchor": {
+        "x": 3.194693282560517,
+        "y": 1.8889802631578947
+      },
+      "prevControl": {
+        "x": 3.421057570806562,
+        "y": 0.6350478801085517
+      },
+      "nextControl": {
+        "x": 2.878103775766231,
+        "y": 3.6427102255072548
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.278224176135151,
-        "y": 2.99662252722123
+        "x": 3.194693282560517,
+        "y": 3.87133801939696
       },
       "prevControl": {
-        "x": 5.989795255756812,
-        "y": 2.5166361583400976
+        "x": 3.0652397260273974,
+        "y": 3.3263056506849313
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef Post B"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5943396226415063,
-      "rotationDegrees": 125.00000000000001
+      "waypointRelativePos": 1.2,
+      "rotationDegrees": 1.2009223064625874
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.0,
-      "maxWaypointRelativePos": 0.6588868940754039,
+      "minWaypointRelativePos": 1.5661016949152529,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 1.892,
+        "maxVelocity": 0.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -53,7 +69,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -61,7 +77,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 120.22923549781876
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,

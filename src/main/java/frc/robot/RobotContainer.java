@@ -41,6 +41,7 @@ import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringPositions;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
+import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -50,6 +51,7 @@ import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ScoringQueueSubsystem;
@@ -79,7 +81,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   private final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
-  //   private final ClimbSubsystem m_climb = new ClimbSubsystem();
+  private final ClimbSubsystem m_climb = new ClimbSubsystem();
   private final ScoringQueueSubsystem m_scoringQueue;
 
   // Controller
@@ -390,8 +392,8 @@ public class RobotContainer {
                         false) // Sets wrist angle in parallel with waiting for the coral to be
                     )));
 
-    // Operatorcontroller.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.5));
-    // Operatorcontroller.a().whileTrue(new SimpleMoveClimb(m_climb, () -> 1));
+    Operatorcontroller.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.5));
+    Operatorcontroller.a().whileTrue(new SimpleMoveClimb(m_climb, () -> .3));
     // Operatorcontroller.povDown()
     // .onTrue(
     // new SequentialCommandGroup(
