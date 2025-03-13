@@ -3,58 +3,7 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": [
-        {
-          "type": "path",
-          "data": {
-            "pathName": "C5 to 3R"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "3R to CS2"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.6
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "RunCoralIntake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CS2 to 2R"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2R to CS2"
-          }
-        }
-      ]
+      "commands": []
     }
   },
   "resetOdom": true,
