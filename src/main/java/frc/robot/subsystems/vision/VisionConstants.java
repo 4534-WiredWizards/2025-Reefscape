@@ -22,29 +22,22 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "limelight-front";
+  // public static String camera0Name = "limelight-front";
   public static String camera1Name = "limelight-back";
 
+  
   // Basic filtering thresholds
-  public static double maxAmbiguity = 0.3; // Increase if rejectiing to many
-  public static double maxZError = 0.75;
+  public static double maxAmbiguity = 0.3; // Increased from 0.2
+  public static double maxZError = 0.5; // Reduced from 8 meters
 
-  // Standard deviation baselines, for 1 meter distance and 1 tag
-  // (Adjusted automatically based on distance and # of tags)
-  public static double linearStdDevBaseline = 0.01; // Meters
-  public static double angularStdDevBaseline = 0.02; // Radians
+  // Standard deviation baselines
+  public static double linearStdDevBaseline = 0.04; // Increased from 0.03
+  public static double angularStdDevBaseline = 0.1; // Increased from 0.08
 
-  // Standard deviation multipliers for each camera
-  // (Adjust to trust some cameras more than others)
-  // (lower standard deviation = higher trust)
-  public static double[] cameraStdDevFactors =
-      new double[] {
-        0.5, // Camera 0
-        0.8 // Camera 1
-      };
+  // Camera trust factors (lower = more trust)
+  public static double[] cameraStdDevFactors = new double[] {0.8, 1.0};
 
-  // Multipliers to apply for MegaTag 2 observations
-  public static double linearStdDevMegatag2Factor = 0.2; // More stable than full 3D solve
-  public static double angularStdDevMegatag2Factor =
-      Double.POSITIVE_INFINITY; // No rotation data available
+  // MegaTag2 factors
+  public static double linearStdDevMegatag2Factor = 0.7; // Was POSITIVE_INFINITY
+  public static double angularStdDevMegatag2Factor = 0.9; // Was POSITIVE_INFINITY
 }
