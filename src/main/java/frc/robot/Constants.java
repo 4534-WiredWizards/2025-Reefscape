@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -165,14 +164,14 @@ public interface Constants {
     public static final double ZEROING_VOLTAGE = 2.5;
 
     // PID and Feedforward Constants
-    public static final double KP = 2.5; // Proportional gain
+    public static final double KP = 5; // Proportional gain
     public static final double KI = 0.0; // Integral gain
-    public static final double KD = 0.1; // Derivative gain
+    // public static final double KD = 0.1; // Derivative gain
 
     // Feedforward Constants
     public static final double KS = 0.25; // Static friction compensation
-    public static final double KV = 0.60; // Velocity feedforward
-    public static final double KA = 0.06; // Acceleration feedforward //Was .12
+    // public static final double KV = 0.60; // Velocity feedforward
+    // public static final double KA = 0.06; // Acceleration feedforward //Was .12
     public static final double KG = 1.18; // Gravity feedforward
 
     // Motion Magic Constants
@@ -182,22 +181,18 @@ public interface Constants {
 
     // Oh- We are going fast as HECK
 
-    public static final double CRUISE_VELOCITY = 128.0; // In units/sec full speed for 1s bottom to top
-    public static final double MAX_ACCELERATION = 256.0; // In units/sec²
-    public static final double JERK = 800.0; // In units/sec³
-
-
-   
-
+    // public static final double CRUISE_VELOCITY =
+    //     128.0; // In units/sec full speed for 1s bottom to top
+    // public static final double MAX_ACCELERATION = 256.0; // In units/sec²
+    // public static final double JERK = 800.0; // In units/sec³
 
     // Maxs New values
-    // public static final double CRUISE_VELOCITY = 90; // In units/sec full speed for 1s bottom to top
-    // public static final double MAX_ACCELERATION = 128.0; // In units/sec²
-    // public static final double JERK = 600.0; // In units/sec³
-    // public static final double KV = 0.64; // Velocity feedforward
-    // public static final double KA = 0.05; // Acceleration feedforward //Was .12
-    // public static final double KD = 0.15; // Derivative gain
-
+    public static final double CRUISE_VELOCITY = 90; // In units/sec full speed for 1s bottom to
+    public static final double MAX_ACCELERATION = 128.0; // In units/sec²
+    public static final double JERK = 600.0; // In units/sec³
+    public static final double KV = 0.6; // Velocity feedforward
+    public static final double KA = 0.05; // Acceleration feedforward //Was .12
+    public static final double KD = 0.10; // Derivative gain
 
     // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
@@ -221,8 +216,8 @@ public interface Constants {
     public static final double POSITION_GROUND = 0.0;
     public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 25;
-    public static final double POSITION_L3 = 55;
-    public static final double POSITION_L4 = 115;
+    public static final double POSITION_L3 = 54;
+    public static final double POSITION_L4 = 120;
     public static final double POSITION_BARGE = 127;
 
     // Manual Control Constants
@@ -282,10 +277,10 @@ public interface Constants {
 
     // Preset Positions
     // Level Positions
-    double L1_ANGLE = 136;
-    double L2_ANGLE = 136;
-    double L3_ANGLE = 136;
-    double L4_ANGLE = 108;
+    double L1_ANGLE = 123;
+    double L2_ANGLE = 123;
+    double L3_ANGLE = 123;
+    double L4_ANGLE = 91;
 
     // Operational Positions
     int CORAL_INTAKE_ANGLE = 205;
