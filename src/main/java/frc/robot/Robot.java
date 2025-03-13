@@ -127,6 +127,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     // Call the robot container's init method
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
+    robotContainer.vision.resetRobotPose();
   }
 
   /** This function is called once when the robot is disabled. */

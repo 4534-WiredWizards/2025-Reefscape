@@ -18,9 +18,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
-import com.pathplanner.lib.pathfinding.Pathfinding;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -81,7 +78,7 @@ public class RobotContainer {
   // Subsystems
 
   private final Drive drive;
-  private final Vision vision;
+  public final Vision vision;
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   private final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
@@ -214,7 +211,6 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                drive::getPose,
                 // new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
         break;
@@ -228,7 +224,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        vision = new Vision(drive::addVisionMeasurement,drive::getPose,new VisionIO() {}, new VisionIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         break;
 
