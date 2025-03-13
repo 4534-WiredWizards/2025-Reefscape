@@ -18,6 +18,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
+import com.pathplanner.lib.pathfinding.Pathfinding;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -26,6 +29,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -107,6 +111,74 @@ public class RobotContainer {
     NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
     NamedCommands.registerCommand(
         "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+    NamedCommands.registerCommand(
+        "WE-CoralIntake",
+        new ConditionalCommand(
+            // If the elevator is NOT at ground position, run the full sequence
+            new SequentialCommandGroup(
+                // Step 1: Clear the elevator
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                // Step 2: Move elevator down, prepare wrist, and run intake
+                new ParallelCommandGroup(
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                    new SequentialCommandGroup(
+                        new WaitUntilCommand(
+                            () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+            // If the elevator is ALREADY at ground position, just run intake and set wrist
+            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false),
+            // The condition: Check if elevator is NOT at ground position
+            () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND)));
+
+    NamedCommands.registerCommand(
+        "WE-L1",
+        new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelDeadlineGroup(
+                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist, false),
+                new SetWristPosition(
+                    m_Wrist,
+                    Wrist.L1_ANGLE,
+                    false) // Sets wrist angle in parallel with waiting for the coral to be
+                )));
+
+    NamedCommands.registerCommand(
+        "WE-L2",
+        new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelDeadlineGroup(
+                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist, false),
+                new SetWristPosition(
+                    m_Wrist,
+                    Wrist.L2_ANGLE,
+                    false) // Sets wrist angle in parallel with waiting for the coral to be
+                )));
+    NamedCommands.registerCommand(
+        "WE-L3",
+        new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelDeadlineGroup(
+                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist, false),
+                new SetWristPosition(
+                    m_Wrist,
+                    Wrist.L3_ANGLE,
+                    false) // Sets wrist angle in parallel with waiting for the coral to be
+                )));
+    NamedCommands.registerCommand(
+        "WE-L4",
+        new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelDeadlineGroup(
+                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist, false),
+                new SetWristPosition(
+                    m_Wrist,
+                    Wrist.L4_ANGLE,
+                    false) // Sets wrist angle in parallel with waiting for the coral to be
+                )));
 
     // Event Triggers
     new EventTrigger("Elevator L4")
@@ -340,17 +412,27 @@ public class RobotContainer {
     // Operator PID control for Nuetral D-pad
     Operatorcontroller.povDown()
         .onTrue(
-            new SequentialCommandGroup(
-                // Step 1: Clear the elevator
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                // Step 2: Move elevator down, prepare wrist, and run intake
-                new ParallelDeadlineGroup(
+            new ConditionalCommand(
+                // If the elevator is NOT at ground position, run the full sequence
+                new SequentialCommandGroup(
+                    // Step 1: Clear the elevator
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                    // Step 2: Move elevator down, prepare wrist, and run intake
+                    new ParallelDeadlineGroup(
+                        new RunCoralIntake(m_Intake, true),
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                        new SequentialCommandGroup(
+                            new WaitUntilCommand(
+                                () ->
+                                    m_elevator.getEncoderPosition()
+                                        < Elevator.ELEVATOR_DANGER_LIMIT),
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                // If the elevator is ALREADY at ground position, just run intake and set wrist
+                new ParallelCommandGroup(
                     new RunCoralIntake(m_Intake, true),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
-                    new SequentialCommandGroup(
-                        new WaitUntilCommand(
-                            () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
-                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))));
+                    new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+                // The condition: Check if elevator is NOT at ground position
+                () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND)));
 
     // L2
     Operatorcontroller.povLeft()
