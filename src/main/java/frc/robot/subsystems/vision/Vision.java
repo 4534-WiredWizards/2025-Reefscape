@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,12 +21,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
   private final VisionConsumer consumer;
+  private final Drive driveSystem;
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  public Vision(VisionConsumer consumer, VisionIO... io) {
-    this.consumer = consumer;
+  public Vision(Drive driveSystem, VisionIO... io) {
+    this.driveSystem = driveSystem;
+    this.consumer = driveSystem::addVisionMeasurement; // Use the method reference here
     this.io = io;
 
     // Initialize inputs
@@ -120,7 +123,7 @@ public class Vision extends SubsystemBase {
                 || Math.abs(currentTime - observation.timestamp()) > maxTimeDifference
 
                 // Check tag distance (reject if too far)
-                || observation.averageTagDistance() > 4.0;
+                || observation.averageTagDistance() > maxTagDistance;
 
         // Add pose to log
         robotPoses.add(observation.pose());
@@ -206,11 +209,7 @@ public class Vision extends SubsystemBase {
    * This may need to be modified based on your actual consumer implementation
    */
   private Pose2d getCurrentPoseFromConsumer() {
-    if (consumer instanceof PoseProvider) {
-      return ((PoseProvider) consumer).getCurrentPose();
-    }
-    // Default to origin if consumer can't provide pose
-    return new Pose2d();
+    return driveSystem.getPose();
   }
 
   /**
@@ -218,12 +217,10 @@ public class Vision extends SubsystemBase {
    * it) This may need to be modified based on your actual consumer implementation
    */
   private double getGyroRateFromConsumer() {
-    if (consumer instanceof GyroRateProvider) {
-      return ((GyroRateProvider) consumer).getGyroRate();
-    }
-    // Default to 0 if consumer can't provide gyro rate
-    return 0.0;
+    return driveSystem.getGyroRate();
   }
+
+  /** Optional interface for consumers that can set the current pose */
 
   /** Generates a detailed rejection reason for logging */
   private String getRejectionReason(
@@ -259,30 +256,11 @@ public class Vision extends SubsystemBase {
     if (timeDifference > maxTimeDifference) {
       return "Stale data: " + timeDifference + "s old";
     }
-    if (observation.averageTagDistance() > 4.0) {
+    if (observation.averageTagDistance() > maxTagDistance) {
       return "Tags too far: " + observation.averageTagDistance() + "m";
     }
 
     return "Unknown reason";
-  }
-
-  /** Optional interface for consumers that can provide current pose */
-  public interface PoseProvider {
-    Pose2d getCurrentPose();
-  }
-
-  /** Optional interface for consumers that can provide gyro rate */
-  public interface GyroRateProvider {
-    double getGyroRate();
-  }
-
-  /** Functional interface for vision consumers */
-  @FunctionalInterface
-  public static interface VisionConsumer {
-    public void accept(
-        Pose2d visionRobotPoseMeters,
-        double timestampSeconds,
-        Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
   /**
@@ -291,6 +269,7 @@ public class Vision extends SubsystemBase {
    */
   public void resetRobotPose() {
     Logger.recordOutput("Vision/Status", "Attempting to reset pose from vision...");
+    boolean foundAnyObservations = false;
 
     for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
       if (!inputs[cameraIndex].connected) {
@@ -298,35 +277,85 @@ public class Vision extends SubsystemBase {
         continue;
       }
 
+      Logger.recordOutput(
+          "Vision/Status",
+          "Checking camera "
+              + cameraIndex
+              + " with "
+              + inputs[cameraIndex].poseObservations.length
+              + " observations");
+
       // Find best observation (most tags, closest)
       VisionIO.PoseObservation bestObservation = null;
       int maxTagCount = 0;
       double minDistance = Double.MAX_VALUE;
 
       for (var observation : inputs[cameraIndex].poseObservations) {
-        // Skip invalid observations
-        if (observation.tagCount() == 0
-            || (observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity)
-            || Math.abs(observation.pose().getZ()) > maxZError
-            || observation.pose().getX() < 0.0
-            || observation.pose().getX() > aprilTagLayout.getFieldLength()
-            || observation.pose().getY() < 0.0
-            || observation.pose().getY() > aprilTagLayout.getFieldWidth()
-            || observation.averageTagDistance() > 4.0) {
+        foundAnyObservations = true;
+        // Log each observation for debugging
+        Logger.recordOutput(
+            "Vision/ResetAttempt/Camera" + cameraIndex + "/Observation",
+            "Tags: "
+                + observation.tagCount()
+                + ", Ambiguity: "
+                + observation.ambiguity()
+                + ", Z: "
+                + observation.pose().getZ()
+                + ", Dist: "
+                + observation.averageTagDistance()
+                + ", Pose: "
+                + observation.pose().toPose2d());
+
+        // Relaxed validation criteria - only check critical issues
+        boolean isValid = true;
+        String rejectionReason = "";
+
+        // Still need at least one tag
+        if (observation.tagCount() == 0) {
+          isValid = false;
+          rejectionReason = "No tags detected";
+        }
+        // Relaxed single tag ambiguity threshold (1.5x previous value)
+        else if (observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity * 1.5) {
+          isValid = false;
+          rejectionReason = "Single tag with extreme ambiguity: " + observation.ambiguity();
+        }
+        // Still check if we're on the field, but with a small buffer outside
+        else if (observation.pose().getX() < -0.5
+            || observation.pose().getX() > aprilTagLayout.getFieldLength() + 0.5
+            || observation.pose().getY() < -0.5
+            || observation.pose().getY() > aprilTagLayout.getFieldWidth() + 0.5) {
+          isValid = false;
+          rejectionReason = "Pose far outside field: " + observation.pose().toPose2d();
+        }
+        // Relaxed Z error check (1.5x previous threshold)
+        else if (Math.abs(observation.pose().getZ()) > maxZError * 1.5) {
+          isValid = false;
+          rejectionReason = "Z error extremely high: " + observation.pose().getZ();
+        }
+        // Relaxed distance check (1.25x previous threshold)
+        else if (observation.averageTagDistance() > maxTagDistance * 1.25) {
+          isValid = false;
+          rejectionReason = "Tags very far: " + observation.averageTagDistance() + "m";
+        }
+
+        // Check if data is fresh - relaxed threshold (2x previous value)
+        double currentTime = Timer.getFPGATimestamp();
+        double timeDifference = Math.abs(currentTime - observation.timestamp());
+        if (timeDifference > maxTimeDifference * 2) {
+          isValid = false;
+          rejectionReason = "Very stale data: " + timeDifference + "s old";
+        }
+
+        if (!isValid) {
+          Logger.recordOutput(
+              "Vision/ResetAttempt/Camera" + cameraIndex + "/Rejected", rejectionReason);
           continue;
         }
 
-        // Check if data is fresh
-        double currentTime = Timer.getFPGATimestamp();
-        if (Math.abs(currentTime - observation.timestamp()) > maxTimeDifference) {
-          Logger.recordOutput(
-              "Vision/Status",
-              "Stale data for reset on Camera "
-                  + cameraIndex
-                  + ": Delta = "
-                  + (currentTime - observation.timestamp()));
-          continue;
-        }
+        Logger.recordOutput(
+            "Vision/ResetAttempt/Camera" + cameraIndex + "/Valid",
+            "Tags: " + observation.tagCount() + ", Distance: " + observation.averageTagDistance());
 
         // Prioritize by tag count, then by distance
         if (observation.tagCount() > maxTagCount
@@ -340,30 +369,37 @@ public class Vision extends SubsystemBase {
 
       // Apply best observation if found
       if (bestObservation != null) {
-        if (consumer instanceof PoseProvider) {
-          // Assuming consumer can also set the pose
-          if (consumer instanceof PoseSetter) {
-            ((PoseSetter) consumer).setPose(bestObservation.pose().toPose2d());
-            Logger.recordOutput(
-                "Vision/Status",
-                "Successfully reset pose to "
-                    + bestObservation.pose().toPose2d()
-                    + " from Camera "
-                    + cameraIndex
-                    + " with "
-                    + bestObservation.tagCount()
-                    + " tags");
-            return;
-          }
-        }
+        driveSystem.setPose(bestObservation.pose().toPose2d());
+        Logger.recordOutput(
+            "Vision/Status",
+            "Successfully reset pose to "
+                + bestObservation.pose().toPose2d()
+                + " from Camera "
+                + cameraIndex
+                + " with "
+                + bestObservation.tagCount()
+                + " tags at "
+                + bestObservation.averageTagDistance()
+                + "m distance");
+        return;
       }
     }
 
-    Logger.recordOutput("Vision/Status", "Could not reset pose: no valid vision data found.");
+    if (!foundAnyObservations) {
+      Logger.recordOutput(
+          "Vision/Status", "Could not reset pose: no vision observations available.");
+    } else {
+      Logger.recordOutput(
+          "Vision/Status",
+          "Could not reset pose: no valid vision data found. Check Vision/ResetAttempt logs for details.");
+    }
   }
 
-  /** Optional interface for consumers that can set the current pose */
-  public interface PoseSetter {
-    void setPose(Pose2d pose);
+  @FunctionalInterface
+  public static interface VisionConsumer {
+    public void accept(
+        Pose2d visionRobotPoseMeters,
+        double timestampSeconds,
+        Matrix<N3, N1> visionMeasurementStdDevs);
   }
 }

@@ -260,6 +260,11 @@ public class Drive extends SubsystemBase {
 
     Logger.recordOutput("Odometry/EstimatedX", poseEstimator.getEstimatedPosition().getX());
     Logger.recordOutput("Odometry/EstimatedY", poseEstimator.getEstimatedPosition().getY());
+    // Record yaw drive.getRotation()
+    Logger.recordOutput(
+        "Odometry/EstimatedYaw", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+    // Raw rotation from getRotation()
+    Logger.recordOutput("Odometry/EstimatedYawRaw", getRotation().getDegrees());
 
     // Track Current Zone
     Logger.recordOutput("Drive/CurrentZone", getZone().ordinal() + 1);
@@ -418,12 +423,15 @@ public class Drive extends SubsystemBase {
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
-    return getPose().getRotation();
+    // return getPose().getRotation().plus(Rotation2d.fromDegrees(180));
+    return getPose().getRotation(); // Try adding 180 if megatag is getting wrong value reading
   }
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
+    // This method already exists in Drive, no need to change the implementation
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+    Logger.recordOutput("Drive/SetPoseFromVision", pose);
   }
 
   // Reset gyro function from gyroIO.reset
