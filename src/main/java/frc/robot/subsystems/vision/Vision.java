@@ -26,18 +26,25 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
+
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.struct.Pose2dStruct;
 
 public class Vision extends SubsystemBase {
   private final VisionConsumer consumer;
+  private final Supplier<Pose2d> poseSupplier;
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  public Vision(VisionConsumer consumer, VisionIO... io) {
+  public Vision(VisionConsumer consumer, Supplier<Pose2d> poseSupplier, VisionIO... io) {
     this.consumer = consumer;
+    this.poseSupplier = poseSupplier;
     this.io = io;
 
     // Initialize inputs
@@ -96,21 +103,17 @@ public class Vision extends SubsystemBase {
         }
       }
 
-      // Loop over pose observations
       for (var observation : inputs[cameraIndex].poseObservations) {
         // Check whether to reject pose
-        boolean rejectPose =
-            observation.tagCount() == 0 // Must have at least one tag
-                || (observation.tagCount() == 1
-                    && observation.ambiguity() > maxAmbiguity) // Cannot be high ambiguity
-                || Math.abs(observation.pose().getZ())
-                    > maxZError // Must have realistic Z coordinate
 
-                // Must be within the field boundaries
-                || observation.pose().getX() < 0.0
-                || observation.pose().getX() > aprilTagLayout.getFieldLength()
-                || observation.pose().getY() < 0.0
-                || observation.pose().getY() > aprilTagLayout.getFieldWidth();
+        Pose2d currentEstimate = poseSupplier.get(); // You'll need to add this method
+
+        boolean rejectPose = observation.tagCount() == 0
+        || (observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity)
+        || Math.abs(observation.pose().getZ()) > maxZError
+        || !isPoseInField(observation.pose())
+        || isTooFarFromCurrentEstimate(currentEstimate, observation.pose())
+        || isRotatingTooFast();
 
         // Add pose to log
         robotPoses.add(observation.pose());
@@ -175,6 +178,22 @@ public class Vision extends SubsystemBase {
     Logger.recordOutput(
         "Vision/Summary/RobotPosesRejected",
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+  }
+
+  private boolean isPoseInField(Pose3d pose) {
+    return pose.getX() >= 0.0
+        && pose.getX() <= aprilTagLayout.getFieldLength()
+        && pose.getY() >= 0.0
+        && pose.getY() <= aprilTagLayout.getFieldWidth();
+  }
+
+  private boolean isTooFarFromCurrentEstimate(Pose2d currentEstimate, Pose3d visionPose) {
+    return currentEstimate.getTranslation()
+        .getDistance(visionPose.toPose2d().getTranslation()) > 1.5; // 1.5 meter threshold
+  }
+
+  private boolean isRotatingTooFast() {
+    return Math.abs(gyroRate.get()) > Math.toRadians(720); // 720 degrees/sec threshold
   }
 
   @FunctionalInterface
