@@ -1,11 +1,15 @@
 package frc.robot;
 
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,6 +34,7 @@ import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveToPath;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.ManualPoseSetter;
@@ -101,19 +106,19 @@ private PathPlannerPath Z6L;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     try {
-        Z1R = PathPlannerPath.fromPathFile("1R");
+        // Z1R = PathPlannerPath.fromPathFile("1R");
         Z1L = PathPlannerPath.fromPathFile("1L");
-        Z2R = PathPlannerPath.fromPathFile("2R");
-        Z2L = PathPlannerPath.fromPathFile("2L");
-        Z3R = PathPlannerPath.fromPathFile("3R");
-        Z3L = PathPlannerPath.fromPathFile("3L");
-        Z4R = PathPlannerPath.fromPathFile("4R");
-        Z4L = PathPlannerPath.fromPathFile("4L");
-        Z5R = PathPlannerPath.fromPathFile("5R");
-        Z5L = PathPlannerPath.fromPathFile("5L");
-        Z6R = PathPlannerPath.fromPathFile("6R");
-        Z6L = PathPlannerPath.fromPathFile("6L");
-    } catch (Exception e) {
+        // Z2R = PathPlannerPath.fromPathFile("2R");
+        // Z2L = PathPlannerPath.fromPathFile("2L");
+        // Z3R = PathPlannerPath.fromPathFile("3R");
+        // Z3L = PathPlannerPath.fromPathFile("3L");
+        // Z4R = PathPlannerPath.fromPathFile("4R");
+        // Z4L = PathPlannerPath.fromPathFile("4L");
+        // Z5R = PathPlannerPath.fromPathFile("5R");
+        // Z5L = PathPlannerPath.fromPathFile("5L");
+        // Z6R = PathPlannerPath.fromPathFile("6R");
+        // Z6L = PathPlannerPath.fromPathFile("6L");
+    } catch (FileVersionException | IOException | ParseException e) {
         Z1R = null;
         Z1L = null;
         Z2R = null;
@@ -391,7 +396,8 @@ private PathPlannerPath Z6L;
     //     "TestDrive/CoralStation2",
     //     new DriveToPoint(drive, new Pose2d(1.183, 0.956, new Rotation2d(Math.toRadians(234)))));
 
-    SmartDashboard.putData("TestDrive/Zone1/Right", )
+    SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPath(drive, Z1L));
+    
   }
 
   /** Configure button bindings for driver and operator controls */
