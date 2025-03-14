@@ -19,6 +19,18 @@
         {
           "type": "path",
           "data": {
+            "pathName": "3R to CS2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "CS2 to 2R"
           }
         },

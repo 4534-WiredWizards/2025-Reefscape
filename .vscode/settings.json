@@ -1,6 +1,7 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.server.launchMode": "Standard",
+  "liveshare.languages.allowGuestCommandControl": true,
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,

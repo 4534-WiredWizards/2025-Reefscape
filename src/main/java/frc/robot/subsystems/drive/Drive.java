@@ -326,12 +326,17 @@ public class Drive extends SubsystemBase {
   }
 
   /** Determines which side of a line a point lies on */
-  private double getSideOfLine(double x, double y, double slope) {
+  private double getSideOfLine(double x, double y, double slope, boolean isRedAlliance) {
+    double centerX =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_X : FieldPosition.Blue.Reef.CENTER_X;
+    double centerY =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_Y : FieldPosition.Blue.Reef.CENTER_Y;
+
     if (Double.isInfinite(slope)) {
-      return x - FieldPosition.Blue.Reef.CENTER_X; // Vertical line case
+      return x - centerX; // Vertical line case
     }
-    double relX = x - FieldPosition.Blue.Reef.CENTER_X;
-    double relY = y - FieldPosition.Blue.Reef.CENTER_Y;
+    double relX = x - centerX;
+    double relY = y - centerY;
     return relY - slope * relX;
   }
 
@@ -341,17 +346,32 @@ public class Drive extends SubsystemBase {
     double x = pose.getX();
     double y = pose.getY();
 
+    // Determine alliance
+    boolean isRedAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+
     boolean[] sides = new boolean[3];
     for (int i = 0; i < 3; i++) {
-      sides[i] = getSideOfLine(x, y, lineSlopes[i]) > 0;
+      sides[i] = getSideOfLine(x, y, lineSlopes[i], isRedAlliance) > 0;
     }
 
-    if (sides[0]) { // Right of vertical
-      if (sides[1]) return ReefZone.ZONE_5;
-      else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
-    } else { // Left of vertical
-      if (sides[2]) return ReefZone.ZONE_6;
-      else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+    if (isRedAlliance) {
+      // For Red alliance, we need to adjust the zone mapping since the field is mirrored
+      if (!sides[0]) { // Left of vertical (mirrored from Blue)
+        if (sides[1]) return ReefZone.ZONE_5;
+        else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
+      } else { // Right of vertical (mirrored from Blue)
+        if (sides[2]) return ReefZone.ZONE_6;
+        else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+      }
+    } else {
+      // Original Blue alliance logic
+      if (sides[0]) { // Right of vertical
+        if (sides[1]) return ReefZone.ZONE_5;
+        else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
+      } else { // Left of vertical
+        if (sides[2]) return ReefZone.ZONE_6;
+        else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+      }
     }
   }
 
