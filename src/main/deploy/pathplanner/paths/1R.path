@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 2.498409469854793,
-        "y": 4.17
+        "y": 3.871
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.3951653671940187,
-        "y": 4.17
+        "y": 3.871
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.197,
-        "y": 4.17
+        "x": 3.194693282560517,
+        "y": 3.871
       },
       "prevControl": {
-        "x": 2.8578886768501532,
-        "y": 4.172514096334223
+        "x": 2.8555819594106704,
+        "y": 3.873514096334223
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef Post 1R"
     }
   ],
   "rotationTargets": [],
