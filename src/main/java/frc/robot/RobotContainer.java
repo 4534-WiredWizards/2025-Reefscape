@@ -18,6 +18,7 @@ import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -331,6 +332,10 @@ public class RobotContainer {
     SmartDashboard.putData(
         "TestDrive/Zone3/Right",
         new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_3, ScoringSide.RIGHT)));
+
+    SmartDashboard.putData(
+        "TestDrive/CoralStation2",
+        new DriveToPoint(drive, new Pose2d(1.183, 0.956, new Rotation2d(Math.toRadians(234)))));
 
     // Out because next to pool :(
     // SmartDashboard.putData("TestDrive/Zone4/Left", new DriveToPoint(drive, targetPose4Left));
