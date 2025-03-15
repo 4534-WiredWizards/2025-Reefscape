@@ -155,7 +155,7 @@ public interface Constants {
     public static final int RIGHT_MOTOR_ID = 52; // Adjust as needed
 
     // Elevator Position Limits
-    public static final double MAX_SAFE_POS = 128.0; // Maximum safe position (adjust as needed)
+    public static final double MAX_SAFE_POS = 71.0; // Maximum safe position (adjust as needed)
     public static final double MIN_SAFE_POS = 0; // Minimum safe position (adjust as needed)
 
     // Voltage Limits
@@ -215,10 +215,10 @@ public interface Constants {
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = 0.0;
     public static final double POSITION_L1 = 0;
-    public static final double POSITION_L2 = 25;
-    public static final double POSITION_L3 = 54;
-    public static final double POSITION_L4 = 120;
-    public static final double POSITION_BARGE = 127;
+    public static final double POSITION_L2 = 13.8;
+    public static final double POSITION_L3 = 30;
+    public static final double POSITION_L4 = 66.6;
+    public static final double POSITION_BARGE = 70;
 
     // Manual Control Constants
     public static final double MANUAL_SPEED = 0.4; // Speed for manual control
