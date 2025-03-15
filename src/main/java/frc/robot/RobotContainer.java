@@ -1,16 +1,13 @@
 package frc.robot;
 
-import java.io.IOException;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -56,10 +53,11 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -84,9 +82,8 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  //Scoring Position
-  private EventTrigger ScoreInRequestedPosition;
-
+  // Scoring Position
+  private EventTrigger MoveToRequestedPosition;
 
   private PathPlannerPath Z1R;
   private PathPlannerPath Z1L;
@@ -272,8 +269,9 @@ public class RobotContainer {
   /** Configure event triggers for PathPlanner */
   private void configureEventTriggers() {
     // Elevator level events
-    EventTrigger ScoreInRequestedPosition = new EventTrigger("ScoreInRequestedPosition");
-    // ScoreInRequestedPosition.whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
+    MoveToRequestedPosition = new EventTrigger("ScoreInRequestedPosition");
+    // Basic connsole log instance command saying no value set
+    MoveToRequestedPosition.whileTrue(new InstantCommand(() -> System.out.println("No value set")));
 
     // Commands to move wrist and elevator to the scoring position
     new EventTrigger("WE-CoralIntake")
@@ -298,8 +296,7 @@ public class RobotContainer {
                     new RunCoralIntake(m_Intake, true),
                     new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
                 // The condition: Check if elevator is NOT at ground position
-        () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND)));
-
+                () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND)));
 
     new EventTrigger("WE-L1")
         .whileTrue(
@@ -318,7 +315,7 @@ public class RobotContainer {
                     new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
                     new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))));
-    
+
     new EventTrigger("WE-L3")
         .whileTrue(
             new SequentialCommandGroup(
@@ -357,10 +354,14 @@ public class RobotContainer {
 
     // Coral intake event
     new EventTrigger("RunCoralIntake").whileTrue(new RunCoralIntake(m_Intake, true));
-    new EventTrigger("RunCoralOutake").whileTrue(new RunCoralOutake(m_Intake).andThen(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+    new EventTrigger("RunCoralOutake")
+        .whileTrue(
+            new RunCoralOutake(m_Intake)
+                .andThen(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
     // Basic Intake/Outake events
-    new EventTrigger("AW-Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+    new EventTrigger("AW-Outake")
+        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
     new EventTrigger("AW-Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
   }
 
@@ -449,27 +450,23 @@ public class RobotContainer {
     // SmartDashboard.putData(
     //     "TestDrive/Zone1/Left",
     //     new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_1, ScoringSide.LEFT)));
-    // SmartDashboard.putData(
-    //     "TestDrive/Zone1/Right",
-    //     new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_1, ScoringSide.RIGHT)));
-    // SmartDashboard.putData(
-    //     "TestDrive/Zone2/Left",
-    //     new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_2, ScoringSide.LEFT)));
-    // SmartDashboard.putData(
-    //     "TestDrive/Zone2/Right",
-    //     new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_2, ScoringSide.RIGHT)));
-    // SmartDashboard.putData(
-    //     "TestDrive/Zone3/Left",
-    //     new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_3, ScoringSide.LEFT)));
-    // SmartDashboard.putData(
-    //     "TestDrive/Zone3/Right",
-    //     new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_3, ScoringSide.RIGHT)));
-    // SmartDashboard.putData(
-    //     "TestDrive/CoralStation2",
-    //     new DriveToPoint(drive, new Pose2d(1.183, 0.956, new Rotation2d(Math.toRadians(234)))));
 
-    SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPath(drive, Z1L));
-    SmartDashboard.putData("TestDrive/Zone1/Left", new DriveToPath(drive, Z1R));
+    SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPath(drive, Z1R));
+    SmartDashboard.putData(
+        "TestDrive/Zone1/Left",
+        new SequentialCommandGroup(
+            new InstantCommand(
+                () ->
+                    MoveToRequestedPosition.onTrue(
+                        new SequentialCommandGroup(
+                            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                            new ParallelDeadlineGroup(
+                                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                                new SetElevatorPosition(
+                                    m_elevator, Elevator.POSITION_L4, m_Wrist, false),
+                                new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false))))),
+            new DriveToPath(drive, Z1L)));
+
     SmartDashboard.putData("TestDrive/Zone2/Right", new DriveToPath(drive, Z2L));
     SmartDashboard.putData("TestDrive/Zone2/Left", new DriveToPath(drive, Z2R));
     SmartDashboard.putData("TestDrive/Zone3/Right", new DriveToPath(drive, Z3L));
