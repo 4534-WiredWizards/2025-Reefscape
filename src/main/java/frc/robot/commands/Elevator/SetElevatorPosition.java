@@ -4,30 +4,73 @@
 
 package frc.robot.commands.Elevator;
 
+import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class SetElevatorPosition extends Command {
   private final ElevatorSubsystem m_elevator;
-  private final double m_targetPosition;
+  private final DoubleSupplier m_targetPositionSupplier;
   private final boolean stopWhenAtSetpoint;
   private final WristSubsystem m_wrist;
+  private double m_targetPosition;
 
+  /**
+   * Creates a SetElevatorPosition command with a fixed target position.
+   * @param elevator The elevator subsystem
+   * @param targetPosition The fixed target position
+   * @param wrist The wrist subsystem
+   */
   public SetElevatorPosition(
       ElevatorSubsystem elevator, double targetPosition, WristSubsystem wrist) {
     this(elevator, targetPosition, wrist, true); // Default stopWhenAtSetpoint to true
   }
 
+  /**
+   * Creates a SetElevatorPosition command with a fixed target position.
+   * @param elevator The elevator subsystem
+   * @param targetPosition The fixed target position
+   * @param wrist The wrist subsystem
+   * @param stopWhenAtSetpoint Whether to stop when the setpoint is reached
+   */
   public SetElevatorPosition(
       ElevatorSubsystem elevator,
       double targetPosition,
       WristSubsystem wrist,
       boolean stopWhenAtSetpoint) {
+    this(elevator, () -> targetPosition, wrist, stopWhenAtSetpoint);
+  }
+
+  /**
+   * Creates a SetElevatorPosition command with a dynamic target position supplier.
+   * @param elevator The elevator subsystem
+   * @param targetPositionSupplier Supplier for the target position
+   * @param wrist The wrist subsystem
+   */
+  public SetElevatorPosition(
+      ElevatorSubsystem elevator, DoubleSupplier targetPositionSupplier, WristSubsystem wrist) {
+    this(elevator, targetPositionSupplier, wrist, true); // Default stopWhenAtSetpoint to true
+  }
+
+  /**
+   * Creates a SetElevatorPosition command with a dynamic target position supplier.
+   * @param elevator The elevator subsystem
+   * @param targetPositionSupplier Supplier for the target position
+   * @param wrist The wrist subsystem
+   * @param stopWhenAtSetpoint Whether to stop when the setpoint is reached
+   */
+  public SetElevatorPosition(
+      ElevatorSubsystem elevator,
+      DoubleSupplier targetPositionSupplier,
+      WristSubsystem wrist,
+      boolean stopWhenAtSetpoint) {
     this.m_elevator = elevator;
-    this.m_targetPosition = targetPosition;
+    this.m_targetPositionSupplier = targetPositionSupplier;
     this.stopWhenAtSetpoint = stopWhenAtSetpoint;
     this.m_wrist = wrist;
     addRequirements(elevator);
@@ -35,6 +78,9 @@ public class SetElevatorPosition extends Command {
 
   @Override
   public void initialize() {
+    // Get the current target position from the supplier at initialization time
+    m_targetPosition = m_targetPositionSupplier.getAsDouble();
+    
     double safePosition =
         Math.min(Elevator.MAX_SAFE_POS, Math.max(Elevator.MIN_SAFE_POS, m_targetPosition));
 
@@ -43,11 +89,8 @@ public class SetElevatorPosition extends Command {
     } else {
       m_elevator.setLookForStalled(false);
     }
-    // if (m_wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
-    // end(true);
-    // } else {
+    
     m_elevator.setPosition(safePosition);
-    // }
   }
 
   @Override
@@ -74,12 +117,8 @@ public class SetElevatorPosition extends Command {
 
   @Override
   public boolean isFinished() {
-    // return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
     if (m_targetPosition == Elevator.POSITION_GROUND) {
-      return (stopWhenAtSetpoint
-          && (m_elevator.isAtPosition(
-              m_targetPosition))); // Removed || m_elevator.isStalled() because was stalling when
-      // doing the move imidieatly
+      return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
     } else {
       return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
     }
