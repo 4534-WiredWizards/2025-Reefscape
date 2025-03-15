@@ -103,7 +103,6 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
 
   // Scoring Position
-  private EventTrigger MoveToRequestedPosition;
 
   private PathPlannerPath Z1R;
   private PathPlannerPath Z1L;
@@ -289,7 +288,7 @@ public class RobotContainer {
   /** Configure event triggers for PathPlanner */
   private void configureEventTriggers() {
     // Elevator level events
-    new EventTrigger("ScoreInRequestedPosition")
+    new EventTrigger("MoveToRequestedPosition")
         .onTrue(
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
@@ -384,8 +383,9 @@ public class RobotContainer {
     // Coral intake event
     new EventTrigger("RunCoralIntake").whileTrue(new RunCoralIntake(m_Intake, true));
     new EventTrigger("RunCoralOutake")
-        .whileTrue(
+        .onTrue(
             new RunCoralOutake(m_Intake)
+                .withTimeout(1)
                 .andThen(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
     // Basic Intake/Outake events
@@ -485,8 +485,7 @@ public class RobotContainer {
         "TestDrive/Zone1/LeftL4",
         new SequentialCommandGroup(
             new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
-            new DriveToPath(drive, Z1L),
-            new RunCoralOutake(m_Intake)));
+            new DriveToPath(drive, Z1L)));
 
     SmartDashboard.putData("TestDrive/Zone2/Right", new DriveToPath(drive, Z2L));
     SmartDashboard.putData("TestDrive/Zone2/Left", new DriveToPath(drive, Z2R));
