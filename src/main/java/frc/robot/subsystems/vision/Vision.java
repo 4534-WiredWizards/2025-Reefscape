@@ -11,8 +11,11 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ReefZone;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.LinkedList;
@@ -57,6 +60,17 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // Get current zone for tag filtering
+    ReefZone currentZone = driveSystem.getZone();
+    boolean isRedAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+    
+    // Get the tag ID for the current zone
+    Integer currentZoneTagId = isRedAlliance ? RED_ZONE_PRIMARY_TAGS.get(currentZone) : BLUE_ZONE_PRIMARY_TAGS.get(currentZone);
+    
+    // Log the current zone and tag
+    Logger.recordOutput("Vision/CurrentZone", currentZone.toString());
+    Logger.recordOutput("Vision/CurrentZoneTagId", currentZoneTagId != null ? currentZoneTagId : -1);
+    
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
@@ -83,8 +97,14 @@ public class Vision extends SubsystemBase {
       List<Pose3d> robotPosesAccepted = new LinkedList<>();
       List<Pose3d> robotPosesRejected = new LinkedList<>();
 
-      // Add tag poses
+      // Add tag poses - ONLY add tags that match the current zone's tag ID
       for (int tagId : inputs[cameraIndex].tagIds) {
+        // Skip tags that don't match the current zone's tag
+        if (currentZoneTagId != null && tagId != currentZoneTagId) {
+          Logger.recordOutput("Vision/SkippedTag", tagId);
+          continue;
+        }
+        
         var tagPose = aprilTagLayout.getTagPose(tagId);
         if (tagPose.isPresent()) {
           tagPoses.add(tagPose.get());
@@ -219,8 +239,6 @@ public class Vision extends SubsystemBase {
   private double getGyroRateFromConsumer() {
     return driveSystem.getGyroRate();
   }
-
-  /** Optional interface for consumers that can set the current pose */
 
   /** Generates a detailed rejection reason for logging */
   private String getRejectionReason(
