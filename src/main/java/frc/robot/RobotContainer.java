@@ -227,6 +227,9 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
 
+    // RunCoralIntake
+    NamedCommands.registerCommand("RunCoralIntake", new RunCoralIntake(m_Intake, true));
+
     // Complex WE-CoralIntake command for intake with elevator coordination
     NamedCommands.registerCommand(
         "WE-CoralIntake",
@@ -382,11 +385,7 @@ public class RobotContainer {
 
     // Coral intake event
     new EventTrigger("RunCoralIntake").whileTrue(new RunCoralIntake(m_Intake, true));
-    new EventTrigger("RunCoralOutake")
-        .onTrue(
-            new RunCoralOutake(m_Intake)
-                .withTimeout(1)
-                .andThen(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+    new EventTrigger("RunCoralOutake").whileTrue(new RunCoralOutake(m_Intake).withTimeout(1.0));
 
     // Basic Intake/Outake events
     new EventTrigger("AW-Outake")

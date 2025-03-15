@@ -9,6 +9,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class RunCoralOutake extends Command {
   private final IntakeSubsystem intakeSubsystem;
+  private boolean wasCoralDetected = false;
 
   public RunCoralOutake(IntakeSubsystem intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
@@ -18,11 +19,11 @@ public class RunCoralOutake extends Command {
   @Override
   public void initialize() {
     intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
+    wasCoralDetected = intakeSubsystem.getSecondSensor();
   }
 
   @Override
   public void execute() {
-    // Continuously set roller speed in case of interruption
     intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
   }
 
@@ -33,7 +34,7 @@ public class RunCoralOutake extends Command {
 
   @Override
   public boolean isFinished() {
-    // Stop command when the coral is no longer detected
-    return !intakeSubsystem.getSecondSensor();
+    // Only finish if coral was initially detected AND is now gone
+    return wasCoralDetected && !intakeSubsystem.getSecondSensor();
   }
 }

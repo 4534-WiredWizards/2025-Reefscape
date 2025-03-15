@@ -11,6 +11,25 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "WE-CoralIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunCoralIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Dem2"
