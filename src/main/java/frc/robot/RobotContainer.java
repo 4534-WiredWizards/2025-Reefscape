@@ -108,16 +108,16 @@ private PathPlannerPath Z6L;
     try {
         // Z1R = PathPlannerPath.fromPathFile("1R");
         Z1L = PathPlannerPath.fromPathFile("1L");
-        // Z2R = PathPlannerPath.fromPathFile("2R");
-        // Z2L = PathPlannerPath.fromPathFile("2L");
-        // Z3R = PathPlannerPath.fromPathFile("3R");
-        // Z3L = PathPlannerPath.fromPathFile("3L");
-        // Z4R = PathPlannerPath.fromPathFile("4R");
-        // Z4L = PathPlannerPath.fromPathFile("4L");
-        // Z5R = PathPlannerPath.fromPathFile("5R");
-        // Z5L = PathPlannerPath.fromPathFile("5L");
-        // Z6R = PathPlannerPath.fromPathFile("6R");
-        // Z6L = PathPlannerPath.fromPathFile("6L");
+        Z2R = PathPlannerPath.fromPathFile("2R");
+        Z2L = PathPlannerPath.fromPathFile("2L");
+        Z3R = PathPlannerPath.fromPathFile("3R");
+        Z3L = PathPlannerPath.fromPathFile("3L");
+        Z4R = PathPlannerPath.fromPathFile("4R");
+        Z4L = PathPlannerPath.fromPathFile("4L");
+        Z5R = PathPlannerPath.fromPathFile("5R");
+        Z5L = PathPlannerPath.fromPathFile("5L");
+        Z6R = PathPlannerPath.fromPathFile("6R");
+        Z6L = PathPlannerPath.fromPathFile("6L");
     } catch (FileVersionException | IOException | ParseException e) {
         Z1R = null;
         Z1L = null;
