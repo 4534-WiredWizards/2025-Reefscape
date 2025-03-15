@@ -63,14 +63,18 @@ public class Vision extends SubsystemBase {
     // Get current zone for tag filtering
     ReefZone currentZone = driveSystem.getZone();
     boolean isRedAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
-    
+
     // Get the tag ID for the current zone
-    Integer currentZoneTagId = isRedAlliance ? RED_ZONE_PRIMARY_TAGS.get(currentZone) : BLUE_ZONE_PRIMARY_TAGS.get(currentZone);
-    
+    Integer currentZoneTagId =
+        isRedAlliance
+            ? RED_ZONE_PRIMARY_TAGS.get(currentZone)
+            : BLUE_ZONE_PRIMARY_TAGS.get(currentZone);
+
     // Log the current zone and tag
     Logger.recordOutput("Vision/CurrentZone", currentZone.toString());
-    Logger.recordOutput("Vision/CurrentZoneTagId", currentZoneTagId != null ? currentZoneTagId : -1);
-    
+    Logger.recordOutput(
+        "Vision/CurrentZoneTagId", currentZoneTagId != null ? currentZoneTagId : -1);
+
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
@@ -104,7 +108,7 @@ public class Vision extends SubsystemBase {
           Logger.recordOutput("Vision/SkippedTag", tagId);
           continue;
         }
-        
+
         var tagPose = aprilTagLayout.getTagPose(tagId);
         if (tagPose.isPresent()) {
           tagPoses.add(tagPose.get());
