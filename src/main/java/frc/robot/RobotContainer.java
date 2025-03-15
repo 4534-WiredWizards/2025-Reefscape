@@ -1,16 +1,13 @@
 package frc.robot;
 
-import java.io.IOException;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -56,10 +53,12 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -81,25 +80,24 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(0);
   private final Joystick driverJoystick = new Joystick(1);
 
-  //Requested Postion
+  // Requested Postion
   private double targetElevatorPosition = Elevator.POSITION_L1;
   private double targetWristAngle = Wrist.L1_ANGLE;
 
-   
-    // Setter method for updating the target positions
-    public void setTargetPositions(double elevatorPosition, double wristAngle) {
-        this.targetElevatorPosition = elevatorPosition;
-        this.targetWristAngle = wristAngle;
-    }
+  // Setter method for updating the target positions
+  public void setTargetPositions(double elevatorPosition, double wristAngle) {
+    this.targetElevatorPosition = elevatorPosition;
+    this.targetWristAngle = wristAngle;
+  }
 
-    // Getter methods that can be referenced by commands
-    public double getTargetElevatorPosition() {
-        return targetElevatorPosition;
-    }
+  // Getter methods that can be referenced by commands
+  public double getTargetElevatorPosition() {
+    return targetElevatorPosition;
+  }
 
-    public double getTargetWristAngle() {
-        return targetWristAngle;
-    }
+  public double getTargetWristAngle() {
+    return targetWristAngle;
+  }
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -291,21 +289,19 @@ public class RobotContainer {
   /** Configure event triggers for PathPlanner */
   private void configureEventTriggers() {
     // Elevator level events
-    new EventTrigger("ScoreInRequestedPosition").onTrue(
-        new SequentialCommandGroup(
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-            new ParallelDeadlineGroup(
-                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                new SetElevatorPosition(
-                    m_elevator, 
-                    () -> targetElevatorPosition, // Lambda expression that returns the current value
-                    m_Wrist, 
-                    false
-                ),
-                new SetWristPosition(m_Wrist, this::getTargetWristAngle, false)
-            )
-        )
-    )
+    new EventTrigger("ScoreInRequestedPosition")
+        .onTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelDeadlineGroup(
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(
+                        m_elevator,
+                        () -> targetElevatorPosition, // Lambda expression that returns the current
+                        // value
+                        m_Wrist,
+                        false),
+                    new SetWristPosition(m_Wrist, this::getTargetWristAngle, false))));
     // Commands to move wrist and elevator to the scoring position
     new EventTrigger("WE-CoralIntake")
         .onTrue(
@@ -486,19 +482,11 @@ public class RobotContainer {
 
     SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPath(drive, Z1R));
     SmartDashboard.putData(
-        "TestDrive/Zone1/Left",
+        "TestDrive/Zone1/LeftL4",
         new SequentialCommandGroup(
-            new InstantCommand(
-                () ->
-                    MoveToRequestedPosition.onTrue(
-                        new SequentialCommandGroup(
-                            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                            new ParallelDeadlineGroup(
-                                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                                new SetElevatorPosition(
-                                    m_elevator, Elevator.POSITION_L4, m_Wrist, false),
-                                new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false))))),
-            new DriveToPath(drive, Z1L)));
+            new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
+            new DriveToPath(drive, Z1L),
+            new RunCoralOutake(m_Intake)));
 
     SmartDashboard.putData("TestDrive/Zone2/Right", new DriveToPath(drive, Z2L));
     SmartDashboard.putData("TestDrive/Zone2/Left", new DriveToPath(drive, Z2R));
@@ -677,5 +665,9 @@ public class RobotContainer {
 
     // Display current zone
     SmartDashboard.putNumber("Drive/CurrentZone", drive.getZone().ordinal() + 1);
+
+    // Log current requested position
+    Logger.recordOutput("Targets/ElevatorPosition", targetElevatorPosition);
+    Logger.recordOutput("Targets/WristAngle", targetWristAngle);
   }
 }

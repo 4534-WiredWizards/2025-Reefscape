@@ -3,13 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.commands.Wrist;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.WristSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SetWristPosition extends Command {
   private final WristSubsystem m_wrist;
@@ -17,7 +15,9 @@ public class SetWristPosition extends Command {
   private final boolean stopWhenAtSetpoint;
   private double targetPosition;
 
-  /** Creates a new SetWristPosition with a fixed target and stopWhenAtSetpoint defaulting to true. */
+  /**
+   * Creates a new SetWristPosition with a fixed target and stopWhenAtSetpoint defaulting to true.
+   */
   public SetWristPosition(WristSubsystem m_wrist, double targetPosition) {
     this(m_wrist, targetPosition, true); // Default stopWhenAtSetpoint to true
   }
@@ -27,13 +27,19 @@ public class SetWristPosition extends Command {
       WristSubsystem m_wrist, double targetPosition, boolean stopWhenAtSetpoint) {
     this(m_wrist, () -> targetPosition, stopWhenAtSetpoint);
   }
-  
-  /** Creates a new SetWristPosition with a dynamic target supplier and stopWhenAtSetpoint defaulting to true. */
+
+  /**
+   * Creates a new SetWristPosition with a dynamic target supplier and stopWhenAtSetpoint defaulting
+   * to true.
+   */
   public SetWristPosition(WristSubsystem m_wrist, DoubleSupplier targetPositionSupplier) {
     this(m_wrist, targetPositionSupplier, true); // Default stopWhenAtSetpoint to true
   }
 
-  /** Creates a new SetWristPosition with a dynamic target supplier and specified stopWhenAtSetpoint value. */
+  /**
+   * Creates a new SetWristPosition with a dynamic target supplier and specified stopWhenAtSetpoint
+   * value.
+   */
   public SetWristPosition(
       WristSubsystem m_wrist, DoubleSupplier targetPositionSupplier, boolean stopWhenAtSetpoint) {
     this.m_wrist = m_wrist;
@@ -47,7 +53,7 @@ public class SetWristPosition extends Command {
   public void initialize() {
     // Get the current target position from the supplier at initialization time
     targetPosition = targetPositionSupplier.getAsDouble();
-    
+
     System.out.println("SetWristPosition initialized, target angle: " + targetPosition);
     double safePosition =
         Math.min(Wrist.MAX_SAFE_ANGLE, Math.max(Wrist.MIN_SAFE_ANGLE, targetPosition));

@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -201,7 +200,8 @@ public interface Constants {
 
     // Conversion factors
     // Conversion factors (recalculated based on new measurements)
-    public static final double ROTATIONS_TO_INCHES = (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO; // ~0.9896 in/rot
+    public static final double ROTATIONS_TO_INCHES =
+        (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO; // ~0.9896 in/rot
     public static final double INCHES_TO_ROTATIONS = 1.0 / ROTATIONS_TO_INCHES; // ~1.0105 rot/in
 
     // Tolerance and Threshold Values

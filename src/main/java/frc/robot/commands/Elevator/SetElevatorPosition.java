@@ -4,14 +4,12 @@
 
 package frc.robot.commands.Elevator;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SetElevatorPosition extends Command {
   private final ElevatorSubsystem m_elevator;
@@ -22,6 +20,7 @@ public class SetElevatorPosition extends Command {
 
   /**
    * Creates a SetElevatorPosition command with a fixed target position.
+   *
    * @param elevator The elevator subsystem
    * @param targetPosition The fixed target position
    * @param wrist The wrist subsystem
@@ -33,6 +32,7 @@ public class SetElevatorPosition extends Command {
 
   /**
    * Creates a SetElevatorPosition command with a fixed target position.
+   *
    * @param elevator The elevator subsystem
    * @param targetPosition The fixed target position
    * @param wrist The wrist subsystem
@@ -48,6 +48,7 @@ public class SetElevatorPosition extends Command {
 
   /**
    * Creates a SetElevatorPosition command with a dynamic target position supplier.
+   *
    * @param elevator The elevator subsystem
    * @param targetPositionSupplier Supplier for the target position
    * @param wrist The wrist subsystem
@@ -59,6 +60,7 @@ public class SetElevatorPosition extends Command {
 
   /**
    * Creates a SetElevatorPosition command with a dynamic target position supplier.
+   *
    * @param elevator The elevator subsystem
    * @param targetPositionSupplier Supplier for the target position
    * @param wrist The wrist subsystem
@@ -80,7 +82,7 @@ public class SetElevatorPosition extends Command {
   public void initialize() {
     // Get the current target position from the supplier at initialization time
     m_targetPosition = m_targetPositionSupplier.getAsDouble();
-    
+
     double safePosition =
         Math.min(Elevator.MAX_SAFE_POS, Math.max(Elevator.MIN_SAFE_POS, m_targetPosition));
 
@@ -89,7 +91,7 @@ public class SetElevatorPosition extends Command {
     } else {
       m_elevator.setLookForStalled(false);
     }
-    
+
     m_elevator.setPosition(safePosition);
   }
 
