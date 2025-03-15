@@ -1,16 +1,13 @@
 package frc.robot;
 
-import java.io.IOException;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -55,10 +52,11 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -83,54 +81,51 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-private PathPlannerPath Z1R;
-private PathPlannerPath Z1L;
-private PathPlannerPath Z2R;
-private PathPlannerPath Z2L;
-private PathPlannerPath Z3R;
-private PathPlannerPath Z3L;
-private PathPlannerPath Z4R;
-private PathPlannerPath Z4L;
-private PathPlannerPath Z5R;
-private PathPlannerPath Z5L;
-private PathPlannerPath Z6R;
-private PathPlannerPath Z6L;
-
-
+  private PathPlannerPath Z1R;
+  private PathPlannerPath Z1L;
+  private PathPlannerPath Z2R;
+  private PathPlannerPath Z2L;
+  private PathPlannerPath Z3R;
+  private PathPlannerPath Z3L;
+  private PathPlannerPath Z4R;
+  private PathPlannerPath Z4L;
+  private PathPlannerPath Z5R;
+  private PathPlannerPath Z5L;
+  private PathPlannerPath Z6R;
+  private PathPlannerPath Z6L;
 
   public double getWristAngle() {
     return m_Wrist.getAngle();
   }
-     
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     try {
-        // Z1R = PathPlannerPath.fromPathFile("1R");
-        Z1L = PathPlannerPath.fromPathFile("1L");
-        // Z2R = PathPlannerPath.fromPathFile("2R");
-        // Z2L = PathPlannerPath.fromPathFile("2L");
-        // Z3R = PathPlannerPath.fromPathFile("3R");
-        // Z3L = PathPlannerPath.fromPathFile("3L");
-        // Z4R = PathPlannerPath.fromPathFile("4R");
-        // Z4L = PathPlannerPath.fromPathFile("4L");
-        // Z5R = PathPlannerPath.fromPathFile("5R");
-        // Z5L = PathPlannerPath.fromPathFile("5L");
-        // Z6R = PathPlannerPath.fromPathFile("6R");
-        // Z6L = PathPlannerPath.fromPathFile("6L");
+      // Z1R = PathPlannerPath.fromPathFile("1R");
+      Z1L = PathPlannerPath.fromPathFile("1L");
+      // Z2R = PathPlannerPath.fromPathFile("2R");
+      // Z2L = PathPlannerPath.fromPathFile("2L");
+      // Z3R = PathPlannerPath.fromPathFile("3R");
+      // Z3L = PathPlannerPath.fromPathFile("3L");
+      // Z4R = PathPlannerPath.fromPathFile("4R");
+      // Z4L = PathPlannerPath.fromPathFile("4L");
+      // Z5R = PathPlannerPath.fromPathFile("5R");
+      // Z5L = PathPlannerPath.fromPathFile("5L");
+      // Z6R = PathPlannerPath.fromPathFile("6R");
+      // Z6L = PathPlannerPath.fromPathFile("6L");
     } catch (FileVersionException | IOException | ParseException e) {
-        Z1R = null;
-        Z1L = null;
-        Z2R = null;
-        Z2L = null;
-        Z3R = null;
-        Z3L = null;
-        Z4R = null;
-        Z4L = null;
-        Z5R = null;
-        Z5L = null;
-        Z6R = null;
-        Z6L = null;
+      Z1R = null;
+      Z1L = null;
+      Z2R = null;
+      Z2L = null;
+      Z3R = null;
+      Z3L = null;
+      Z4R = null;
+      Z4L = null;
+      Z5R = null;
+      Z5L = null;
+      Z6R = null;
+      Z6L = null;
     }
 
     // Initialize subsystems based on runtime mode
@@ -397,7 +392,6 @@ private PathPlannerPath Z6L;
     //     new DriveToPoint(drive, new Pose2d(1.183, 0.956, new Rotation2d(Math.toRadians(234)))));
 
     SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPath(drive, Z1L));
-    
   }
 
   /** Configure button bindings for driver and operator controls */

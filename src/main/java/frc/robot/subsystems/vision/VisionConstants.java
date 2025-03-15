@@ -1,10 +1,9 @@
 package frc.robot.subsystems.vision;
 
-import java.util.Map;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import frc.robot.Constants.ReefZone;
+import java.util.Map;
 
 public class VisionConstants {
   // AprilTag layout
@@ -16,24 +15,24 @@ public class VisionConstants {
   public static String camera1Name = "limelight-back";
 
   // Map of zone to primary AprilTag ID for Blue alliance
-  public static final Map<ReefZone, Integer> BLUE_ZONE_PRIMARY_TAGS = Map.of(
-      ReefZone.ZONE_1, 18,
-      ReefZone.ZONE_2, 17,
-      ReefZone.ZONE_3, 22,
-      ReefZone.ZONE_4, 21,
-      ReefZone.ZONE_5, 20,
-      ReefZone.ZONE_6, 19
-  );
-  
+  public static final Map<ReefZone, Integer> BLUE_ZONE_PRIMARY_TAGS =
+      Map.of(
+          ReefZone.ZONE_1, 18,
+          ReefZone.ZONE_2, 17,
+          ReefZone.ZONE_3, 22,
+          ReefZone.ZONE_4, 21,
+          ReefZone.ZONE_5, 20,
+          ReefZone.ZONE_6, 19);
+
   // Map of zone to primary AprilTag ID for Red alliance
-  public static final Map<ReefZone, Integer> RED_ZONE_PRIMARY_TAGS = Map.of(
-      ReefZone.ZONE_1, 7,
-      ReefZone.ZONE_2, 8,
-      ReefZone.ZONE_3, 9,
-      ReefZone.ZONE_4, 10,
-      ReefZone.ZONE_5, 11,
-      ReefZone.ZONE_6, 6
-  );
+  public static final Map<ReefZone, Integer> RED_ZONE_PRIMARY_TAGS =
+      Map.of(
+          ReefZone.ZONE_1, 7,
+          ReefZone.ZONE_2, 8,
+          ReefZone.ZONE_3, 9,
+          ReefZone.ZONE_4, 10,
+          ReefZone.ZONE_5, 11,
+          ReefZone.ZONE_6, 6);
 
   // Basic filtering thresholds
   public static double maxAmbiguity =
