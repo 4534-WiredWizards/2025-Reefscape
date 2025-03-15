@@ -1,13 +1,16 @@
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,6 +40,7 @@ import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.ManualPoseSetter;
 import frc.robot.commands.Wrist.AdaptiveWrist;
 import frc.robot.commands.Wrist.RunCoralIntake;
+import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
@@ -52,11 +56,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -70,7 +73,7 @@ public class RobotContainer {
   public final Vision vision;
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
-  private final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
+  public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
   private final ClimbSubsystem m_climb = new ClimbSubsystem();
   private final ScoringQueueSubsystem m_scoringQueue;
 
@@ -80,6 +83,10 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  //Scoring Position
+  private EventTrigger ScoreInRequestedPosition;
+
 
   private PathPlannerPath Z1R;
   private PathPlannerPath Z1L;
@@ -265,26 +272,96 @@ public class RobotContainer {
   /** Configure event triggers for PathPlanner */
   private void configureEventTriggers() {
     // Elevator level events
-    new EventTrigger("Elevator L4")
+    EventTrigger ScoreInRequestedPosition = new EventTrigger("ScoreInRequestedPosition");
+    // ScoreInRequestedPosition.whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
+
+    // Commands to move wrist and elevator to the scoring position
+    new EventTrigger("WE-CoralIntake")
+        .onTrue(
+            new ConditionalCommand(
+                // If the elevator is NOT at ground position, run the full sequence
+                new SequentialCommandGroup(
+                    // Step 1: Clear the elevator
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                    // Step 2: Move elevator down, prepare wrist, and run intake
+                    new ParallelDeadlineGroup(
+                        new RunCoralIntake(m_Intake, true),
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                        new SequentialCommandGroup(
+                            new WaitUntilCommand(
+                                () ->
+                                    m_elevator.getEncoderPosition()
+                                        < Elevator.ELEVATOR_DANGER_LIMIT),
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                // If the elevator is ALREADY at ground position, just run intake and set wrist
+                new ParallelCommandGroup(
+                    new RunCoralIntake(m_Intake, true),
+                    new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+                // The condition: Check if elevator is NOT at ground position
+        () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND)));
+
+
+    new EventTrigger("WE-L1")
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelDeadlineGroup(
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false))));
+
+    new EventTrigger("WE-L2")
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelDeadlineGroup(
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))));
+    
+    new EventTrigger("WE-L3")
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelDeadlineGroup(
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false))));
+
+    new EventTrigger("WE-L4")
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelDeadlineGroup(
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false))));
+
+    // Elevator position events
+    new EventTrigger("E-L4")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
-    new EventTrigger("Elevator L3")
+    new EventTrigger("E-L4")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
-    new EventTrigger("Elevator L2")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
-    new EventTrigger("Elevator L1")
+    new EventTrigger("E-L2")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
-    new EventTrigger("Elevator Ground")
+    new EventTrigger("E-L4")
+        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
+    new EventTrigger("E-Zero")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
     // Wrist position events
-    new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
-    new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+    new EventTrigger("W-L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
+    new EventTrigger("W-L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+    new EventTrigger("W-L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+    new EventTrigger("W-L1").whileTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
 
-    // Intake/Outake events
-    new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
-    new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
+    // Coral intake event
+    new EventTrigger("RunCoralIntake").whileTrue(new RunCoralIntake(m_Intake, true));
+    new EventTrigger("RunCoralOutake").whileTrue(new RunCoralOutake(m_Intake).andThen(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+
+    // Basic Intake/Outake events
+    new EventTrigger("AW-Outake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+    new EventTrigger("AW-Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
   }
 
   /** Configure SysId characterization commands for auto chooser */
