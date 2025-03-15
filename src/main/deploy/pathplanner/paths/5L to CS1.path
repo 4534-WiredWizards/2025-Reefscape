@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.29425,
-        "y": 5.0584999999999996
+        "x": 5.274971590909091,
+        "y": 5.047088068181818
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.044743421052631,
-        "y": 5.299042763157895
+        "x": 6.025465011961723,
+        "y": 5.287630831339714
       },
       "isLocked": false,
       "linkedName": "Reef Post 5L"
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -124.3302171955034
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }
