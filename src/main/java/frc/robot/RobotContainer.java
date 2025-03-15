@@ -1,13 +1,16 @@
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -53,11 +56,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -78,6 +80,26 @@ public class RobotContainer {
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
   private final Joystick driverJoystick = new Joystick(1);
+
+  //Requested Postion
+  private double targetElevatorPosition = Elevator.POSITION_L1;
+  private double targetWristAngle = Wrist.L1_ANGLE;
+
+   
+    // Setter method for updating the target positions
+    public void setTargetPositions(double elevatorPosition, double wristAngle) {
+        this.targetElevatorPosition = elevatorPosition;
+        this.targetWristAngle = wristAngle;
+    }
+
+    // Getter methods that can be referenced by commands
+    public double getTargetElevatorPosition() {
+        return targetElevatorPosition;
+    }
+
+    public double getTargetWristAngle() {
+        return targetWristAngle;
+    }
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -269,10 +291,21 @@ public class RobotContainer {
   /** Configure event triggers for PathPlanner */
   private void configureEventTriggers() {
     // Elevator level events
-    MoveToRequestedPosition = new EventTrigger("ScoreInRequestedPosition");
-    // Basic connsole log instance command saying no value set
-    MoveToRequestedPosition.whileTrue(new InstantCommand(() -> System.out.println("No value set")));
-
+    new EventTrigger("ScoreInRequestedPosition").onTrue(
+        new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelDeadlineGroup(
+                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                new SetElevatorPosition(
+                    m_elevator, 
+                    () -> targetElevatorPosition, // Lambda expression that returns the current value
+                    m_Wrist, 
+                    false
+                ),
+                new SetWristPosition(m_Wrist, this::getTargetWristAngle, false)
+            )
+        )
+    )
     // Commands to move wrist and elevator to the scoring position
     new EventTrigger("WE-CoralIntake")
         .onTrue(

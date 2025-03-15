@@ -12,10 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -196,12 +197,11 @@ public interface Constants {
 
     // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
-    public static final double GEAR_RATIO = 9; // Verified 15:1 ratio
+    public static final double GEAR_RATIO = 5; // Verified 15:1 ratio
 
     // Conversion factors
     // Conversion factors (recalculated based on new measurements)
-    public static final double ROTATIONS_TO_INCHES =
-        (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO; // ~0.9896 in/rot
+    public static final double ROTATIONS_TO_INCHES = (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO; // ~0.9896 in/rot
     public static final double INCHES_TO_ROTATIONS = 1.0 / ROTATIONS_TO_INCHES; // ~1.0105 rot/in
 
     // Tolerance and Threshold Values
@@ -209,7 +209,7 @@ public interface Constants {
     public static final double STALL_VELOCITY_THRESHOLD = 0.05; // Rotations/sec
 
     // Safety Limits
-    public static final double ELEVATOR_DANGER_LIMIT = 12.0;
+    public static final double ELEVATOR_DANGER_LIMIT = 6.6;
 
     // Elevator Stop Positions
     // Define preset positions that the elevator can move to
@@ -388,7 +388,7 @@ public interface Constants {
   interface Autonomous {
     // Pathfinding Constants
 
-    double ROBOT_MASS_KG = 55.79;
+    double ROBOT_MASS_KG = 61.68;
     double ROBOT_MOI = 6.883;
     double WHEEL_COF = 1.2;
 
