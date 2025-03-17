@@ -1,13 +1,17 @@
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -53,12 +57,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -220,6 +222,21 @@ public class RobotContainer {
     setupManualPoseSetter();
   }
 
+
+    public Command createScoringSequence(double elevatorPosition, double wristAngle) {
+        return new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelDeadlineGroup(
+                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, false),
+                new SetWristPosition(m_Wrist, wristAngle, false)
+            )
+        );
+    }
+
+
+    
+
   /** Register named commands for PathPlanner */
   private void registerNamedCommands() {
     NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Intake, this::getWristAngle, true));
@@ -241,48 +258,18 @@ public class RobotContainer {
                     new SequentialCommandGroup(
                         new WaitUntilCommand(
                             () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
-                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))
+            ),
             // If the elevator is ALREADY at ground position, just run intake and set wrist
             new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false),
             // The condition: Check if elevator is NOT at ground position
             () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND)));
 
     // Register different level scoring commands
-    NamedCommands.registerCommand(
-        "WE-L1",
-        new SequentialCommandGroup(
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-            new ParallelDeadlineGroup(
-                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist, false),
-                new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false))));
-
-    NamedCommands.registerCommand(
-        "WE-L2",
-        new SequentialCommandGroup(
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-            new ParallelDeadlineGroup(
-                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist, false),
-                new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))));
-
-    NamedCommands.registerCommand(
-        "WE-L3",
-        new SequentialCommandGroup(
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-            new ParallelDeadlineGroup(
-                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist, false),
-                new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false))));
-
-    NamedCommands.registerCommand(
-        "WE-L4",
-        new SequentialCommandGroup(
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-            new ParallelDeadlineGroup(
-                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist, false),
-                new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false))));
+    NamedCommands.registerCommand("WE-L1", createScoringSequence(Elevator.POSITION_L1, Wrist.L1_ANGLE));
+    NamedCommands.registerCommand("WE-L2", createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
+    NamedCommands.registerCommand("WE-L3", createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
+    NamedCommands.registerCommand("WE-L4", createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
   }
 
   /** Configure event triggers for PathPlanner */
@@ -300,7 +287,8 @@ public class RobotContainer {
                         // value
                         m_Wrist,
                         false),
-                    new SetWristPosition(m_Wrist, this::getTargetWristAngle, false))));
+                    new SetWristPosition(m_Wrist, this::getTargetWristAngle, false)))
+            );
     // Commands to move wrist and elevator to the scoring position
     new EventTrigger("WE-CoralIntake")
         .onTrue(
@@ -310,71 +298,30 @@ public class RobotContainer {
                     // Step 1: Clear the elevator
                     new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                     // Step 2: Move elevator down, prepare wrist, and run intake
-                    new ParallelDeadlineGroup(
-                        new RunCoralIntake(m_Intake, true),
+                    new ParallelCommandGroup(
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
                         new SequentialCommandGroup(
                             new WaitUntilCommand(
-                                () ->
-                                    m_elevator.getEncoderPosition()
-                                        < Elevator.ELEVATOR_DANGER_LIMIT),
-                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                                () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))
+                ),
                 // If the elevator is ALREADY at ground position, just run intake and set wrist
-                new ParallelCommandGroup(
-                    new RunCoralIntake(m_Intake, true),
-                    new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false),
                 // The condition: Check if elevator is NOT at ground position
-                () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND)));
+                () -> !m_elevator.isAtPosition(Elevator.POSITION_GROUND))
+        );
 
-    new EventTrigger("WE-L1")
-        .whileTrue(
-            new SequentialCommandGroup(
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                new ParallelDeadlineGroup(
-                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist, false),
-                    new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false))));
+    new EventTrigger("WE-L1").whileTrue(createScoringSequence(Elevator.POSITION_L1, Wrist.L1_ANGLE));
+    new EventTrigger("WE-L2").whileTrue(createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
+    new EventTrigger("WE-L3").whileTrue(createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
+    new EventTrigger("WE-L4").whileTrue(createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
 
-    new EventTrigger("WE-L2")
-        .whileTrue(
-            new SequentialCommandGroup(
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                new ParallelDeadlineGroup(
-                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist, false),
-                    new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false))));
-
-    new EventTrigger("WE-L3")
-        .whileTrue(
-            new SequentialCommandGroup(
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                new ParallelDeadlineGroup(
-                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist, false),
-                    new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false))));
-
-    new EventTrigger("WE-L4")
-        .whileTrue(
-            new SequentialCommandGroup(
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                new ParallelDeadlineGroup(
-                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist, false),
-                    new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false))));
-
-    // Elevator position events
-    new EventTrigger("E-L4")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
-    new EventTrigger("E-L4")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
-    new EventTrigger("E-L2")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
-    new EventTrigger("E-L4")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
-    new EventTrigger("E-Zero")
-        .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
-
-    // Wrist position events
+    // Elevator + Wrist position events
+    new EventTrigger("E-L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
+    new EventTrigger("E-L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
+    new EventTrigger("E-L2").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
+    new EventTrigger("E-L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
+    new EventTrigger("E-Zero").whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
     new EventTrigger("W-L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
     new EventTrigger("W-L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
     new EventTrigger("W-L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
@@ -413,16 +360,16 @@ public class RobotContainer {
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Wrist characterization commands
-    autoChooser.addOption(
-        "Wrist SysId (Dynamic Forward)",
-        m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Wrist SysId (Dynamic Reverse)",
-        m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Wrist SysId (Quasistatic Forward)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Wrist SysId (Quasistatic Reverse)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Wrist SysId (Dynamic Forward)",
+    //     m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Wrist SysId (Dynamic Reverse)",
+    //     m_Wrist.dynamicSysIdCommand(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Wrist SysId (Quasistatic Forward)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Wrist SysId (Quasistatic Reverse)", m_Wrist.sysIdCommand(SysIdRoutine.Direction.kReverse));
   }
 
   /** Setup manual pose setter functionality */
@@ -440,63 +387,49 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Pose", new InstantCommand(() -> vision.resetRobotPose()));
 
     // Wrist test commands
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false));
-    SmartDashboard.putData("TestWristCommand/Bottom", new SetWristPosition(m_Wrist, -203, false));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist Coral Intake",
-        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist MIN_CLEAR_ELEVATOR_ANGLE",
-        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false));
-    SmartDashboard.putData(
-        "TestWristCommand/Wrist Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION, false));
+    SmartDashboard.putData("Wrist/L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
+    SmartDashboard.putData("Wrist/L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false));
+    SmartDashboard.putData("Wrist/L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false));
+    SmartDashboard.putData("Wrist/L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false));
+    SmartDashboard.putData("Wrist/Bottom", new SetWristPosition(m_Wrist, -203, false));
+    SmartDashboard.putData("Wrist/CoralIntake", new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
+    SmartDashboard.putData("Wrist/ClearElevator", new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false));
+    SmartDashboard.putData("Wrist/Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION, false));
 
     // Elevator test commands
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator Barge",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L4",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L3",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L2",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
-    SmartDashboard.putData(
-        "TestElevatorCommand/Elevator L1",
-        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
+    SmartDashboard.putData("Elevator/Barge", new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist));
+    SmartDashboard.putData("Elevator/L4", new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
+    SmartDashboard.putData("Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
+    SmartDashboard.putData("Elevator/L2", new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
+    SmartDashboard.putData("Elevator/L1", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
     // Drive to point test commands
     // SmartDashboard.putData(
     //     "TestDrive/Zone1/Left",
     //     new DriveToPoint(drive, ScoringPositions.getPose(ReefZone.ZONE_1, ScoringSide.LEFT)));
-
-    SmartDashboard.putData("TestDrive/Zone1/Right", new DriveToPath(drive, Z1R));
+    // AutoScoring test
     SmartDashboard.putData(
-        "TestDrive/Zone1/LeftL4",
+        "Score/Z1-l4",
         new SequentialCommandGroup(
             new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
-            new DriveToPath(drive, Z1L)));
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new DriveToPath(drive, Z1L)
+        ));
 
-    SmartDashboard.putData("TestDrive/Zone2/Right", new DriveToPath(drive, Z2L));
-    SmartDashboard.putData("TestDrive/Zone2/Left", new DriveToPath(drive, Z2R));
-    SmartDashboard.putData("TestDrive/Zone3/Right", new DriveToPath(drive, Z3L));
-    SmartDashboard.putData("TestDrive/Zone3/Left", new DriveToPath(drive, Z3R));
-    SmartDashboard.putData("TestDrive/Zone4/Right", new DriveToPath(drive, Z4L));
-    SmartDashboard.putData("TestDrive/Zone4/Left", new DriveToPath(drive, Z4R));
-    SmartDashboard.putData("TestDrive/Zone5/Right", new DriveToPath(drive, Z5L));
-    SmartDashboard.putData("TestDrive/Zone5/Left", new DriveToPath(drive, Z5R));
-    SmartDashboard.putData("TestDrive/Zone6/Right", new DriveToPath(drive, Z6L));
-    SmartDashboard.putData("TestDrive/Zone6/Left", new DriveToPath(drive, Z6R));
+
+    // Drive to path test commands
+    SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
+    SmartDashboard.putData("Drive/Z1L", new DriveToPath(drive, Z1L));
+    SmartDashboard.putData("Drive/Z2R", new DriveToPath(drive, Z2R));
+    SmartDashboard.putData("Drive/Z2L", new DriveToPath(drive, Z2L));
+    SmartDashboard.putData("Drive/Z3R", new DriveToPath(drive, Z3R));
+    SmartDashboard.putData("Drive/Z3L", new DriveToPath(drive, Z3L));
+    SmartDashboard.putData("Drive/Z4R", new DriveToPath(drive, Z4R));
+    SmartDashboard.putData("Drive/Z4L", new DriveToPath(drive, Z4L));
+    SmartDashboard.putData("Drive/Z5R", new DriveToPath(drive, Z5R));
+    SmartDashboard.putData("Drive/Z5L", new DriveToPath(drive, Z5L));
+    SmartDashboard.putData("Drive/Z6R", new DriveToPath(drive, Z6R));
+    SmartDashboard.putData("Drive/Z6L", new DriveToPath(drive, Z6L));
   }
 
   /** Configure button bindings for driver and operator controls */
