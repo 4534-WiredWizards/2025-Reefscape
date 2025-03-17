@@ -210,7 +210,7 @@ public interface Constants {
     public static final double STALL_VELOCITY_THRESHOLD = 0.05; // Rotations/sec
 
     // Safety Limits
-    public static final double ELEVATOR_DANGER_LIMIT = 6.6;
+    public static final double ELEVATOR_DANGER_LIMIT = 6.8;
 
     // Elevator Stop Positions
     // Define preset positions that the elevator can move to
@@ -257,7 +257,7 @@ public interface Constants {
     double KA = 0.01; // Acceleration feedforward
 
     // Motion Profile Configuration
-    double CRUISE_VELOCITY = 30; // In raw encoder vlues/s
+    double CRUISE_VELOCITY = 40; // In raw encoder vlues/s
     double ACCELERATION = 60; // In raw encoder values/s/s
     double JERK = 0;
 
