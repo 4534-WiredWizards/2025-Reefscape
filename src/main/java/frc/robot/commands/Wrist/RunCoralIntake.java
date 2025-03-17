@@ -13,7 +13,6 @@ public class RunCoralIntake extends Command {
   private final IntakeSubsystem intakeSubsystem;
 
   private final boolean autoStop;
-  private boolean coralCentered = false;
   private boolean secondSensorActivated = false;
 
   public RunCoralIntake(IntakeSubsystem intakeSubsystem, boolean autoStop) {
@@ -35,9 +34,9 @@ public class RunCoralIntake extends Command {
     // If first sensor hasn't been activated yet, run at intake speed
     if (!secondSensorActivated) {
       intakeSubsystem.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
-      System.out.println("second sensor not activated");
+      // System.out.println("second sensor not activated");
     } else {
-      System.out.println("Stopping roller");
+      // System.out.println("Stopping roller");
       intakeSubsystem.stopRoller();
     }
   }
