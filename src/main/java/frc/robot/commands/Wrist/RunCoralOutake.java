@@ -3,16 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.commands.Wrist;
 
-import edu.wpi.first.wpilibj.Timer;
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.IntakeSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class RunCoralOutake extends Command {
   private final IntakeSubsystem intakeSubsystem;
-  private final Timer commandTimer = new Timer();
-  private static final double MINIMUM_RUN_TIME = 0.5; // Run for at least 0.5 seconds
+  private boolean initialSensorState;
   
   public RunCoralOutake(IntakeSubsystem intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
@@ -23,38 +22,43 @@ public class RunCoralOutake extends Command {
   public void initialize() {
     System.out.println("RunCoralOutake initialized");
     intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
-    commandTimer.reset();
-    commandTimer.start();
+    initialSensorState = intakeSubsystem.getFirstSensor();
     Logger.recordOutput("Intake/Command", "Coral Outake Started");
+    Logger.recordOutput("Intake/Outake/InitialSensorState", initialSensorState);
+    System.out.println("RunCoralOutake - Initial first sensor state: " + 
+                      (initialSensorState ? "Coral detected" : "No coral detected"));
   }
 
   @Override
   public void execute() {
-    // Continuously set roller speed in case of interruption
+    // Continuously set roller speed
     intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
+    
+    // Log current sensor state
+    boolean currentSensorState = intakeSubsystem.getFirstSensor();
+    Logger.recordOutput("Intake/Outake/CurrentSensorState", currentSensorState);
   }
 
   @Override
   public void end(boolean interrupted) {
     System.out.println("RunCoralOutake ended, interrupted: " + interrupted);
+    System.out.println("Final first sensor state: " + 
+                      (intakeSubsystem.getFirstSensor() ? "Coral detected" : "No coral detected"));
     intakeSubsystem.stopRoller();
     Logger.recordOutput("Intake/Command", "Coral Outake Ended");
   }
 
   @Override
   public boolean isFinished() {
-    // Only check the sensor after the minimum run time has elapsed
-    if (commandTimer.get() < MINIMUM_RUN_TIME) {
-      return false;
+    // Finish when the first sensor no longer detects coral
+    boolean sensorState = intakeSubsystem.getFirstSensor();
+    
+    // If sensor state changed from true to false, we're done
+    if (initialSensorState && !sensorState) {
+      System.out.println("RunCoralOutake finishing - first sensor no longer detects coral");
+      return true;
     }
     
-    // After the minimum time, stop when the coral is no longer detected
-    boolean sensorDetection = !intakeSubsystem.getSecondSensor();
-    
-    if (sensorDetection) {
-      System.out.println("RunCoralOutake finishing - second sensor no longer detects coral");
-    }
-    
-    return sensorDetection;
+    return false;
   }
 }
