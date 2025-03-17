@@ -166,6 +166,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopInit() {
     robotContainer.vision.resetRobotPose();
+    System.out.println("Resetting robot pose in teleop");
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
