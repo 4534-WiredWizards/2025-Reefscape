@@ -506,6 +506,13 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
+        operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.5));
+        operatorController.a().whileTrue(new SimpleMoveClimb(m_climb, () -> .3));
+    
+        operatorController.button(Operator.RESET_BOT_POSE_BUTTON).onTrue(new InstantCommand(() -> vision.resetRobotPose()));
+        operatorController.button(Operator.RESET_BOT_POSE_BUTTON).onTrue(m_elevator.zeroCommand());
+            
+
         // Configure POV buttons for operator presets
         configurePOVButtons();
 
