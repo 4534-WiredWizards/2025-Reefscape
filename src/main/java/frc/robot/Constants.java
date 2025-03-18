@@ -166,7 +166,7 @@ public interface Constants {
 
     // PID and Feedforward Constants
     public static final double KP = 0.069; // Proportional gain
-    public static final double KI = 0.001; // Integral gain
+    public static final double KI = 0; // Integral gain
     // public static final double KD = 0.1; // Derivative gain
 
     // Feedforward Constants
