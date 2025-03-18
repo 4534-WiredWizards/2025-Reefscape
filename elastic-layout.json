@@ -18,7 +18,7 @@
             "title": "Field",
             "x": 0.0,
             "y": 0.0,
-            "width": 864.0,
+            "width": 1088.0,
             "height": 512.0,
             "type": "Field",
             "properties": {
@@ -35,131 +35,11 @@
             }
           },
           {
-            "title": "L-L2",
-            "x": 864.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Queued/Left/L2",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4281741874,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "L-L3",
-            "x": 864.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Queued/Left/L3",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4281741874,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "R-L2",
-            "x": 992.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Queued/Right/L2",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4281741874,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "R-L3",
-            "x": 992.0,
-            "y": 128.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Queued/Right/L3",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4281741874,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "R-L4",
-            "x": 992.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Queued/Right/L4",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4281741874,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "L1",
-            "x": 864.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Queued/L1",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4281741874,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "Voltage",
-            "x": 1472.0,
-            "y": 0.0,
-            "width": 352.0,
-            "height": 128.0,
-            "type": "Voltage View",
-            "properties": {
-              "topic": "/AdvantageKit/PowerDistribution/Voltage",
-              "period": 0.06,
-              "data_type": "double",
-              "min_value": 4.0,
-              "max_value": 13.0,
-              "divisions": 5,
-              "inverted": false,
-              "orientation": "horizontal"
-            }
-          },
-          {
             "title": "MatchTime",
-            "x": 1120.0,
-            "y": 0.0,
-            "width": 352.0,
-            "height": 128.0,
+            "x": 640.0,
+            "y": 512.0,
+            "width": 240.0,
+            "height": 240.0,
             "type": "Match Time",
             "properties": {
               "topic": "/AdvantageKit/DriverStation/MatchTime",
@@ -171,25 +51,8 @@
             }
           },
           {
-            "title": "L4",
-            "x": 864.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Queued/Left/L4",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4281741874,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
             "title": "Current Zone",
-            "x": 608.0,
+            "x": 0.0,
             "y": 512.0,
             "width": 240.0,
             "height": 256.0,
@@ -210,7 +73,7 @@
           },
           {
             "title": "Wrist Angle",
-            "x": 992.0,
+            "x": 400.0,
             "y": 512.0,
             "width": 240.0,
             "height": 256.0,
@@ -231,7 +94,7 @@
           },
           {
             "title": "Elevator Height",
-            "x": 848.0,
+            "x": 240.0,
             "y": 512.0,
             "width": 144.0,
             "height": 256.0,
@@ -248,35 +111,9 @@
             }
           },
           {
-            "title": "X",
-            "x": 1232.0,
-            "y": 512.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Large Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Odometry/EstimatedX",
-              "period": 0.06,
-              "data_type": "double"
-            }
-          },
-          {
-            "title": "Y",
-            "x": 1360.0,
-            "y": 512.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Large Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Odometry/EstimatedY",
-              "period": 0.06,
-              "data_type": "double"
-            }
-          },
-          {
             "title": "FMSInfo",
-            "x": 1232.0,
-            "y": 640.0,
+            "x": 496.0,
+            "y": 768.0,
             "width": 384.0,
             "height": 128.0,
             "type": "FMSInfo",
@@ -287,8 +124,8 @@
           },
           {
             "title": "Auto Choices",
-            "x": 1280.0,
-            "y": 240.0,
+            "x": 0.0,
+            "y": 768.0,
             "width": 496.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
@@ -296,6 +133,105 @@
               "topic": "/SmartDashboard/Auto Choices",
               "period": 0.06,
               "sort_options": false
+            }
+          },
+          {
+            "title": "Reset Pose",
+            "x": 880.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Reset Pose",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "limelight-back",
+            "x": 1088.0,
+            "y": 0.0,
+            "width": 816.0,
+            "height": 480.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-back",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "limelight-front",
+            "x": 1152.0,
+            "y": 480.0,
+            "width": 752.0,
+            "height": 464.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-front",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Front",
+            "x": 896.0,
+            "y": 640.0,
+            "width": 240.0,
+            "height": 112.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/Vision/Camera0/Connected",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Back",
+            "x": 896.0,
+            "y": 752.0,
+            "width": 240.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/Vision/Camera1/Connected",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "limelight-back",
+            "x": 1936.0,
+            "y": 16.0,
+            "width": 976.0,
+            "height": 704.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-back",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "limelight-front",
+            "x": 2912.0,
+            "y": 0.0,
+            "width": 864.0,
+            "height": 704.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-front",
+              "period": 0.06,
+              "rotation_turns": 0
             }
           }
         ]
@@ -307,15 +243,29 @@
         "layouts": [
           {
             "title": "Command",
-            "x": 576.0,
-            "y": 16.0,
+            "x": 816.0,
+            "y": 0.0,
             "width": 256.0,
             "height": 256.0,
             "type": "List Layout",
             "properties": {
-              "label_position": "BOTTOM"
+              "label_position": "TOP"
             },
             "children": [
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/Angle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
               {
                 "title": "ManualSpeed",
                 "x": 0.0,
@@ -329,49 +279,73 @@
                   "data_type": "double",
                   "show_submit_button": false
                 }
-              },
+              }
+            ]
+          },
+          {
+            "title": "Control",
+            "x": 1072.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 672.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
               {
-                "title": "SetpointCommand",
+                "title": "FeedForward",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/SetpointCommand",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/FeedForward",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "Stop",
+                "title": "PIDOutput",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
-                "type": "Boolean Box",
+                "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/Stop",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PIDOutput",
                   "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "TotalOutput",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/TotalOutput",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
                 }
               }
             ]
           },
           {
             "title": "Status",
-            "x": 64.0,
-            "y": 16.0,
+            "x": 1328.0,
+            "y": 0.0,
             "width": 256.0,
-            "height": 720.0,
+            "height": 784.0,
             "type": "List Layout",
             "properties": {
-              "label_position": "BOTTOM"
+              "label_position": "RIGHT"
             },
             "children": [
               {
@@ -383,6 +357,20 @@
                 "type": "Text Display",
                 "properties": {
                   "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AbsoluteEncoderValue",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Angle",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
@@ -406,215 +394,336 @@
                 }
               },
               {
-                "title": "MotorCurrent",
+                "title": "Current",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/MotorCurrent",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Current",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "MotorTemperature",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/MotorTemperature",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "MotorVoltage",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/MotorVoltage",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "RollerMotorCurrent",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RollerMotorCurrent",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "RollerMotorSpeed",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RollerMotorSpeed",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "RollerMotorTemperature",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RollerMotorTemperature",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "RollerMotorVoltage",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RollerMotorVoltage",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "Stalled",
+                "title": "IsInCoralRange",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Boolean Box",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Stalled",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsInCoralRange",
                   "period": 0.06,
                   "data_type": "boolean",
                   "true_color": 4283215696,
                   "false_color": 4294198070,
                   "true_icon": "None",
                   "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsStalled",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsStalled",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsZeroed",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroing",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsZeroing",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "RawMotorPosition",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RawMotorPosition",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Setpoint",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Setpoint",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "StallCount",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/StallCount",
+                  "period": 0.06,
+                  "data_type": "int",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "StallDetectionActive",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/StallDetectionActive",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Temperature",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Temperature",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Text",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Text",
+                  "period": 0.06,
+                  "data_type": "string",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Velocity",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Velocity",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Voltage",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
                 }
               }
             ]
           },
           {
-            "title": "Control",
-            "x": 320.0,
-            "y": 16.0,
+            "title": "Config",
+            "x": 816.0,
+            "y": 256.0,
             "width": 256.0,
-            "height": 608.0,
+            "height": 672.0,
             "type": "List Layout",
             "properties": {
-              "label_position": "TOP"
+              "label_position": "RIGHT"
             },
             "children": [
               {
-                "title": "ClampSpeed",
+                "title": "CoralMaxAngle",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/ClampSpeed",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/CoralMaxAngle",
+                  "period": 0.06,
+                  "data_type": "int",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "GearRatio",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/GearRatio",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "FeedforwardOutput",
+                "title": "MaxSafeAngle",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/FeedforwardOutput",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MaxSafeAngle",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "PIDEnabled",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PIDEnabled",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              },
-              {
-                "title": "PIDOutput",
+                "title": "MinClearElevatorAngle",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PIDOutput",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MinClearElevatorAngle",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "RollerSpeed",
+                "title": "MinSafeAngle",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/RollerSpeed",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MinSafeAngle",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "TotalMotorOutput",
+                "title": "SoftForwardLimit",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Control/TotalMotorOutput",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/SoftForwardLimit",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "SoftReverseLimit",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/SoftReverseLimit",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "TrueZero",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/TrueZero",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "ZeroingSpeed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/ZeroingSpeed",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
@@ -624,10 +733,10 @@
           },
           {
             "title": "Sensor",
-            "x": 1584.0,
-            "y": 32.0,
+            "x": 496.0,
+            "y": 112.0,
             "width": 256.0,
-            "height": 256.0,
+            "height": 368.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
@@ -668,244 +777,16 @@
                 }
               }
             ]
-          }
-        ],
-        "containers": [
-          {
-            "title": "FMSInfo",
-            "x": 1536.0,
-            "y": 832.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "FMSInfo",
-            "properties": {
-              "topic": "/FMSInfo",
-              "period": 0.06
-            }
-          },
-          {
-            "title": "IntakeStatus",
-            "x": 1184.0,
-            "y": 160.0,
-            "width": 208.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/IntakeStatus",
-              "period": 0.06,
-              "data_type": "string",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "CurrentAngle",
-            "x": 1200.0,
-            "y": 288.0,
-            "width": 320.0,
-            "height": 320.0,
-            "type": "Large Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/CurrentAngle",
-              "period": 0.033,
-              "data_type": "double"
-            }
-          },
-          {
-            "title": "ClampSpeed",
-            "x": 864.0,
-            "y": 272.0,
-            "width": 304.0,
-            "height": 352.0,
-            "type": "Graph",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/ClampSpeed",
-              "period": 0.033,
-              "data_type": "double",
-              "time_displayed": 5.0,
-              "min_value": -1.0,
-              "max_value": 1.0,
-              "color": 4285060096,
-              "line_width": 2.0
-            }
-          },
-          {
-            "title": "Stalled",
-            "x": 576.0,
-            "y": 288.0,
-            "width": 240.0,
-            "height": 208.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Stalled",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "AtSetpoint",
-            "x": 576.0,
-            "y": 496.0,
-            "width": 240.0,
-            "height": 192.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AtSetpoint",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "Setpoint",
-            "x": 848.0,
-            "y": 32.0,
-            "width": 240.0,
-            "height": 208.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Setpoint",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "Controller",
-            "x": 1616.0,
-            "y": 448.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "ProfiledPIDController",
-            "properties": {
-              "topic": "/SmartDashboard/Wrist/PID/Controller",
-              "period": 0.06
-            }
-          },
-          {
-            "title": "RawEncoderValue",
-            "x": 864.0,
-            "y": 624.0,
-            "width": 608.0,
-            "height": 192.0,
-            "type": "Large Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RawEncoderValue",
-              "period": 0.06,
-              "data_type": "double"
-            }
-          },
-          {
-            "title": "IsCoralRange",
-            "x": 1168.0,
-            "y": 32.0,
-            "width": 400.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/IsCoralRange",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "AdaptiveWrist",
-            "x": 448.0,
-            "y": 720.0,
-            "width": 352.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AdaptiveWrist",
-              "period": 0.06,
-              "data_type": "string",
-              "show_submit_button": false
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Wrist PID",
-      "grid_layout": {
-        "layouts": [
-          {
-            "title": "Command",
-            "x": 0.0,
-            "y": 16.0,
-            "width": 256.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "ManualSpeed",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/ManualSpeed",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "SetpointCommand",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/SetpointCommand",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "Stop",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/Stop",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              }
-            ]
           },
           {
             "title": "Status",
-            "x": 800.0,
+            "x": 1584.0,
             "y": 16.0,
             "width": 256.0,
-            "height": 432.0,
+            "height": 864.0,
             "type": "List Layout",
             "properties": {
-              "label_position": "BOTTOM"
+              "label_position": "RIGHT"
             },
             "children": [
               {
@@ -917,6 +798,34 @@
                 "type": "Text Display",
                 "properties": {
                   "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AbsoluteEncoderValue",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "AdaptiveWrist",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AdaptiveWrist",
+                  "period": 0.06,
+                  "data_type": "string",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Angle",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
@@ -940,28 +849,96 @@
                 }
               },
               {
-                "title": "CurrentAngle",
+                "title": "Current",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/CurrentAngle",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Current",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "RawEncoderValue",
+                "title": "IsInCoralRange",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsInCoralRange",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsStalled",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsStalled",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsZeroed",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroing",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsZeroing",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "RawMotorPosition",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RawEncoderValue",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RawMotorPosition",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
@@ -980,20 +957,332 @@
                   "data_type": "double",
                   "show_submit_button": false
                 }
+              },
+              {
+                "title": "StallCount",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/StallCount",
+                  "period": 0.06,
+                  "data_type": "int",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "StallDetectionActive",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/StallDetectionActive",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Temperature",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Temperature",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Text",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Text",
+                  "period": 0.06,
+                  "data_type": "string",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Velocity",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Velocity",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Voltage",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
               }
             ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "AdaptiveWrist",
+            "x": 432.0,
+            "y": 560.0,
+            "width": 352.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AdaptiveWrist",
+              "period": 0.06,
+              "data_type": "string"
+            }
           },
           {
-            "title": "Config",
-            "x": 0.0,
-            "y": 272.0,
+            "title": "PIDEnabled",
+            "x": 224.0,
+            "y": 112.0,
             "width": 256.0,
-            "height": 432.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PIDEnabled",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Wrist PID",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "TestWristCommand",
+            "x": 1232.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 896.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
             },
             "children": [
+              {
+                "title": "Bottom",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Bottom",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist Barger",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Wrist Barger",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist Coral Intake",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Wrist Coral Intake",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist Drive",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Wrist Drive",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L1",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Wrist L1",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L2",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Wrist L2",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L3",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Wrist L3",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Wrist L4",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestWristCommand/Wrist L4",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Command",
+            "x": 464.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/Angle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "ManualSpeed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/ManualSpeed",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Command/Voltage",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Config",
+            "x": 720.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 768.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "CoralMaxAngle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/CoralMaxAngle",
+                  "period": 0.06,
+                  "data_type": "int",
+                  "show_submit_button": false
+                }
+              },
               {
                 "title": "GearRatio",
                 "x": 0.0,
@@ -1009,28 +1298,167 @@
                 }
               },
               {
-                "title": "InitialSetpoint",
+                "title": "MaxSafeAngle",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/InitialSetpoint",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MaxSafeAngle",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "PIDEnabled",
+                "title": "MinClearElevatorAngle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MinClearElevatorAngle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "MinSafeAngle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MinSafeAngle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "MotionMagicAcceleration",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MotionMagicAcceleration",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "MotionMagicCruiseVelocity",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MotionMagicCruiseVelocity",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "TrueZero",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/TrueZero",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "ZeroingSpeed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/ZeroingSpeed",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Status",
+            "x": 976.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 720.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "RIGHT"
+            },
+            "children": [
+              {
+                "title": "AbsoluteEncoderValue",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AbsoluteEncoderValue",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Angle",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Angle",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Current",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Current",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "IsInCoralRange",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Boolean Box",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/PIDEnabled",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsInCoralRange",
                   "period": 0.06,
                   "data_type": "boolean",
                   "true_color": 4283215696,
@@ -1040,109 +1468,141 @@
                 }
               },
               {
-                "title": "SoftForwardLimit",
+                "title": "IsStalled",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsStalled",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsZeroed",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroing",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/IsZeroing",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "StallCount",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/SoftForwardLimit",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/StallCount",
                   "period": 0.06,
-                  "data_type": "double",
+                  "data_type": "int",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "SoftReverseLimit",
+                "title": "StallDetectionActive",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/StallDetectionActive",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Temperature",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Wrist/Config/SoftReverseLimit",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Temperature",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
-              }
-            ]
-          },
-          {
-            "title": "TestCommand",
-            "x": 288.0,
-            "y": 16.0,
-            "width": 256.0,
-            "height": 528.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
+              },
               {
-                "title": "Bottom",
+                "title": "Text",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 256.0,
+                "width": 128.0,
                 "height": 128.0,
-                "type": "Command",
+                "type": "Text Display",
                 "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Bottom",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Text",
                   "period": 0.06,
-                  "show_type": true
+                  "data_type": "string",
+                  "show_submit_button": false
                 }
               },
               {
-                "title": "Wrist L1",
+                "title": "Velocity",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 256.0,
+                "width": 128.0,
                 "height": 128.0,
-                "type": "Command",
+                "type": "Text Display",
                 "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L1",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Velocity",
                   "period": 0.06,
-                  "show_type": true
+                  "data_type": "double",
+                  "show_submit_button": false
                 }
               },
               {
-                "title": "Wrist L2",
+                "title": "Voltage",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 256.0,
+                "width": 128.0,
                 "height": 128.0,
-                "type": "Command",
+                "type": "Text Display",
                 "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L2",
+                  "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Voltage",
                   "period": 0.06,
-                  "show_type": true
-                }
-              },
-              {
-                "title": "Wrist L3",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L3",
-                  "period": 0.06,
-                  "show_type": true
-                }
-              },
-              {
-                "title": "Wrist L4",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 256.0,
-                "height": 128.0,
-                "type": "Command",
-                "properties": {
-                  "topic": "/SmartDashboard/TestCommand/Wrist L4",
-                  "period": 0.06,
-                  "show_type": true
+                  "data_type": "double",
+                  "show_submit_button": false
                 }
               }
             ]
@@ -1150,145 +1610,141 @@
         ],
         "containers": [
           {
-            "title": "CurrentAngle",
-            "x": 272.0,
-            "y": 544.0,
-            "width": 272.0,
-            "height": 208.0,
+            "title": "Angle",
+            "x": 1488.0,
+            "y": 16.0,
+            "width": 320.0,
+            "height": 128.0,
             "type": "Large Text Display",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/CurrentAngle",
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Angle",
               "period": 0.06,
               "data_type": "double"
             }
           },
           {
-            "title": "pidController",
-            "x": 544.0,
-            "y": 16.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "ProfiledPIDController",
-            "properties": {
-              "topic": "/SmartDashboard/Wrist/pidController",
-              "period": 0.06
-            }
-          },
-          {
-            "title": "FeedForward",
-            "x": 1056.0,
-            "y": 16.0,
-            "width": 400.0,
-            "height": 384.0,
-            "type": "Graph",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/FeedForward",
-              "period": 0.033,
-              "data_type": "double",
-              "time_displayed": 5.0,
-              "color": 4278238420,
-              "line_width": 2.0
-            }
-          },
-          {
-            "title": "PidOutput",
-            "x": 1472.0,
-            "y": 32.0,
-            "width": 384.0,
-            "height": 384.0,
-            "type": "Graph",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PidOutput",
-              "period": 0.033,
-              "data_type": "double",
-              "time_displayed": 5.0,
-              "color": 4278238420,
-              "line_width": 2.0
-            }
-          },
-          {
-            "title": "PidOutput",
-            "x": 48.0,
-            "y": 752.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PidOutput",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
-            "title": "PidOutputVel",
-            "x": 1072.0,
-            "y": 416.0,
-            "width": 400.0,
-            "height": 432.0,
-            "type": "Graph",
-            "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PidOutputVel",
-              "period": 0.033,
-              "data_type": "double",
-              "time_displayed": 5.0,
-              "color": 4278238420,
-              "line_width": 2.0
-            }
-          },
-          {
-            "title": "PidOutputPos",
-            "x": 448.0,
-            "y": 768.0,
-            "width": 368.0,
+            "title": "Setpoint",
+            "x": 1488.0,
+            "y": 144.0,
+            "width": 320.0,
             "height": 128.0,
             "type": "Large Text Display",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PidOutputPos",
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Setpoint",
               "period": 0.06,
               "data_type": "double"
             }
           },
           {
-            "title": "TotalMotorOutput",
-            "x": 1504.0,
+            "title": "AtSetpoint",
+            "x": 416.0,
+            "y": 528.0,
+            "width": 304.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/AtSetpoint",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "TargetMotorPosition",
+            "x": 1488.0,
+            "y": 272.0,
+            "width": 304.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/TargetMotorPosition",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "RawMotorPosition",
+            "x": 1488.0,
             "y": 416.0,
             "width": 320.0,
             "height": 128.0,
-            "type": "Text Display",
+            "type": "Large Text Display",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/TotalMotorOutput",
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/RawMotorPosition",
               "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
+              "data_type": "double"
             }
           },
           {
-            "title": "PidOutput",
-            "x": 1504.0,
-            "y": 544.0,
-            "width": 336.0,
+            "title": "SoftForwardLimit",
+            "x": 720.0,
+            "y": 768.0,
+            "width": 160.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Control/PidOutput",
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Config/SoftForwardLimit",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": false
             }
           },
           {
-            "title": "Voltage",
-            "x": 1504.0,
-            "y": 672.0,
-            "width": 352.0,
-            "height": 96.0,
+            "title": "SoftReverseLimit",
+            "x": 880.0,
+            "y": 768.0,
+            "width": 160.0,
+            "height": 128.0,
             "type": "Text Display",
             "properties": {
-              "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Voltage",
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Config/SoftReverseLimit",
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": false
+            }
+          },
+          {
+            "title": "MaxSafeAngle",
+            "x": 160.0,
+            "y": 544.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MaxSafeAngle",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "MinSafeAngle",
+            "x": 160.0,
+            "y": 672.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Wrist/Config/MinSafeAngle",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Zero Wrist",
+            "x": 464.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Wrist/Zero Wrist",
+              "period": 0.06,
+              "show_type": true
             }
           }
         ]
@@ -1299,30 +1755,71 @@
       "grid_layout": {
         "layouts": [
           {
-            "title": "Config",
-            "x": 0.0,
-            "y": 80.0,
+            "title": "Command",
+            "x": 704.0,
+            "y": 0.0,
             "width": 256.0,
-            "height": 256.0,
+            "height": 464.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
             },
             "children": [
               {
-                "title": "InitialSetpoint",
+                "title": "ManualSpeed",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Config/InitialSetpoint",
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Command/ManualSpeed",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               },
+              {
+                "title": "Position",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Command/Position",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Voltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Command/Voltage",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Config",
+            "x": 976.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 576.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
               {
                 "title": "MaxSafePos",
                 "x": 0.0,
@@ -1333,143 +1830,143 @@
                 "properties": {
                   "topic": "/AdvantageKit/RealOutputs/Elevator/Config/MaxSafePos",
                   "period": 0.06,
-                  "data_type": "int",
+                  "data_type": "double",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "PIDEnabled",
+                "title": "MinSafePos",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
-                "type": "Boolean Box",
+                "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Config/PIDEnabled",
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Config/MinSafePos",
                   "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "PositionTolerance",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Config/PositionTolerance",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "ZeroingVoltage",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Config/ZeroingVoltage",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
                 }
               }
             ]
           },
           {
-            "title": "Control",
-            "x": 768.0,
-            "y": 80.0,
+            "title": "TestElevatorCommand",
+            "x": 448.0,
+            "y": 16.0,
             "width": 256.0,
-            "height": 352.0,
+            "height": 768.0,
             "type": "List Layout",
             "properties": {
-              "label_position": "TOP"
+              "label_position": "HIDDEN"
             },
             "children": [
               {
-                "title": "ClampSpeed",
+                "title": "Elevator Barge",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/ClampSpeed",
+                  "topic": "/SmartDashboard/TestElevatorCommand/Elevator Barge",
                   "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
+                  "show_type": true
                 }
               },
               {
-                "title": "Feedforward",
+                "title": "Elevator L1",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/Feedforward",
+                  "topic": "/SmartDashboard/TestElevatorCommand/Elevator L1",
                   "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
+                  "show_type": true
                 }
               },
               {
-                "title": "PIDEnabled",
+                "title": "Elevator L2",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Boolean Box",
+                "type": "Command",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/PIDEnabled",
+                  "topic": "/SmartDashboard/TestElevatorCommand/Elevator L2",
                   "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
+                  "show_type": true
                 }
               },
               {
-                "title": "PIDOutput",
+                "title": "Elevator L3",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/PIDOutput",
+                  "topic": "/SmartDashboard/TestElevatorCommand/Elevator L3",
                   "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
+                  "show_type": true
                 }
               },
               {
-                "title": "TotalOutput",
+                "title": "Elevator L4",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/TotalOutput",
+                  "topic": "/SmartDashboard/TestElevatorCommand/Elevator L4",
                   "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
+                  "show_type": true
                 }
               }
             ]
           },
           {
             "title": "Status",
-            "x": 512.0,
-            "y": 80.0,
+            "x": 1248.0,
+            "y": 0.0,
             "width": 256.0,
-            "height": 592.0,
+            "height": 944.0,
             "type": "List Layout",
             "properties": {
               "label_position": "TOP"
             },
             "children": [
-              {
-                "title": "AtSetpoint",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Boolean Box",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/AtSetpoint",
-                  "period": 0.06,
-                  "data_type": "boolean",
-                  "true_color": 4283215696,
-                  "false_color": 4294198070,
-                  "true_icon": "None",
-                  "false_icon": "None"
-                }
-              },
               {
                 "title": "Current",
                 "x": 0.0,
@@ -1482,6 +1979,57 @@
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
+                }
+              },
+              {
+                "title": "IsStalled",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/IsStalled",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/IsZeroed",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "IsZeroing",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/IsZeroing",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
                 }
               },
               {
@@ -1513,14 +2061,28 @@
                 }
               },
               {
-                "title": "Stalled",
+                "title": "StallCount",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/StallCount",
+                  "period": 0.06,
+                  "data_type": "int",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "StallDetectionActive",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Boolean Box",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Stalled",
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/StallDetectionActive",
                   "period": 0.06,
                   "data_type": "boolean",
                   "true_color": 4283215696,
@@ -1540,6 +2102,20 @@
                   "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Temperature",
                   "period": 0.06,
                   "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Text",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Text",
+                  "period": 0.06,
+                  "data_type": "string",
                   "show_submit_button": false
                 }
               },
@@ -1570,57 +2146,140 @@
                   "data_type": "double",
                   "show_submit_button": false
                 }
-              }
-            ]
-          },
-          {
-            "title": "Control",
-            "x": 256.0,
-            "y": 80.0,
-            "width": 256.0,
-            "height": 368.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "ClampSpeed",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/ClampSpeed",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
               },
               {
-                "title": "Feedforward",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/Feedforward",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "PIDEnabled",
+                "title": "lookForStalled",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Boolean Box",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/PIDEnabled",
+                  "topic": "/AdvantageKit/RealOutputs/Elevator/Status/lookForStalled",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "Position",
+            "x": 784.0,
+            "y": 576.0,
+            "width": 448.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Position",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Setpoint",
+            "x": 800.0,
+            "y": 704.0,
+            "width": 432.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Setpoint",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Zero Elevator",
+            "x": 1536.0,
+            "y": 16.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Elevator/Zero Elevator",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "Text",
+            "x": 112.0,
+            "y": 784.0,
+            "width": 672.0,
+            "height": 160.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Text",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "IsAtPosition",
+            "x": 1584.0,
+            "y": 256.0,
+            "width": 224.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Elevator/Status/IsAtPosition",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Velocity",
+            "x": 16.0,
+            "y": 144.0,
+            "width": 432.0,
+            "height": 576.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Velocity",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "DriveAutoTesting",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Camera0",
+            "x": 0.0,
+            "y": 800.0,
+            "width": 256.0,
+            "height": 176.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Connected",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera0/Connected",
                   "period": 0.06,
                   "data_type": "boolean",
                   "true_color": 4283215696,
@@ -1630,72 +2289,127 @@
                 }
               },
               {
-                "title": "PIDOutput",
+                "title": "TagIds",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/PIDOutput",
+                  "topic": "/AdvantageKit/Vision/Camera0/TagIds",
                   "period": 0.06,
-                  "data_type": "double",
+                  "data_type": "int[]",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Camera1",
+            "x": 256.0,
+            "y": 800.0,
+            "width": 256.0,
+            "height": 176.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Connected",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera1/Connected",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "TagIds",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera1/TagIds",
+                  "period": 0.06,
+                  "data_type": "int[]",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Gyro",
+            "x": 1648.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 416.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Connected",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/Drive/Gyro/Connected",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "OdometryYawTimestamps",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/Drive/Gyro/OdometryYawTimestamps",
+                  "period": 0.06,
+                  "data_type": "double[]",
                   "show_submit_button": false
                 }
               },
               {
-                "title": "TotalOutput",
+                "title": "YawVelocityRadPerSec",
                 "x": 0.0,
                 "y": 0.0,
                 "width": 128.0,
                 "height": 128.0,
                 "type": "Text Display",
                 "properties": {
-                  "topic": "/AdvantageKit/RealOutputs/Elevator/Control/TotalOutput",
+                  "topic": "/AdvantageKit/Drive/Gyro/YawVelocityRadPerSec",
                   "period": 0.06,
                   "data_type": "double",
                   "show_submit_button": false
                 }
               }
             ]
-          }
-        ],
-        "containers": [
-          {
-            "title": "FMSInfo",
-            "x": 1520.0,
-            "y": 816.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "FMSInfo",
-            "properties": {
-              "topic": "/FMSInfo",
-              "period": 0.06
-            }
           },
           {
-            "title": "Controller",
-            "x": 1088.0,
-            "y": 96.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "ProfiledPIDController",
-            "properties": {
-              "topic": "/SmartDashboard/Elevator/PID/Controller",
-              "period": 0.06
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Cameras",
-      "grid_layout": {
-        "layouts": [
-          {
-            "title": "limelight-back",
-            "x": 224.0,
-            "y": 112.0,
+            "title": "Zone1",
+            "x": 688.0,
+            "y": 528.0,
             "width": 256.0,
             "height": 256.0,
             "type": "List Layout",
@@ -1704,549 +2418,107 @@
             },
             "children": [
               {
-                "title": "botpose",
+                "title": "LeftL4",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/limelight-back/botpose",
+                  "topic": "/SmartDashboard/TestDrive/Zone1/LeftL4",
                   "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
+                  "show_type": true
                 }
               },
               {
-                "title": "botpose_orb",
+                "title": "Right",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/limelight-back/botpose_orb",
+                  "topic": "/SmartDashboard/TestDrive/Zone1/Right",
                   "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
+                  "show_type": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Zone6",
+            "x": 976.0,
+            "y": 544.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Left",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestDrive/Zone6/Left",
+                  "period": 0.06,
+                  "show_type": true
                 }
               },
               {
-                "title": "botpose_orb_wpiblue",
+                "title": "Right",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/limelight-back/botpose_orb_wpiblue",
+                  "topic": "/SmartDashboard/TestDrive/Zone6/Right",
                   "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
+                  "show_type": true
+                }
+              }
+            ]
+          },
+          {
+            "title": "Zone4",
+            "x": 1248.0,
+            "y": 544.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Left",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/TestDrive/Zone4/Left",
+                  "period": 0.06,
+                  "show_type": true
                 }
               },
               {
-                "title": "botpose_orb_wpired",
+                "title": "Right",
                 "x": 0.0,
                 "y": 0.0,
-                "width": 128.0,
+                "width": 256.0,
                 "height": 128.0,
-                "type": "Text Display",
+                "type": "Command",
                 "properties": {
-                  "topic": "/limelight-back/botpose_orb_wpired",
+                  "topic": "/SmartDashboard/TestDrive/Zone4/Right",
                   "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "botpose_targetspace",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/botpose_targetspace",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "botpose_wpiblue",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/botpose_wpiblue",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "botpose_wpired",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/botpose_wpired",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "camerapose_robotspace",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/camerapose_robotspace",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "camerapose_targetspace",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/camerapose_targetspace",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "cl",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/cl",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "crosshairs",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/crosshairs",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "getpipe",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/getpipe",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "getpipetype",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/getpipetype",
-                  "period": 0.06,
-                  "data_type": "string",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "hb",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/hb",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "hw",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/hw",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "json",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/json",
-                  "period": 0.06,
-                  "data_type": "string",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "ledMode",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/ledMode",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "llpython",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/llpython",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "pipeline",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/pipeline",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "rawbarcodes",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/rawbarcodes",
-                  "period": 0.06,
-                  "data_type": "string[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "rawdetections",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/rawdetections",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "rawfiducials",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/rawfiducials",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "rawtargets",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/rawtargets",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "stddevs",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/stddevs",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "stream",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/stream",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "t2d",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/t2d",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "ta",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/ta",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "targetpose_cameraspace",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/targetpose_cameraspace",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "targetpose_robotspace",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/targetpose_robotspace",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tc",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tc",
-                  "period": 0.06,
-                  "data_type": "double[]",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tcclass",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tcclass",
-                  "period": 0.06,
-                  "data_type": "string",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tdclass",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tdclass",
-                  "period": 0.06,
-                  "data_type": "string",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tid",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tid",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tl",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tl",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tv",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tv",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tx",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tx",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "txnc",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/txnc",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "ty",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/ty",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
-                }
-              },
-              {
-                "title": "tync",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Text Display",
-                "properties": {
-                  "topic": "/limelight-back/tync",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "show_submit_button": false
+                  "show_type": true
                 }
               }
             ]
@@ -2254,11 +2526,70 @@
         ],
         "containers": [
           {
+            "title": "CurrentZone",
+            "x": 0.0,
+            "y": 464.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Drive/CurrentZone",
+              "period": 0.06,
+              "data_type": "int"
+            }
+          },
+          {
+            "title": "EstimatedX",
+            "x": 256.0,
+            "y": 464.0,
+            "width": 336.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Odometry/EstimatedX",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "EstimatedY",
+            "x": 256.0,
+            "y": 592.0,
+            "width": 320.0,
+            "height": 96.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Odometry/EstimatedY",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Field",
+            "x": 768.0,
+            "y": 16.0,
+            "width": 1152.0,
+            "height": 464.0,
+            "type": "Field",
+            "properties": {
+              "topic": "/SmartDashboard/Field",
+              "period": 0.06,
+              "field_game": "Reefscape",
+              "robot_width": 0.85,
+              "robot_length": 0.85,
+              "show_other_objects": true,
+              "show_trajectories": true,
+              "field_rotation": 0.0,
+              "robot_color": 4294198070,
+              "trajectory_color": 4294967295
+            }
+          },
+          {
             "title": "limelight-back",
-            "x": 496.0,
-            "y": 112.0,
-            "width": 688.0,
-            "height": 528.0,
+            "x": 416.0,
+            "y": 16.0,
+            "width": 352.0,
+            "height": 448.0,
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/limelight-back",
@@ -2268,15 +2599,296 @@
           },
           {
             "title": "limelight-front",
-            "x": 1184.0,
-            "y": 128.0,
-            "width": 640.0,
-            "height": 512.0,
+            "x": 0.0,
+            "y": 32.0,
+            "width": 416.0,
+            "height": 416.0,
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/limelight-front",
               "period": 0.06,
               "rotation_turns": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Vision",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Camera0",
+            "x": 352.0,
+            "y": 336.0,
+            "width": 336.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "BOTTOM"
+            },
+            "children": [
+              {
+                "title": "Connected",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera0/Connected",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "TagIds",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera0/TagIds",
+                  "period": 0.06,
+                  "data_type": "int[]",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "robot_orientation_set",
+                "x": 336.0,
+                "y": 448.0,
+                "width": 336.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/limelight-front/robot_orientation_set",
+                  "period": 0.06,
+                  "data_type": "double[]",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Camera1",
+            "x": 16.0,
+            "y": 336.0,
+            "width": 336.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "BOTTOM"
+            },
+            "children": [
+              {
+                "title": "Connected",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera1/Connected",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "TagIds",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/AdvantageKit/Vision/Camera1/TagIds",
+                  "period": 0.06,
+                  "data_type": "int[]",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "robot_orientation_set",
+                "x": 0.0,
+                "y": 496.0,
+                "width": 352.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/limelight-back/robot_orientation_set",
+                  "period": 0.06,
+                  "data_type": "double[]",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "limelight-front",
+            "x": 352.0,
+            "y": 0.0,
+            "width": 336.0,
+            "height": 336.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-front",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Status",
+            "x": 688.0,
+            "y": 0.0,
+            "width": 1200.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Vision/Status",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "EstimatedYaw",
+            "x": 16.0,
+            "y": 592.0,
+            "width": 336.0,
+            "height": 352.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Odometry/EstimatedYaw",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": 0.0,
+              "end_angle": 360.0,
+              "min_value": 0.0,
+              "max_value": 360.0,
+              "number_of_labels": 12,
+              "wrap_value": true,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "EstimatedYawRaw",
+            "x": 352.0,
+            "y": 720.0,
+            "width": 336.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Odometry/EstimatedYawRaw",
+              "period": 1.0,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Reset Pose",
+            "x": 352.0,
+            "y": 592.0,
+            "width": 336.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Reset Pose",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "Field",
+            "x": 688.0,
+            "y": 128.0,
+            "width": 1216.0,
+            "height": 800.0,
+            "type": "Field",
+            "properties": {
+              "topic": "/SmartDashboard/Field",
+              "period": 0.06,
+              "field_game": "Reefscape",
+              "robot_width": 0.85,
+              "robot_length": 0.85,
+              "show_other_objects": true,
+              "show_trajectories": true,
+              "field_rotation": 0.0,
+              "robot_color": 4294198070,
+              "trajectory_color": 4294967295
+            }
+          },
+          {
+            "title": "limelight-back",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 352.0,
+            "height": 336.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-back",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tab 8",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "CurrentZone",
+            "x": 736.0,
+            "y": 160.0,
+            "width": 240.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Vision/CurrentZone",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "CurrentZoneTagId",
+            "x": 736.0,
+            "y": 288.0,
+            "width": 304.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Vision/CurrentZoneTagId",
+              "period": 0.06,
+              "data_type": "int",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Status",
+            "x": 736.0,
+            "y": 416.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Vision/Status",
+              "period": 0.06,
+              "data_type": "string",
+              "show_submit_button": false
             }
           }
         ]
