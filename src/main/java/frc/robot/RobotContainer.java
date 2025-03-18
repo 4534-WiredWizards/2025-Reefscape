@@ -369,11 +369,11 @@ public class RobotContainer {
     // Elevator position events
     new EventTrigger("E-L4")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
-    new EventTrigger("E-L4")
+    new EventTrigger("E-L3")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
     new EventTrigger("E-L2")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
-    new EventTrigger("E-L4")
+    new EventTrigger("E-L1")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
     new EventTrigger("E-Zero")
         .whileTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
@@ -557,6 +557,7 @@ public class RobotContainer {
     operatorController.a().whileTrue(new SimpleMoveClimb(m_climb, () -> .3));
 
     operatorController.button(Operator.RESET_BOT_POSE_BUTTON).onTrue(new InstantCommand(() -> vision.resetRobotPose()));
+    operatorController.button(Operator.RESET_BOT_POSE_BUTTON).onTrue(m_elevator.zeroCommand());
 
     // Side-specific controls using right thumb axis
     configureThumbAxisTriggers();
