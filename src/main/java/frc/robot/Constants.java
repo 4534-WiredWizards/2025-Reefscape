@@ -165,8 +165,8 @@ public interface Constants {
     public static final double ZEROING_VOLTAGE = 5;
 
     // PID and Feedforward Constants
-    public static final double KP = 0.069; // Proportional gain
-    public static final double KI = 0.001; // Integral gain
+    public static final double KP = 1.8; // Proportional gain
+    public static final double KI = 0.01; // Integral gain
     // public static final double KD = 0.1; // Derivative gain
 
     // Feedforward Constants
@@ -188,12 +188,12 @@ public interface Constants {
     // public static final double JERK = 800.0; // In units/sec³
 
     // Maxs New values
-    public static final double CRUISE_VELOCITY = 86; // In units/sec full speed for 1s bottom to
-    public static final double MAX_ACCELERATION = 171; // In units/sec²
-    public static final double JERK = 500.0; // In units/sec³
+    public static final double CRUISE_VELOCITY = 100; // In units/sec full speed for 1s bottom to
+    public static final double MAX_ACCELERATION = 150; // In units/sec²
+    public static final double JERK = 500; // In units/sec³
     public static final double KV = 0.6; // Velocity feedforward
     public static final double KA = 0.05; // Acceleration feedforward //Was .12
-    public static final double KD = 0.69; // Derivative gain OR 0.006
+    public static final double KD = 0.006; // Derivative gain
 
     // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
