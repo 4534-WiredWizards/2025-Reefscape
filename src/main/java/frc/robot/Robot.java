@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Music;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -127,7 +126,16 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     // Call the robot container's init method
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
-    robotContainer.vision.resetRobotPose();
+    new Thread(
+            () -> {
+              try {
+                Thread.sleep(2000); // 2 second delay
+                robotContainer.vision.resetRobotPose();
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+            })
+        .start();
   }
 
   /** This function is called once when the robot is disabled. */
@@ -157,6 +165,8 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    robotContainer.vision.resetRobotPose();
+    System.out.println("Resetting robot pose in teleop");
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -179,8 +189,8 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     // FIXME: Music to be added back as a command or when doesnt brick the motors
-    Music music = new Music();
-    music.playNotLikeUs();
+    // Music music = new Music();
+    // music.playNotLikeUs();
   }
 
   /** This function is called periodically during test mode. */

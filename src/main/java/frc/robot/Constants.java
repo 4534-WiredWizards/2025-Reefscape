@@ -12,10 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -161,11 +162,11 @@ public interface Constants {
     // Voltage Limits
     public static final double PEAK_FORWARD_VOLTAGE = 12.0;
     public static final double PEAK_REVERSE_VOLTAGE = -12.0;
-    public static final double ZEROING_VOLTAGE = 2.5;
+    public static final double ZEROING_VOLTAGE = 5;
 
     // PID and Feedforward Constants
-    public static final double KP = 5; // Proportional gain
-    public static final double KI = 0.0; // Integral gain
+    public static final double KP = 0.069; // Proportional gain
+    public static final double KI = 0.001; // Integral gain
     // public static final double KD = 0.1; // Derivative gain
 
     // Feedforward Constants
@@ -187,12 +188,12 @@ public interface Constants {
     // public static final double JERK = 800.0; // In units/sec³
 
     // Maxs New values
-    public static final double CRUISE_VELOCITY = 90; // In units/sec full speed for 1s bottom to
-    public static final double MAX_ACCELERATION = 128.0; // In units/sec²
-    public static final double JERK = 600.0; // In units/sec³
+    public static final double CRUISE_VELOCITY = 86; // In units/sec full speed for 1s bottom to
+    public static final double MAX_ACCELERATION = 171; // In units/sec²
+    public static final double JERK = 500.0; // In units/sec³
     public static final double KV = 0.6; // Velocity feedforward
     public static final double KA = 0.05; // Acceleration feedforward //Was .12
-    public static final double KD = 0.10; // Derivative gain
+    public static final double KD = 0.69; // Derivative gain OR 0.006
 
     // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
@@ -209,19 +210,19 @@ public interface Constants {
     public static final double STALL_VELOCITY_THRESHOLD = 0.05; // Rotations/sec
 
     // Safety Limits
-    public static final double ELEVATOR_DANGER_LIMIT = 6.6;
+    public static final double ELEVATOR_DANGER_LIMIT = 6.8;
 
     // Elevator Stop Positions
     // Define preset positions that the elevator can move to
-    public static final double POSITION_GROUND = 0.0;
+    public static final double POSITION_GROUND = -0.1;
     public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 13.8;
-    public static final double POSITION_L3 = 30;
-    public static final double POSITION_L4 = 66.6;
+    public static final double POSITION_L3 = (30-2.5);
+    public static final double POSITION_L4 = (66.6+2.4);
     public static final double POSITION_BARGE = 70;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.4; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.6; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
@@ -244,7 +245,7 @@ public interface Constants {
 
     // Control System Constants
     // PID Configuration
-    double PID_POSITION_TOLERANCE = 1;
+    double PID_POSITION_TOLERANCE = 2.2; // In angle units
     double KP = 2.75;
     double KI = 0.0;
     double KD = 0.15;
@@ -256,8 +257,8 @@ public interface Constants {
     double KA = 0.01; // Acceleration feedforward
 
     // Motion Profile Configuration
-    double CRUISE_VELOCITY = 30; // In raw encoder vlues/s
-    double ACCELERATION = 60; // In raw encoder values/s/s
+    double CRUISE_VELOCITY = 80; // In raw encoder vlues/s
+    double ACCELERATION = 100; // In raw encoder values/s/s
     double JERK = 0;
 
     // Safety Limits
@@ -278,9 +279,9 @@ public interface Constants {
     // Preset Positions
     // Level Positions
     double L1_ANGLE = 123;
-    double L2_ANGLE = 123;
-    double L3_ANGLE = 123;
-    double L4_ANGLE = 91;
+    double L2_ANGLE = (123-5);
+    double L3_ANGLE = (123-5);
+    double L4_ANGLE = 89;
 
     // Operational Positions
     int CORAL_INTAKE_ANGLE = 205;
@@ -299,9 +300,9 @@ public interface Constants {
 
       // Intake/Outtake Speeds
       double CORAL_INTAKE_SPEED = 0.4;
-      double CORAL_OUTTAKE_SPEED = -0.2;
-      double ALGAE_INTAKE_SPEED = 0.1;
-      double ALGAE_OUTTAKE_SPEED = -0.3;
+      double CORAL_OUTTAKE_SPEED = -0.28;
+      double ALGAE_INTAKE_SPEED = 0.3;
+      double ALGAE_OUTTAKE_SPEED = -0.7;
     }
   }
 
