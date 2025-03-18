@@ -162,11 +162,11 @@ public interface Constants {
     // Voltage Limits
     public static final double PEAK_FORWARD_VOLTAGE = 12.0;
     public static final double PEAK_REVERSE_VOLTAGE = -12.0;
-    public static final double ZEROING_VOLTAGE = 3;
+    public static final double ZEROING_VOLTAGE = 5;
 
     // PID and Feedforward Constants
     public static final double KP = 5; // Proportional gain
-    public static final double KI = 0.0; // Integral gain
+    public static final double KI = 0.01; // Integral gain
     // public static final double KD = 0.1; // Derivative gain
 
     // Feedforward Constants
@@ -217,12 +217,12 @@ public interface Constants {
     public static final double POSITION_GROUND = 0.0;
     public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 13.8;
-    public static final double POSITION_L3 = 30;
-    public static final double POSITION_L4 = 66.6;
+    public static final double POSITION_L3 = (30-2.5);
+    public static final double POSITION_L4 = (66.6+2.4);
     public static final double POSITION_BARGE = 70;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.4; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.6; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
@@ -279,9 +279,9 @@ public interface Constants {
     // Preset Positions
     // Level Positions
     double L1_ANGLE = 123;
-    double L2_ANGLE = 123;
-    double L3_ANGLE = 123;
-    double L4_ANGLE = 91;
+    double L2_ANGLE = (123-5);
+    double L3_ANGLE = (123-5);
+    double L4_ANGLE = 89;
 
     // Operational Positions
     int CORAL_INTAKE_ANGLE = 205;
