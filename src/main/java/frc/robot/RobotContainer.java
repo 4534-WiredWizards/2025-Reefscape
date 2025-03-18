@@ -241,12 +241,8 @@ public class RobotContainer {
                 new ParallelDeadlineGroup(
                     // Use the sensor to determine when to stop waiting
                     new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                    new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, true),
-                    new SequentialCommandGroup(
-                        new WaitUntilCommand(() -> 
-                            m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
-                        new SetWristPosition(m_Wrist, wristAngle, true)
-                    )
+                    new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, wristAngle, false)
                 )
             ),
             
