@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
+import frc.robot.Constants.IO;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.Wrist;
@@ -554,6 +555,8 @@ public class RobotContainer {
     // Configure climb controls
     operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.5));
     operatorController.a().whileTrue(new SimpleMoveClimb(m_climb, () -> .3));
+
+    operatorController.button(Operator.RESET_BOT_POSE_BUTTON).onTrue(new InstantCommand(() -> vision.resetRobotPose()));
 
     // Side-specific controls using right thumb axis
     configureThumbAxisTriggers();
