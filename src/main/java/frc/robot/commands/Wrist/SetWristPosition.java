@@ -3,13 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.commands.Wrist;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.WristSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SetWristPosition extends Command {
   private final WristSubsystem m_wrist;
