@@ -234,12 +234,30 @@ public class RobotContainer {
     }
 
     public Command createScoringSequence(double elevatorPosition, double wristAngle) {
-        return new SequentialCommandGroup(
+        return new ConditionalCommand(
+            // If coral is detected in intake (sensor is triggered)
+            new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
                 new ParallelDeadlineGroup(
-                        new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
-                        new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, false),
-                        new SetWristPosition(m_Wrist, wristAngle, false)));
+                    // Use the sensor to determine when to stop waiting
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, wristAngle, false)
+                )
+            ),
+            
+            // If no coral detected, just move to position without waiting for sensor
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelCommandGroup(
+                    new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, true),
+                    new SetWristPosition(m_Wrist, wristAngle, true)
+                )
+            ),
+            
+            // Condition: check if sensor detects coral
+            () -> m_Intake.getFirstSensor()
+        );
     }
 
     // Define commadn to ElevatorDown&RuneCoralIntake
