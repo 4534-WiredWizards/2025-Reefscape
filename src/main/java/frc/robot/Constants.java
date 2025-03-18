@@ -214,7 +214,7 @@ public interface Constants {
 
     // Elevator Stop Positions
     // Define preset positions that the elevator can move to
-    public static final double POSITION_GROUND = 0.0;
+    public static final double POSITION_GROUND = -1;
     public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 13.8;
     public static final double POSITION_L3 = (30-2.5);
@@ -245,7 +245,7 @@ public interface Constants {
 
     // Control System Constants
     // PID Configuration
-    double PID_POSITION_TOLERANCE = 1;
+    double PID_POSITION_TOLERANCE = 2.2; // In angle units
     double KP = 2.75;
     double KI = 0.0;
     double KD = 0.15;
@@ -257,8 +257,8 @@ public interface Constants {
     double KA = 0.01; // Acceleration feedforward
 
     // Motion Profile Configuration
-    double CRUISE_VELOCITY = 40; // In raw encoder vlues/s
-    double ACCELERATION = 60; // In raw encoder values/s/s
+    double CRUISE_VELOCITY = 80; // In raw encoder vlues/s
+    double ACCELERATION = 100; // In raw encoder values/s/s
     double JERK = 0;
 
     // Safety Limits
@@ -300,9 +300,9 @@ public interface Constants {
 
       // Intake/Outtake Speeds
       double CORAL_INTAKE_SPEED = 0.4;
-      double CORAL_OUTTAKE_SPEED = -0.2;
-      double ALGAE_INTAKE_SPEED = 0.1;
-      double ALGAE_OUTTAKE_SPEED = -0.3;
+      double CORAL_OUTTAKE_SPEED = -0.28;
+      double ALGAE_INTAKE_SPEED = 0.3;
+      double ALGAE_OUTTAKE_SPEED = -0.7;
     }
   }
 
