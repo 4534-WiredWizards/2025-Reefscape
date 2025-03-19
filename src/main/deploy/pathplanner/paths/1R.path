@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 2.498,
-        "y": 3.871
+        "y": 3.858
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.3950000000000005,
-        "y": 3.871
+        "y": 3.858
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.195,
-        "y": 3.871
+        "x": 3.210160154849323,
+        "y": 3.858
       },
       "prevControl": {
-        "x": 2.856009316033613,
-        "y": 3.8735132019420035
+        "x": 2.871169470882936,
+        "y": 3.8605132019420036
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,20 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "MoveToRequestedPosition",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "RunCoralOutake",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 0.4,
     "maxAcceleration": 3.5,
