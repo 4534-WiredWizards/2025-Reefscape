@@ -1,3 +1,5 @@
+// Help us Max is a  tyrant
+
 package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
@@ -619,6 +621,67 @@ public class RobotContainer {
 
     // L4 scoring position (Up button)
     operatorController.povUp().onTrue(createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
+  }
+
+  public void configureCoralAutoScoringButtons() {
+    Trigger leftLevel1 =
+        operatorController
+            .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(operatorController.povDown());
+    Trigger leftLevel2 =
+        operatorController
+            .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(operatorController.povLeft());
+    Trigger leftLevel3 =
+        operatorController
+            .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(operatorController.povRight());
+    Trigger leftLevel4 =
+        operatorController
+            .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+            .and(operatorController.povUp());
+
+    // Right Side
+    Trigger rightLevel1 =
+        operatorController
+            .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+            .and(operatorController.povDown());
+    Trigger rightLevel2 =
+        operatorController
+            .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+            .and(operatorController.povLeft());
+    Trigger rightLevel3 =
+        operatorController
+            .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+            .and(operatorController.povRight());
+    Trigger rightLevel4 =
+        operatorController
+            .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+            .and(operatorController.povUp());
+
+    // Test Combo Buttons
+    leftLevel1.onTrue(Commands.runOnce(() -> new InstantCommand(() -> System.out.println("test"))));
+
+    // Left Side L2 - L4
+
+    // leftLevel2.onTrue(autoScoringSequence(Constants.ScoringSide.LEFT,
+    // Constants.ScoringHeight.L2));
+
+    // leftLevel3.onTrue(autoScoringSequence(Constants.ScoringSide.LEFT,
+    // Constants.ScoringHeight.L3));
+
+    // leftLevel4.onTrue(autoScoringSequence(Constants.ScoringSide.LEFT,
+    // Constants.ScoringHeight.L4));
+
+    // //Right Side L2 - L4
+    // rightLevel2.onTrue(autoScoringSequence(Constants.ScoringSide.RIGHT,
+    // Constants.ScoringHeight.L2));
+
+    // rightLevel3.onTrue(autoScoringSequence(Constants.ScoringSide.RIGHT,
+    // Constants.ScoringHeight.L3));
+
+    // rightLevel4.onTrue(autoScoringSequence(Constants.ScoringSide.RIGHT,
+    // Constants.ScoringHeight.L4));
   }
 
   /** Configure thumb axis triggers for side-specific actions */
