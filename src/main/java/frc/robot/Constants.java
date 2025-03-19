@@ -219,7 +219,7 @@ public interface Constants {
     public static final double POSITION_L3 = 29.79;
     public static final double POSITION_L4 = 68.81;
     public static final double POSITION_HIGH_ALGAE = POSITION_L3;
-    public static final double POSITION_LOW_ALGAE = POSITION_L2;
+    public static final double POSITION_LOW_ALGAE = 15;
     public static final double POSITION_BARGE = 70;
 
     // Manual Control Constants
@@ -258,8 +258,8 @@ public interface Constants {
     double KA = 0.01; // Acceleration feedforward
 
     // Motion Profile Configuration
-    double CRUISE_VELOCITY = 80; // In raw encoder vlues/s
-    double ACCELERATION = 100; // In raw encoder values/s/s
+    double CRUISE_VELOCITY = 90; // In raw encoder vlues/s
+    double ACCELERATION = 120; // In raw encoder values/s/s
     double JERK = 0;
 
     // Safety Limits

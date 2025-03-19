@@ -68,7 +68,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "WE-L4",
+      "name": "MoveToRequestedPosition",
       "waypointRelativePos": 1.12688356164383,
       "endWaypointRelativePos": null,
       "command": null

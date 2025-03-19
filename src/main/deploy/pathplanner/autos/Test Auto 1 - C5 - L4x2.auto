@@ -19,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "WE-CoralIntake"
+            "name": "RunCoralOutake"
           }
         },
         {
@@ -31,7 +31,19 @@
         {
           "type": "named",
           "data": {
-            "name": "RunCoralIntake"
+            "name": "WE-CoralIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS2 to 2R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
           }
         }
       ]

@@ -267,7 +267,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Odometry/EstimatedYawRaw", getRotation().getDegrees());
 
     // Track Current Zone
-    Logger.recordOutput("Drive/CurrentZone", getZone().ordinal() + 1);
+    Logger.recordOutput("Drive/DetectedZone", getZone().ordinal() + 1);
 
     // Record getMaxAngularSpeedRadPerSec
     Logger.recordOutput("Drive/MaxAngularSpeedRadPerSec", getMaxAngularSpeedRadPerSec());
