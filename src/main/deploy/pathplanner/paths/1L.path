@@ -40,7 +40,7 @@
     },
     {
       "name": "RunCoralOutake",
-      "waypointRelativePos": 0.9796610169491525,
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }
