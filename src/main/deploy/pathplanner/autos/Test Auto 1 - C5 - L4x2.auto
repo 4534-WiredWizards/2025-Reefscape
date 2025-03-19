@@ -39,12 +39,6 @@
           "data": {
             "pathName": "CS2 to 2R"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunCoralOutake"
-          }
         }
       ]
     }

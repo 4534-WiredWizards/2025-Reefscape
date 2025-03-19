@@ -36,12 +36,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void moveRoller(double speed) {
     rollerMotor.set(speed);
-    Logger.recordOutput("Intake/Control/Speed", speed);
+    // Logger.recordOutput("Intake/Control/Speed", speed);
   }
 
   public void stopRoller() {
     rollerMotor.set(0);
-    Logger.recordOutput("Intake/Control/Speed", 0);
+    // Logger.recordOutput("Intake/Control/Speed", 0);
   }
 
   public boolean getFirstSensor() {

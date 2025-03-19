@@ -68,10 +68,21 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "MoveToRequestedPosition",
-      "waypointRelativePos": 1.12688356164383,
+      "name": "Scoring Postion",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
+    },
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0.02513464991023339,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
     }
   ],
   "globalConstraints": {

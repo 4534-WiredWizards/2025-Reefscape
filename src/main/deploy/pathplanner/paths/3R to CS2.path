@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.810580204376972,
-        "y": 2.3637367439554566
+        "x": 6.061677631578947,
+        "y": 1.8793585526315792
       },
       "isLocked": false,
       "linkedName": "Reef Post 3R"
@@ -56,22 +56,37 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "SetWristSafePosition",
-      "waypointRelativePos": 0,
+      "name": "Back Off Wrist",
+      "waypointRelativePos": 0.04129263913824056,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
     },
     {
-      "name": "E-Zero",
-      "waypointRelativePos": 0.11849192100538594,
-      "endWaypointRelativePos": 0.19210053859964102,
-      "command": null
+      "name": "Zero Elevator",
+      "waypointRelativePos": 0.21723518850987417,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "E-Zero"
+        }
+      }
     },
     {
-      "name": "W-CoralIntake",
-      "waypointRelativePos": 0.25673249551167,
+      "name": "Run Coral Intake",
+      "waypointRelativePos": 0.38420107719928226,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-CoralIntake"
+        }
+      }
     }
   ],
   "globalConstraints": {

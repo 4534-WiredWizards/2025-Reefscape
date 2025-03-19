@@ -52,10 +52,26 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "MoveToRequestedPosition",
+      "name": "Wrist Out",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "Raise",
+      "waypointRelativePos": 0.5242369838420115,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-L4"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -71,7 +87,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 137.48955292199923

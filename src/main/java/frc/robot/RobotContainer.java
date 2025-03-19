@@ -379,6 +379,10 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "WE-L4", createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
 
+    // Elevator to zero postion
+    NamedCommands.registerCommand(
+        "E-Zero", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist, true));
+
     // Command to set wrist to safe position
     NamedCommands.registerCommand(
         "SetWristSafePosition",
@@ -417,50 +421,53 @@ public class RobotContainer {
 
     // Ground command
 
-    new EventTrigger("WE-L1")
-        .whileTrue(createScoringSequence(Elevator.POSITION_L1, Wrist.L1_ANGLE));
-    new EventTrigger("WE-L2")
-        .whileTrue(createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
-    new EventTrigger("WE-L3")
-        .whileTrue(createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
-    new EventTrigger("WE-L4").onTrue(createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
+    // new EventTrigger("WE-L1")
+    //     .whileTrue(createScoringSequence(Elevator.POSITION_L1, Wrist.L1_ANGLE));
+    // new EventTrigger("WE-L2")
+    //     .whileTrue(createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
+    // new EventTrigger("WE-L3")
+    //     .whileTrue(createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
+    // new EventTrigger("WE-L4").onTrue(createScoringSequence(Elevator.POSITION_L4,
+    // Wrist.L4_ANGLE));
 
-    // Elevator + Wrist position events
-    new EventTrigger("E-L4")
-        .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist, false));
-    new EventTrigger("E-L4")
-        .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
-    new EventTrigger("E-L2")
-        .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
-    new EventTrigger("E-L4")
-        .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
-    new EventTrigger("E-Zero")
-        .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
-    new EventTrigger("W-L4").onTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
-    new EventTrigger("W-L3").onTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    new EventTrigger("W-L2").onTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    new EventTrigger("W-L1").onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-    new EventTrigger("W-CoralIntake")
-        .onTrue(new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
-    new EventTrigger("SetWristSafePosition")
-        .onTrue(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
+    // // Elevator + Wrist position events
+    // new EventTrigger("E-L4")
+    //     .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist, false));
+    // new EventTrigger("E-L4")
+    //     .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
+    // new EventTrigger("E-L2")
+    //     .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
+    // new EventTrigger("E-L4")
+    //     .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_L1, m_Wrist));
+    // new EventTrigger("E-Zero")
+    //     .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
+    // new EventTrigger("W-L4").onTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
+    // new EventTrigger("W-L3").onTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
+    // new EventTrigger("W-L2").onTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
+    // new EventTrigger("W-L1").onTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
+    // new EventTrigger("W-CoralIntake")
+    //     .onTrue(new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
+    // new EventTrigger("SetWristSafePosition")
+    //     .onTrue(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
 
-    // Event to set target positions for L4 scoring
-    new EventTrigger("SetTargetL4")
-        .onTrue(new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)));
+    // // Event to set target positions for L4 scoring
+    // new EventTrigger("SetTargetL4")
+    //     .onTrue(new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4,
+    // Wrist.L4_ANGLE)));
 
-    // Coral intake event
-    new EventTrigger("RunCoralIntake").whileTrue(new RunCoralIntake(m_Intake, true));
-    new EventTrigger("RunCoralOutake")
-        .onTrue(
-            new RunCoralOutake(m_Intake)
-                .withTimeout(1)
-                .andThen(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+    // // Coral intake event
+    // new EventTrigger("RunCoralIntake").whileTrue(new RunCoralIntake(m_Intake, true));
+    // new EventTrigger("RunCoralOutake")
+    //     .onTrue(
+    //         new RunCoralOutake(m_Intake)
+    //             .withTimeout(1)
+    //             .andThen(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
-    // Basic Intake/Outake events
-    new EventTrigger("AW-Outake")
-        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
-    new EventTrigger("AW-Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true));
+    // // Basic Intake/Outake events
+    // new EventTrigger("AW-Outake")
+    //     .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+    // new EventTrigger("AW-Intake").whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle,
+    // true));
   }
 
   /** Configure SysId characterization commands for auto chooser */
