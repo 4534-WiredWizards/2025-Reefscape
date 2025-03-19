@@ -1,13 +1,17 @@
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -53,12 +57,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -229,6 +231,9 @@ public class RobotContainer {
 
                 // Setup manual pose setter
                 setupManualPoseSetter();
+
+                // Configure Coral Auto Scoring Buttons
+                configureCoralAutoScoringButtons();
         }
 
         public Command createScoringSequence(double elevatorPosition, double wristAngle) {
@@ -572,8 +577,7 @@ public class RobotContainer {
                 operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.5));
                 operatorController.a().whileTrue(new SimpleMoveClimb(m_climb, () -> .3));
 
-                // Side-specific controls using right thumb axis
-                configureThumbAxisTriggers();
+                
 
                 // Set default command for wrist
                 m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
@@ -597,18 +601,129 @@ public class RobotContainer {
                 // L4 scoring position (Up button)
                 operatorController.povUp().onTrue(createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
         }
+        
+        //Coral Auto scoring
+        public void configureCoralAutoScoringButtons(){
+                Trigger leftLevel1 =
+                operatorController
+                    .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                    .and(operatorController.povDown());  
+                Trigger leftLevel2 =
+                operatorController
+                    .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                    .and(operatorController.povLeft());
+                Trigger leftLevel3 =
+                operatorController
+                    .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                    .and(operatorController.povRight());
+                Trigger leftLevel4 =
+                operatorController
+                        .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+                        .and(operatorController.povUp());
 
-        /** Configure thumb axis triggers for side-specific actions */
-        private void configureThumbAxisTriggers() {
-                // Left side Level 1 with thumb axis left + D-pad down
-                Trigger leftLevel1 = operatorController
-                                .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-                                .and(operatorController.povDown());
+                //Right Side
+                Trigger rightLevel1 =
+                operatorController
+                    .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                    .and(operatorController.povDown());
+                Trigger rightLevel2 =
+                operatorController
+                    .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                    .and(operatorController.povLeft());
+                Trigger rightLevel3 =
+                operatorController
+                    .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                    .and(operatorController.povRight());
+                Trigger rightLevel4 =
+                operatorController
+                        .axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
+                        .and(operatorController.povUp());
 
+                //Test Combo Buttons
                 leftLevel1.onTrue(Commands.runOnce(() -> new InstantCommand(() -> System.out.println("test"))));
-                // Test command to print "test" to console
+
+                //Left Side L2 - L4
+
+                // leftLevel2.onTrue(new SequentialCommandGroup(
+                //          new InstantCommand(() -> vision.resetRobotPose()),
+                //          new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L2,
+                //                         Wrist.L2_ANGLE)),
+                //          new ParallelCommandGroup(
+                //          new SetWristPosition(m_Wrist,
+                //                                         Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+                //                         new DriveToPath(drive, Z1L)),
+                //         new RunCoralOutake(m_Intake),
+                //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+
+                // leftLevel3.onTrue(new SequentialCommandGroup(
+                //         new InstantCommand(() -> vision.resetRobotPose()),
+                //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L3,
+                //                         Wrist.L3_ANGLE)),
+                //         new ParallelCommandGroup(
+                //                         new SetWristPosition(m_Wrist,
+                //                                         Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+                //                         new DriveToPath(drive, Z1L)),
+                //         new RunCoralOutake(m_Intake),
+                //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+
+                // leftLevel4.onTrue(new SequentialCommandGroup(
+                //         new InstantCommand(() -> vision.resetRobotPose()),
+                //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4,
+                //                         Wrist.L4_ANGLE)),
+                //         new ParallelCommandGroup(
+                //                         new SetWristPosition(m_Wrist,
+                //                                         Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+                //                         new DriveToPath(drive, Z1L)),
+                //         new RunCoralOutake(m_Intake),
+                //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+
+                // //Right Side L2 - L4
+                // rightLevel2.onTrue(new SequentialCommandGroup(
+                //         new InstantCommand(() -> vision.resetRobotPose()),
+                //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L2,
+                //                         Wrist.L2_ANGLE)),
+                //         new ParallelCommandGroup(
+                //                         new SetWristPosition(m_Wrist,
+                //                                         Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+                //                         new DriveToPath(drive, Z1R)),
+                //         new RunCoralOutake(m_Intake),
+                //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+
+                // rightLevel3.onTrue(new SequentialCommandGroup(
+                //         new InstantCommand(() -> vision.resetRobotPose()),
+                //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L3,
+                //                         Wrist.L3_ANGLE)),
+                //         new ParallelCommandGroup(
+                //                         new SetWristPosition(m_Wrist,
+                //                                         Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+                //                         new DriveToPath(drive, Z1R)),
+                //         new RunCoralOutake(m_Intake),
+                //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+
+                // rightLevel4.onTrue(new SequentialCommandGroup(
+                //         new InstantCommand(() -> vision.resetRobotPose()),
+                //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4,
+                //                         Wrist.L4_ANGLE)),
+                //         new ParallelCommandGroup(
+                //                         new SetWristPosition(m_Wrist,
+                //                                         Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+                //                         new DriveToPath(drive, Z1R)),
+                //         new RunCoralOutake(m_Intake),
+                //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
         }
+
+        /** Configure thumb axis triggers for side-specific actions */
+        // private void configureThumbAxisTriggers() {
+        //         // Left side Level 1 with thumb axis left + D-pad down
+        //         Trigger leftLevel1 = operatorController
+        //                         .axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
+        //                         .and(operatorController.povDown());
+
+        //         leftLevel1.onTrue(Commands.runOnce(() -> new InstantCommand(() -> System.out.println("test"))));
+        //         // Test command to print "test" to console
+
+        // }
 
         /**
          * Use this to pass the autonomous command to the main {@link Robot} class.
