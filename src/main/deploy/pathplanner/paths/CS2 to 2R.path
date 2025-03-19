@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.7800164473684208,
-        "y": 1.2443256578947364
+        "x": 1.7607730263157892,
+        "y": 1.4367598684210532
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.702261254153413,
-        "y": 1.5896642371183565
+        "x": 3.683017833100779,
+        "y": 1.7820984476446733
       },
       "isLocked": false,
       "linkedName": "Coral Station 2"
@@ -53,7 +53,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.1490125673249545,
+      "minWaypointRelativePos": 0.491921005385997,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -68,14 +68,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Scoring Postion",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "Wrist Out",
-      "waypointRelativePos": 0.02513464991023339,
+      "waypointRelativePos": 0.05745062836624773,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -83,10 +77,21 @@
           "name": "SetWristSafePosition"
         }
       }
+    },
+    {
+      "name": "Scoring Postion",
+      "waypointRelativePos": 0.7001795332136441,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-L4"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 0.8,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -101,7 +106,7 @@
   "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -126.0
+    "rotation": -150.85192815428692
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
