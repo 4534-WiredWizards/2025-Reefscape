@@ -2,14 +2,18 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -58,12 +62,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -233,6 +235,7 @@ public class RobotContainer {
    * @return The PathPlannerPath for the specified zone and side
    */
   private PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
+    System.out.println("Zone: " + zone + " Side: " + side);
     switch (zone) {
       case ZONE_1:
         return side == Constants.ScoringSide.RIGHT ? Z1R : Z1L;
@@ -248,8 +251,7 @@ public class RobotContainer {
         return side == Constants.ScoringSide.RIGHT ? Z6R : Z6L;
       default:
         // Default to Zone 1 if the zone is invalid
-        return side == Constants.ScoringSide.RIGHT ? Z1R : Z1L;
-    }
+        return side == Constants.ScoringSide.RIGHT ? Z1R : Z1L;    }
   }
 
   public Command createScoringSequence(double elevatorPosition, double wristAngle) {
@@ -310,21 +312,71 @@ public class RobotContainer {
    */
   public Command autoScoringSequence(ScoringSide side, ScoringHeight height) {
     return new SequentialCommandGroup(
+        // Add initial logging
+        new InstantCommand(
+            () -> {
+              Logger.recordOutput("AutoScoring/Started", true);
+              Logger.recordOutput("AutoScoring/Side", side.toString());
+              Logger.recordOutput("AutoScoring/Height", height.toString());
+              Logger.recordOutput("AutoScoring/Zone", drive.getZone().toString());
+              Logger.recordOutput("AutoScoring/InitialPose", drive.getPose());
+            }),
+
         // Reset pose and prepare for scoring
         new InstantCommand(() -> vision.resetRobotPose()),
         new InstantCommand(
-            () -> setTargetPositions(height.getElevatorPosition(), height.getWristAngle())),
+            () -> {
+              setTargetPositions(height.getElevatorPosition(), height.getWristAngle());
+              Logger.recordOutput(
+                  "AutoScoring/TargetElevatorPosition", height.getElevatorPosition());
+              Logger.recordOutput("AutoScoring/TargetWristAngle", height.getWristAngle());
+              Logger.recordOutput("AutoScoring/PoseAfterReset", drive.getPose());
+            }),
 
         // Move wrist to clear elevator and drive to scoring position
         new ParallelCommandGroup(
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-            new DriveToPath(drive, getPathForZoneAndSide(drive.getZone(), side))),
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)
+                .andThen(
+                    new InstantCommand(
+                        () -> Logger.recordOutput("AutoScoring/WristClearedElevator", true))),
+            new InstantCommand(
+                    () -> {
+                      PathPlannerPath selectedPath = getPathForZoneAndSide(drive.getZone(), side);
+                      Logger.recordOutput(
+                          "AutoScoring/SelectedPath",
+                          drive.getZone().toString() + "-" + side.toString());
+                      Logger.recordOutput(
+                          "AutoScoring/PathInitialPoint",
+                          selectedPath != null
+                              ? selectedPath.getPoint(0).position.toString()
+                              : "null");
+                    })
+                .andThen(new DriveToPath(drive, getPathForZoneAndSide(drive.getZone(), side)))
+                .andThen(
+                    new InstantCommand(
+                        () -> {
+                          Logger.recordOutput("AutoScoring/DriveCompleted", true);
+                          Logger.recordOutput("AutoScoring/FinalDrivePose", drive.getPose());
+                        }))),
 
         // Score by running coral outake
-        new RunCoralOutake(m_Intake),
+        new InstantCommand(() -> Logger.recordOutput("AutoScoring/StartingOutake", true)),
+        new RunCoralOutake(m_Intake)
+            .andThen(
+                new InstantCommand(() -> Logger.recordOutput("AutoScoring/OutakeCompleted", true))),
 
         // Return wrist to safe position
-        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)
+            .andThen(
+                new InstantCommand(
+                    () -> Logger.recordOutput("AutoScoring/WristReturnedToSafe", true))),
+
+        // Final logging
+        new InstantCommand(
+            () -> {
+              Logger.recordOutput("AutoScoring/Completed", true);
+              Logger.recordOutput("AutoScoring/FinalPose", drive.getPose());
+            }));
   }
 
   /** Register named commands for PathPlanner */
