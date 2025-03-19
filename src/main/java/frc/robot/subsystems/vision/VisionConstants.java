@@ -71,5 +71,5 @@ public class VisionConstants {
   public static final double maxGyroRate = Math.toRadians(720);
 
   // Maximum time difference in seconds to consider a vision measurement fresh
-  public static final double maxTimeDifference = 0.3;
+  public static final double maxTimeDifference = 0.8;
 }
