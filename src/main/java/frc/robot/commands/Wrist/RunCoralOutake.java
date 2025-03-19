@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.commands.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,23 +15,28 @@ public class RunCoralOutake extends Command {
 
   @Override
   public void initialize() {
+    System.out.println("RunCoralOutake initialized");
     intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
     wasCoralDetected = intakeSubsystem.getSecondSensor();
+    System.out.println("Initial coral detection: " + wasCoralDetected);
   }
 
   @Override
   public void execute() {
+    System.out.println("RunCoralOutake executing");
     intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
   }
 
   @Override
   public void end(boolean interrupted) {
+    System.out.println("RunCoralOutake ended, interrupted: " + interrupted);
     intakeSubsystem.stopRoller();
   }
 
   @Override
   public boolean isFinished() {
-    // Only finish if coral was initially detected AND is now gone
-    return wasCoralDetected && !intakeSubsystem.getSecondSensor();
+    boolean isFinished = wasCoralDetected && !intakeSubsystem.getFirstSensor();
+    System.out.println("RunCoralOutake isFinished: " + isFinished);
+    return isFinished;
   }
 }

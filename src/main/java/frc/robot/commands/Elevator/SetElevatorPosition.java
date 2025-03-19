@@ -4,14 +4,12 @@
 
 package frc.robot.commands.Elevator;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SetElevatorPosition extends Command {
   private final ElevatorSubsystem m_elevator;
@@ -122,7 +120,9 @@ public class SetElevatorPosition extends Command {
   @Override
   public boolean isFinished() {
     if (m_targetPosition == Elevator.POSITION_GROUND) {
-      return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition) || ( m_elevator.isStalled() && m_elevator.getEncoderPosition()<Elevator.ELEVATOR_DANGER_LIMIT) );
+      return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition)
+          || (m_elevator.isStalled()
+              && m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT));
     } else {
       return (stopWhenAtSetpoint && m_elevator.isAtPosition(m_targetPosition));
     }

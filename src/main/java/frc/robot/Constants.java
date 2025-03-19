@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -165,7 +164,7 @@ public interface Constants {
     public static final double ZEROING_VOLTAGE = 5;
 
     // PID and Feedforward Constants
-    public static final double KP = 1.8; // Proportional gain
+    public static final double KP = 5; // Proportional gain
     public static final double KI = 0.01; // Integral gain
     // public static final double KD = 0.1; // Derivative gain
 
@@ -188,12 +187,12 @@ public interface Constants {
     // public static final double JERK = 800.0; // In units/sec³
 
     // Maxs New values
-    public static final double CRUISE_VELOCITY = 100; // In units/sec full speed for 1s bottom to
-    public static final double MAX_ACCELERATION = 150; // In units/sec²
-    public static final double JERK = 500; // In units/sec³
+    public static final double CRUISE_VELOCITY = 65; // In units/sec full speed for 1s bottom to
+    public static final double MAX_ACCELERATION = 145; // In units/sec²
+    // public static final double JERK = 600; // In units/sec³
     public static final double KV = 0.6; // Velocity feedforward
     public static final double KA = 0.05; // Acceleration feedforward //Was .12
-    public static final double KD = 0.006; // Derivative gain
+    public static final double KD = 0.1; // Derivative gain
 
     // Physical Constantsp
     public static final double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm -> ~4.724 inches
@@ -206,7 +205,7 @@ public interface Constants {
     public static final double INCHES_TO_ROTATIONS = 1.0 / ROTATIONS_TO_INCHES; // ~1.0105 rot/in
 
     // Tolerance and Threshold Values
-    public static final double POSITION_TOLERANCE = 1.0 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
+    public static final double POSITION_TOLERANCE = 1.2 * INCHES_TO_ROTATIONS; // ~1 inch tolerance
     public static final double STALL_VELOCITY_THRESHOLD = 0.05; // Rotations/sec
 
     // Safety Limits
@@ -217,8 +216,8 @@ public interface Constants {
     public static final double POSITION_GROUND = -0.1;
     public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 13.8;
-    public static final double POSITION_L3 = (30-2.5);
-    public static final double POSITION_L4 = (66.6+2.4);
+    public static final double POSITION_L3 = (30 - 2.5);
+    public static final double POSITION_L4 = (66.6 + 2.4);
     public static final double POSITION_BARGE = 70;
 
     // Manual Control Constants
@@ -279,8 +278,8 @@ public interface Constants {
     // Preset Positions
     // Level Positions
     double L1_ANGLE = 123;
-    double L2_ANGLE = (123-5);
-    double L3_ANGLE = (123-5);
+    double L2_ANGLE = (123 - 5);
+    double L3_ANGLE = (123 - 5);
     double L4_ANGLE = 89;
 
     // Operational Positions
