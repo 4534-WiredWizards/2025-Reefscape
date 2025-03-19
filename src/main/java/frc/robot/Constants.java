@@ -216,7 +216,7 @@ public interface Constants {
     public static final double POSITION_GROUND = -0.1;
     public static final double POSITION_L1 = 0;
     public static final double POSITION_L2 = 13.8;
-    public static final double POSITION_L3 = (30 - 2.5);
+    public static final double POSITION_L3 = (30 - 0.21);
     public static final double POSITION_L4 = (66.6 + 2.4);
     public static final double POSITION_BARGE = 70;
 
