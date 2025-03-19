@@ -1,6 +1,18 @@
 package frc.robot.subsystems.vision;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
+import static frc.robot.subsystems.vision.VisionConstants.angularStdDevBaseline;
+import static frc.robot.subsystems.vision.VisionConstants.angularStdDevMegatag2Factor;
+import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
+import static frc.robot.subsystems.vision.VisionConstants.cameraStdDevFactors;
+import static frc.robot.subsystems.vision.VisionConstants.linearStdDevBaseline;
+import static frc.robot.subsystems.vision.VisionConstants.linearStdDevMegatag2Factor;
+import static frc.robot.subsystems.vision.VisionConstants.maxAmbiguity;
+import static frc.robot.subsystems.vision.VisionConstants.maxGyroRate;
+import static frc.robot.subsystems.vision.VisionConstants.maxPoseDifference;
+import static frc.robot.subsystems.vision.VisionConstants.maxTagDistance;
+import static frc.robot.subsystems.vision.VisionConstants.maxTimeDifference;
+import static frc.robot.subsystems.vision.VisionConstants.maxZError;
+import static frc.robot.subsystems.vision.VisionConstants.minTagDistance;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -16,7 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ReefZone;
-import frc.robot.subsystems.drive.*;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,15 +77,15 @@ public class Vision extends SubsystemBase {
     boolean isRedAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
     // Get the tag ID for the current zone
-    Integer currentZoneTagId =
-        isRedAlliance
-            ? RED_ZONE_PRIMARY_TAGS.get(currentZone)
-            : BLUE_ZONE_PRIMARY_TAGS.get(currentZone);
+    // Integer currentZoneTagId =
+    //     isRedAlliance
+    //         ? RED_ZONE_PRIMARY_TAGS.get(currentZone)
+    //         : BLUE_ZONE_PRIMARY_TAGS.get(currentZone);
 
     // Log the current zone and tag
     Logger.recordOutput("Vision/CurrentZone", currentZone.toString());
-    Logger.recordOutput(
-        "Vision/CurrentZoneTagId", currentZoneTagId != null ? currentZoneTagId : -1);
+    // Logger.recordOutput(
+    //     "Vision/CurrentZoneTagId", currentZoneTagId != null ? currentZoneTagId : -1);
 
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
@@ -104,10 +116,10 @@ public class Vision extends SubsystemBase {
       // Add tag poses - ONLY add tags that match the current zone's tag ID
       for (int tagId : inputs[cameraIndex].tagIds) {
         // Skip tags that don't match the current zone's tag
-        if (currentZoneTagId != null && tagId != currentZoneTagId) {
-          Logger.recordOutput("Vision/SkippedTag", tagId);
-          continue;
-        }
+        // if (currentZoneTagId != null && tagId != currentZoneTagId) {
+        //   Logger.recordOutput("Vision/SkippedTag", tagId);
+        //   continue;
+        // }
 
         var tagPose = aprilTagLayout.getTagPose(tagId);
         if (tagPose.isPresent()) {
@@ -127,7 +139,6 @@ public class Vision extends SubsystemBase {
                     && observation.ambiguity() > maxAmbiguity) // Cannot be high ambiguity
                 || Math.abs(observation.pose().getZ())
                     > maxZError // Must have realistic Z coordinate
-
                 // Must be within the field boundaries
                 || observation.pose().getX() < 0.0
                 || observation.pose().getX() > aprilTagLayout.getFieldLength()
