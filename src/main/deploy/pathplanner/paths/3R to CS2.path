@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.278,
-        "y": 2.997
+        "x": 5.291940789473683,
+        "y": 2.966611842105263
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.7966394149032885,
-        "y": 2.3941249018501933
+        "x": 5.810580204376972,
+        "y": 2.3637367439554566
       },
       "isLocked": false,
       "linkedName": "Reef Post 3R"
     },
     {
       "anchor": {
-        "x": 1.183,
-        "y": 0.956
+        "x": 1.7800164473684208,
+        "y": 1.2443256578947364
       },
       "prevControl": {
-        "x": 1.1888699047843958,
-        "y": 0.706068921064582
+        "x": 1.7858863521528165,
+        "y": 0.9943945789593183
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,12 +38,38 @@
       "rotationDegrees": -126.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.2495511669658887,
+      "constraints": {
+        "maxVelocity": 0.3,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "WE-CoralIntake",
-      "waypointRelativePos": 0.16494505157170916,
+      "name": "SetWristSafePosition",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "E-Zero",
+      "waypointRelativePos": 0.11849192100538594,
+      "endWaypointRelativePos": 0.19210053859964102,
+      "command": null
+    },
+    {
+      "name": "W-CoralIntake",
+      "waypointRelativePos": 0.25673249551167,
       "endWaypointRelativePos": null,
       "command": null
     }

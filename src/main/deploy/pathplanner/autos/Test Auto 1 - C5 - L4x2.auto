@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "SetTargetL4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "C5 to 3R"
@@ -13,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunCoralOutake"
+            "name": "WE-CoralIntake"
           }
         },
         {
@@ -26,18 +32,6 @@
           "type": "named",
           "data": {
             "name": "RunCoralIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CS2 to 2R"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunCoralOutake"
           }
         }
       ]

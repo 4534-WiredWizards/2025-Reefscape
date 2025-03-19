@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.278,
-        "y": 2.997
+        "x": 5.291940789473683,
+        "y": 2.966611842105263
       },
       "prevControl": {
-        "x": 5.714073452515839,
-        "y": 2.279798050309088
+        "x": 5.728014241989523,
+        "y": 2.2494098924143513
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,14 +52,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "WE-L4",
-      "waypointRelativePos": 0.6026629917512685,
+      "name": "MoveToRequestedPosition",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 0.5,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -76,5 +76,5 @@
     "velocity": 0,
     "rotation": 137.48955292199923
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
