@@ -684,7 +684,7 @@ public class RobotContainer {
         operatorController
                 .button(Operator.RESET_BOT_POSE_BUTTON)
                 .onTrue(new InstantCommand(() -> vision.resetRobotPose()));
-        operatorController.button(Operator.RESET_BOT_POSE_BUTTON).onTrue(m_elevator.zeroCommand());
+        operatorController.button(Operator.ZERO_ELEVATOR_BUTTON).onTrue(m_elevator.zeroCommand());
 
         // Configure POV buttons for operator presets
         configurePOVButtons();
