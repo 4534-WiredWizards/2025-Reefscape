@@ -1,3 +1,5 @@
+// Help us Max is a  tyrant
+
 package frc.robot;
 
 import java.io.IOException;
@@ -644,17 +646,21 @@ public class RobotContainer {
 
                 //Left Side L2 - L4
 
-                // leftLevel2.onTrue(new SequentialCommandGroup(
-                //          new InstantCommand(() -> vision.resetRobotPose()),
-                //          new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L2,
-                //                         Wrist.L2_ANGLE)),
-                //          new ParallelCommandGroup(
-                //          new SetWristPosition(m_Wrist,
-                //                                         Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
-                //                         new DriveToPath(drive, Z1L)),
-                //         new RunCoralOutake(m_Intake),
-                //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+                // leftLevel2.onTrue(autoScoringSequence(Constants.ScoringSide.LEFT, Constants.ScoringHeight.L2));
 
+                // leftLevel3.onTrue(autoScoringSequence(Constants.ScoringSide.LEFT, Constants.ScoringHeight.L3));
+
+                // leftLevel4.onTrue(autoScoringSequence(Constants.ScoringSide.LEFT, Constants.ScoringHeight.L4));
+
+                // //Right Side L2 - L4
+                // rightLevel2.onTrue(autoScoringSequence(Constants.ScoringSide.RIGHT, Constants.ScoringHeight.L2));
+
+                // rightLevel3.onTrue(autoScoringSequence(Constants.ScoringSide.RIGHT, Constants.ScoringHeight.L3));
+
+                // rightLevel4.onTrue(autoScoringSequence(Constants.ScoringSide.RIGHT, Constants.ScoringHeight.L4));
+
+                
+                //TODO: Delete this
                 // leftLevel3.onTrue(new SequentialCommandGroup(
                 //         new InstantCommand(() -> vision.resetRobotPose()),
                 //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L3,
