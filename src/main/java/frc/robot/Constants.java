@@ -215,9 +215,11 @@ public interface Constants {
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = -0.1;
     public static final double POSITION_L1 = 0;
-    public static final double POSITION_L2 = 13.8;
-    public static final double POSITION_L3 = (30 - 0.21);
-    public static final double POSITION_L4 = (66.6 + 2.4);
+    public static final double POSITION_L2 = 13.95;
+    public static final double POSITION_L3 = 29.79;
+    public static final double POSITION_L4 = 68.81;
+    public static final double POSITION_HIGH_ALGAE = POSITION_L3;
+    public static final double POSITION_LOW_ALGAE = POSITION_L2;
     public static final double POSITION_BARGE = 70;
 
     // Manual Control Constants
@@ -281,6 +283,9 @@ public interface Constants {
     double L2_ANGLE = (123 - 5);
     double L3_ANGLE = (123 - 5);
     double L4_ANGLE = 89;
+
+    // Algae intake positions
+    double ALGAE_INTAKE_ANGLE = 20;
 
     // Operational Positions
     int CORAL_INTAKE_ANGLE = 205;
