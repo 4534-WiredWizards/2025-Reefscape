@@ -381,8 +381,8 @@ public interface Constants {
       int MANUAL_OVERRIDE_BUTTON = 5; // Left bumper
       int CLIMB_SEQUENCE_BUTTON = 6; // Right bumper
       int RIGHT_THUMB_AXIS = 4;
-      int RESET_BOT_POSE_BUTTON = 7; // Select button
-      int ZERO_ELEVATOR_BUTTON = 8; // start button
+      int RESET_BOT_POSE_BUTTON = 8; // Select button
+      int ZERO_ELEVATOR_BUTTON = 7; // start button
     }
   }
 

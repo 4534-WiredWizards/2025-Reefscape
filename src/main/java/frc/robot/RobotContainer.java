@@ -28,6 +28,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
+import frc.robot.Constants.ReefZone;
+import frc.robot.Constants.ScoringHeight;
+import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
@@ -220,13 +223,40 @@ public class RobotContainer {
     setupManualPoseSetter();
   }
 
+  /**
+   * Gets the path to use based on the specified zone and side.
+   *
+   * @param zone The scoring zone (ZONE_1 through ZONE_6)
+   * @param side The scoring side (LEFT or RIGHT)
+   * @return The PathPlannerPath for the specified zone and side
+   */
+  private PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
+    switch (zone) {
+      case ZONE_1:
+        return side == Constants.ScoringSide.RIGHT ? Z1R : Z1L;
+      case ZONE_2:
+        return side == Constants.ScoringSide.RIGHT ? Z2R : Z2L;
+      case ZONE_3:
+        return side == Constants.ScoringSide.RIGHT ? Z3R : Z3L;
+      case ZONE_4:
+        return side == Constants.ScoringSide.RIGHT ? Z4R : Z4L;
+      case ZONE_5:
+        return side == Constants.ScoringSide.RIGHT ? Z5R : Z5L;
+      case ZONE_6:
+        return side == Constants.ScoringSide.RIGHT ? Z6R : Z6L;
+      default:
+        // Default to Zone 1 if the zone is invalid
+        return side == Constants.ScoringSide.RIGHT ? Z1R : Z1L;
+    }
+  }
+
   public Command createScoringSequence(double elevatorPosition, double wristAngle) {
     return new ConditionalCommand(
         // If coral is detected in intake (sensor is triggered)
         new SequentialCommandGroup(
             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
             new ParallelDeadlineGroup(
-                // Use the sensor to determine when to stop waiting
+                // Use the sensor to determine when to stop waitingauto
                 new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
                 new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, false),
                 new SetWristPosition(m_Wrist, wristAngle, false))),
@@ -268,6 +298,31 @@ public class RobotContainer {
             () -> !m_elevator.isAtPosition(0.3))
         // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false)
         );
+  }
+
+  /**
+   * Creates an auto scoring sequence using the current zone and specified side.
+   *
+   * @param side The scoring side (LEFT or RIGHT)
+   * @return Command sequence for autonomous scoring
+   */
+  public Command autoScoringSequence(ScoringSide side, ScoringHeight height) {
+    return new SequentialCommandGroup(
+        // Reset pose and prepare for scoring
+        new InstantCommand(() -> vision.resetRobotPose()),
+        new InstantCommand(
+            () -> setTargetPositions(height.getElevatorPosition(), height.getWristAngle())),
+
+        // Move wrist to clear elevator and drive to scoring position
+        new ParallelCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new DriveToPath(drive, getPathForZoneAndSide(drive.getZone(), side))),
+
+        // Score by running coral outake
+        new RunCoralOutake(m_Intake),
+
+        // Return wrist to safe position
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
   }
 
   /** Register named commands for PathPlanner */
@@ -456,6 +511,9 @@ public class RobotContainer {
                 new DriveToPath(drive, Z1R)),
             new RunCoralOutake(m_Intake),
             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+
+    SmartDashboard.putData(
+        "Score/AutoZone L4-L", autoScoringSequence(ScoringSide.LEFT, ScoringHeight.L4));
 
     // Drive to path test commands
     SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
