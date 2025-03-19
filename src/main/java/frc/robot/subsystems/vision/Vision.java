@@ -147,7 +147,8 @@ public class Vision extends SubsystemBase {
                 || Math.abs(currentTime - observation.timestamp()) > maxTimeDifference
 
                 // Check tag distance (reject if too far)
-                || observation.averageTagDistance() > maxTagDistance;
+                || observation.averageTagDistance() > maxTagDistance
+                || observation.averageTagDistance() < minTagDistance; // Add this line
 
         // Add pose to log
         robotPoses.add(observation.pose());
@@ -280,6 +281,8 @@ public class Vision extends SubsystemBase {
     }
     if (observation.averageTagDistance() > maxTagDistance) {
       return "Tags too far: " + observation.averageTagDistance() + "m";
+    } else if (observation.averageTagDistance() < minTagDistance) { // Add this condition
+      return "Tags too close: " + observation.averageTagDistance() + "m";
     }
 
     return "Unknown reason";

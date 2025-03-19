@@ -62,7 +62,10 @@ public class VisionConstants {
   public static double angularStdDevMegatag2Factor = 3.0; // Should use robot gyro for rotation
 
   // Maximum pose difference in meters to accept a vision measurement
-  public static final double maxPoseDifference = .4;
+  public static final double maxPoseDifference = 1;
+  // Add this line under the maxTagDistance declaration
+  public static final double minTagDistance =
+      0.5; // Minimum meter distance to accept vision measurements
 
   // Maximum meter distance to accept vision measurements
   public static final double maxTagDistance = 10;
