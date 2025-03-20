@@ -355,13 +355,13 @@ public class Drive extends SubsystemBase {
     }
 
     if (isRedAlliance) {
-      // For Red alliance, we need to adjust the zone mapping since the field is mirrored
-      if (!sides[0]) { // Left of vertical (mirrored from Blue)
-        if (sides[1]) return ReefZone.ZONE_5;
-        else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
-      } else { // Right of vertical (mirrored from Blue)
-        if (sides[2]) return ReefZone.ZONE_6;
-        else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+      // For Blue alliance, we need to adjust the zone mapping since the field is mirrored
+      if (sides[0]) { // Right of vertical
+        if (sides[1]) return ReefZone.ZONE_2;
+        else return sides[2] ? ReefZone.ZONE_1 : ReefZone.ZONE_6;
+      } else { // Left of vertical
+        if (sides[2]) return ReefZone.ZONE_3;
+        else return sides[1] ? ReefZone.ZONE_4 : ReefZone.ZONE_5;
       }
     } else {
       // Original Blue alliance logic
