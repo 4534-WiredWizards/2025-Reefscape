@@ -12,10 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -189,7 +190,7 @@ public interface Constants {
     // Maxs New values
     public static final double CRUISE_VELOCITY = 65; // In units/sec full speed for 1s bottom to
     public static final double MAX_ACCELERATION = 145; // In units/sec²
-    public static final double JERK = 500; // In units/sec³
+    public static final double JERK = 200; // Reduced from 500 to 200 for smoother movement
     public static final double KV = 0.6; // Velocity feedforward
     public static final double KA = 0.05; // Acceleration feedforward //Was .12
     public static final double KD = 0.1; // Derivative gain
@@ -223,7 +224,7 @@ public interface Constants {
     public static final double POSITION_BARGE = 70;
 
     // Manual Control Constants
-    public static final double MANUAL_SPEED = 0.6; // Speed for manual control
+    public static final double MANUAL_SPEED = 0.75; // Speed for manual control
     public static final int DOWN_DIRECTION = -1; // Direction for manual control
   }
 
