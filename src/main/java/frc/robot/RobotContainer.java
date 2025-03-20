@@ -108,18 +108,18 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
 
   // Scoring Position
-public PathPlannerPath Z1R;
-public PathPlannerPath Z1L;
-public PathPlannerPath Z2R;
-public PathPlannerPath Z2L;
-public PathPlannerPath Z3R;
-public PathPlannerPath Z3L;
-public PathPlannerPath Z4R;
-public PathPlannerPath Z4L;
-public PathPlannerPath Z5R;
-public PathPlannerPath Z5L;
-public PathPlannerPath Z6R;
-public PathPlannerPath Z6L;
+  public PathPlannerPath Z1R;
+  public PathPlannerPath Z1L;
+  public PathPlannerPath Z2R;
+  public PathPlannerPath Z2L;
+  public PathPlannerPath Z3R;
+  public PathPlannerPath Z3L;
+  public PathPlannerPath Z4R;
+  public PathPlannerPath Z4L;
+  public PathPlannerPath Z5R;
+  public PathPlannerPath Z5L;
+  public PathPlannerPath Z6R;
+  public PathPlannerPath Z6L;
 
   public double getWristAngle() {
     return m_Wrist.getAngle();
@@ -752,14 +752,42 @@ public PathPlannerPath Z6L;
     // Test Combo Buttons
     leftLevel1.onTrue(Commands.runOnce(() -> System.out.println("test")));
 
-        leftLevel2.onTrue(Commands.runOnce(() -> new InstantCommand(() -> m_scoringQueue.addScoringCommand(ScoringSide.LEFT, ScoringHeight.L2))));
-        leftLevel3.onTrue(Commands.runOnce(() -> new InstantCommand(() ->m_scoringQueue.addScoringCommand(ScoringSide.LEFT, ScoringHeight.L3))));
-        leftLevel4.onTrue(Commands.runOnce(() -> new InstantCommand(() ->m_scoringQueue.addScoringCommand(ScoringSide.LEFT, ScoringHeight.L4))));
+    leftLevel2.onTrue(
+        Commands.runOnce(
+            () ->
+                new InstantCommand(
+                    () -> m_scoringQueue.addScoringCommand(ScoringSide.LEFT, ScoringHeight.L2))));
+    leftLevel3.onTrue(
+        Commands.runOnce(
+            () ->
+                new InstantCommand(
+                    () -> m_scoringQueue.addScoringCommand(ScoringSide.LEFT, ScoringHeight.L3))));
+    leftLevel4.onTrue(
+        Commands.runOnce(
+            () ->
+                new InstantCommand(
+                    () -> m_scoringQueue.addScoringCommand(ScoringSide.LEFT, ScoringHeight.L4))));
 
-        rightLevel1.onTrue(Commands.runOnce(() -> new InstantCommand(() ->m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L1))));
-        rightLevel2.onTrue(Commands.runOnce(() -> new InstantCommand(() ->m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L2))));
-        rightLevel3.onTrue(Commands.runOnce(() -> new InstantCommand(() ->m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L3))));
-        rightLevel4.onTrue(Commands.runOnce(() -> new InstantCommand(() ->m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L4))));
+    rightLevel1.onTrue(
+        Commands.runOnce(
+            () ->
+                new InstantCommand(
+                    () -> m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L1))));
+    rightLevel2.onTrue(
+        Commands.runOnce(
+            () ->
+                new InstantCommand(
+                    () -> m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L2))));
+    rightLevel3.onTrue(
+        Commands.runOnce(
+            () ->
+                new InstantCommand(
+                    () -> m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L3))));
+    rightLevel4.onTrue(
+        Commands.runOnce(
+            () ->
+                new InstantCommand(
+                    () -> m_scoringQueue.addScoringCommand(ScoringSide.RIGHT, ScoringHeight.L4))));
 
     // Left Side L2 - L4
     // leftLevel2.onTrue(autoScoringSequence(Constants.ScoringSide.LEFT,

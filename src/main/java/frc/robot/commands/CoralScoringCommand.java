@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
+import frc.robot.RobotContainer;
 import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -15,8 +16,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.Logger;
-import frc.robot.RobotContainer;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 public class CoralScoringCommand extends SequentialCommandGroup {
 
@@ -31,35 +30,34 @@ public class CoralScoringCommand extends SequentialCommandGroup {
       WristSubsystem m_Wrist,
       IntakeSubsystem m_Intake,
       ScoringSide side,
-      Constants.ScoringHeight height
-      ) {
+      Constants.ScoringHeight height) {
     this.drive = drive;
     this.side = side;
     this.height = height;
 
-
     addCommands(
         // Dynamically determine the zone at execution time
         new InstantCommand(
-            () -> {ReefZone currentZone = drive.getZone();
-          Logger.recordOutput("AutoScoring/ExecutionZone", currentZone.toString());
+            () -> {
+              ReefZone currentZone = drive.getZone();
+              Logger.recordOutput("AutoScoring/ExecutionZone", currentZone.toString());
 
-          // Get the path for the current zone and side
-            PathPlannerPath path = robotContainer.getPathForZoneAndSide(currentZone, side);
+              // Get the path for the current zone and side
+              PathPlannerPath path = robotContainer.getPathForZoneAndSide(currentZone, side);
 
-          // Create and schedule a command to follow that specific path
-          Command command =
-              new SequentialCommandGroup(
-                  new InstantCommand(
-                      () ->
-                          Logger.recordOutput(
-                              "AutoScoring/StartingPath",
-                              currentZone.toString() + "-" + side.toString())),
-                  new DriveToPath(drive, path),
-                  // Rest of your scoring sequence...
-                  new RunCoralOutake(m_Intake),
-                  new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
-          command.schedule();
+              // Create and schedule a command to follow that specific path
+              Command command =
+                  new SequentialCommandGroup(
+                      new InstantCommand(
+                          () ->
+                              Logger.recordOutput(
+                                  "AutoScoring/StartingPath",
+                                  currentZone.toString() + "-" + side.toString())),
+                      new DriveToPath(drive, path),
+                      // Rest of your scoring sequence...
+                      new RunCoralOutake(m_Intake),
+                      new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
+              command.schedule();
             })
         // ,
 
