@@ -31,6 +31,7 @@ import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.ReefZone;
+import frc.robot.Constants.ScoringHeight;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.Climb.SimpleMoveClimb;
@@ -261,44 +262,47 @@ public class RobotContainer {
     return path;
   }
 
+  
   /**
-   * Creates an auto scoring sequence using the current zone and specified side.
-   *
-   * @param side The scoring side (LEFT or RIGHT)
-   * @return Command sequence for autonomous scoring
-   */
-  public Command dynamicZoneAutoScoring(ScoringSide side) {
-    return Commands.runOnce(
-        () -> {
-          // Get the current zone at execution time
-          ReefZone currentZone = drive.getZone();
-          Logger.recordOutput("AutoScoring/ExecutionZone", currentZone.toString());
-          //   Logger.recordOutput("AutoScoring/RequestedHeight", height.toString());
-          Logger.recordOutput("AutoScoring/RequestedSide", side.toString());
+ * Creates a command to drive to a reef scoring position based on the current zone and specified side.
+ * Includes interrupt capability using button press.
+ *
+ * @param side The scoring side (LEFT or RIGHT)
+ * @return Command sequence for driving to the specified reef side
+ */
+public Command driveToReefSide(ScoringSide side) {
+    return new SequentialCommandGroup(
+        // Create a new initial command that determines the path based on current zone
+        new InstantCommand(() -> {
+            // Get the current zone at execution time
+            ReefZone currentZone = drive.getZone();
+            Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
+            Logger.recordOutput("DriveToReef/RequestedSide", side.toString());
 
-          // Get the path for the current zone and side
-          PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
+            // Get the path for the current zone and side
+            PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
 
-          // Create and schedule a command to follow that specific path
-          Command command =
-              new SequentialCommandGroup(
-                  //   new InstantCommand(
-                  //       () ->
-                  //           Logger.recordOutput(
-                  //               "AutoScoring/StartingPath",
-                  //               currentZone.toString() + "-" + side.toString())),
-                  //   // Set target positions using the enum values
-                  //   new InstantCommand(
-                  //       () ->
-                  //           setTargetPositions(height.getElevatorPosition(),
-                  // height.getWristAngle())),
-                  new DriveToPath(drive, path)
-                  // Rest of your scoring sequence...
-                  //   new RunCoralOutake(m_Intake)
-                  );
-          command.schedule();
-        });
-  }
+            // Create a cancel trigger that can be used by the driver
+            // This will be a new trigger for the driver joystick button 1 (trigger)
+            Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.TRIGGER);
+
+            // Create and schedule a command to follow that specific path with cancel capability
+            Command pathCommand = new DriveToPath(drive, path)
+                .until(cancelDriveTrigger)  // Will end when trigger is pressed
+                .finallyDo(() -> {
+                    // When the command ends (either by completion or cancellation),
+                    // log the status and stop the drive
+                    Logger.recordOutput("DriveToReef/Status", 
+                        "Path following ended - " + (cancelDriveTrigger.getAsBoolean() ? 
+                            "Cancelled by driver" : "Completed successfully"));
+                    drive.stop();
+                });
+                
+            pathCommand.schedule();
+            Logger.recordOutput("DriveToReef/Status", "Started driving to reef side");
+        })
+    );
+}
 
   public Command createScoringSequence(double elevatorPosition, double wristAngle) {
     return new ConditionalCommand(
@@ -579,22 +583,22 @@ public class RobotContainer {
             new RunCoralOutake(m_Intake),
             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
-    SmartDashboard.putData("Score/AutoZone L", dynamicZoneAutoScoring(ScoringSide.LEFT));
-    SmartDashboard.putData("Score/AutoZone R", dynamicZoneAutoScoring(ScoringSide.RIGHT));
+    SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT));
+    SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT));
 
     // Drive to path test commands
-    SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
-    SmartDashboard.putData("Drive/Z1L", new DriveToPath(drive, Z1L));
-    SmartDashboard.putData("Drive/Z2R", new DriveToPath(drive, Z2R));
-    SmartDashboard.putData("Drive/Z2L", new DriveToPath(drive, Z2L));
-    SmartDashboard.putData("Drive/Z3R", new DriveToPath(drive, Z3R));
-    SmartDashboard.putData("Drive/Z3L", new DriveToPath(drive, Z3L));
-    SmartDashboard.putData("Drive/Z4R", new DriveToPath(drive, Z4R));
-    SmartDashboard.putData("Drive/Z4L", new DriveToPath(drive, Z4L));
-    SmartDashboard.putData("Drive/Z5R", new DriveToPath(drive, Z5R));
-    SmartDashboard.putData("Drive/Z5L", new DriveToPath(drive, Z5L));
-    SmartDashboard.putData("Drive/Z6R", new DriveToPath(drive, Z6R));
-    SmartDashboard.putData("Drive/Z6L", new DriveToPath(drive, Z6L));
+    // SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
+    // SmartDashboard.putData("Drive/Z1L", new DriveToPath(drive, Z1L));
+    // SmartDashboard.putData("Drive/Z2R", new DriveToPath(drive, Z2R));
+    // SmartDashboard.putData("Drive/Z2L", new DriveToPath(drive, Z2L));
+    // SmartDashboard.putData("Drive/Z3R", new DriveToPath(drive, Z3R));
+    // SmartDashboard.putData("Drive/Z3L", new DriveToPath(drive, Z3L));
+    // SmartDashboard.putData("Drive/Z4R", new DriveToPath(drive, Z4R));
+    // SmartDashboard.putData("Drive/Z4L", new DriveToPath(drive, Z4L));
+    // SmartDashboard.putData("Drive/Z5R", new DriveToPath(drive, Z5R));
+    // SmartDashboard.putData("Drive/Z5L", new DriveToPath(drive, Z5L));
+    // SmartDashboard.putData("Drive/Z6R", new DriveToPath(drive, Z6R));
+    // SmartDashboard.putData("Drive/Z6L", new DriveToPath(drive, Z6L));
   }
 
   /** Configure button bindings for driver and operator controls */
