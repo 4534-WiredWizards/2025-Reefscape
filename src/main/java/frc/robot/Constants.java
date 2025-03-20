@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -117,11 +116,13 @@ public interface Constants {
             ReefZone.ZONE_5,
             Map.of(
                 ScoringSide.LEFT, new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
-                ScoringSide.RIGHT, new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
+                ScoringSide.RIGHT,
+                    new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
             ReefZone.ZONE_6,
             Map.of(
                 ScoringSide.LEFT, new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
-                ScoringSide.RIGHT, new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
+                ScoringSide.RIGHT,
+                    new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
 
     static Pose2d getPose(ReefZone zone, ScoringSide side) {
       return ZONE_POSITIONS.get(zone).get(side);
@@ -161,7 +162,7 @@ public interface Constants {
     // Physical Properties
     double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm in inches
     double GEAR_RATIO = 5.0;
-    
+
     // Conversion Factors
     double ROTATIONS_TO_INCHES = (Math.PI * PULLEY_DIAMETER) / GEAR_RATIO;
     double INCHES_TO_ROTATIONS = 1.0 / ROTATIONS_TO_INCHES;
@@ -309,13 +310,24 @@ public interface Constants {
       int DRIVE_ROTATE_AXIS = 3;
       int DRIVE_THROTTLE_AXIS = 2;
 
-      // Buttons
-      int TRIGGER = 1;
-      int ZERO_GYRO_BUTTON = 2;
-      int FIELD_RELATIVE_TOGGLE = 3;
-      int SLOW_MODE_TOGGLE = 4;
-      int LOCK_ANGLE_BUTTON = 7;
-      int STOP_WITH_X_BUTTON = 8;
+      interface RightJoystick {
+        int RIGHT_THUMB_BUTTON = 4;
+        int STRIPED_CENTER_BUTTON = 2;
+        int WEIRD_UNDER_BUTTON = 3;
+        int TRIGGER = 1;
+      }
+
+      interface LeftThrottle {
+        int TOP_THUMB_BUTTON = 5;
+        int MIDDLE_THUMB_BUTTON = 6;
+        int BOTTOM_THUMB_BUTTON = 7;
+        int FRONT_THUMB_BUTTON = 8;
+        int BACK_POINTER_HIGH_BUTTON = 9;
+        int BACK_POINTER_LOW_BUTTON = 10;
+      }
+
+      int BASE_LEFT_BUTTON = 11;
+      int BASE_RIGHT_BUTTON = 12;
     }
 
     // Operator Controller (Xbox)
@@ -329,7 +341,7 @@ public interface Constants {
       int CLIMB_SEQUENCE_BUTTON = 6; // Right bumper
       int ZERO_ELEVATOR_BUTTON = 7; // Start button
       int RESET_BOT_POSE_BUTTON = 8; // Select button
-      
+
       // Axes
       int RIGHT_THUMB_AXIS = 4;
     }

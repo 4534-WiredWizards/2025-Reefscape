@@ -1,17 +1,13 @@
 package frc.robot;
 
-import java.io.IOException;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -58,10 +54,12 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -175,9 +173,7 @@ public class RobotContainer {
     setupManualPoseSetter();
   }
 
-  /**
-   * Loads all path planner paths used for autonomous and reef scoring
-   */
+  /** Loads all path planner paths used for autonomous and reef scoring */
   private void loadPaths() {
     try {
       System.out.println("\n[Path Loading] Loading paths...");
@@ -213,24 +209,18 @@ public class RobotContainer {
     }
   }
 
-  /**
-   * Sets the target positions for the elevator and wrist
-   */
+  /** Sets the target positions for the elevator and wrist */
   public void setTargetPositions(double elevatorPosition, double wristAngle) {
     this.targetElevatorPosition = elevatorPosition;
     this.targetWristAngle = wristAngle;
   }
 
-  /**
-   * Gets the current target elevator position
-   */
+  /** Gets the current target elevator position */
   public double getTargetElevatorPosition() {
     return targetElevatorPosition;
   }
 
-  /**
-   * Gets the current target wrist angle
-   */
+  /** Gets the current target wrist angle */
   public double getTargetWristAngle() {
     return targetWristAngle;
   }
@@ -269,49 +259,54 @@ public class RobotContainer {
   }
 
   /**
-   * Creates a command to drive to a reef scoring position based on the current zone and specified side.
-   * Includes interrupt capability using button press.
+   * Creates a command to drive to a reef scoring position based on the current zone and specified
+   * side. Includes interrupt capability using button press.
    *
    * @param side The scoring side (LEFT or RIGHT)
    * @return Command sequence for driving to the specified reef side
    */
   public Command driveToReefSide(ScoringSide side) {
     return new SequentialCommandGroup(
+        new InstantCommand(() -> vision.resetRobotPose()),
         // Create a new initial command that determines the path based on current zone
-        new InstantCommand(() -> {
-            // Get the current zone at execution time
-            ReefZone currentZone = drive.getZone();
-            Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
-            Logger.recordOutput("DriveToReef/RequestedSide", side.toString());
+        new InstantCommand(
+            () -> {
+              // Get the current zone at execution time
+              ReefZone currentZone = drive.getZone();
+              Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
+              Logger.recordOutput("DriveToReef/RequestedSide", side.toString());
 
-            // Get the path for the current zone and side
-            PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
+              // Get the path for the current zone and side
+              PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
 
-            // Create a cancel trigger that can be used by the driver
-            // This will be a new trigger for the driver joystick button 1 (trigger)
-            Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.TRIGGER);
+              // Create a cancel trigger that can be used by the driver
+              // This will be a new trigger for the driver joystick button 1 (trigger)
+              Trigger cancelDriveTrigger =
+                  new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
 
-            // Create and schedule a command to follow that specific path with cancel capability
-            Command pathCommand = new DriveToPath(drive, path)
-                .until(cancelDriveTrigger)  // Will end when trigger is pressed
-                .finallyDo(() -> {
-                    // When the command ends (either by completion or cancellation),
-                    // log the status and stop the drive
-                    Logger.recordOutput("DriveToReef/Status", 
-                        "Path following ended - " + (cancelDriveTrigger.getAsBoolean() ? 
-                            "Cancelled by driver" : "Completed successfully"));
-                    drive.stop();
-                });
-                
-            pathCommand.schedule();
-            Logger.recordOutput("DriveToReef/Status", "Started driving to reef side");
-        })
-    );
+              // Create and schedule a command to follow that specific path with cancel capability
+              Command pathCommand =
+                  new DriveToPath(drive, path)
+                      .until(cancelDriveTrigger) // Will end when trigger is pressed
+                      .finallyDo(
+                          () -> {
+                            // When the command ends (either by completion or cancellation),
+                            // log the status and stop the drive
+                            Logger.recordOutput(
+                                "DriveToReef/Status",
+                                "Path following ended - "
+                                    + (cancelDriveTrigger.getAsBoolean()
+                                        ? "Cancelled by driver"
+                                        : "Completed successfully"));
+                            drive.stop();
+                          });
+
+              pathCommand.schedule();
+              Logger.recordOutput("DriveToReef/Status", "Started driving to reef side");
+            }));
   }
 
-  /**
-   * Creates a sequence for moving to a scoring position
-   */
+  /** Creates a sequence for moving to a scoring position */
   public Command createScoringSequence(double elevatorPosition, double wristAngle) {
     return new ConditionalCommand(
         // If coral is detected in intake (sensor is triggered)
@@ -349,9 +344,7 @@ public class RobotContainer {
         });
   }
 
-  /**
-   * Creates a command sequence for elevator down and coral intake
-   */
+  /** Creates a command sequence for elevator down and coral intake */
   public Command elevatorDownAndRunCoralIntake() {
     return new SequentialCommandGroup(
         new ConditionalCommand(
@@ -372,8 +365,7 @@ public class RobotContainer {
                 new RunCoralIntake(m_Intake, true),
                 new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
             // The condition: Check if elevator is NOT at ground position
-            () -> !m_elevator.isAtPosition(0.3))
-        );
+            () -> !m_elevator.isAtPosition(0.3)));
   }
 
   /** Register named commands for PathPlanner */
@@ -421,12 +413,9 @@ public class RobotContainer {
                 new ParallelDeadlineGroup(
                     new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
                     new SetElevatorPosition(
-                        m_elevator,
-                        this::getTargetElevatorPosition,
-                        m_Wrist,
-                        false),
+                        m_elevator, this::getTargetElevatorPosition, m_Wrist, false),
                     new SetWristPosition(m_Wrist, this::getTargetWristAngle, false))));
-    
+
     // Commands to move wrist and elevator to the scoring position
     new EventTrigger("WE-CoralIntake").onTrue(elevatorDownAndRunCoralIntake());
   }
@@ -473,28 +462,28 @@ public class RobotContainer {
         "Elevator/L1", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
     // AutoScoring test
-    SmartDashboard.putData(
-        "Score/Z1-l4-L",
-        new SequentialCommandGroup(
-            new InstantCommand(() -> vision.resetRobotPose()),
-            new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
-            new ParallelCommandGroup(
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
-                new DriveToPath(drive, Z1L)),
-            new RunCoralOutake(m_Intake),
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+    // SmartDashboard.putData(
+    //     "Score/Z1-l4-L",
+    //     new SequentialCommandGroup(
+    //         new InstantCommand(() -> vision.resetRobotPose()),
+    //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
+    //         new ParallelCommandGroup(
+    //             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+    //             new DriveToPath(drive, Z1L)),
+    //         new RunCoralOutake(m_Intake),
+    //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
     // Add Z1-L4 Right
-    SmartDashboard.putData(
-        "Score/Z1-l4-R",
-        new SequentialCommandGroup(
-            new InstantCommand(() -> vision.resetRobotPose()),
-            new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
-            new ParallelCommandGroup(
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
-                new DriveToPath(drive, Z1R)),
-            new RunCoralOutake(m_Intake),
-            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+    // SmartDashboard.putData(
+    //     "Score/Z1-l4-R",
+    //     new SequentialCommandGroup(
+    //         new InstantCommand(() -> vision.resetRobotPose()),
+    //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
+    //         new ParallelCommandGroup(
+    //             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
+    //             new DriveToPath(drive, Z1R)),
+    //         new RunCoralOutake(m_Intake),
+    //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
     // New method with cancellation capability
     SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT));
@@ -525,11 +514,11 @@ public class RobotContainer {
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
             () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
-            () -> driverJoystick.getRawButton(Driver.SLOW_MODE_TOGGLE),
-            () -> driverJoystick.getRawButton(Driver.FIELD_RELATIVE_TOGGLE)));
+            () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
+            () -> driverJoystick.getRawButton(Driver.LeftThrottle.TOP_THUMB_BUTTON)));
 
     // Lock to 0° when lock angle button is held
-    new JoystickButton(driverJoystick, Driver.LOCK_ANGLE_BUTTON)
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
         .toggleOnTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
@@ -538,16 +527,18 @@ public class RobotContainer {
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    new JoystickButton(driverJoystick, Driver.STOP_WITH_X_BUTTON)
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
         .toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Zero gyro when reset button is pressed
-    new JoystickButton(driverJoystick, Driver.ZERO_GYRO_BUTTON)
-        .onTrue(Commands.runOnce(() -> drive.resetGyro()).ignoringDisable(true));
+    new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
+        .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
     // Add driver joystick commands for reef side approach
-    new JoystickButton(driverJoystick, 11).onTrue(driveToReefSide(ScoringSide.LEFT));
-    new JoystickButton(driverJoystick, 12).onTrue(driveToReefSide(ScoringSide.RIGHT));
+    new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON)
+        .onTrue(driveToReefSide(ScoringSide.LEFT));
+    new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
+        .onTrue(driveToReefSide(ScoringSide.RIGHT));
 
     // Elevator manual control
     operatorController
