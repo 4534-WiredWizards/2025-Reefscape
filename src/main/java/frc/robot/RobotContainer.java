@@ -402,8 +402,8 @@ public class RobotContainer {
         "SetTargetL4",
         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)));
 
-    NamedCommands.registerCommand("RunCoralOutake", new RunCoralOutake(m_Intake));
-  }
+        NamedCommands.registerCommand("RunCoralOutake", new RunCoralOutake(m_Intake).withTimeout(1.5));
+    }
 
   /** Configure event triggers for PathPlanner */
   private void configureEventTriggers() {
