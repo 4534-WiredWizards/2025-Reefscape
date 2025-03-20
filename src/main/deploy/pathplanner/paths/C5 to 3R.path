@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.01422697368421,
-        "y": 1.8889802631578947
+        "x": 6.1675164473684205,
+        "y": 2.0333059210526314
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.7368026856639185,
-        "y": 2.0511967084089853
+        "x": 5.890092159348129,
+        "y": 2.1955223663037224
       },
       "isLocked": false,
       "linkedName": "Starting Cage 5"
     },
     {
       "anchor": {
-        "x": 5.291940789473683,
-        "y": 2.966611842105263
+        "x": 5.3208059210526315,
+        "y": 2.9185032894736844
       },
       "prevControl": {
-        "x": 5.728014241989523,
-        "y": 2.2494098924143513
+        "x": 5.756879373568471,
+        "y": 2.2013013397827725
       },
       "nextControl": null,
       "isLocked": false,
@@ -37,7 +37,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7525423728813555,
+      "minWaypointRelativePos": 0.3482944344703776,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -75,7 +75,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.3,
+    "maxVelocity": 0.7,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

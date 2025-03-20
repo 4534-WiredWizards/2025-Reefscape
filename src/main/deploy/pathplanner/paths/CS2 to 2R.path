@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.7607730263157892,
-        "y": 1.4367598684210532
+        "x": 1.500986842105263,
+        "y": 1.2443256578947364
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.683017833100779,
-        "y": 1.7820984476446733
+        "x": 3.204029605263157,
+        "y": 1.5810855263157884
       },
       "isLocked": false,
       "linkedName": "Coral Station 2"
     },
     {
       "anchor": {
-        "x": 3.5853198789361898,
-        "y": 2.117646230262295
+        "x": 3.858305921052631,
+        "y": 2.6972039473684206
       },
       "prevControl": {
-        "x": 3.4544504883576037,
-        "y": 1.8886223808691698
-      },
-      "nextControl": {
-        "x": 3.834272867657796,
-        "y": 2.5533185562574854
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.97,
-        "y": 2.8236837771285663
-      },
-      "prevControl": {
-        "x": 3.872133996943121,
-        "y": 2.593635422547033
+        "x": 3.5215460526315785,
+        "y": 2.2064967105263156
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,15 +30,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 0.32861635220125784,
       "rotationDegrees": 59.99999999999999
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.491921005385997,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.25,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
         "maxAcceleration": 3.0,
@@ -69,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "Wrist Out",
-      "waypointRelativePos": 0.05745062836624773,
+      "waypointRelativePos": 0.05,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -80,7 +64,7 @@
     },
     {
       "name": "Scoring Postion",
-      "waypointRelativePos": 0.7001795332136441,
+      "waypointRelativePos": 0.35,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -106,7 +90,7 @@
   "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -150.85192815428692
+    "rotation": -131.53177074108282
   },
   "useDefaultConstraints": false
 }

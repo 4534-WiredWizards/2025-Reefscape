@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.97,
-        "y": 2.8236837771285663
+        "x": 3.858305921052631,
+        "y": 2.6972039473684206
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2862348593547424,
-        "y": 2.058329463000913
+        "x": 3.2521381578947364,
+        "y": 2.3412006578947366
       },
       "isLocked": false,
       "linkedName": "Reef Post 2R"
     },
     {
       "anchor": {
-        "x": 1.7607730263157892,
-        "y": 1.4367598684210532
+        "x": 1.500986842105263,
+        "y": 1.2443256578947364
       },
       "prevControl": {
-        "x": 2.0748034859287525,
-        "y": 1.6706987578560963
+        "x": 1.8150173017182263,
+        "y": 1.4782645473297795
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,7 +36,41 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0.01974865350089766,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "Zero Elevator",
+      "waypointRelativePos": 0.1777378815080791,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "E-Zero"
+        }
+      }
+    },
+    {
+      "name": "Coral Intake",
+      "waypointRelativePos": 0.5511669658886892,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-CoralIntake"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.5,
@@ -47,7 +81,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -150.85192815428692
+    "rotation": -131.53177074108282
   },
   "reversed": false,
   "folder": null,

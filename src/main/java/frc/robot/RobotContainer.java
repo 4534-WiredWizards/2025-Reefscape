@@ -274,6 +274,8 @@ public class RobotContainer {
           // Get the current zone at execution time
           ReefZone currentZone = drive.getZone();
           Logger.recordOutput("AutoScoring/ExecutionZone", currentZone.toString());
+          Logger.recordOutput("AutoScoring/RequestedHeight", height.toString());
+          Logger.recordOutput("AutoScoring/RequestedSide", side.toString());
 
           // Get the path for the current zone and side
           PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
@@ -286,13 +288,15 @@ public class RobotContainer {
                           Logger.recordOutput(
                               "AutoScoring/StartingPath",
                               currentZone.toString() + "-" + side.toString())),
+                  // Set target positions using the enum values
+                  new InstantCommand(() -> setTargetPositions(height.getElevatorPosition(), height.getWristAngle())),
                   new DriveToPath(drive, path),
                   // Rest of your scoring sequence...
                   new RunCoralOutake(m_Intake),
                   new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
           command.schedule();
         });
-  }
+}
 
   public Command createScoringSequence(double elevatorPosition, double wristAngle) {
     return new ConditionalCommand(
@@ -376,8 +380,7 @@ public class RobotContainer {
         "WE-L2", createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
     NamedCommands.registerCommand(
         "WE-L3", createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
-    NamedCommands.registerCommand(
-        "WE-L4", createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
+    NamedCommands.registerCommand("WE-L4", createScoringSequence(62.5, 110.0));
 
     // Elevator to zero postion
     NamedCommands.registerCommand(

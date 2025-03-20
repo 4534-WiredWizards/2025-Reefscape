@@ -39,6 +39,24 @@
           "data": {
             "pathName": "CS2 to 2R"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2R to CS2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WE-CoralIntake"
+          }
         }
       ]
     }
