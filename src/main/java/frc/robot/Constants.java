@@ -215,8 +215,8 @@ public interface Constants {
     // Define preset positions that the elevator can move to
     public static final double POSITION_GROUND = -0.1;
     public static final double POSITION_L1 = 0;
-    public static final double POSITION_L2 = 13.95;
-    public static final double POSITION_L3 = 30;
+    public static final double POSITION_L2 = 13.95 + 2;
+    public static final double POSITION_L3 = 30 + 2;
     public static final double POSITION_L4 = 68.81;
     public static final double POSITION_HIGH_ALGAE = POSITION_L3;
     public static final double POSITION_LOW_ALGAE = 15;
@@ -280,8 +280,8 @@ public interface Constants {
     // Preset Positions
     // Level Positions
     double L1_ANGLE = 123;
-    double L2_ANGLE = 150;
-    double L3_ANGLE = 150;
+    double L2_ANGLE = (123 - 5);
+    double L3_ANGLE = (123 - 5);
     double L4_ANGLE = 89;
 
     // Algae intake positions

@@ -31,7 +31,6 @@ import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.ReefZone;
-import frc.robot.Constants.ScoringHeight;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.Climb.SimpleMoveClimb;
@@ -268,13 +267,13 @@ public class RobotContainer {
    * @param side The scoring side (LEFT or RIGHT)
    * @return Command sequence for autonomous scoring
    */
-  public Command dynamicZoneAutoScoring(ScoringSide side, ScoringHeight height) {
+  public Command dynamicZoneAutoScoring(ScoringSide side) {
     return Commands.runOnce(
         () -> {
           // Get the current zone at execution time
           ReefZone currentZone = drive.getZone();
           Logger.recordOutput("AutoScoring/ExecutionZone", currentZone.toString());
-          Logger.recordOutput("AutoScoring/RequestedHeight", height.toString());
+          //   Logger.recordOutput("AutoScoring/RequestedHeight", height.toString());
           Logger.recordOutput("AutoScoring/RequestedSide", side.toString());
 
           // Get the path for the current zone and side
@@ -283,20 +282,23 @@ public class RobotContainer {
           // Create and schedule a command to follow that specific path
           Command command =
               new SequentialCommandGroup(
-                  new InstantCommand(
-                      () ->
-                          Logger.recordOutput(
-                              "AutoScoring/StartingPath",
-                              currentZone.toString() + "-" + side.toString())),
-                  // Set target positions using the enum values
-                  new InstantCommand(() -> setTargetPositions(height.getElevatorPosition(), height.getWristAngle())),
-                  new DriveToPath(drive, path),
+                  //   new InstantCommand(
+                  //       () ->
+                  //           Logger.recordOutput(
+                  //               "AutoScoring/StartingPath",
+                  //               currentZone.toString() + "-" + side.toString())),
+                  //   // Set target positions using the enum values
+                  //   new InstantCommand(
+                  //       () ->
+                  //           setTargetPositions(height.getElevatorPosition(),
+                  // height.getWristAngle())),
+                  new DriveToPath(drive, path)
                   // Rest of your scoring sequence...
-                  new RunCoralOutake(m_Intake),
-                  new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
+                  //   new RunCoralOutake(m_Intake)
+                  );
           command.schedule();
         });
-}
+  }
 
   public Command createScoringSequence(double elevatorPosition, double wristAngle) {
     return new ConditionalCommand(
@@ -577,8 +579,8 @@ public class RobotContainer {
             new RunCoralOutake(m_Intake),
             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
 
-    SmartDashboard.putData(
-        "Score/AutoZone L4-L", dynamicZoneAutoScoring(ScoringSide.LEFT, ScoringHeight.L4));
+    SmartDashboard.putData("Score/AutoZone L", dynamicZoneAutoScoring(ScoringSide.LEFT));
+    SmartDashboard.putData("Score/AutoZone R", dynamicZoneAutoScoring(ScoringSide.RIGHT));
 
     // Drive to path test commands
     SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
@@ -624,6 +626,10 @@ public class RobotContainer {
     // Zero gyro when reset button is pressed
     new JoystickButton(driverJoystick, Driver.ZERO_GYRO_BUTTON)
         .onTrue(Commands.runOnce(() -> drive.resetGyro()).ignoringDisable(true));
+
+    // Add driver joystick commands for AutoZone scoring
+    new JoystickButton(driverJoystick, 11).onTrue(dynamicZoneAutoScoring(ScoringSide.LEFT));
+    new JoystickButton(driverJoystick, 12).onTrue(dynamicZoneAutoScoring(ScoringSide.RIGHT));
 
     // Elevator manual control
     operatorController
