@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
-import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
-import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -13,14 +11,33 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
+import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
 
 public class ElevatorSubsystem extends SubsystemBase {
+
+  // Mecanism 2d
+  // Class member variables
+  private final Mechanism2d elevatorMechanism;
+  private final MechanismRoot2d elevatorRoot;
+  private final MechanismLigament2d baseLigament;
+  private final MechanismLigament2d elevatorLigament;
+  private final double CANVAS_WIDTH = 1.5; // 1.5 meter width to accommodate horizontal extension
+  private final double CANVAS_HEIGHT = 2.0; // 2 meter height (covers 6ft max height)
+  private final double ELEVATOR_THICKNESS =.05; // 5cm thickness
 
   private final TalonFX elevatorMotor1 = new TalonFX(Elevator.LEFT_MOTOR_ID, "rio");
   private final TalonFX elevatorMotor2 = new TalonFX(Elevator.RIGHT_MOTOR_ID, "rio");
@@ -44,6 +61,33 @@ public class ElevatorSubsystem extends SubsystemBase {
   public ElevatorSubsystem() {
     configureMotors();
     setpoint = getEncoderPosition();
+
+    // Create a Mechanism2d visualization for the elevator
+    elevatorMechanism = new Mechanism2d(CANVAS_WIDTH, CANVAS_HEIGHT, new Color8Bit(Color.kBlack));
+    elevatorRoot = elevatorMechanism.getRoot("ElevatorRoot", CANVAS_WIDTH / 2.0, 0);
+
+    // Create base of the elevator - static part pointing up (90 degrees)
+    baseLigament = elevatorRoot.append(
+        new MechanismLigament2d(
+            "Base",
+            Units.inchesToMeters(5),
+            90, // 90 degrees = vertical pointing up
+            6,
+            new Color8Bit(Color.kGray)));
+
+    // Create the moving part of the elevator pointing horizontally (0 degrees) from
+    // top of base
+    elevatorLigament = baseLigament.append(
+        new MechanismLigament2d(
+            "Elevator",
+            100, // Initial length will be set in periodic
+            0, // 0 degrees = horizontal pointing right from top of base
+            ELEVATOR_THICKNESS * 100, // Width in pixels
+            new Color8Bit(0xBF, 0x57, 0x00) // Brown color
+        ));
+
+    // Add the mechanism to SmartDashboard
+    SmartDashboard.putData("Elevator/Mechanism", elevatorMechanism);
 
     logConfiguration();
   }
@@ -82,12 +126,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     fx_cfg.MotionMagic.MotionMagicAcceleration = Elevator.MAX_ACCELERATION;
     // fx_cfg.MotionMagic.MotionMagicJerk = Elevator.JERK;
 
-    SoftwareLimitSwitchConfigs limitSwitchConfigs =
-        new SoftwareLimitSwitchConfigs()
-            .withForwardSoftLimitEnable(true)
-            .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
-            .withReverseSoftLimitEnable(false)
-            .withReverseSoftLimitThreshold(Elevator.MIN_SAFE_POS);
+    SoftwareLimitSwitchConfigs limitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+        .withForwardSoftLimitEnable(true)
+        .withForwardSoftLimitThreshold(Elevator.MAX_SAFE_POS)
+        .withReverseSoftLimitEnable(false)
+        .withReverseSoftLimitThreshold(Elevator.MIN_SAFE_POS);
 
     fx_cfg.withSoftwareLimitSwitch(limitSwitchConfigs);
     fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -147,13 +190,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public Command setZeroCommand() {
     return Commands.runOnce(
-            () -> {
-              isZeroed = true;
-              elevatorMotor1.setPosition(0);
-              isZeroing = false;
-              stop();
-              currentStatus = "Zero set";
-            })
+        () -> {
+          isZeroed = true;
+          elevatorMotor1.setPosition(0);
+          isZeroing = false;
+          stop();
+          currentStatus = "Zero set";
+        })
         .ignoringDisable(true);
   }
 
@@ -165,8 +208,8 @@ public class ElevatorSubsystem extends SubsystemBase {
               currentStatus = "Zeroing started";
             }),
         Commands.deadline(
-                Commands.waitUntil(this::isStalled),
-                Commands.run(() -> setVoltage(-Elevator.ZEROING_VOLTAGE), this))
+            Commands.waitUntil(this::isStalled),
+            Commands.run(() -> setVoltage(-Elevator.ZEROING_VOLTAGE), this))
             .handleInterrupt(
                 () -> {
                   isZeroing = false;
@@ -227,6 +270,19 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     if (currentStatus.contains("Moving to position") || currentStatus.contains("At position")) {
       Logger.recordOutput("Elevator/Status/PositionError", setpoint - currentPosition);
+    }
+
+    // Mechanism 2d visualization
+    double elevatorExtension = currentPosition;
+    elevatorLigament.setLength(Units.inchesToMeters(elevatorExtension));
+
+    // Add color coding based on different states
+    if (isStalled()) {
+      elevatorLigament.setColor(new Color8Bit(Color.kRed));
+    } else if (voltage != 0.0) {
+      elevatorLigament.setColor(new Color8Bit(Color.kYellow)); // Moving
+    } else {
+      elevatorLigament.setColor(new Color8Bit(0xBF, 0x57, 0x00)); // Default brown
     }
   }
 
