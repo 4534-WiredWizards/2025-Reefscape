@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [
     "Done",
+    "Not Done",
     "Scoring"
   ],
   "autoFolders": [],
