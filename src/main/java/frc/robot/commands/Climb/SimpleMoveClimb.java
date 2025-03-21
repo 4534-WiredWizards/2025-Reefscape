@@ -2,32 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Wrist;
+package frc.robot.commands.Climb;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Wrist;
-import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SimpleMoveWrist extends Command {
+public class SimpleMoveClimb extends Command {
 
-  private final WristSubsystem m_wrist;
+  private final ClimbSubsystem m_climb;
   private final DoubleSupplier speedSupplier;
 
-  /** Creates a new SimpleMoveWrist. */
-  public SimpleMoveWrist(WristSubsystem m_wrist, DoubleSupplier speedSupplier) {
+  /** Creates a new SimpleMoveClimb. */
+  public SimpleMoveClimb(ClimbSubsystem m_climb, DoubleSupplier speedSupplier) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_wrist = m_wrist;
+    this.m_climb = m_climb;
     this.speedSupplier = speedSupplier;
-    addRequirements(m_wrist);
+    addRequirements(m_climb);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_wrist.stop();
+    m_climb.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,24 +33,20 @@ public class SimpleMoveWrist extends Command {
   public void execute() {
     double speed = speedSupplier.getAsDouble();
     // deadband for joystick
-    if (speed < 0.1 && speed > -0.1) {
-      speed = 0;
-    }
-    speed = speed * Wrist.SPEED_SCALAR;
-    Logger.recordOutput("Wrist/GivenSpeed", speed);
+    Logger.recordOutput("Climb/GivenSpeed", speed);
 
-    m_wrist.moveManual(speed);
+    m_climb.moveManual(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_wrist.stop();
+    m_climb.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_wrist.isStalled();
+    return m_climb.isStalled();
   }
 }

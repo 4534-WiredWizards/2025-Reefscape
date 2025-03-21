@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.414573863636364,
+        "y": 2.1054687499999987
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.966073863636364,
+        "y": 2.88229353719464
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.048630136983157,
+        "y": 2.725278253425505
+      },
+      "prevControl": {
+        "x": 5.218130136983158,
+        "y": 2.4316956415425803
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 3L"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 0.4,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "reversed": false,
+  "folder": "Scoring",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "useDefaultConstraints": false
+}

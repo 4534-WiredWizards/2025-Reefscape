@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C1 to 5L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5L to CS1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS1 to 6R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6R to CS1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS1 to 6L"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

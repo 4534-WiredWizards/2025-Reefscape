@@ -1,0 +1,93 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.858305921052631,
+        "y": 2.6972039473684206
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.2521381578947364,
+        "y": 2.3412006578947366
+      },
+      "isLocked": false,
+      "linkedName": "Reef Post 2R"
+    },
+    {
+      "anchor": {
+        "x": 1.105162714568662,
+        "y": 1.1097360530369713
+      },
+      "prevControl": {
+        "x": 1.4191931741816253,
+        "y": 1.3436749424720145
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Coral Station 2"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": -126.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0.01974865350089766,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "Zero Elevator",
+      "waypointRelativePos": 0.1777378815080791,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "E-Zero"
+        }
+      }
+    },
+    {
+      "name": "Coral Intake",
+      "waypointRelativePos": 0.5511669658886892,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-CoralIntake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -125.80417830609093
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.985361842105262,
+        "y": 6.988486842105263
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.817838008636503,
+        "y": 5.160349091853073
+      },
+      "isLocked": false,
+      "linkedName": "Starting Cage 1"
+    },
+    {
+      "anchor": {
+        "x": 5.274971590909091,
+        "y": 5.047088068181818
+      },
+      "prevControl": {
+        "x": 5.986721590909091,
+        "y": 5.992838068181818
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 5L"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.47755834829443483,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.4,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -119.99999999999999
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -129.14398641457092
+  },
+  "useDefaultConstraints": true
+}

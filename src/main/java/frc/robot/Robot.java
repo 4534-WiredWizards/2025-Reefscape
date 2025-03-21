@@ -35,7 +35,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
-  private RobotContainer robotContainer;
+  public RobotContainer robotContainer;
 
   public Robot() {
     // Record metadata
@@ -125,7 +125,17 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
     // Call the robot container's init method
-    robotContainer.m_vision.resetLimelightBotPoseBlue();
+    // robotContainer.m_vision.resetLimelightBotPoseBlue();
+    new Thread(
+            () -> {
+              try {
+                Thread.sleep(2000); // 2 second delay
+                robotContainer.vision.resetRobotPose();
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+            })
+        .start();
   }
 
   /** This function is called once when the robot is disabled. */
@@ -139,7 +149,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    robotContainer.m_vision.resetLimelightBotPoseBlue();
+    // robotContainer.m_vision.resetLimelightBotPoseBlue();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -155,7 +165,9 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    robotContainer.m_vision.resetLimelightBotPoseBlue();
+    robotContainer.vision.resetRobotPose();
+    System.out.println("Resetting robot pose in teleop");
+    // robotContainer.m_vision.resetLimelightBotPoseBlue();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -172,12 +184,13 @@ public class Robot extends LoggedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
+
+    // Cancels all running commands at the start of test mode
     CommandScheduler.getInstance().cancelAll();
 
     // FIXME: Music to be added back as a command or when doesnt brick the motors
     // Music music = new Music();
-    // music.playUnderTheSea();
+    // music.playNotLikeUs();
   }
 
   /** This function is called periodically during test mode. */

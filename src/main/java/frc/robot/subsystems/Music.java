@@ -73,6 +73,17 @@ public class Music extends SubsystemBase {
     m_orchestra.play();
   }
 
+  public void playNotLikeUs() {
+    // stop any music that is currently playing
+    m_orchestra.stop();
+
+    // load Not Like Us
+    m_orchestra.loadMusic("NotLikeUs.chrp");
+
+    // play Not Like Us
+    m_orchestra.play();
+  }
+
   public void stop() {
     m_orchestra.stop();
   }

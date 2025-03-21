@@ -1,0 +1,96 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.1675164473684205,
+        "y": 2.0333059210526314
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.890092159348129,
+        "y": 2.1955223663037224
+      },
+      "isLocked": false,
+      "linkedName": "Starting Cage 5"
+    },
+    {
+      "anchor": {
+        "x": 5.3208059210526315,
+        "y": 2.9185032894736844
+      },
+      "prevControl": {
+        "x": 5.756879373568471,
+        "y": 2.2013013397827725
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 3R"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5943396226415063,
+      "rotationDegrees": 125.00000000000001
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.3482944344703776,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.4,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "Raise",
+      "waypointRelativePos": 0.5242369838420115,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-L4"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.7,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "reversed": false,
+  "folder": "Done",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 137.48955292199923
+  },
+  "useDefaultConstraints": false
+}
