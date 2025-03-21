@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.1675164473684205,
-        "y": 2.0333059210526314
+        "x": 6.66892584409672,
+        "y": 1.8972223669363393
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.201702719596642,
-        "y": 1.4498618814160147
+        "x": 5.703112116324942,
+        "y": 1.3137783272997225
       },
       "isLocked": false,
       "linkedName": "Starting Cage 5"
@@ -83,7 +83,7 @@
   "folder": "Not Done",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 137.48955292199923
+    "rotation": 124.61586187489964
   },
   "useDefaultConstraints": true
 }

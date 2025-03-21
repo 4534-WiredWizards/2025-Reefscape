@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.105162714568662,
-        "y": 1.1097360530369713
+        "x": 1.3126774317781689,
+        "y": 0.9313088000660207
       },
       "prevControl": {
-        "x": 1.1110326193530575,
-        "y": 0.8598049741015532
+        "x": 1.3185473365625644,
+        "y": 0.6813777211306026
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 0.22082585278276481,
+      "maxWaypointRelativePos": 0.20931820972495085,
       "constraints": {
         "maxVelocity": 0.5,
         "maxAcceleration": 3.5,
@@ -57,7 +57,7 @@
   "eventMarkers": [
     {
       "name": "Back Off Wrist",
-      "waypointRelativePos": 0.01974865350089769,
+      "waypointRelativePos": 0.01,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -68,7 +68,7 @@
     },
     {
       "name": "Zero Elevator",
-      "waypointRelativePos": 0.15080789946140033,
+      "waypointRelativePos": 0.14088592829076604,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

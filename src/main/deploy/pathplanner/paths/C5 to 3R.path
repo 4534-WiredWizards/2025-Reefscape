@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.1675164473684205,
-        "y": 2.0333059210526314
+        "x": 6.66892584409672,
+        "y": 1.8972223669363393
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.890092159348129,
-        "y": 2.1955223663037224
+        "x": 6.088275243441289,
+        "y": 2.065040081131183
       },
       "isLocked": false,
       "linkedName": "Starting Cage 5"
@@ -37,7 +37,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.3482944344703776,
+      "minWaypointRelativePos": 0.5019799852652257,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -90,7 +90,7 @@
   "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 137.48955292199923
+    "rotation": 124.61586187489964
   },
   "useDefaultConstraints": false
 }

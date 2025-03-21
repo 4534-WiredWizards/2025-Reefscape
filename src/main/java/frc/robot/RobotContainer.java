@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
 import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
@@ -504,6 +505,11 @@ public class RobotContainer {
     // SmartDashboard.putData("Drive/Z6L", new DriveToPath(drive, Z6L));
   }
 
+  // Method to set controller rumble for operator controller
+  public void setOperatorRumble(double rumble) {
+    operatorController.setRumble(kBothRumble, rumble);
+  }
+
   /** Configure button bindings for driver and operator controls */
   private void configureButtonBindings() {
     // Default command for drive - joystick control
@@ -583,6 +589,12 @@ public class RobotContainer {
                         m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
                     new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
+
+    // Test rumble command
+    operatorController
+        .start()
+        .onTrue(new InstantCommand(() -> setOperatorRumble(1.0)))
+        .onFalse(new InstantCommand(() -> setOperatorRumble(0.0)));
 
     // B - High algae
     operatorController
