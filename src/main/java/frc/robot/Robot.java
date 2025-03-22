@@ -129,7 +129,7 @@ public class Robot extends LoggedRobot {
     new Thread(
             () -> {
               try {
-                Thread.sleep(2000); // 2 second delay
+                Thread.sleep(20000); // 20 second delay
                 robotContainer.vision.resetRobotPose();
               } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -140,7 +140,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    robotContainer.vision.resetRobotPose();
+  }
 
   /** This function is called periodically when disabled. */
   @Override
@@ -149,7 +151,8 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // robotContainer.m_vision.resetLimelightBotPoseBlue();
+    System.out.println("Resetting robot pose in auto");
+    robotContainer.vision.resetRobotPose();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -165,8 +168,8 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    robotContainer.vision.resetRobotPose();
     System.out.println("Resetting robot pose in teleop");
+    robotContainer.vision.resetRobotPose();
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
