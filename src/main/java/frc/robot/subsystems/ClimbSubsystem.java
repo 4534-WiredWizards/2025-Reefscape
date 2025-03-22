@@ -8,6 +8,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Climb;
+import org.littletonrobotics.junction.Logger;
 
 public class ClimbSubsystem extends SubsystemBase {
   // define climb motor
@@ -19,6 +20,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     SparkFlexConfig motorConfig = new SparkFlexConfig();
     motorConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(60);
+    Logger.recordOutput("Climb/Encoder", climbMotor.getEncoder().getPosition());
 
     climbMotor.configure(
         motorConfig,
@@ -29,6 +31,8 @@ public class ClimbSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Log postiion
+    Logger.recordOutput("Climb/Encoder", climbMotor.getEncoder().getPosition());
   }
 
   public void moveManual(double speed) {
