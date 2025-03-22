@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -287,9 +288,12 @@ public class RobotContainer {
 
               // Create and schedule a command to follow that specific path with cancel capability
               Command pathCommand =
-                  new DriveToPath(drive, path)
-                      .until(cancelDriveTrigger) // Will end when trigger is pressed
-                      .finallyDo(
+              new SequentialCommandGroup(
+                        new DriveToPath(drive, path)
+                        .until(cancelDriveTrigger), // Will end when trigger is pressed
+                        // Add rumble feedback when path completes
+                        setOperatorRumble(0.7) // Use a moderate rumble intensity
+                        ).finallyDo(
                           () -> {
                             // When the command ends (either by completion or cancellation),
                             // log the status and stop the drive
@@ -300,6 +304,8 @@ public class RobotContainer {
                                         ? "Cancelled by driver"
                                         : "Completed successfully"));
                             drive.stop();
+
+                            operatorController.setRumble(kBothRumble, 0.0);
                           });
 
               pathCommand.schedule();
@@ -347,27 +353,30 @@ public class RobotContainer {
 
   /** Creates a command sequence for elevator down and coral intake */
   public Command elevatorDownAndRunCoralIntake() {
-    return new SequentialCommandGroup(
-        new ConditionalCommand(
-            // If the elevator is NOT at ground position, run the full sequence
-            new SequentialCommandGroup(
-                // Step 1: Clear the elevator
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                // Step 2: Move elevator down, prepare wrist, and run intake
+        return new SequentialCommandGroup(
+            new ConditionalCommand(
+                // If the elevator is NOT at ground position, run the full sequence
+                new SequentialCommandGroup(
+                    // Step 1: Clear the elevator
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                    // Step 2: Move elevator down, prepare wrist, and run intake
+                    new ParallelDeadlineGroup(
+                        new RunCoralIntake(m_Intake, true),
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                        new SequentialCommandGroup(
+                            new WaitUntilCommand(
+                                () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                // If the elevator is ALREADY at ground position, just run intake and set wrist
                 new ParallelDeadlineGroup(
                     new RunCoralIntake(m_Intake, true),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
-                    new SequentialCommandGroup(
-                        new WaitUntilCommand(
-                            () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
-                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
-            // If the elevator is ALREADY at ground position, just run intake and set wrist
-            new ParallelDeadlineGroup(
-                new RunCoralIntake(m_Intake, true),
-                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
-            // The condition: Check if elevator is NOT at ground position
-            () -> !m_elevator.isAtPosition(0.3)));
-  }
+                    new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+                // The condition: Check if elevator is NOT at ground position
+                () -> !m_elevator.isAtPosition(0.3)),
+            // Add rumble feedback after coral intake completes
+            setOperatorRumble(0.6)
+        );
+    }
 
   /** Register named commands for PathPlanner */
   private void registerNamedCommands() {
@@ -510,10 +519,14 @@ public class RobotContainer {
     // SmartDashboard.putData("Drive/Z6L", new DriveToPath(drive, Z6L));
   }
 
-  // Method to set controller rumble for operator controller
-  public void setOperatorRumble(double rumble) {
-    operatorController.setRumble(kBothRumble, rumble);
-  }
+// Method to set controller rumble for operator controller
+public Command setOperatorRumble(double rumble) {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> operatorController.setRumble(kBothRumble, rumble)),
+                new WaitCommand(0.5),
+                new InstantCommand(() -> operatorController.setRumble(kBothRumble, 0.0)));
+
+}
 
   /** Configure button bindings for driver and operator controls */
   private void configureButtonBindings() {
