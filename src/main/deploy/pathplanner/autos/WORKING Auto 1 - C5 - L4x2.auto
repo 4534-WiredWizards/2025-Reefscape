@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ResetBotPose"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "C5 to 3R"

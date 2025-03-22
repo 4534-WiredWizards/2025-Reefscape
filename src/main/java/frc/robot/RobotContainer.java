@@ -449,7 +449,7 @@ public class RobotContainer {
 
     // Resetpose based on vision command
     NamedCommands.registerCommand(
-        "ResetBotPose", new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
+        "ResetBotPose", new InstantCommand(() -> vision.resetRobotPose()));
   }
 
   /** Configure event triggers for PathPlanner */
