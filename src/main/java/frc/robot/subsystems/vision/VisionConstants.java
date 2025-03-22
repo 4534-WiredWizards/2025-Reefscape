@@ -1,10 +1,9 @@
 package frc.robot.subsystems.vision;
 
-import java.util.Map;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import frc.robot.Constants.ReefZone;
+import java.util.Map;
 
 public class VisionConstants {
   // AprilTag layout

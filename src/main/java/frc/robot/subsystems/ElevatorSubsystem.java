@@ -14,9 +14,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -25,15 +22,18 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
   // Mecanism 2d
   // Class member variables
-  private final Mechanism2d elevatorMechanism;
-  private final MechanismRoot2d elevatorRoot;
-  private final MechanismLigament2d baseLigament;
-  private final MechanismLigament2d elevatorLigament;
+  private final LoggedMechanism2d elevatorMechanism;
+  private final LoggedMechanismRoot2d elevatorRoot;
+  private final LoggedMechanismLigament2d baseLigament;
+  private final LoggedMechanismLigament2d elevatorLigament;
   private final double CANVAS_WIDTH = 1.5; // 1.5 meter width to accommodate horizontal extension
   private final double CANVAS_HEIGHT = 2.0; // 2 meter height (covers 6ft max height)
   private final double ELEVATOR_THICKNESS = .05; // 5cm thickness
@@ -62,13 +62,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     setpoint = getEncoderPosition();
 
     // Create a Mechanism2d visualization for the elevator
-    elevatorMechanism = new Mechanism2d(CANVAS_WIDTH, CANVAS_HEIGHT, new Color8Bit(Color.kBlack));
+    elevatorMechanism =
+        new LoggedMechanism2d(CANVAS_WIDTH, CANVAS_HEIGHT, new Color8Bit(Color.kBlack));
     elevatorRoot = elevatorMechanism.getRoot("ElevatorRoot", CANVAS_WIDTH / 2.0, 0);
 
     // Create base of the elevator - static part pointing up (90 degrees)
     baseLigament =
         elevatorRoot.append(
-            new MechanismLigament2d(
+            new LoggedMechanismLigament2d(
                 "Base",
                 Units.inchesToMeters(5),
                 90, // 90 degrees = vertical pointing up
@@ -79,7 +80,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // top of base
     elevatorLigament =
         baseLigament.append(
-            new MechanismLigament2d(
+            new LoggedMechanismLigament2d(
                 "Elevator",
                 100, // Initial length will be set in periodic
                 0, // 0 degrees = horizontal pointing right from top of base
@@ -89,6 +90,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // Add the mechanism to SmartDashboard
     SmartDashboard.putData("Elevator/Mechanism", elevatorMechanism);
+
+    // Record mecanism in the logger
+    Logger.recordOutput("Elevator", elevatorMechanism);
 
     logConfiguration();
   }
