@@ -351,28 +351,60 @@ public class RobotContainer {
         });
   }
 
+//   new SequentialCommandGroup(
+//                     // Step 1: Clear the elevator
+//                     new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+//                     // Step 2: Move elevator down, prepare wrist, and run intake
+//                     new ParallelDeadlineGroup(
+//                         new RunCoralIntake(m_Intake, true),
+//                         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+//                         new SequentialCommandGroup(
+//                             new WaitUntilCommand(
+//                                 () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+//                             new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+
   /** Creates a command sequence for elevator down and coral intake */
   public Command elevatorDownAndRunCoralIntake() {
         return new SequentialCommandGroup(
             new ConditionalCommand(
                 // If the elevator is NOT at ground position, run the full sequence
-                new SequentialCommandGroup(
-                    // Step 1: Clear the elevator
-                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                    // Step 2: Move elevator down, prepare wrist, and run intake
+                new ConditionalCommand(
                     new ParallelDeadlineGroup(
                         new RunCoralIntake(m_Intake, true),
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
                         new SequentialCommandGroup(
-                            new WaitUntilCommand(
-                                () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
-                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                            // Start with wrist in clear position
+                            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false)
+                                // Cancel this when elevator is below danger limit
+                                .until(() -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                            // Then move wrist to intake position
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)
+                        )
+                    ),
+                    new SequentialCommandGroup( // Run when wrist is Not cleaxxr
+                        // Clear the wrist
+                        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                        // Move elevator down and move wrist in and run intake
+                        new ParallelDeadlineGroup(
+                            new RunCoralIntake(m_Intake, true),
+                            new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                            new SequentialCommandGroup(
+                                new WaitUntilCommand(
+                                    () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)
+                            )
+                        )
+                    ),
+                    () -> m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE
+                ),
                 // If the elevator is ALREADY at ground position, just run intake and set wrist
                 new ParallelDeadlineGroup(
                     new RunCoralIntake(m_Intake, true),
-                    new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+                    new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)
+                ),
                 // The condition: Check if elevator is NOT at ground position
-                () -> !m_elevator.isAtPosition(0.3)),
+                () -> !(m_elevator.getEncoderPosition() < 3.0)
+            ),
             // Add rumble feedback after coral intake completes
             setOperatorRumble(0.6)
         );
