@@ -426,7 +426,7 @@ public class RobotContainer {
         "WE-L2", createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
     NamedCommands.registerCommand(
         "WE-L3", createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
-    NamedCommands.registerCommand("WE-L4", createScoringSequence(62.5, 110.0));
+    NamedCommands.registerCommand("WE-L4", createScoringSequence(62.9, 110.0));
 
     // Elevator to zero position
     NamedCommands.registerCommand(
