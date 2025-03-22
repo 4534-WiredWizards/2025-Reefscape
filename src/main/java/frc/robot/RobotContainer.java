@@ -650,10 +650,10 @@ public Command setOperatorRumble(double rumble) {
                     new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
 
     // Test rumble command
-    operatorController
-        .start()
-        .onTrue(new InstantCommand(() -> setOperatorRumble(1.0)))
-        .onFalse(new InstantCommand(() -> setOperatorRumble(0.0)));
+    // operatorController
+    //     .start()
+    //     .onTrue(new InstantCommand(() -> setOperatorRumble(1.0)))
+    //     .onFalse(new InstantCommand(() -> setOperatorRumble(0.0)));
 
     // B - High algae
     operatorController
