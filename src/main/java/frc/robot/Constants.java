@@ -182,7 +182,7 @@ public interface Constants {
     double POSITION_BARGE = 70.0;
 
     // Manual Control
-    double MANUAL_SPEED = 0.75;
+    double MANUAL_SPEED = 0.45;
     int DOWN_DIRECTION = -1;
   }
 
@@ -250,7 +250,7 @@ public interface Constants {
       int SECOND_SENSOR_ID = 3;
 
       // Speeds
-      double CORAL_INTAKE_SPEED = 0.5;
+      double CORAL_INTAKE_SPEED = 0.6;
       double CORAL_OUTTAKE_SPEED = -0.28;
       double ALGAE_INTAKE_SPEED = 0.1;
       double ALGAE_OUTTAKE_SPEED = -0.5;
