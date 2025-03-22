@@ -37,6 +37,12 @@ public class ManualPoseSetter extends Command {
     Logger.recordOutput("ManualPose/SetTime", edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
   }
 
+  // Work while disabled
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
+  }
+
   @Override
   public boolean isFinished() {
     // Command finishes immediately after setting the pose
