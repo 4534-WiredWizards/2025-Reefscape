@@ -1,18 +1,22 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -55,12 +59,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -285,7 +287,8 @@ public class RobotContainer {
               Trigger cancelDriveTrigger =
                   new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
 
-              // Create and schedule a command to follow that specific path with cancel capability
+              // Create and schedule a command to follow that specific path with cancel
+              // capability
               Command pathCommand =
                   new DriveToPath(drive, path)
                       .until(cancelDriveTrigger) // Will end when trigger is pressed
@@ -428,17 +431,30 @@ public class RobotContainer {
   /** Setup manual pose setter functionality */
   private void setupManualPoseSetter() {
     // Initialize default values for manual pose setter
-    SmartDashboard.putNumber("ManualPose/X", 3.0);
-    SmartDashboard.putNumber("ManualPose/Y", 3.0);
-    SmartDashboard.putNumber("ManualPose/Rotation", 0.0);
-    SmartDashboard.putData("ManualPose/SetPose", new ManualPoseSetter(drive));
+    SmartDashboard.putNumber("ManualPose/X", 7.0);
+    SmartDashboard.putNumber("ManualPose/Y", 2.0);
+    SmartDashboard.putNumber("ManualPose/Rotation", 180);
+    SmartDashboard.putData("ManualPose/SetPose", new ManualPoseSetter(drive).ignoringDisable(true));
   }
 
   /** Configure SmartDashboard commands and test controls */
   private void configureSmartDashboard() {
-    // Command to reset pose based on vision
+
+    // Test print command with ignoringDisable
     SmartDashboard.putData(
-        "Reset Pose", new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
+        "Reset Pose Test",
+        new InstantCommand(
+                () -> {
+                  System.out.println("Attempting to reset pose...");
+                  vision.resetRobotPose();
+                })
+            .ignoringDisable(true));
+
+    SmartDashboard.putData(
+        "Reset Pos Test 2",
+        new InstantCommand(() -> vision.resetRobotPose())
+            .ignoringDisable(true) // Allows execution while disabled
+            .withName("ResetVisionPose"));
 
     SmartDashboard.putData("Run Coral Outake", new RunCoralOutake(m_Intake));
 
@@ -467,30 +483,23 @@ public class RobotContainer {
     SmartDashboard.putData(
         "Elevator/L1", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
-    // AutoScoring test
-    // SmartDashboard.putData(
-    //     "Score/Z1-l4-L",
-    //     new SequentialCommandGroup(
-    //         new InstantCommand(() -> vision.resetRobotPose()),
-    //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
-    //         new ParallelCommandGroup(
-    //             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
-    //             new DriveToPath(drive, Z1L)),
-    //         new RunCoralOutake(m_Intake),
-    //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
+    SmartDashboard.putData(
+        "PoseReset/1",
+        new InstantCommand(
+                () -> {
+                  System.out.println("[Button 1] Attempting reset...");
+                  vision.resetRobotPose();
+                })
+            .ignoringDisable(true));
 
-    // Add Z1-L4 Right
-    // SmartDashboard.putData(
-    //     "Score/Z1-l4-R",
-    //     new SequentialCommandGroup(
-    //         new InstantCommand(() -> vision.resetRobotPose()),
-    //         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)),
-    //         new ParallelCommandGroup(
-    //             new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false),
-    //             new DriveToPath(drive, Z1R)),
-    //         new RunCoralOutake(m_Intake),
-    //         new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true)));
-
+    SmartDashboard.putData(
+        "PoseReset/2",
+        new InstantCommand(
+                () -> {
+                  System.out.println("[Button 2] Attempting reset..."); // Add print
+                  vision.resetRobotPose();
+                })
+            .ignoringDisable(true));
     // New method with cancellation capability
     SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT));
     SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT));
@@ -642,6 +651,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    System.err.println("Running autonomous command!");
     return autoChooser.get();
   }
 
