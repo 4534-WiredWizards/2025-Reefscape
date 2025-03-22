@@ -35,7 +35,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 0.25351692275747517,
       "constraints": {
-        "maxVelocity": 0.2,
+        "maxVelocity": 0.5,
         "maxAcceleration": 3.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -59,7 +59,7 @@
     },
     {
       "name": "Zero Elevator",
-      "waypointRelativePos": 0.11376142026578075,
+      "waypointRelativePos": 0.1627118644067797,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
