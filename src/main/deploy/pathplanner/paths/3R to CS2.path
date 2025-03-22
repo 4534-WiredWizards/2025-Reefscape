@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.3208059210526315,
-        "y": 2.9185032894736844
+        "x": 5.327843981328258,
+        "y": 2.9093212501355232
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.090542763157895,
-        "y": 1.8312500000000005
+        "x": 6.097580823433522,
+        "y": 1.8220679606618393
       },
       "isLocked": false,
       "linkedName": "Reef Post 3R"
     },
     {
       "anchor": {
-        "x": 1.3126774317781689,
-        "y": 0.9313088000660207
+        "x": 1.1720034246575342,
+        "y": 1.0574272260273971
       },
       "prevControl": {
-        "x": 1.3185473365625644,
-        "y": 0.6813777211306026
+        "x": 1.1778733294419297,
+        "y": 0.807496147091979
       },
       "nextControl": null,
       "isLocked": false,
@@ -44,7 +44,7 @@
       "minWaypointRelativePos": 0.0,
       "maxWaypointRelativePos": 0.20931820972495085,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 0.6,
         "maxAcceleration": 3.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
