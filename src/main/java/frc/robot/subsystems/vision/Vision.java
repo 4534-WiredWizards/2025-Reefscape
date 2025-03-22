@@ -304,6 +304,7 @@ public class Vision extends SubsystemBase {
    * resetLimelightBotPoseBlue method from the old implementation.
    */
   public void resetRobotPose() {
+    System.out.println("Vision resetRobotPose()");
     Logger.recordOutput("Vision/Status", "Attempting to reset pose from vision...");
     boolean foundAnyObservations = false;
 
