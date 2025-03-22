@@ -5,9 +5,27 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "SetTargetL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ResetBotPose"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "4L"
+            "pathName": "Middle to 4R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
           }
         }
       ]

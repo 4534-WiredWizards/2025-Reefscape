@@ -634,7 +634,7 @@ public Command setOperatorRumble(double rumble) {
     configurePOVButtons();
 
     // Configure climb controls
-    operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.35)); // Wind - Climb up
+    operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.65)); // Wind - Climb up
     operatorController.x().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
 
     // A - Low algae

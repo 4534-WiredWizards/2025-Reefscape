@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.817838008636503,
-        "y": 5.160349091853073
+        "x": 5.804466145833333,
+        "y": 5.746456163194445
       },
       "isLocked": false,
       "linkedName": "Starting Cage 1"
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.47755834829443483,
+      "minWaypointRelativePos": 0.44689576411960147,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
@@ -59,7 +59,7 @@
     },
     {
       "name": "Scoring Postition",
-      "waypointRelativePos": 0.6758461378737556,
+      "waypointRelativePos": 0.5685345722591364,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -70,7 +70,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -82,10 +82,10 @@
     "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Not Done",
+  "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -129.14398641457092
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -35,21 +35,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "WE-CoralIntake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "CS1 to 6R"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "6R to CS1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CS1 to 6L"
+            "name": "RunCoralOutake"
           }
         }
       ]
