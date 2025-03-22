@@ -1,18 +1,22 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -55,12 +59,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -402,6 +404,9 @@ public class RobotContainer {
         new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)));
 
     NamedCommands.registerCommand("RunCoralOutake", new RunCoralOutake(m_Intake).withTimeout(1.5));
+
+        // Resetpose based on vision command  
+    NamedCommands.registerCommand("ResetBotPose", new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
   }
 
   /** Configure event triggers for PathPlanner */
@@ -419,6 +424,8 @@ public class RobotContainer {
 
     // Commands to move wrist and elevator to the scoring position
     new EventTrigger("WE-CoralIntake").onTrue(elevatorDownAndRunCoralIntake());
+
+    
   }
 
   /** Setup manual pose setter functionality */
@@ -433,7 +440,7 @@ public class RobotContainer {
   /** Configure SmartDashboard commands and test controls */
   private void configureSmartDashboard() {
     // Command to reset pose based on vision
-    SmartDashboard.putData("Reset Pose", new InstantCommand(() -> vision.resetRobotPose()));
+    SmartDashboard.putData("Reset Pose", new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
 
     SmartDashboard.putData("Run Coral Outake", new RunCoralOutake(m_Intake));
 
@@ -567,8 +574,8 @@ public class RobotContainer {
         .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
     operatorController
-        .button(Operator.RESET_BOT_POSE_BUTTON)
-        .onTrue(new InstantCommand(() -> vision.resetRobotPose()));
+    .button(Operator.RESET_BOT_POSE_BUTTON)
+    .onTrue(new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
     operatorController.button(Operator.ZERO_ELEVATOR_BUTTON).onTrue(m_elevator.zeroCommand());
 
     // Configure POV buttons for operator presets
