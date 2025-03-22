@@ -1,9 +1,10 @@
 package frc.robot.subsystems.vision;
 
+import java.util.Map;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import frc.robot.Constants.ReefZone;
-import java.util.Map;
 
 public class VisionConstants {
   // AprilTag layout
@@ -62,13 +63,13 @@ public class VisionConstants {
   public static double angularStdDevMegatag2Factor = 3.0; // Should use robot gyro for rotation
 
   // Maximum pose difference in meters to accept a vision measurement
-  public static final double maxPoseDifference = 1;
+  public static final double maxPoseDifference = 1.5;
   // Add this line under the maxTagDistance declaration
   public static final double minTagDistance =
       0.01; // Minimum meter distance to accept vision measurements
 
   // Maximum meter distance to accept vision measurements
-  public static final double maxTagDistance = 10;
+  public static final double maxTagDistance = 5;
 
   // Maximum gyro rate in rad/s to accept vision measurements
   public static final double maxGyroRate = Math.toRadians(720);
