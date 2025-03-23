@@ -4,12 +4,16 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
-import org.littletonrobotics.junction.Logger;
 
 /** Command to pathfind to a prebuilt path and follow it */
 public class DriveToPath extends Command {
@@ -18,11 +22,35 @@ public class DriveToPath extends Command {
   private final PathPlannerPath path;
   private Command pathFollowingCommand;
   private final PathConstraints constraints;
+  private final BooleanSupplier interupter;
+
+  /** Creates a new DriveToPoint with a prebuilt path and default constraints */
+  public DriveToPath(Drive drive, PathPlannerPath path, BooleanSupplier interupter) {
+    this.drive = drive;
+    this.path = path;
+    this.interupter = interupter;
+
+    if (path == null) {
+      throw new IllegalArgumentException("Path cannot be null");
+    }
+
+    // Create path constraints with default values
+    this.constraints =
+        new PathConstraints(
+            drive.getMaxLinearSpeedMetersPerSec() * 0.5, // 50% of max velocity
+            drive.getMaxLinearSpeedMetersPerSec() * 0.4, // 50% of max acceleration
+            drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
+            drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
+            );
+
+    addRequirements(drive);
+  }
 
   /** Creates a new DriveToPoint with a prebuilt path and default constraints */
   public DriveToPath(Drive drive, PathPlannerPath path) {
     this.drive = drive;
     this.path = path;
+    this.interupter = null;
 
     if (path == null) {
       throw new IllegalArgumentException("Path cannot be null");
@@ -80,6 +108,10 @@ public class DriveToPath extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (interupter != null && interupter.getAsBoolean()) {
+      Logger.recordOutput("DriveToPoint/Status", "Command interrupted");
+      return true;
+    }
     return pathFollowingCommand != null && pathFollowingCommand.isFinished();
   }
 }

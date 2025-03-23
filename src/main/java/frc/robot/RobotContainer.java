@@ -1,18 +1,23 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,7 +38,6 @@ import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
-import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPath;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -45,7 +49,6 @@ import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -56,12 +59,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -76,7 +77,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
-  private final ClimbSubsystem m_climb = new ClimbSubsystem();
+//   private final ClimbSubsystem m_climb = new ClimbSubsystem();
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
@@ -267,12 +268,31 @@ public class RobotContainer {
    * @param side The scoring side (LEFT or RIGHT)
    * @return Command sequence for driving to the specified reef side
    */
-  public Command driveToReefSide(ScoringSide side) {
+
+  //    public Command driveToReefSide2(ScoringSide side) {
+  //     return new SequentialCommandGroup(
+  //         new InstantCommand(() -> vision.resetRobotPose()),
+  //         Commands.runOnce(() -> {
+  //             Logger.recordOutput("DriveToReef/RequestedSide", side.toString());
+  //             ReefZone currentZone = drive.getZone();
+  //             Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
+  //         }),
+  //         new DriveToPath(drive, getPathForZoneAndSide(drive.getZone(), side))
+  //             .until(new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER)),
+  //         setOperatorRumble(0.7)
+  //     ).finallyDo(() -> {
+  //         drive.stop();
+  //         operatorController.setRumble(kBothRumble, 0.0);
+  //     });
+  // }
+
+  public Command driveToReefSide(ScoringSide side, BooleanSupplier cancelDriveTrigger) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> vision.resetRobotPose()),
         // Create a new initial command that determines the path based on current zone
         new InstantCommand(
             () -> {
+
               // Get the current zone at execution time
               ReefZone currentZone = drive.getZone();
               Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
@@ -281,17 +301,12 @@ public class RobotContainer {
               // Get the path for the current zone and side
               PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
 
-              // Create a cancel trigger that can be used by the driver
-              // This will be a new trigger for the driver joystick button 1 (trigger)
-              Trigger cancelDriveTrigger =
-                  new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
-
               // Create and schedule a command to follow that specific path with cancel
               // capability
               Command pathCommand =
                   new SequentialCommandGroup(
-                          new DriveToPath(drive, path)
-                              .until(cancelDriveTrigger), // Will end when trigger is pressed
+                          new DriveToPath(
+                              drive, path, cancelDriveTrigger), // Will end when trigger is pressed
                           // Add rumble feedback when path completes
                           setOperatorRumble(0.7) // Use a moderate rumble intensity
                           )
@@ -306,8 +321,6 @@ public class RobotContainer {
                                         ? "Cancelled by driver"
                                         : "Completed successfully"));
                             drive.stop();
-
-                            operatorController.setRumble(kBothRumble, 0.0);
                           });
 
               pathCommand.schedule();
@@ -538,8 +551,8 @@ public class RobotContainer {
                 })
             .ignoringDisable(true));
     // New method with cancellation capability
-    SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT));
-    SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT));
+    SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT, () -> false));
+    SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT, () -> false));
 
     // Drive to path test commands
     // SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
@@ -567,6 +580,8 @@ public class RobotContainer {
   /** Configure button bindings for driver and operator controls */
   private void configureButtonBindings() {
     // Default command for drive - joystick control
+    Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
@@ -596,9 +611,9 @@ public class RobotContainer {
 
     // Add driver joystick commands for reef side approachs
     new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON)
-        .onTrue(driveToReefSide(ScoringSide.LEFT));
+        .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
-        .onTrue(driveToReefSide(ScoringSide.RIGHT));
+        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
 
     // Elevator manual control
     operatorController
@@ -629,8 +644,8 @@ public class RobotContainer {
     configurePOVButtons();
 
     // Configure climb controls
-    operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.65)); // Wind - Climb up
-    operatorController.x().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
+    // operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.65)); // Wind - Climb up
+    // operatorController.x().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
 
     // A - Low algae
     operatorController
