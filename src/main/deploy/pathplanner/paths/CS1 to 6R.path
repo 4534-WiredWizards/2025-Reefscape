@@ -64,7 +64,7 @@
     },
     {
       "name": "Scoring Postion",
-      "waypointRelativePos": 0.6607532184385381,
+      "waypointRelativePos": 0.5728813559322041,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
