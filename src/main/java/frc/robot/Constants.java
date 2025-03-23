@@ -12,10 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -252,7 +253,7 @@ public interface Constants {
       // Speeds
       double CORAL_INTAKE_SPEED = 0.6;
       double CORAL_OUTTAKE_SPEED = -0.28;
-      double ALGAE_INTAKE_SPEED = 0.1;
+      double ALGAE_INTAKE_SPEED = 0.2;
       double ALGAE_OUTTAKE_SPEED = -0.5;
     }
   }
