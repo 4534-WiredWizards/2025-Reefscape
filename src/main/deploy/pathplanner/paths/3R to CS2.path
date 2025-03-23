@@ -20,8 +20,8 @@
         "y": 1.0574272260273971
       },
       "prevControl": {
-        "x": 1.1778733294419297,
-        "y": 0.807496147091979
+        "x": 1.4220034246575342,
+        "y": 1.0574272260273971
       },
       "nextControl": null,
       "isLocked": false,
@@ -68,7 +68,7 @@
     },
     {
       "name": "Zero Elevator",
-      "waypointRelativePos": 0.14088592829076604,
+      "waypointRelativePos": 0.14237288135593223,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -107,5 +107,5 @@
     "velocity": 0,
     "rotation": 119.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
