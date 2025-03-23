@@ -4,16 +4,13 @@
 
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
+import java.util.function.BooleanSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /** Command to pathfind to a prebuilt path and follow it */
 public class DriveToPath extends Command {
