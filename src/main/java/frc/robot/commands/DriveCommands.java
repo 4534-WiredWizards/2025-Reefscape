@@ -107,12 +107,13 @@ public class DriveCommands {
 
           // Convert to field relative speeds & send command
           ChassisSpeeds speeds =
-              new ChassisSpeeds(xDirectionSpeed, yDirectionSpeed, omega * turningSpeed);
+              new ChassisSpeeds(xDirectionSpeed, yDirectionSpeed, (omega * turningSpeed));
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
 
           if (!fieldOrientedView.getAsBoolean()) {
+            // Field Oriented Drive
             drive.runVelocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     speeds,
@@ -120,12 +121,8 @@ public class DriveCommands {
                         ? drive.getRotation().plus(new Rotation2d(Math.PI))
                         : drive.getRotation()));
           } else {
-            drive.runVelocity(
-                ChassisSpeeds.fromRobotRelativeSpeeds(
-                    speeds,
-                    isFlipped
-                        ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                        : drive.getRotation()));
+            // Robot Oriented Drive
+            drive.runVelocity(speeds);
           }
         },
         drive);

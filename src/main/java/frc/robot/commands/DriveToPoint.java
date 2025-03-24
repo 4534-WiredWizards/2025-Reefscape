@@ -29,12 +29,13 @@ public class DriveToPoint extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     PathConstraints constraints =
         new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec(), // Maximum linear velocity (m/s)
-            drive.getMaxLinearSpeedMetersPerSec() * 2, // Maximum linear acceleration (m/s²)
+            drive.getMaxLinearSpeedMetersPerSec() / 8, // Maximum linear velocity (m/s)
+            drive.getMaxLinearSpeedMetersPerSec() / 2, // Maximum linear acceleration (m/s²)
             drive.getMaxAngularSpeedRadPerSec(), // Maximum angular velocity (rad/s)
-            drive.getMaxAngularSpeedRadPerSec() * 2 // Maximum angular acceleration (rad/s²)
+            drive.getMaxAngularSpeedRadPerSec() // Maximum angular acceleration (rad/s²)
             );
     pathFindingCommand = AutoBuilder.pathfindToPose(targetPose, constraints, 0.0);
 

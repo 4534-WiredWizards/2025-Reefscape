@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SetTargetL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ResetBotPose"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C1 to 5L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5L to CS1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WE-CoralIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS1 to 6R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

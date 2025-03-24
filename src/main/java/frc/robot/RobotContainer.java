@@ -1,50 +1,56 @@
-// Copyright 2021-2025 FRC 4534
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot;
 
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.IO.Driver;
 import frc.robot.Constants.IO.Operator;
+import frc.robot.Constants.ReefZone;
+import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveToPoint;
+import frc.robot.commands.DriveToPath;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
+import frc.robot.commands.ManualPoseSetter;
 import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.RunCoralIntake;
+import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ScoringQueueSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -52,6 +58,11 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -61,43 +72,48 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
  */
 public class RobotContainer {
   // Subsystems
-
   private final Drive drive;
-  public final VisionSubsystem m_vision;
-  private final WristSubsystem m_Wrist = new WristSubsystem();
+  public final Vision vision;
+  private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
-  private final ScoringQueueSubsystem m_scoringQueue;
+  public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
+//   private final ClimbSubsystem m_climb = new ClimbSubsystem();
 
-  // Controller
-  private final CommandXboxController Operatorcontroller = new CommandXboxController(0);
+  // Controllers
+  private final CommandXboxController operatorController = new CommandXboxController(0);
   private final Joystick driverJoystick = new Joystick(1);
+
+  // Requested Position
+  private double targetElevatorPosition = Elevator.POSITION_L1;
+  private double targetWristAngle = Wrist.L1_ANGLE;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  // Named Command
+  // Path Planning Paths
+  public PathPlannerPath Z1R;
+  public PathPlannerPath Z1L;
+  public PathPlannerPath Z2R;
+  public PathPlannerPath Z2L;
+  public PathPlannerPath Z3R;
+  public PathPlannerPath Z3L;
+  public PathPlannerPath Z4R;
+  public PathPlannerPath Z4L;
+  public PathPlannerPath Z5R;
+  public PathPlannerPath Z5L;
+  public PathPlannerPath Z6R;
+  public PathPlannerPath Z6L;
+
+  public double getWristAngle() {
+    return m_Wrist.getAngle();
+  }
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Load path planner paths
+    loadPaths();
 
-    // Register named commands
-    NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Wrist, true));
-    NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
-    NamedCommands.registerCommand("Outake", new AdaptiveWrist(m_Wrist, false));
-
-    // Event Triggers
-    new EventTrigger("Elevator L4").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L4_POS));
-    new EventTrigger("Elevator L3").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L3_POS));
-    new EventTrigger("Elevator L2").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L2_POS));
-    new EventTrigger("Elevator L1").whileTrue(new SetElevatorPosition(m_elevator, Elevator.L1_POS));
-
-    new EventTrigger("Wrist Coral L4").whileTrue(new SetWristPosition(m_Wrist, Wrist.L4_ANGLE));
-    new EventTrigger("Wrist Coral L3").whileTrue(new SetWristPosition(m_Wrist, Wrist.L3_ANGLE));
-    new EventTrigger("Wrist Coral L2").whileTrue(new SetWristPosition(m_Wrist, Wrist.L2_ANGLE));
-    new EventTrigger("Wrist Coral L1").whileTrue(new SetWristPosition(m_Wrist, Wrist.L1_ANGLE));
-
-    new EventTrigger("Outake").whileTrue(new AdaptiveWrist(m_Wrist, false));
-    new EventTrigger("Intake").whileTrue(new AdaptiveWrist(m_Wrist, true));
-
+    // Initialize subsystems based on runtime mode
     switch (Constants.CURRENT_MODE) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -108,6 +124,12 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+
+        vision =
+            new Vision(
+                drive,
+                new VisionIOLimelight(camera1Name, drive::getRotation),
+                new VisionIOLimelight(camera0Name, drive::getRotation));
         break;
 
       case SIM:
@@ -119,6 +141,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
         break;
 
       default:
@@ -130,42 +153,434 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
         break;
     }
-    m_vision = new VisionSubsystem(drive);
-    m_scoringQueue = new ScoringQueueSubsystem(drive, m_elevator, m_Wrist);
+
+    // Register named commands for Pathplanner
+    registerNamedCommands();
+
+    // Set up event triggers
+    configureEventTriggers();
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Set up SysId routines
-    // TODO: Comment out after characterization
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
     // Configure the button bindings
     configureButtonBindings();
+
+    // Set up SmartDashboard commands and test buttons
+    configureSmartDashboard();
+
+    // Setup manual pose setter
+    setupManualPoseSetter();
+  }
+
+  /** Loads all path planner paths used for autonomous and reef scoring */
+  private void loadPaths() {
+    try {
+      System.out.println("\n[Path Loading] Loading paths...");
+      Z1R = PathPlannerPath.fromPathFile("1R");
+      Z1L = PathPlannerPath.fromPathFile("1L");
+      Z2R = PathPlannerPath.fromPathFile("2R");
+      Z2L = PathPlannerPath.fromPathFile("2L");
+      Z3R = PathPlannerPath.fromPathFile("3R");
+      Z3L = PathPlannerPath.fromPathFile("3L");
+      Z4R = PathPlannerPath.fromPathFile("4R");
+      Z4L = PathPlannerPath.fromPathFile("4L");
+      Z5R = PathPlannerPath.fromPathFile("5R");
+      Z5L = PathPlannerPath.fromPathFile("5L");
+      Z6R = PathPlannerPath.fromPathFile("6R");
+      Z6L = PathPlannerPath.fromPathFile("6L");
+      System.out.println("-> All paths loaded successfully");
+    } catch (FileVersionException | IOException | ParseException e) {
+      System.err.println("!! ERROR LOADING PATHS !!");
+      e.printStackTrace();
+      // Handle null paths gracefully
+      Z1R = null;
+      Z1L = null;
+      Z2R = null;
+      Z2L = null;
+      Z3R = null;
+      Z3L = null;
+      Z4R = null;
+      Z4L = null;
+      Z5R = null;
+      Z5L = null;
+      Z6R = null;
+      Z6L = null;
+    }
+  }
+
+  /** Sets the target positions for the elevator and wrist */
+  public void setTargetPositions(double elevatorPosition, double wristAngle) {
+    this.targetElevatorPosition = elevatorPosition;
+    this.targetWristAngle = wristAngle;
+  }
+
+  /** Gets the current target elevator position */
+  public double getTargetElevatorPosition() {
+    return targetElevatorPosition;
+  }
+
+  /** Gets the current target wrist angle */
+  public double getTargetWristAngle() {
+    return targetWristAngle;
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses null ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * Gets the path to use based on the specified zone and side.
+   *
+   * @param zone The scoring zone (ZONE_1 through ZONE_6)
+   * @param side The scoring side (LEFT or RIGHT)
+   * @return The PathPlannerPath for the specified zone and side
    */
+  public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
+    System.out.println("\n[Path Selection] Determining path:");
+    System.out.println("-> Current Zone: " + zone);
+    System.out.println("-> Requested Side: " + side);
+    System.out.println("-> Alliance: " + DriverStation.getAlliance().orElse(Alliance.Blue));
+
+    PathPlannerPath path =
+        switch (zone) {
+          case ZONE_1 -> side == ScoringSide.RIGHT ? Z1R : Z1L;
+          case ZONE_2 -> side == ScoringSide.RIGHT ? Z2R : Z2L;
+          case ZONE_3 -> side == ScoringSide.RIGHT ? Z3R : Z3L;
+          case ZONE_4 -> side == ScoringSide.RIGHT ? Z4R : Z4L;
+          case ZONE_5 -> side == ScoringSide.RIGHT ? Z5R : Z5L;
+          case ZONE_6 -> side == ScoringSide.RIGHT ? Z6R : Z6L;
+          default -> null;
+        };
+
+    if (path != null) {
+      System.out.println("-> Selected Path: " + path.name);
+    } else {
+      System.err.println("!! ERROR: No path found for zone " + zone + " side " + side);
+    }
+
+    return path;
+  }
+
+  /**
+   * Creates a command to drive to a reef scoring position based on the current zone and specified
+   * side. Includes interrupt capability using button press.
+   *
+   * @param side The scoring side (LEFT or RIGHT)
+   * @return Command sequence for driving to the specified reef side
+   */
+
+  //    public Command driveToReefSide2(ScoringSide side) {
+  //     return new SequentialCommandGroup(
+  //         new InstantCommand(() -> vision.resetRobotPose()),
+  //         Commands.runOnce(() -> {
+  //             Logger.recordOutput("DriveToReef/RequestedSide", side.toString());
+  //             ReefZone currentZone = drive.getZone();
+  //             Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
+  //         }),
+  //         new DriveToPath(drive, getPathForZoneAndSide(drive.getZone(), side))
+  //             .until(new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER)),
+  //         setOperatorRumble(0.7)
+  //     ).finallyDo(() -> {
+  //         drive.stop();
+  //         operatorController.setRumble(kBothRumble, 0.0);
+  //     });
+  // }
+
+  public Command driveToReefSide(ScoringSide side, BooleanSupplier cancelDriveTrigger) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> vision.resetRobotPose()),
+        // Create a new initial command that determines the path based on current zone
+        new InstantCommand(
+            () -> {
+
+              // Get the current zone at execution time
+              ReefZone currentZone = drive.getZone();
+              Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
+              Logger.recordOutput("DriveToReef/RequestedSide", side.toString());
+
+              // Get the path for the current zone and side
+              PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
+
+              // Create and schedule a command to follow that specific path with cancel
+              // capability
+              Command pathCommand =
+                  new SequentialCommandGroup(
+                          new DriveToPath(
+                              drive, path, cancelDriveTrigger), // Will end when trigger is pressed
+                          // Add rumble feedback when path completes
+                          setOperatorRumble(0.7) // Use a moderate rumble intensity
+                          )
+                      .finallyDo(
+                          () -> {
+                            // When the command ends (either by completion or cancellation),
+                            // log the status and stop the drive
+                            Logger.recordOutput(
+                                "DriveToReef/Status",
+                                "Path following ended - "
+                                    + (cancelDriveTrigger.getAsBoolean()
+                                        ? "Cancelled by driver"
+                                        : "Completed successfully"));
+                            drive.stop();
+                          });
+
+              pathCommand.schedule();
+              Logger.recordOutput("DriveToReef/Status", "Started driving to reef side");
+            }));
+  }
+
+  /** Creates a sequence for moving to a scoring position */
+  public Command createScoringSequence(double elevatorPosition, double wristAngle) {
+    return new ConditionalCommand(
+        // If coral is detected in intake (sensor is triggered)
+        new SequentialCommandGroup(
+            new InstantCommand(
+                () -> {
+                  System.out.println("Coral detected, running full sequence");
+                  System.out.println("Requested Elevator Position: " + elevatorPosition);
+                  System.out.println("Requested Wrist Angle: " + wristAngle);
+                }),
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelDeadlineGroup(
+                // Use the sensor to determine when to stop waiting
+                new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, false),
+                new SetWristPosition(m_Wrist, wristAngle, false))),
+        // If no coral detected, just move to position without waiting for sensor
+        new SequentialCommandGroup(
+            new InstantCommand(
+                () -> {
+                  System.out.println("No coral detected, moving to position");
+                  System.out.println("Requested Elevator Position: " + elevatorPosition);
+                  System.out.println("Requested Wrist Angle: " + wristAngle);
+                }),
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelCommandGroup(
+                new SetElevatorPosition(m_elevator, elevatorPosition, m_Wrist, false),
+                new SetWristPosition(m_Wrist, wristAngle, false))),
+        // Condition: check if sensor detects coral
+        () -> {
+          boolean sensorTriggered = m_Intake.getFirstSensor();
+          System.out.println(
+              "Sensor check: " + (sensorTriggered ? "Coral detected" : "No coral detected"));
+          return sensorTriggered;
+        });
+  }
+
+  //   new SequentialCommandGroup(
+  //                     // Step 1: Clear the elevator
+  //                     new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+  //                     // Step 2: Move elevator down, prepare wrist, and run intake
+  //                     new ParallelDeadlineGroup(
+  //                         new RunCoralIntake(m_Intake, true),
+  //                         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+  //                         new SequentialCommandGroup(
+  //                             new WaitUntilCommand(
+  //                                 () -> m_elevator.getEncoderPosition() <
+  // Elevator.ELEVATOR_DANGER_LIMIT),
+  //                             new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+
+  /** Creates a command sequence for elevator down and coral intake */
+  public Command elevatorDownAndRunCoralIntake() {
+    return new SequentialCommandGroup(
+        new ConditionalCommand(
+            // If the elevator is NOT at ground position, run the full sequence
+            new ConditionalCommand(
+                new ParallelDeadlineGroup(
+                    new RunCoralIntake(m_Intake, true),
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                    new SequentialCommandGroup(
+                        // Start with wrist in clear position
+                        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false)
+                            // Cancel this when elevator is below danger limit
+                            .until(
+                                () ->
+                                    m_elevator.getEncoderPosition()
+                                        < Elevator.ELEVATOR_DANGER_LIMIT),
+                        // Then move wrist to intake position
+                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false))),
+                new SequentialCommandGroup( // Run when wrist is Not cleaxxr
+                    // Clear the wrist
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                    // Move elevator down and move wrist in and run intake
+                    new ParallelDeadlineGroup(
+                        new RunCoralIntake(m_Intake, true),
+                        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                        new SequentialCommandGroup(
+                            new WaitUntilCommand(
+                                () ->
+                                    m_elevator.getEncoderPosition()
+                                        < Elevator.ELEVATOR_DANGER_LIMIT),
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                () -> m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
+            // If the elevator is ALREADY at ground position, just run intake and set wrist
+            new ParallelDeadlineGroup(
+                new RunCoralIntake(m_Intake, true),
+                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+            // The condition: Check if elevator is NOT at ground position
+            () -> !(m_elevator.getEncoderPosition() < 3.0)),
+        // Add rumble feedback after coral intake completes
+        setOperatorRumble(0.6));
+  }
+
+  /** Register named commands for PathPlanner */
+  private void registerNamedCommands() {
+    NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Intake, this::getWristAngle, true));
+    NamedCommands.registerCommand("SetWristPosition", new SetWristPosition(m_Wrist, 20.0));
+    NamedCommands.registerCommand(
+        "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
+
+    // Complex WE-CoralIntake command for intake with elevator coordination
+    NamedCommands.registerCommand("WE-CoralIntake", elevatorDownAndRunCoralIntake());
+
+    // Register different level scoring commands
+    NamedCommands.registerCommand(
+        "WE-L1", createScoringSequence(Elevator.POSITION_L1, Wrist.L1_ANGLE));
+    NamedCommands.registerCommand(
+        "WE-L2", createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
+    NamedCommands.registerCommand(
+        "WE-L3", createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
+    NamedCommands.registerCommand("WE-L4", createScoringSequence(62.9, 110.0));
+
+    // Elevator to zero position
+    NamedCommands.registerCommand(
+        "E-Zero", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist, true));
+
+    // Command to set wrist to safe position
+    NamedCommands.registerCommand(
+        "SetWristSafePosition",
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true));
+
+    NamedCommands.registerCommand(
+        "SetTargetL4",
+        new InstantCommand(() -> setTargetPositions(Elevator.POSITION_L4, Wrist.L4_ANGLE)));
+
+    NamedCommands.registerCommand("RunCoralOutake", new RunCoralOutake(m_Intake).withTimeout(1.5));
+
+    // Resetpose based on vision command
+    NamedCommands.registerCommand(
+        "ResetBotPose", new InstantCommand(() -> vision.resetRobotPose()));
+  }
+
+  /** Configure event triggers for PathPlanner */
+  private void configureEventTriggers() {
+    // Elevator level events
+    new EventTrigger("MoveToRequestedPosition")
+        .onTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelDeadlineGroup(
+                    new WaitUntilCommand(() -> !m_Intake.getFirstSensor()),
+                    new SetElevatorPosition(
+                        m_elevator, this::getTargetElevatorPosition, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, this::getTargetWristAngle, false))));
+
+    // Commands to move wrist and elevator to the scoring position
+    new EventTrigger("WE-CoralIntake").onTrue(elevatorDownAndRunCoralIntake());
+  }
+
+  /** Setup manual pose setter functionality */
+  private void setupManualPoseSetter() {
+    // Initialize default values for manual pose setter
+    SmartDashboard.putNumber("ManualPose/X", 7.0);
+    SmartDashboard.putNumber("ManualPose/Y", 2.0);
+    SmartDashboard.putNumber("ManualPose/Rotation", 180);
+    SmartDashboard.putData("ManualPose/SetPose", new ManualPoseSetter(drive).ignoringDisable(true));
+  }
+
+  /** Configure SmartDashboard commands and test controls */
+  private void configureSmartDashboard() {
+
+    // Test print command with ignoringDisable
+    SmartDashboard.putData(
+        "Reset Pose Test",
+        new InstantCommand(
+                () -> {
+                  System.out.println("Attempting to reset pose...");
+                  vision.resetRobotPose();
+                })
+            .ignoringDisable(true));
+
+    SmartDashboard.putData(
+        "Reset Pos Test 2",
+        new InstantCommand(() -> vision.resetRobotPose())
+            .ignoringDisable(true) // Allows execution while disabled
+            .withName("ResetVisionPose"));
+
+    SmartDashboard.putData("Run Coral Outake", new RunCoralOutake(m_Intake));
+
+    // Wrist test commands
+    SmartDashboard.putData("Wrist/L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
+    SmartDashboard.putData("Wrist/L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false));
+    SmartDashboard.putData("Wrist/L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false));
+    SmartDashboard.putData("Wrist/L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false));
+    SmartDashboard.putData(
+        "Wrist/CoralIntake", new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
+    SmartDashboard.putData(
+        "Wrist/ClearElevator",
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false));
+    SmartDashboard.putData(
+        "Wrist/Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION, false));
+
+    // Elevator test commands
+    SmartDashboard.putData(
+        "Elevator/Barge", new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist));
+    SmartDashboard.putData(
+        "Elevator/L4", new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
+    SmartDashboard.putData(
+        "Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
+    SmartDashboard.putData(
+        "Elevator/L2", new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
+    SmartDashboard.putData(
+        "Elevator/L1", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
+
+    SmartDashboard.putData(
+        "PoseReset/1",
+        new InstantCommand(
+                () -> {
+                  System.out.println("[Button 1] Attempting reset...");
+                  vision.resetRobotPose();
+                })
+            .ignoringDisable(true));
+
+    SmartDashboard.putData(
+        "PoseReset/2",
+        new InstantCommand(
+                () -> {
+                  System.out.println("[Button 2] Attempting reset..."); // Add print
+                  vision.resetRobotPose();
+                })
+            .ignoringDisable(true));
+    // New method with cancellation capability
+    SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT, () -> false));
+    SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT, () -> false));
+
+    // Drive to path test commands
+    // SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
+    // SmartDashboard.putData("Drive/Z1L", new DriveToPath(drive, Z1L));
+    // SmartDashboard.putData("Drive/Z2R", new DriveToPath(drive, Z2R));
+    // SmartDashboard.putData("Drive/Z2L", new DriveToPath(drive, Z2L));
+    // SmartDashboard.putData("Drive/Z3R", new DriveToPath(drive, Z3R));
+    // SmartDashboard.putData("Drive/Z3L", new DriveToPath(drive, Z3L));
+    // SmartDashboard.putData("Drive/Z4R", new DriveToPath(drive, Z4R));
+    // SmartDashboard.putData("Drive/Z4L", new DriveToPath(drive, Z4L));
+    // SmartDashboard.putData("Drive/Z5R", new DriveToPath(drive, Z5R));
+    // SmartDashboard.putData("Drive/Z5L", new DriveToPath(drive, Z5L));
+    // SmartDashboard.putData("Drive/Z6R", new DriveToPath(drive, Z6R));
+    // SmartDashboard.putData("Drive/Z6L", new DriveToPath(drive, Z6L));
+  }
+
+  // Method to set controller rumble for operator controller
+  public Command setOperatorRumble(double rumble) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> operatorController.setRumble(kBothRumble, rumble)),
+        new WaitCommand(0.5),
+        new InstantCommand(() -> operatorController.setRumble(kBothRumble, 0.0)));
+  }
+
+  /** Configure button bindings for driver and operator controls */
   private void configureButtonBindings() {
-    // Default command, normal field-relative drive
+    // Default command for drive - joystick control
+    Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -174,12 +589,11 @@ public class RobotContainer {
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
             () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
-            () -> driverJoystick.getRawButton(Driver.SLOW_MODE_TOGGLE),
-            () -> driverJoystick.getRawButton(Driver.FIELD_RELATIVE_TOGGLE)));
+            () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
+            () -> driverJoystick.getRawButton(Driver.LeftThrottle.TOP_THUMB_BUTTON)));
 
-    // Lock to 0° when A button is held TODO
-    // lockAngle
-    new JoystickButton(driverJoystick, Driver.LOCK_ANGLE_BUTTON)
+    // Lock to 0° when lock angle button is held
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.BOTTOM_THUMB_BUTTON)
         .toggleOnTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
@@ -188,81 +602,102 @@ public class RobotContainer {
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    // TODO make this button 8 on flight controller
-    new JoystickButton(driverJoystick, Driver.STOP_WITH_X_BUTTON)
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
         .toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Zero gyro when Y button is pressed
-    new JoystickButton(driverJoystick, Driver.ZERO_GYRO_BUTTON)
-        .onTrue(Commands.runOnce(() -> drive.resetGyro()).ignoringDisable(true));
+    // Zero gyro when reset button is pressed
+    new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
+        .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
-    Operatorcontroller.leftBumper()
+    // Add driver joystick commands for reef side approachs
+    new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON)
+        .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
+    new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
+        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+
+    // Elevator manual control
+    operatorController
+        .leftBumper()
         .whileTrue(
             new SimpleMoveElevator(
-                m_elevator, () -> Elevator.ELEVATOR_DOWN_DIR * Elevator.MANUAL_SPEED));
-    Operatorcontroller.rightBumper()
+                m_Wrist, m_elevator, () -> Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED));
+    operatorController
+        .rightBumper()
         .whileTrue(
             new SimpleMoveElevator(
-                m_elevator, () -> Elevator.ELEVATOR_UP_DIR * Elevator.MANUAL_SPEED));
-    
-    
-                Operatorcontroller.leftTrigger().whileTrue(new AdaptiveWrist(m_Wrist, true)); //Pickup
-    Operatorcontroller.rightTrigger().whileTrue(new AdaptiveWrist(m_Wrist, false)); //Outtake
+                m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)));
 
-    Constants.ScoringPositions.ZonePosition position =
-        Constants.ScoringPositions.getZonePosition(
-            Constants.ReefZone.ZONE_3, Constants.ScoringSide.LEFT);
-    Pose2d targetPose = new Pose2d(position.x(), position.y(), new Rotation2d(position.theta()));
+    // Intake/Outtake controls
+    operatorController
+        .leftTrigger()
+        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, true)); // Intake
+    operatorController
+        .rightTrigger()
+        .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
-    // Operator on true button id SCORE_L1_BUTTON
-    Operatorcontroller.button(Operator.SCORE_L1_BUTTON) // X Button
-        .onTrue(new DriveToPoint(drive, targetPose));
+    operatorController
+        .button(Operator.RESET_BOT_POSE_BUTTON)
+        .onTrue(new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
+    operatorController.button(Operator.ZERO_ELEVATOR_BUTTON).onTrue(m_elevator.zeroCommand());
 
-    // Buttom/Axis Event Combos
-    // Right Coral Side (using RIGHT_THUMB_AXIS)
-    // Trigger rightLevel1 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povDown());
-    // Trigger rightLevel2 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povLeft());
-    // Trigger rightLevel3 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povRight());
-    // Trigger rightLevel4 =
-    //     Operatorcontroller.axisGreaterThan(Operator.RIGHT_THUMB_AXIS, 0.3)
-    //         .and(Operatorcontroller.povUp());
+    // Configure POV buttons for operator presets
+    configurePOVButtons();
 
-    // // Now same for left side - also uses the right thumb axis
-    // Trigger leftLevel1 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povDown());
-    // Trigger leftLevel2 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povLeft());
-    // Trigger leftLevel3 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povRight());
-    // Trigger leftLevel4 =
-    //     Operatorcontroller.axisLessThan(Operator.RIGHT_THUMB_AXIS, -0.3)
-    //         .and(Operatorcontroller.povUp());
+    // Configure climb controls
+    // operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.65)); // Wind - Climb up
+    // operatorController.x().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
 
-    // // Bind the combined trigger to a command
-    // // Print test log to see if the triggers are working
-    // rightLevel1.onTrue(Commands.runOnce(() -> System.out.println("Right Level 1"), drive));
-    // rightLevel2.onTrue(Commands.runOnce(() -> System.out.println("Right Level 2"), drive));
-    // rightLevel3.onTrue(Commands.runOnce(() -> System.out.println("Right Level 3"), drive));
-    // rightLevel4.onTrue(Commands.runOnce(() -> System.out.println("Right Level 4"), drive));
+    // A - Low algae
+    operatorController
+        .a()
+        .onTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelCommandGroup(
+                    new SetElevatorPosition(
+                        m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
+                    new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
 
-    // leftLevel1.onTrue(Commands.runOnce(() -> System.out.println("Left Level 1"), drive));
-    // leftLevel2.onTrue(Commands.runOnce(() -> System.out.println("Left Level 2"), drive));
-    // leftLevel3.onTrue(Commands.runOnce(() -> System.out.println("Left Level 3"), drive));
-    // leftLevel4.onTrue(Commands.runOnce(() -> System.out.println("Left Level 4"), drive));
-    // TODO: Change to
+    // Test rumble command
+    // operatorController
+    //     .start()
+    //     .onTrue(new InstantCommand(() -> setOperatorRumble(1.0)))
+    //     .onFalse(new InstantCommand(() -> setOperatorRumble(0.0)));
 
-    // FIXME: Possible issues due to axis being 0-1 value, setpoint will be 20-300
-    // degree postions
-    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> Operatorcontroller.getLeftX()));
+    // B - High algae
+    operatorController
+        .b()
+        .onTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new ParallelCommandGroup(
+                    new SetElevatorPosition(
+                        m_elevator, Elevator.POSITION_HIGH_ALGAE, m_Wrist, false),
+                    new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
+                    new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
+
+    // Set default command for wrist
+    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
+  }
+
+  /** Configure POV (D-pad) buttons for operator */
+  private void configurePOVButtons() {
+    // Coral intake sequence (Down button)
+    operatorController.povDown().onTrue(elevatorDownAndRunCoralIntake());
+
+    // L2 scoring position (Left button)
+    operatorController
+        .povLeft()
+        .onTrue(createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
+
+    // L3 scoring position (Right button)
+    operatorController
+        .povRight()
+        .onTrue(createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
+
+    // L4 scoring position (Up button)
+    operatorController.povUp().onTrue(createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
   }
 
   /**
@@ -271,10 +706,25 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    System.err.println("Running autonomous command!");
     return autoChooser.get();
   }
 
+  /** Updates SmartDashboard values periodically */
   public void updateDashboard() {
-    SmartDashboard.getNumber("Match Time", DriverStation.getMatchTime());
+    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+
+    // Display current pose information
+    Pose2d currentPose = drive.getPose();
+    SmartDashboard.putNumber("Pose/X", currentPose.getX());
+    SmartDashboard.putNumber("Pose/Y", currentPose.getY());
+    SmartDashboard.putNumber("Pose/Rotation", currentPose.getRotation().getDegrees());
+
+    // Display current zone
+    SmartDashboard.putNumber("Drive/CurrentZone", drive.getZone().ordinal() + 1);
+
+    // Log current requested position
+    Logger.recordOutput("Targets/ElevatorPosition", targetElevatorPosition);
+    Logger.recordOutput("Targets/WristAngle", targetWristAngle);
   }
 }

@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.3583577172533916,
+        "y": 2.446115894653876
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.4833577172533916,
+        "y": 2.662622245599986
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.6458717467627757,
+        "y": 2.914433182264936
+      },
+      "prevControl": {
+        "x": 3.4763717467627755,
+        "y": 2.6208505703820113
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 2L"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 0.6,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "reversed": false,
+  "folder": "Scoring",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "useDefaultConstraints": false
+}

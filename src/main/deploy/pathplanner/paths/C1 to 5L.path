@@ -1,0 +1,91 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.985361842105262,
+        "y": 6.988486842105263
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.804466145833333,
+        "y": 5.746456163194445
+      },
+      "isLocked": false,
+      "linkedName": "Starting Cage 1"
+    },
+    {
+      "anchor": {
+        "x": 5.313311998106151,
+        "y": 5.138375786998031
+      },
+      "prevControl": {
+        "x": 6.025061998106151,
+        "y": 6.084125786998031
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 5L"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.42711864406779665,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.45,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0.033105793189368765,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "Scoring Postition",
+      "waypointRelativePos": 0.5685345722591364,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-L4"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -119.99999999999999
+  },
+  "reversed": false,
+  "folder": "Done",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -129.14398641457092
+  },
+  "useDefaultConstraints": false
+}

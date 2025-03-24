@@ -1,0 +1,96 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.032020547945206,
+        "y": 1.2076840753424654
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.451369947289774,
+        "y": 1.3755017895373085
+      },
+      "isLocked": false,
+      "linkedName": "Starting Cage 5"
+    },
+    {
+      "anchor": {
+        "x": 5.327843981328258,
+        "y": 2.9093212501355232
+      },
+      "prevControl": {
+        "x": 5.763917433844098,
+        "y": 2.1921193004446113
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 3R"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5943396226415063,
+      "rotationDegrees": 125.00000000000001
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.5661016949152544,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.45,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "Raise",
+      "waypointRelativePos": 0.43,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-L4"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.8,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "reversed": false,
+  "folder": "Done",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 135.8550973962667
+  },
+  "useDefaultConstraints": false
+}

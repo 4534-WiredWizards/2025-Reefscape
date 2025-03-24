@@ -15,6 +15,7 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
+import static frc.robot.Constants.Swerve.Drive.ROTATION_SPEED_SCALAR;
 
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -259,9 +260,17 @@ public class Drive extends SubsystemBase {
 
     Logger.recordOutput("Odometry/EstimatedX", poseEstimator.getEstimatedPosition().getX());
     Logger.recordOutput("Odometry/EstimatedY", poseEstimator.getEstimatedPosition().getY());
+    // Record yaw drive.getRotation()
+    Logger.recordOutput(
+        "Odometry/EstimatedYaw", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+    // Raw rotation from getRotation()
+    Logger.recordOutput("Odometry/EstimatedYawRaw", getRotation().getDegrees());
 
     // Track Current Zone
-    Logger.recordOutput("Drive/CurrentZone", getZone().ordinal() + 1);
+    Logger.recordOutput("Drive/DetectedZone", getZone().ordinal() + 1);
+
+    // Record getMaxAngularSpeedRadPerSec
+    Logger.recordOutput("Drive/MaxAngularSpeedRadPerSec", getMaxAngularSpeedRadPerSec());
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.CURRENT_MODE != Mode.SIM);
@@ -317,12 +326,17 @@ public class Drive extends SubsystemBase {
   }
 
   /** Determines which side of a line a point lies on */
-  private double getSideOfLine(double x, double y, double slope) {
+  private double getSideOfLine(double x, double y, double slope, boolean isRedAlliance) {
+    double centerX =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_X : FieldPosition.Blue.Reef.CENTER_X;
+    double centerY =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_Y : FieldPosition.Blue.Reef.CENTER_Y;
+
     if (Double.isInfinite(slope)) {
-      return x - FieldPosition.Blue.Reef.CENTER_X; // Vertical line case
+      return x - centerX; // Vertical line case
     }
-    double relX = x - FieldPosition.Blue.Reef.CENTER_X;
-    double relY = y - FieldPosition.Blue.Reef.CENTER_Y;
+    double relX = x - centerX;
+    double relY = y - centerY;
     return relY - slope * relX;
   }
 
@@ -332,17 +346,32 @@ public class Drive extends SubsystemBase {
     double x = pose.getX();
     double y = pose.getY();
 
+    // Determine alliance
+    boolean isRedAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+
     boolean[] sides = new boolean[3];
     for (int i = 0; i < 3; i++) {
-      sides[i] = getSideOfLine(x, y, lineSlopes[i]) > 0;
+      sides[i] = getSideOfLine(x, y, lineSlopes[i], isRedAlliance) > 0;
     }
 
-    if (sides[0]) { // Right of vertical
-      if (sides[1]) return ReefZone.ZONE_5;
-      else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
-    } else { // Left of vertical
-      if (sides[2]) return ReefZone.ZONE_6;
-      else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+    if (isRedAlliance) {
+      // For Blue alliance, we need to adjust the zone mapping since the field is mirrored
+      if (sides[0]) { // Right of vertical
+        if (sides[1]) return ReefZone.ZONE_2;
+        else return sides[2] ? ReefZone.ZONE_1 : ReefZone.ZONE_6;
+      } else { // Left of vertical
+        if (sides[2]) return ReefZone.ZONE_3;
+        else return sides[1] ? ReefZone.ZONE_4 : ReefZone.ZONE_5;
+      }
+    } else {
+      // Original Blue alliance logic
+      if (sides[0]) { // Right of vertical
+        if (sides[1]) return ReefZone.ZONE_5;
+        else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
+      } else { // Left of vertical
+        if (sides[2]) return ReefZone.ZONE_6;
+        else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+      }
     }
   }
 
@@ -414,12 +443,15 @@ public class Drive extends SubsystemBase {
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
-    return getPose().getRotation();
+    // return getPose().getRotation().plus(Rotation2d.fromDegrees(180));
+    return getPose().getRotation(); // Try adding 180 if megatag is getting wrong value reading
   }
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
+    // This method already exists in Drive, no need to change the implementation
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+    Logger.recordOutput("Drive/SetPoseFromVision", pose);
   }
 
   // Reset gyro function from gyroIO.reset
@@ -449,7 +481,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
-    return getMaxLinearSpeedMetersPerSec() / DRIVE_BASE_RADIUS;
+    return ((getMaxLinearSpeedMetersPerSec() * ROTATION_SPEED_SCALAR) / DRIVE_BASE_RADIUS);
   }
 
   /** Returns an array of module translations. */
@@ -460,5 +492,15 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  // Implement the VisionConsumer accept method
+  public void accept(
+      Pose2d visionRobotPoseMeters,
+      double timestampSeconds,
+      Matrix<N3, N1> visionMeasurementStdDevs) {
+    // Add the vision measurement to the pose estimator
+    poseEstimator.addVisionMeasurement(
+        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
   }
 }

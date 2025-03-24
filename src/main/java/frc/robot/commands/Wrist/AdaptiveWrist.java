@@ -4,64 +4,112 @@
 
 package frc.robot.commands.Wrist;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
-import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AdaptiveWrist extends Command {
-
-  public final WristSubsystem m_wrist;
+  private final IntakeSubsystem m_intake;
+  private final DoubleSupplier wristAngleSupplier;
   private final boolean isPickup;
 
-  /** Creates a new AdaptiveWrist. */
-  public AdaptiveWrist(WristSubsystem m_wrist, boolean isPickup) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.m_wrist = m_wrist;
+  // The separate coral intake command
+  private RunCoralIntake coralIntakeCommand;
+  private boolean isRunningCoralIntake = false;
+  private boolean wasInCoralRange = false;
+
+  public AdaptiveWrist(
+      IntakeSubsystem intake, DoubleSupplier wristAngleSupplier, boolean isPickup) {
+    this.m_intake = intake;
+    this.wristAngleSupplier = wristAngleSupplier;
     this.isPickup = isPickup;
-    addRequirements(m_wrist);
+
+    addRequirements(m_intake);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    // Create a new instance of the coral intake command
+    coralIntakeCommand = new RunCoralIntake(m_intake, true);
+    isRunningCoralIntake = false;
+    wasInCoralRange = false;
+    Logger.recordOutput("Wrist/Status/AdaptiveWrist", "Initialized");
+  }
 
-  // FIXME: Needs to contain way to check when finished
-  // Will be done with sensors attached to spark flex
-
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double wristAngle = m_wrist.getAngle();
-    boolean isCoralRange = wristAngle < Wrist.CORAL_MAX_ANGLE;
-    Logger.recordOutput("Wrist/IsCoralRange", isCoralRange);
+    double wristAngle = wristAngleSupplier.getAsDouble();
+    boolean isCoralRange = (wristAngle > Wrist.CORAL_MAX_ANGLE);
 
-    String intakeStatus;
-    double rollerSpeed;
+    // Check for mode changes
+    if (isCoralRange != wasInCoralRange) {
+      wasInCoralRange = isCoralRange;
 
-    if (isCoralRange) {
-        rollerSpeed = isPickup ? Wrist.Roller.CORAL_INTAKE_SPEED : Wrist.Roller.CORAL_OUTTAKE_SPEED;
-        intakeStatus = isPickup ? "Coral intake" : "Coral outtake";
-    } else {
-        rollerSpeed = isPickup ? Wrist.Roller.ALGAE_INTAKE_SPEED : Wrist.Roller.ALGAE_OUTTAKE_SPEED;
-        intakeStatus = isPickup ? "Algae intake" : "Algae outtake";
+      // If we're leaving coral range and were running coral intake, end it
+      if (!isCoralRange && isRunningCoralIntake) {
+        coralIntakeCommand.end(true);
+        isRunningCoralIntake = false;
+        Logger.recordOutput("Wrist/Status/AdaptiveWrist", "CoralIntake Ended");
+      }
     }
 
-    m_wrist.moveRoller(rollerSpeed);
-    Logger.recordOutput("Wrist/IntakeStatus", intakeStatus);
-}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_wrist.stopRoller();
+    // Run appropriate intake/outtake based on mode
+    if (isCoralRange) {
+      if (isPickup) {
+        // Handle coral pickup using the separate command
+        handleCoralIntake();
+        Logger.recordOutput("Wrist/Status/AdaptiveWrist", "CoralIntake Running");
+      } else {
+        // If switching from intake to outtake, end the coral intake command
+        if (isRunningCoralIntake) {
+          coralIntakeCommand.end(true);
+          isRunningCoralIntake = false;
+          Logger.recordOutput("Wrist/Status/AdaptiveWrist", "CoralIntake Ended");
+        }
+        // Outtake coral
+        m_intake.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
+        Logger.recordOutput("Wrist/Status/AdaptiveWrist", "Coral Outtake");
+      }
+    } else {
+      // We're in algae range
+      if (isPickup) {
+        m_intake.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
+        Logger.recordOutput("Wrist/Status/AdaptiveWrist", "Algae Intake");
+      } else {
+        m_intake.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
+        Logger.recordOutput("Wrist/Status/AdaptiveWrist", "Algae Outtake");
+      }
+    }
   }
 
-  // Returns true when the command should end.
+  /** Manages the coral intake command lifecycle */
+  private void handleCoralIntake() {
+    // Start the coral intake command if not already running
+    if (!isRunningCoralIntake) {
+      coralIntakeCommand.initialize();
+      isRunningCoralIntake = true;
+    }
+
+    // Run a single iteration of the coral intake command
+    coralIntakeCommand.execute();
+
+    // Check if coral intake is finished
+    if (coralIntakeCommand.isFinished()) {
+      // Successfully completed coral intake
+      coralIntakeCommand.end(false);
+      // Keep isRunningCoralIntake as true to prevent restarting the intake process
+      // until we switch modes
+    }
+  }
+
   @Override
-  public boolean isFinished() {
-    return false;
+  public void end(boolean interrupted) {
+    // Make sure to properly end the coral intake command if it's running
+    if (isRunningCoralIntake) {
+      coralIntakeCommand.end(interrupted);
+      isRunningCoralIntake = false;
+    }
   }
 }
