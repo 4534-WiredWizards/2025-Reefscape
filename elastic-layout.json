@@ -488,6 +488,24 @@
               "period": 0.06,
               "data_type": "double"
             }
+          },
+          {
+            "title": "BatteryVoltage",
+            "x": 256.0,
+            "y": 800.0,
+            "width": 816.0,
+            "height": 160.0,
+            "type": "Voltage View",
+            "properties": {
+              "topic": "/AdvantageKit/SystemStats/BatteryVoltage",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 4.0,
+              "max_value": 13.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
           }
         ]
       }
@@ -549,7 +567,7 @@
             "title": "limelight-back",
             "x": 1088.0,
             "y": 0.0,
-            "width": 816.0,
+            "width": 800.0,
             "height": 480.0,
             "type": "Camera Stream",
             "properties": {
@@ -601,7 +619,7 @@
             "title": "Enabled",
             "x": 624.0,
             "y": 512.0,
-            "width": 256.0,
+            "width": 528.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
@@ -612,6 +630,24 @@
               "false_color": 4294198070,
               "true_icon": "None",
               "false_icon": "None"
+            }
+          },
+          {
+            "title": "BatteryVoltage",
+            "x": 624.0,
+            "y": 640.0,
+            "width": 528.0,
+            "height": 160.0,
+            "type": "Voltage View",
+            "properties": {
+              "topic": "/AdvantageKit/SystemStats/BatteryVoltage",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 4.0,
+              "max_value": 13.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
             }
           }
         ]
