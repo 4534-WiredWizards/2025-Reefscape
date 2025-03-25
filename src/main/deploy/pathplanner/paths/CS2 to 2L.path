@@ -40,8 +40,8 @@
       "minWaypointRelativePos": 0.7728813559322029,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.4,
-        "maxAcceleration": 3.5,
+        "maxVelocity": 0.7,
+        "maxAcceleration": 1.2,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -50,7 +50,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Scoring Postition",
+      "waypointRelativePos": 0.4512951619601326,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-L4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.5,
