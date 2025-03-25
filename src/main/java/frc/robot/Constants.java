@@ -214,9 +214,9 @@ public interface Constants {
     double KA = 0.01;
 
     // Motion Profile
-    double CRUISE_VELOCITY = 90.0;
-    double ACCELERATION = 120.0;
-    double JERK = 0.0;
+    double CRUISE_VELOCITY = 100.0;
+    double ACCELERATION = 150.0;
+    double JERK = 1200;
 
     // Safety Limits
     double MAX_SAFE_VAL = 0.1;

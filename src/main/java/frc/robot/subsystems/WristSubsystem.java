@@ -105,8 +105,12 @@ public class WristSubsystem extends SubsystemBase {
     fx_cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     fx_cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    fx_cfg.Voltage.PeakForwardVoltage = 12.0;
-    fx_cfg.Voltage.PeakReverseVoltage = -12.0;
+    fx_cfg.Voltage.PeakForwardVoltage = 15;
+    fx_cfg.Voltage.PeakReverseVoltage = 15;
+    fx_cfg.CurrentLimits.StatorCurrentLimit = 100;
+    fx_cfg.CurrentLimits.SupplyCurrentLimit = 0;
+    fx_cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+    fx_cfg.CurrentLimits.SupplyCurrentLimitEnable = false;
 
     // Configure PID and feedforward gains
     fx_cfg.Slot0.kP = Wrist.KP;
