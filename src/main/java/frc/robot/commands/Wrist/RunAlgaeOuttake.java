@@ -1,10 +1,9 @@
 package frc.robot.commands.Wrist;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.IntakeSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class RunAlgaeOuttake extends Command {
   private final IntakeSubsystem intakeSubsystem;
@@ -58,11 +57,11 @@ public class RunAlgaeOuttake extends Command {
   public boolean isFinished() {
     // Since algae doesn't affect sensors, we only use the timeout to determine completion
     boolean timedOut = System.currentTimeMillis() - startTime > timeout;
-    
+
     if (timedOut) {
       System.out.println("RunAlgaeOuttake completed after timeout: " + timeout + "ms");
     }
-    
+
     return timedOut;
   }
 }

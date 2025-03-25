@@ -30,9 +30,9 @@ public class RunCoralOutake extends Command {
 
   @Override
   public void end(boolean interrupted) {
-      System.out.println("RunCoralOutake ended, interrupted: " + interrupted);
-      intakeSubsystem.stopRoller();
-      intakeSubsystem.setProtectionOverride(false); // Re-enable protection
+    System.out.println("RunCoralOutake ended, interrupted: " + interrupted);
+    intakeSubsystem.stopRoller();
+    intakeSubsystem.setProtectionOverride(false); // Re-enable protection
   }
 
   @Override

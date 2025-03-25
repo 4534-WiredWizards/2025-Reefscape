@@ -235,7 +235,7 @@ public interface Constants {
     double L2_ANGLE = 120.0;
     double L3_ANGLE = 120.0;
     double L4_ANGLE = 89.0;
-    double BARGE_ANGLE = 105;
+    double BARGE_ANGLE = 85;
 
     // Operational Positions
     double ALGAE_INTAKE_ANGLE = 20.0;
@@ -254,7 +254,7 @@ public interface Constants {
       double CORAL_INTAKE_SPEED = 0.6;
       double CORAL_OUTTAKE_SPEED = -0.28;
       double ALGAE_INTAKE_SPEED = 0.2;
-      double ALGAE_OUTTAKE_SPEED = -0.5;
+      double ALGAE_OUTTAKE_SPEED = -.3;
     }
   }
 
