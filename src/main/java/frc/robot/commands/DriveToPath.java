@@ -56,8 +56,8 @@ public class DriveToPath extends Command {
     // Create path constraints with default values
     this.constraints =
         new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec() * 0.5, // 50% of max velocity
-            drive.getMaxLinearSpeedMetersPerSec() * 0.4, // 50% of max acceleration
+            drive.getMaxLinearSpeedMetersPerSec(), // 50% of max velocity
+            drive.getMaxLinearSpeedMetersPerSec() * 2, // 50% of max acceleration
             drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
             drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
             );
