@@ -167,6 +167,9 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
+    // Default commands
+    configureDefaultCommands();
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -583,15 +586,7 @@ public class RobotContainer {
     // Default command for drive - joystick control
     Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
 
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
-            () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
-            () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
-            () -> false));
+   
 
     // Lock to 0° when lock angle button is held
     // new JoystickButton(driverJoystick, Driver.LeftThrottle.BOTTOM_THUMB_BUTTON)
@@ -696,7 +691,6 @@ public class RobotContainer {
                     new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
 
     // Set default command for wrist
-    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
   }
 
   /** Configure POV (D-pad) buttons for operator */
@@ -717,6 +711,23 @@ public class RobotContainer {
     // L4 scoring position (Up button)
     operatorController.povUp().onTrue(createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
   }
+
+
+
+   //Function to configure default commands for subsystems
+   private void configureDefaultCommands() {
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
+            () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
+            () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
+            () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
+            () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
+            () -> false));
+    m_Intake.setDefaultCommand(m_Intake.getProtectionCommand());
+    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
+   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

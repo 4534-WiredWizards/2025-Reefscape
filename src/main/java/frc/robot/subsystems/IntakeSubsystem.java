@@ -1,6 +1,8 @@
 // IntakeSubsystem.java
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
@@ -8,15 +10,17 @@ import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
-import org.littletonrobotics.junction.Logger;
+import frc.robot.commands.CoralProtectionCommand;
 
 public class IntakeSubsystem extends SubsystemBase {
   private final SparkFlex rollerMotor;
   // sensors
   private final SparkLimitSwitch firstSensor;
   private final SparkLimitSwitch secondSensor;
+  private CoralProtectionCommand protectionCommand = null;
 
   public IntakeSubsystem() {
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
@@ -67,6 +71,22 @@ public class IntakeSubsystem extends SubsystemBase {
   public boolean getSecondSensor() {
     return secondSensor.isPressed();
   }
+
+  // Add this method to the IntakeSubsystem class
+  public CoralProtectionCommand getProtectionCommand() {
+    if (protectionCommand == null) {
+        protectionCommand = new CoralProtectionCommand(this);
+    }
+    return protectionCommand;
+  }
+
+  // Add this method to the IntakeSubsystem class
+  public void setProtectionOverride(boolean override) {
+    if (protectionCommand != null) {
+        protectionCommand.setOverrideActive(override);
+    }
+  }
+
 
   // Periodic,
   @Override
