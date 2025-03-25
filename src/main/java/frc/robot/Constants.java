@@ -146,18 +146,18 @@ public interface Constants {
     double ZEROING_VOLTAGE = 5.0;
 
     // PID and Feedforward
-    double KP = 5.0;
+    double KP = 3.5;
     double KI = 0.01;
-    double KD = 0.1;
+    double KD = 0.3;
     double KS = 0.25;
-    double KV = 0.6;
+    double KV = 0.68;
     double KA = 0.05;
-    double KG = 1.18;
+    double KG = 1.2;
 
     // Motion Profile
-    double CRUISE_VELOCITY = 65.0;
-    double MAX_ACCELERATION = 145.0;
-    double JERK = 200.0;
+    double CRUISE_VELOCITY = 100;
+    double MAX_ACCELERATION = 200.0;
+    double JERK = 1200;
 
     // Physical Properties
     double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm in inches
