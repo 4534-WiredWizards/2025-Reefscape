@@ -235,6 +235,7 @@ public interface Constants {
     double L2_ANGLE = 120.0;
     double L3_ANGLE = 120.0;
     double L4_ANGLE = 89.0;
+    double BARGE_ANGLE = 105;
 
     // Operational Positions
     double ALGAE_INTAKE_ANGLE = 20.0;
@@ -341,6 +342,8 @@ public interface Constants {
       int CLIMB_SEQUENCE_BUTTON = 6; // Right bumper
       int ZERO_ELEVATOR_BUTTON = 7; // Start button
       int RESET_BOT_POSE_BUTTON = 8; // Select button
+      int PRESS_LEFT_THUMBSTICK = 9;
+      int PRESS_RIGHT_THUMBSTICK = 10;
 
       // Axes
       int RIGHT_THUMB_AXIS = 4;

@@ -10,7 +10,6 @@ import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
@@ -33,6 +32,7 @@ import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
+import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPath;
 import frc.robot.commands.Elevator.SetElevatorPosition;
@@ -44,6 +44,7 @@ import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -75,7 +76,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
-  //   private final ClimbSubsystem m_climb = new ClimbSubsystem();
+  private final ClimbSubsystem m_climb = new ClimbSubsystem();
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
@@ -588,26 +589,29 @@ public class RobotContainer {
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
             () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
             () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
-            () -> driverJoystick.getRawButton(Driver.LeftThrottle.TOP_THUMB_BUTTON)));
+            () -> false));
 
     // Lock to 0° when lock angle button is held
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.BOTTOM_THUMB_BUTTON)
-        .toggleOnTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -driverJoystick.getY(),
-                () -> -driverJoystick.getX(),
-                () -> new Rotation2d()));
+    // new JoystickButton(driverJoystick, Driver.LeftThrottle.BOTTOM_THUMB_BUTTON)
+    //     .toggleOnTrue(
+    //         DriveCommands.joystickDriveAtAngle(
+    //             drive,
+    //             () -> -driverJoystick.getY(),
+    //             () -> -driverJoystick.getX(),
+    //             () -> new Rotation2d(60)));
 
     // Switch to X pattern when X button is pressed
     new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
-        .toggleOnTrue(Commands.runOnce(drive::stopWithX, drive));
+        .whileTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Zero gyro when reset button is pressed
     new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
     // Add driver joystick commands for reef side approachs
+
+    // Drive to center for algae - FRONT_THUMB_BUTTON
+
     new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON)
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
@@ -624,6 +628,14 @@ public class RobotContainer {
         .whileTrue(
             new SimpleMoveElevator(
                 m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)));
+
+    operatorController
+        .button(Operator.PRESS_RIGHT_THUMBSTICK)
+        .onTrue(
+            new SequentialCommandGroup(
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
+                new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
+                new AdaptiveWrist(m_Intake, this::getWristAngle, false)));
 
     // Intake/Outtake controls
     operatorController
@@ -642,9 +654,9 @@ public class RobotContainer {
     configurePOVButtons();
 
     // Configure climb controls
-    // operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.65)); // Wind - Climb
+    operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.65)); // Wind - Climb
     // up
-    // operatorController.x().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
+    operatorController.x().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
 
     // A - Low algae
     operatorController
