@@ -19,24 +19,40 @@ public class IntakeSubsystem extends SubsystemBase {
   private final SparkLimitSwitch secondSensor;
 
   public IntakeSubsystem() {
-
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
     firstSensor = rollerMotor.getForwardLimitSwitch();
     secondSensor = rollerMotor.getReverseLimitSwitch();
 
-    SparkFlexConfig idleConfig = new SparkFlexConfig();
-    idleConfig.limitSwitch.forwardLimitSwitchEnabled(false);
-    idleConfig.limitSwitch.reverseLimitSwitchEnabled(false);
+    SparkFlexConfig config = new SparkFlexConfig();
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
+    config.limitSwitch.reverseLimitSwitchEnabled(false);
 
-    idleConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(60);
-    rollerMotor.configure(
-        idleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // Increase current limit (carefully)
+    config.idleMode(IdleMode.kBrake).smartCurrentLimit(80);
+
+    // Use the correct method for voltage compensation
+    config.voltageCompensation(12.0);
+
+    rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public void moveRoller(double speed) {
-    rollerMotor.set(speed);
-    // Logger.recordOutput("Intake/Control/Speed", speed);
+  // Add ramping to avoid current spikes and maintain torque
+  private double prevSpeed = 0;
+  private final double RAMP_RATE = 0.1; // Adjust as needed
+
+  public void moveRoller(double targetSpeed) {
+    // Calculate new speed with ramping
+    double newSpeed = prevSpeed;
+    if (targetSpeed > prevSpeed) {
+      newSpeed = Math.min(prevSpeed + RAMP_RATE, targetSpeed);
+    } else if (targetSpeed < prevSpeed) {
+      newSpeed = Math.max(prevSpeed - RAMP_RATE, targetSpeed);
+    }
+
+    rollerMotor.set(newSpeed);
+    prevSpeed = newSpeed;
+    Logger.recordOutput("Intake/Control/Speed", newSpeed);
   }
 
   public void stopRoller() {
