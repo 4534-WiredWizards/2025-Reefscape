@@ -141,8 +141,8 @@ public interface Constants {
     double ELEVATOR_DANGER_LIMIT = 6.8;
 
     // Voltage Configuration
-    double PEAK_FORWARD_VOLTAGE = 12.0;
-    double PEAK_REVERSE_VOLTAGE = -12.0;
+    double PEAK_FORWARD_VOLTAGE = 15.0;
+    double PEAK_REVERSE_VOLTAGE = -9.0;
     double ZEROING_VOLTAGE = 5.0;
 
     // PID and Feedforward
@@ -151,12 +151,12 @@ public interface Constants {
     double KD = 0.3;
     double KS = 0.25;
     double KV = 0.68;
-    double KA = 0.05;
+    double KA = 0.07;
     double KG = 1.2;
 
     // Motion Profile
     double CRUISE_VELOCITY = 100;
-    double MAX_ACCELERATION = 200.0;
+    double MAX_ACCELERATION = 150.0;
     double JERK = 1200;
 
     // Physical Properties

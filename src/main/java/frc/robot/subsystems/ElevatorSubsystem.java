@@ -115,8 +115,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     TalonFXConfiguration fx_cfg = new TalonFXConfiguration();
 
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+
     fx_cfg.Voltage.PeakForwardVoltage = Elevator.PEAK_FORWARD_VOLTAGE;
     fx_cfg.Voltage.PeakReverseVoltage = Elevator.PEAK_REVERSE_VOLTAGE;
+    fx_cfg.CurrentLimits.StatorCurrentLimit = 100;
+    fx_cfg.CurrentLimits.SupplyCurrentLimit = 0;
+    fx_cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+    fx_cfg.CurrentLimits.SupplyCurrentLimitEnable = false;
 
     fx_cfg.Slot0.kP = Elevator.KP;
     fx_cfg.Slot0.kI = Elevator.KI;
