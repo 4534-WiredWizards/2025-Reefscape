@@ -38,6 +38,7 @@ import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
+import frc.robot.commands.Climb.HoldClimbPosition;
 import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPath;
@@ -689,15 +690,12 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
     // Add driver joystick commands for reef side approachs
-
-    // Drive to center for algae - FRONT_THUMB_BUTTON
-
-    new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON)
+    new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON) //Auto align with left reef post in current zone
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
-        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
-        .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0))).schedule()));
+    new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON) //Auto align with right reef post in current zone
+        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger)); 
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON) //Drive to barge position
+        .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0)), cancelDriveTrigger).schedule()));
 
     // Elevator manual control
     operatorController
@@ -720,17 +718,6 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
                     new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
                     new RunAlgaeOuttake(m_Intake).withTimeout(1.5))));
 
-    // .onTrue(
-    //     new ParallelDeadlineGroup(
-    //         new SequentialCommandGroup(
-    //             // Wait until elevator is close to position before moving wrist
-    //             new WaitUntilCommand(() -> m_elevator.getEncoderPosition() >
-    // (Elevator.POSITION_BARGE - 20)),
-    //             new ParallelCommandGroup(
-    //                 new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
-    //                 new AdaptiveWrist(m_Intake, this::getWristAngle, false)
-    //             )),
-    //         new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, false)));
     // Intake/Outtake controls
     operatorController
         .leftTrigger()
@@ -739,17 +726,21 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
         .rightTrigger()
         .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
-    operatorController
-        .button(Operator.RESET_BOT_POSE_BUTTON)
-        .onTrue(new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
+    // operatorController
+    //     .button(Operator.RESET_BOT_POSE_BUTTON)
+    //     .onTrue(new InstantCommand(() -> vision.resetRobotPose()).ignoringDisable(true));
     operatorController.button(Operator.ZERO_ELEVATOR_BUTTON).onTrue(m_elevator.zeroCommand());
 
     // Configure POV buttons for operator presets
     configurePOVButtons();
 
+
+    // Test Hold Climb Button 
+
+    operatorController.button(Operator.RESET_BOT_POSE_BUTTON).toggleOnTrue(new HoldClimbPosition(m_climb));
+
     // Configure climb controls
     operatorController2.a().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb
-    // up
     operatorController2.b().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
 
     // A - Low algae
