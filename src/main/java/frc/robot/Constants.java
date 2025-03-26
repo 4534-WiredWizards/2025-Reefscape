@@ -182,6 +182,7 @@ public interface Constants {
     double POSITION_HIGH_ALGAE = POSITION_L3;
     double POSITION_LOW_ALGAE = 15.0;
     double POSITION_BARGE = 70.0;
+    double POSITION_SAFE_ALGAE = 10.0;
 
     // Manual Control
     double MANUAL_SPEED = 0.45;
