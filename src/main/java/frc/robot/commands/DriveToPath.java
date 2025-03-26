@@ -1,15 +1,12 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
+import java.util.function.BooleanSupplier;
+import org.littletonrobotics.junction.Logger;
 
 /** Command to pathfind to a prebuilt path and follow it */
 public class DriveToPath extends Command {
@@ -22,7 +19,7 @@ public class DriveToPath extends Command {
 
   // Track if interrupted by trigger
   private boolean wasInterruptedByTrigger = false;
-  
+
   // Create a private method to initialize constraints
   private PathConstraints createDefaultConstraints(Drive drive) {
     return new PathConstraints(
@@ -30,7 +27,7 @@ public class DriveToPath extends Command {
         drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
         drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
         drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
-    );
+        );
   }
 
   /** Creates a new DriveToPoint with a prebuilt path and default constraints */
@@ -70,7 +67,7 @@ public class DriveToPath extends Command {
   public void initialize() {
     Logger.recordOutput("DriveToPoint/StartPose", drive.getPose());
     Logger.recordOutput("DriveToPoint/Status", "Pathfinding to start of prebuilt path");
-    
+
     // Reset interrupt tracking
     wasInterruptedByTrigger = false;
 
