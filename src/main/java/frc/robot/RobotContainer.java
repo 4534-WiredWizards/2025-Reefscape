@@ -44,6 +44,7 @@ import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.ManualPoseSetter;
 import frc.robot.commands.Wrist.AdaptiveWrist;
+import frc.robot.commands.Wrist.RunAlgaeOuttake;
 import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
@@ -82,6 +83,8 @@ public class RobotContainer {
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
+  private final CommandXboxController operatorController2 = new CommandXboxController(2);
+
   private final Joystick driverJoystick = new Joystick(1);
 
   // Requested Position
@@ -586,8 +589,6 @@ public class RobotContainer {
     // Default command for drive - joystick control
     Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
 
-   
-
     // Lock to 0° when lock angle button is held
     // new JoystickButton(driverJoystick, Driver.LeftThrottle.BOTTOM_THUMB_BUTTON)
     //     .toggleOnTrue(
@@ -627,18 +628,25 @@ public class RobotContainer {
                 m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)));
 
     operatorController
-    .button(Operator.PRESS_RIGHT_THUMBSTICK)
-    .onTrue(
-        new ParallelDeadlineGroup(
-            new SequentialCommandGroup(
-                 // Wait until elevator is close to position before moving wrist
-                new WaitUntilCommand(() -> m_elevator.isAtPosition(Elevator.POSITION_BARGE - 8.0)), 
+        .button(Operator.PRESS_RIGHT_THUMBSTICK)
+        .onTrue(
+            new ParallelCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
-                new AdaptiveWrist(m_Intake, this::getWristAngle, false)
-            ),
-            new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, false)
-        )
-    );
+                new SequentialCommandGroup(
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
+                    new RunAlgaeOuttake(m_Intake).withTimeout(1.5))));
+
+    // .onTrue(
+    //     new ParallelDeadlineGroup(
+    //         new SequentialCommandGroup(
+    //             // Wait until elevator is close to position before moving wrist
+    //             new WaitUntilCommand(() -> m_elevator.getEncoderPosition() >
+    // (Elevator.POSITION_BARGE - 20)),
+    //             new ParallelCommandGroup(
+    //                 new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
+    //                 new AdaptiveWrist(m_Intake, this::getWristAngle, false)
+    //             )),
+    //         new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, false)));
     // Intake/Outtake controls
     operatorController
         .leftTrigger()
@@ -656,9 +664,9 @@ public class RobotContainer {
     configurePOVButtons();
 
     // Configure climb controls
-    operatorController.y().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.65)); // Wind - Climb
+    operatorController2.a().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb
     // up
-    operatorController.x().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
+    operatorController2.b().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
 
     // A - Low algae
     operatorController
@@ -712,10 +720,8 @@ public class RobotContainer {
     operatorController.povUp().onTrue(createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
   }
 
-
-
-   //Function to configure default commands for subsystems
-   private void configureDefaultCommands() {
+  // Function to configure default commands for subsystems
+  private void configureDefaultCommands() {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
@@ -727,7 +733,7 @@ public class RobotContainer {
             () -> false));
     m_Intake.setDefaultCommand(m_Intake.getProtectionCommand());
     m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
-   }
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
