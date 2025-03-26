@@ -3,12 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Climb;
-import org.littletonrobotics.junction.Logger;
 
 public class ClimbSubsystem extends SubsystemBase {
   // define climb motor
@@ -31,7 +33,7 @@ public class ClimbSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // Log postiion
+    // Log position
     Logger.recordOutput("Climb/Encoder", climbMotor.getEncoder().getPosition());
   }
 
@@ -47,4 +49,20 @@ public class ClimbSubsystem extends SubsystemBase {
     // Implement stall detection logic here if needed
     return false;
   }
+  
+  /**
+   * Sets the idle mode for the climb motor
+   * @param mode The idle mode (kBrake or kCoast)
+   */
+  public void setIdleMode(IdleMode mode) {
+    SparkFlexConfig config = new SparkFlexConfig();
+    config.idleMode(mode);
+    climbMotor.configure(
+        config,
+        SparkFlex.ResetMode.kNoResetSafeParameters, 
+        SparkFlex.PersistMode.kNoPersistParameters);
+    Logger.recordOutput("Climb/IdleMode", mode.toString());
+  }
+  
+  
 }
