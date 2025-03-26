@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.483366458516725,
+        "y": 4.01349375550176
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.061980427486795,
+        "y": 4.003838165713028
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.824171297315141,
+        "y": 4.012809817891725
+      },
+      "prevControl": {
+        "x": 6.2356201171875,
+        "y": 4.0221435546875
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 4M"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "New Folder",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 179.2249742931609
+  },
+  "useDefaultConstraints": false
+}

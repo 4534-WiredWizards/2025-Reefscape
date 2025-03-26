@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5115770796654933,
+        "y": 2.343197416923415
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.6365770796654937,
+        "y": 2.5597037678695242
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.8208375742737677,
+        "y": 2.858564521897007
+      },
+      "prevControl": {
+        "x": 3.6513375742737675,
+        "y": 2.5649819100140823
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef Post 2M"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "reversed": false,
+  "folder": "New Folder",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "useDefaultConstraints": false
+}
