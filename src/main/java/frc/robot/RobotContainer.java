@@ -509,7 +509,7 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
             // The condition: Check if elevator is NOT at ground position
             () -> !(m_elevator.getEncoderPosition() < 3.0)),
         // Add rumble feedback after coral intake completes
-        setOperatorRumble(0.6));
+        setOperatorRumble(0.2));
   }
 
   /** Register named commands for PathPlanner */
@@ -581,47 +581,47 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
   private void configureSmartDashboard() {
 
     // Test print command with ignoringDisable
-    SmartDashboard.putData(
-        "Reset Pose Test",
-        new InstantCommand(
-                () -> {
-                  System.out.println("Attempting to reset pose...");
-                  vision.resetRobotPose();
-                })
-            .ignoringDisable(true));
+    // SmartDashboard.putData(
+    //     "Reset Pose Test",
+    //     new InstantCommand(
+    //             () -> {
+    //               System.out.println("Attempting to reset pose...");
+    //               vision.resetRobotPose();
+    //             })
+    //         .ignoringDisable(true));
 
-    SmartDashboard.putData(
-        "Reset Pos Test 2",
-        new InstantCommand(() -> vision.resetRobotPose())
-            .ignoringDisable(true) // Allows execution while disabled
-            .withName("ResetVisionPose"));
+    // SmartDashboard.putData(
+    //     "Reset Pos Test 2",
+    //     new InstantCommand(() -> vision.resetRobotPose())
+    //         .ignoringDisable(true) // Allows execution while disabled
+    //         .withName("ResetVisionPose"));
 
-    SmartDashboard.putData("Run Coral Outake", new RunCoralOutake(m_Intake));
+    // SmartDashboard.putData("Run Coral Outake", new RunCoralOutake(m_Intake));
 
     // Wrist test commands
-    SmartDashboard.putData("Wrist/L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
-    SmartDashboard.putData("Wrist/L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false));
-    SmartDashboard.putData("Wrist/L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false));
-    SmartDashboard.putData("Wrist/L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false));
-    SmartDashboard.putData(
-        "Wrist/CoralIntake", new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
-    SmartDashboard.putData(
-        "Wrist/ClearElevator",
-        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false));
-    SmartDashboard.putData(
-        "Wrist/Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION, false));
+    // SmartDashboard.putData("Wrist/L4", new SetWristPosition(m_Wrist, Wrist.L4_ANGLE, false));
+    // SmartDashboard.putData("Wrist/L3", new SetWristPosition(m_Wrist, Wrist.L3_ANGLE, false));
+    // SmartDashboard.putData("Wrist/L2", new SetWristPosition(m_Wrist, Wrist.L2_ANGLE, false));
+    // SmartDashboard.putData("Wrist/L1", new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, false));
+    // SmartDashboard.putData(
+    //     "Wrist/CoralIntake", new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE));
+    // SmartDashboard.putData(
+    //     "Wrist/ClearElevator",
+    //     new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false));
+    // SmartDashboard.putData(
+    //     "Wrist/Drive", new SetWristPosition(m_Wrist, Wrist.DRIVE_POSITION, false));
 
     // Elevator test commands
-    SmartDashboard.putData(
-        "Elevator/Barge", new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist));
-    SmartDashboard.putData(
-        "Elevator/L4", new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
-    SmartDashboard.putData(
-        "Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
-    SmartDashboard.putData(
-        "Elevator/L2", new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
-    SmartDashboard.putData(
-        "Elevator/L1", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
+    // SmartDashboard.putData(
+    //     "Elevator/Barge", new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist));
+    // SmartDashboard.putData(
+    //     "Elevator/L4", new SetElevatorPosition(m_elevator, Elevator.POSITION_L4, m_Wrist));
+    // SmartDashboard.putData(
+    //     "Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
+    // SmartDashboard.putData(
+    //     "Elevator/L2", new SetElevatorPosition(m_elevator, Elevator.POSITION_L2, m_Wrist));
+    // SmartDashboard.putData(
+    //     "Elevator/L1", new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist));
 
     SmartDashboard.putData(
         "PoseReset/1",
@@ -641,8 +641,12 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
                 })
             .ignoringDisable(true));
     // New method with cancellation capability
-    SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT, () -> false));
-    SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT, () -> false));
+    // SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT, () -> false));
+    // SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT, () -> false));
+
+
+
+    // Test hold climb button
 
     // Drive to path test commands
     // SmartDashboard.putData("Drive/Z1R", new DriveToPath(drive, Z1R));
@@ -682,8 +686,8 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     //             () -> new Rotation2d(60)));
 
     // Switch to X pattern when X button is pressed
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
-        .whileTrue(Commands.runOnce(drive::stopWithX, drive));
+    // new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
+    //     .whileTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Zero gyro when reset button is pressed
     new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
@@ -694,8 +698,11 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON) //Auto align with right reef post in current zone
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger)); 
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.TOP_THUMB_BUTTON) //Algae pickup on reef in current zone
+        .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger)); 
     new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON) //Drive to barge position
-        .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0)), cancelDriveTrigger).schedule()));
+        // .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0)), cancelDriveTrigger).schedule())); //COMPETITION
+      .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(6.15, drive.getPose().getY(), new Rotation2d(0)), cancelDriveTrigger).schedule())); //HOME FIELD
 
     // Elevator manual control
     operatorController
@@ -742,6 +749,7 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     // Configure climb controls
     operatorController2.a().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb
     operatorController2.b().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
+    
 
     // A - Low algae
     operatorController
@@ -754,12 +762,6 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
                         m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
                     new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
-
-    // Test rumble command
-    // operatorController
-    //     .start()
-    //     .onTrue(new InstantCommand(() -> setOperatorRumble(1.0)))
-    //     .onFalse(new InstantCommand(() -> setOperatorRumble(0.0)));
 
     // B - High algae
     operatorController
