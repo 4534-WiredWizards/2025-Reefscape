@@ -41,6 +41,7 @@ import frc.robot.Constants.Wrist;
 import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPath;
+import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.ManualPoseSetter;
@@ -48,8 +49,7 @@ import frc.robot.commands.Wrist.AdaptiveWrist;
 import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
-import frc.robot.commands.Wrist.SimpleMoveWrist;
-import frc.robot.commands.DriveToPoint; // Ensure this matches the actual package of DriveToPoint
+import frc.robot.commands.Wrist.SimpleMoveWrist; // Ensure this matches the actual package of DriveToPoint
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -695,7 +695,7 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.BUTTON_6)
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
         .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0))).schedule()));
 
     // Elevator manual control
