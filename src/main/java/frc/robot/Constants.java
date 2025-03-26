@@ -65,7 +65,8 @@ public interface Constants {
 
   public enum ScoringSide {
     LEFT,
-    RIGHT
+    RIGHT,
+    MIDDLE
   }
 
   public enum ScoringHeight {
