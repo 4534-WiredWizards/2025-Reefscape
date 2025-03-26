@@ -22,6 +22,16 @@ public class DriveToPath extends Command {
 
   // Track if interrupted by trigger
   private boolean wasInterruptedByTrigger = false;
+  
+  // Create a private method to initialize constraints
+  private PathConstraints createDefaultConstraints(Drive drive) {
+    return new PathConstraints(
+        drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
+        drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
+        drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
+        drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
+    );
+  }
 
   /** Creates a new DriveToPoint with a prebuilt path and default constraints */
   public DriveToPath(Drive drive, PathPlannerPath path, BooleanSupplier interrupter) {
@@ -33,14 +43,8 @@ public class DriveToPath extends Command {
       throw new IllegalArgumentException("Path cannot be null");
     }
 
-    // Create path constraints with default values
-    this.constraints =
-        new PathConstraints(
-          drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
-          drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
-          drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
-          drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
-            );
+    // Use the helper method to create constraints
+    this.constraints = createDefaultConstraints(drive);
 
     addRequirements(drive);
   }
@@ -55,19 +59,13 @@ public class DriveToPath extends Command {
       throw new IllegalArgumentException("Path cannot be null");
     }
 
-    // Create path constraints with default values
-    this.constraints =
-        new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
-            drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
-            drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
-            drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
-            );
+    // Use the same helper method for constraints
+    this.constraints = createDefaultConstraints(drive);
 
     addRequirements(drive);
   }
 
-  // Called when the command is initially scheduled.
+  // Rest of the code remains unchanged...
   @Override
   public void initialize() {
     Logger.recordOutput("DriveToPoint/StartPose", drive.getPose());
@@ -83,7 +81,6 @@ public class DriveToPath extends Command {
     pathFollowingCommand.schedule();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // Update current status
@@ -101,7 +98,6 @@ public class DriveToPath extends Command {
     }
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     if (pathFollowingCommand != null) {
@@ -121,7 +117,6 @@ public class DriveToPath extends Command {
     drive.stop();
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if (interrupter != null && interrupter.getAsBoolean()) {

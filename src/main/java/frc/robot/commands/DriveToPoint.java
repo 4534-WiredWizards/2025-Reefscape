@@ -45,12 +45,12 @@ public class DriveToPoint extends Command {
     Logger.recordOutput("DriveToPoint/Status", "Initializing path to target pose");
 
     PathConstraints constraints =
-        new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec() / 8,  // Maximum linear velocity (m/s)
-            drive.getMaxLinearSpeedMetersPerSec() / 2,  // Maximum linear acceleration (m/s²)
-            drive.getMaxAngularSpeedRadPerSec(),        // Maximum angular velocity (rad/s)
-            drive.getMaxAngularSpeedRadPerSec()         // Maximum angular acceleration (rad/s²)
-            );
+    new PathConstraints(
+      drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
+      drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
+      drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
+      drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
+  );
             
     // Create pathfinding command with interrupter
     pathFindingCommand = AutoBuilder.pathfindToPose(targetPose, constraints, 0.0)
