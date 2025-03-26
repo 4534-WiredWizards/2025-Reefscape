@@ -36,10 +36,10 @@ public class DriveToPath extends Command {
     // Create path constraints with default values
     this.constraints =
         new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec() * 0.5, // 50% of max velocity
-            drive.getMaxLinearSpeedMetersPerSec() * 0.4, // 40% of max acceleration
-            drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
-            drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
+          drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
+          drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
+          drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
+          drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
             );
 
     addRequirements(drive);
@@ -113,7 +113,6 @@ public class DriveToPath extends Command {
     } else {
       Logger.recordOutput("DriveToPoint/Status", "Successfully followed path");
     }
-
     // Log final status
     Logger.recordOutput("DriveToPoint/FinalPose", drive.getPose());
     Logger.recordOutput("DriveToPoint/WasInterruptedByTrigger", wasInterruptedByTrigger);
