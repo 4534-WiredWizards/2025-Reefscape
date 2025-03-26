@@ -330,6 +330,7 @@ public interface Constants {
 
       int BASE_LEFT_BUTTON = 11;
       int BASE_RIGHT_BUTTON = 12;
+      int BUTTON_6 = 6;
     }
 
     // Operator Controller (Xbox)

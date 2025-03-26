@@ -14,6 +14,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
@@ -48,6 +49,7 @@ import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
+import frc.robot.commands.DriveToPoint; // Ensure this matches the actual package of DriveToPoint
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -693,6 +695,8 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+    new JoystickButton(driverJoystick, Driver.BUTTON_6)
+        .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0))).schedule()));
 
     // Elevator manual control
     operatorController
