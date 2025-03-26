@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.1720034246575342,
-        "y": 1.0574272260273971
+        "x": 1.607748287671233,
+        "y": 1.658454623287671
       },
       "prevControl": {
-        "x": 1.4220034246575342,
-        "y": 1.0574272260273971
+        "x": 1.857748287671233,
+        "y": 1.658454623287671
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,7 +38,21 @@
       "rotationDegrees": -126.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.12542372881355934,
+      "maxWaypointRelativePos": 0.25084745762711863,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
@@ -54,7 +68,7 @@
     },
     {
       "name": "Zero Elevator",
-      "waypointRelativePos": 0.14237288135593223,
+      "waypointRelativePos": 0.12881355932203387,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
