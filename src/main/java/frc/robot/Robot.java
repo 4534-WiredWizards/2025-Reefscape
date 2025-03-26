@@ -13,19 +13,22 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.generated.TunerConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -126,6 +129,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     // Call the robot container's init method
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
+    robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
     new Thread(
             () -> {
               try {
@@ -142,6 +146,19 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     robotContainer.vision.resetRobotPose();
+
+
+    // Thread sleep 15s then set climb idle mode to coast
+    new Thread(
+            () -> {
+              try {
+                Thread.sleep(15000); // 15 second delay
+                robotContainer.m_climb.setIdleMode(IdleMode.kCoast);
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+            })
+      .start();
   }
 
   /** This function is called periodically when disabled. */
@@ -153,6 +170,7 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     System.out.println("Resetting robot pose in auto");
     robotContainer.vision.resetRobotPose();
+    robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -170,6 +188,7 @@ public class Robot extends LoggedRobot {
   public void teleopInit() {
     System.out.println("Resetting robot pose in teleop");
     robotContainer.vision.resetRobotPose();
+    robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

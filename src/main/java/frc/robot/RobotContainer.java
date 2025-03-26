@@ -82,7 +82,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
-  private final ClimbSubsystem m_climb = new ClimbSubsystem();
+  public final ClimbSubsystem m_climb = new ClimbSubsystem();
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
@@ -716,15 +716,6 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
             new SimpleMoveElevator(
                 m_Wrist, m_elevator, () -> (-1 * Elevator.DOWN_DIRECTION * Elevator.MANUAL_SPEED)));
 
-    operatorController
-        .button(Operator.PRESS_RIGHT_THUMBSTICK)
-        .onTrue(
-            new ParallelCommandGroup(
-                new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
-                new SequentialCommandGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
-                    new RunAlgaeOuttake(m_Intake).withTimeout(1.5))));
-
     // Intake/Outtake controls
     operatorController
         .leftTrigger()
@@ -747,8 +738,8 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     operatorController.button(Operator.RESET_BOT_POSE_BUTTON).toggleOnTrue(new HoldClimbPosition(m_climb));
 
     // Configure climb controls
-    operatorController2.a().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb
-    operatorController2.b().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind
+    operatorController2.a().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb //Back stock 1
+    operatorController2.b().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
     
 
     // A - Low algae
@@ -774,6 +765,27 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
                         m_elevator, Elevator.POSITION_HIGH_ALGAE, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
                     new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
+
+
+    // Safe storage position for algae
+    operatorController
+        .y()
+        .onTrue(
+            new SequentialCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, false)
+            ));
+
+
+    // Shoot algae
+    operatorController
+    .x()
+    .onTrue(
+        new ParallelCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
+            new SequentialCommandGroup(
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
+                new RunAlgaeOuttake(m_Intake).withTimeout(1.5))));
 
     // Set default command for wrist
   }

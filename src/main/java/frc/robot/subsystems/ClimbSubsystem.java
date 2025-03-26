@@ -14,7 +14,7 @@ import frc.robot.Constants.Climb;
 
 public class ClimbSubsystem extends SubsystemBase {
   // define climb motor
-  public final SparkFlex climbMotor;
+  private final SparkFlex climbMotor;
 
   /** Creates a new climb. */
   public ClimbSubsystem() {
@@ -33,7 +33,7 @@ public class ClimbSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // Log postiion
+    // Log position
     Logger.recordOutput("Climb/Encoder", climbMotor.getEncoder().getPosition());
   }
 
@@ -49,4 +49,20 @@ public class ClimbSubsystem extends SubsystemBase {
     // Implement stall detection logic here if needed
     return false;
   }
+  
+  /**
+   * Sets the idle mode for the climb motor
+   * @param mode The idle mode (kBrake or kCoast)
+   */
+  public void setIdleMode(IdleMode mode) {
+    SparkFlexConfig config = new SparkFlexConfig();
+    config.idleMode(mode);
+    climbMotor.configure(
+        config,
+        SparkFlex.ResetMode.kNoResetSafeParameters, 
+        SparkFlex.PersistMode.kNoPersistParameters);
+    Logger.recordOutput("Climb/IdleMode", mode.toString());
+  }
+  
+  
 }
