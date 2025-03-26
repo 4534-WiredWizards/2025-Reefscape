@@ -1,23 +1,18 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,7 +46,7 @@ import frc.robot.commands.Wrist.RunAlgaeOuttake;
 import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
-import frc.robot.commands.Wrist.SimpleMoveWrist; // Ensure this matches the actual package of DriveToPoint
+import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -64,10 +59,13 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -111,7 +109,7 @@ public class RobotContainer {
   public PathPlannerPath Z6R;
   public PathPlannerPath Z6L;
 
-  //pathplanning paths for Algea (middle)
+  // pathplanning paths for Algea (middle)
   public PathPlannerPath Z1M;
   public PathPlannerPath Z2M;
   public PathPlannerPath Z3M;
@@ -211,13 +209,13 @@ public class RobotContainer {
       Z6R = PathPlannerPath.fromPathFile("6R");
       Z6L = PathPlannerPath.fromPathFile("6L");
 
-        // Load paths for algae scoring
-        Z1M = PathPlannerPath.fromPathFile("1M");
-        Z2M = PathPlannerPath.fromPathFile("2M");
-        Z3M = PathPlannerPath.fromPathFile("3M");
-        Z4M = PathPlannerPath.fromPathFile("4M");
-        Z5M = PathPlannerPath.fromPathFile("5M");
-        Z6M = PathPlannerPath.fromPathFile("6M");
+      // Load paths for algae scoring
+      Z1M = PathPlannerPath.fromPathFile("1M");
+      Z2M = PathPlannerPath.fromPathFile("2M");
+      Z3M = PathPlannerPath.fromPathFile("3M");
+      Z4M = PathPlannerPath.fromPathFile("4M");
+      Z5M = PathPlannerPath.fromPathFile("5M");
+      Z6M = PathPlannerPath.fromPathFile("6M");
 
       System.out.println("-> All paths loaded successfully");
     } catch (FileVersionException | IOException | ParseException e) {
@@ -269,33 +267,33 @@ public class RobotContainer {
    * @param side The scoring side (LEFT or RIGHT)
    * @return The PathPlannerPath for the specified zone and side
    */
-//   public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
-//     System.out.println("\n[Path Selection] Determining path:");
-//     System.out.println("-> Current Zone: " + zone);
-//     System.out.println("-> Requested Side: " + side);
-//     System.out.println("-> Alliance: " + DriverStation.getAlliance().orElse(Alliance.Blue));
+  //   public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
+  //     System.out.println("\n[Path Selection] Determining path:");
+  //     System.out.println("-> Current Zone: " + zone);
+  //     System.out.println("-> Requested Side: " + side);
+  //     System.out.println("-> Alliance: " + DriverStation.getAlliance().orElse(Alliance.Blue));
 
-//     PathPlannerPath path =
-//         switch (zone) {
-//           case ZONE_1 -> side == ScoringSide.RIGHT ? Z1R : Z1L;
-//           case ZONE_2 -> side == ScoringSide.RIGHT ? Z2R : Z2L;
-//           case ZONE_3 -> side == ScoringSide.RIGHT ? Z3R : Z3L;
-//           case ZONE_4 -> side == ScoringSide.RIGHT ? Z4R : Z4L;
-//           case ZONE_5 -> side == ScoringSide.RIGHT ? Z5R : Z5L;
-//           case ZONE_6 -> side == ScoringSide.RIGHT ? Z6R : Z6L;
-//           default -> null;
-//         };
+  //     PathPlannerPath path =
+  //         switch (zone) {
+  //           case ZONE_1 -> side == ScoringSide.RIGHT ? Z1R : Z1L;
+  //           case ZONE_2 -> side == ScoringSide.RIGHT ? Z2R : Z2L;
+  //           case ZONE_3 -> side == ScoringSide.RIGHT ? Z3R : Z3L;
+  //           case ZONE_4 -> side == ScoringSide.RIGHT ? Z4R : Z4L;
+  //           case ZONE_5 -> side == ScoringSide.RIGHT ? Z5R : Z5L;
+  //           case ZONE_6 -> side == ScoringSide.RIGHT ? Z6R : Z6L;
+  //           default -> null;
+  //         };
 
-//     if (path != null) {
-//       System.out.println("-> Selected Path: " + path.name);
-//     } else {
-//       System.err.println("!! ERROR: No path found for zone " + zone + " side " + side);
-//     }
+  //     if (path != null) {
+  //       System.out.println("-> Selected Path: " + path.name);
+  //     } else {
+  //       System.err.println("!! ERROR: No path found for zone " + zone + " side " + side);
+  //     }
 
-//     return path;
-//   }
+  //     return path;
+  //   }
 
-public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
+  public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     System.out.println("\n[Path Selection] Determining path:");
     System.out.println("-> Current Zone: " + zone);
     System.out.println("-> Requested Side: " + side);
@@ -303,42 +301,36 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
 
     PathPlannerPath path =
         switch (zone) {
-          case ZONE_1 -> 
-            switch (side) {
-              case RIGHT -> Z1R;
-              case LEFT -> Z1L;
-              case MIDDLE -> Z1M;
-            };
-          case ZONE_2 -> 
-            switch (side) {
-              case RIGHT -> Z2R;
-              case LEFT -> Z2L;
-              case MIDDLE -> Z2M;
-            };
-          case ZONE_3 -> 
-            switch (side) {
-              case RIGHT -> Z3R;
-              case LEFT -> Z3L;
-              case MIDDLE -> Z3M;
-            };
-          case ZONE_4 -> 
-            switch (side) {
-              case RIGHT -> Z4R;
-              case LEFT -> Z4L;
-              case MIDDLE -> Z4M;
-            };
-          case ZONE_5 -> 
-            switch (side) {
-              case RIGHT -> Z5R;
-              case LEFT -> Z5L;
-              case MIDDLE -> Z5M;
-            };
-          case ZONE_6 -> 
-            switch (side) {
-              case RIGHT -> Z6R;
-              case LEFT -> Z6L;
-              case MIDDLE -> Z6M;
-            };
+          case ZONE_1 -> switch (side) {
+            case RIGHT -> Z1R;
+            case LEFT -> Z1L;
+            case MIDDLE -> Z1M;
+          };
+          case ZONE_2 -> switch (side) {
+            case RIGHT -> Z2R;
+            case LEFT -> Z2L;
+            case MIDDLE -> Z2M;
+          };
+          case ZONE_3 -> switch (side) {
+            case RIGHT -> Z3R;
+            case LEFT -> Z3L;
+            case MIDDLE -> Z3M;
+          };
+          case ZONE_4 -> switch (side) {
+            case RIGHT -> Z4R;
+            case LEFT -> Z4L;
+            case MIDDLE -> Z4M;
+          };
+          case ZONE_5 -> switch (side) {
+            case RIGHT -> Z5R;
+            case LEFT -> Z5L;
+            case MIDDLE -> Z5M;
+          };
+          case ZONE_6 -> switch (side) {
+            case RIGHT -> Z6R;
+            case LEFT -> Z6L;
+            case MIDDLE -> Z6M;
+          };
           default -> null;
         };
 
@@ -349,7 +341,7 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     }
 
     return path;
-}
+  }
 
   /**
    * Creates a command to drive to a reef scoring position based on the current zone and specified
@@ -644,8 +636,6 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     // SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT, () -> false));
     // SmartDashboard.putData("Score/AutoZone R", driveToReefSide(ScoringSide.RIGHT, () -> false));
 
-
-
     // Test hold climb button
 
     // Drive to path test commands
@@ -694,15 +684,31 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
     // Add driver joystick commands for reef side approachs
-    new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON) //Auto align with left reef post in current zone
+    new JoystickButton(
+            driverJoystick,
+            Driver.BASE_LEFT_BUTTON) // Auto align with left reef post in current zone
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON) //Auto align with right reef post in current zone
-        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger)); 
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.TOP_THUMB_BUTTON) //Algae pickup on reef in current zone
-        .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger)); 
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON) //Drive to barge position
-        // .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0)), cancelDriveTrigger).schedule())); //COMPETITION
-      .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(6.15, drive.getPose().getY(), new Rotation2d(0)), cancelDriveTrigger).schedule())); //HOME FIELD
+    new JoystickButton(
+            driverJoystick,
+            Driver.BASE_RIGHT_BUTTON) // Auto align with right reef post in current zone
+        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+    new JoystickButton(
+            driverJoystick,
+            Driver.LeftThrottle.TOP_THUMB_BUTTON) // Algae pickup on reef in current zone
+        .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger));
+    new JoystickButton(
+            driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON) // Drive to barge position
+        // .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15,
+        // drive.getPose().getY(), new Rotation2d(0)), cancelDriveTrigger).schedule()));
+        // //COMPETITION
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    new DriveToPoint(
+                            drive,
+                            new Pose2d(6.15, drive.getPose().getY(), new Rotation2d(0)),
+                            cancelDriveTrigger)
+                        .schedule())); // HOME FIELD
 
     // Elevator manual control
     operatorController
@@ -732,15 +738,19 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     // Configure POV buttons for operator presets
     configurePOVButtons();
 
+    // Test Hold Climb Button
 
-    // Test Hold Climb Button 
-
-    operatorController.button(Operator.RESET_BOT_POSE_BUTTON).toggleOnTrue(new HoldClimbPosition(m_climb));
+    operatorController
+        .button(Operator.RESET_BOT_POSE_BUTTON)
+        .toggleOnTrue(new HoldClimbPosition(m_climb));
 
     // Configure climb controls
-    operatorController2.a().whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb //Back stock 1
-    operatorController2.b().whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
-    
+    operatorController2
+        .a()
+        .whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb //Back stock 1
+    operatorController2
+        .b()
+        .whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
 
     // A - Low algae
     operatorController
@@ -766,26 +776,23 @@ public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
                     new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
 
-
     // Safe storage position for algae
     operatorController
         .y()
         .onTrue(
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, false)
-            ));
-
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, false)));
 
     // Shoot algae
     operatorController
-    .x()
-    .onTrue(
-        new ParallelCommandGroup(
-            new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
-            new SequentialCommandGroup(
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
-                new RunAlgaeOuttake(m_Intake).withTimeout(1.5))));
+        .x()
+        .onTrue(
+            new ParallelCommandGroup(
+                new SetWristPosition(m_Wrist, Wrist.BARGE_ANGLE, true),
+                new SequentialCommandGroup(
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
+                    new RunAlgaeOuttake(m_Intake).withTimeout(1.5))));
 
     // Set default command for wrist
   }

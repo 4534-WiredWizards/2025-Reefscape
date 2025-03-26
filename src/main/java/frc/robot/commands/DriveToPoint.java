@@ -4,16 +4,13 @@
 
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
+import java.util.function.BooleanSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveToPoint extends Command {
 
@@ -30,10 +27,10 @@ public class DriveToPoint extends Command {
 
     addRequirements(drive);
   }
-  
+
   /** Creates a new DriveToPoint without interruption capability. */
   public DriveToPoint(Drive drive, Pose2d targetPose) {
-    this(drive, targetPose, () -> false);  // Default interrupter that never interrupts
+    this(drive, targetPose, () -> false); // Default interrupter that never interrupts
   }
 
   // Called when the command is initially scheduled.
@@ -45,16 +42,16 @@ public class DriveToPoint extends Command {
     Logger.recordOutput("DriveToPoint/Status", "Initializing path to target pose");
 
     PathConstraints constraints =
-    new PathConstraints(
-      drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
-      drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
-      drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
-      drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
-  );
-            
+        new PathConstraints(
+            drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
+            drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
+            drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
+            drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
+            );
+
     // Create pathfinding command with interrupter
-    pathFindingCommand = AutoBuilder.pathfindToPose(targetPose, constraints, 0.0)
-        .until(interrupter);
+    pathFindingCommand =
+        AutoBuilder.pathfindToPose(targetPose, constraints, 0.0).until(interrupter);
 
     pathFindingCommand.schedule();
   }
@@ -74,11 +71,12 @@ public class DriveToPoint extends Command {
     if (pathFindingCommand != null) {
       pathFindingCommand.cancel();
     }
-    
+
     // Log end status
     Logger.recordOutput("DriveToPoint/FinalPose", drive.getPose());
-    Logger.recordOutput("DriveToPoint/Status", interrupted ? "Command interrupted" : "Path completed");
-    
+    Logger.recordOutput(
+        "DriveToPoint/Status", interrupted ? "Command interrupted" : "Path completed");
+
     // Ensure the drive stops
     drive.stop();
   }
@@ -91,7 +89,7 @@ public class DriveToPoint extends Command {
       Logger.recordOutput("DriveToPoint/Status", "Command interrupted by trigger");
       return true;
     }
-    
+
     // Otherwise, end when the pathfinding command finishes
     return pathFindingCommand != null && pathFindingCommand.isFinished();
   }
