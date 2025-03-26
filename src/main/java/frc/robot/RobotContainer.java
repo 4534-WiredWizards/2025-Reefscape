@@ -14,6 +14,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
@@ -49,6 +50,7 @@ import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
+import frc.robot.commands.DriveToPoint; // Ensure this matches the actual package of DriveToPoint
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -107,6 +109,14 @@ public class RobotContainer {
   public PathPlannerPath Z5L;
   public PathPlannerPath Z6R;
   public PathPlannerPath Z6L;
+
+  //pathplanning paths for Algea (middle)
+  public PathPlannerPath Z1M;
+  public PathPlannerPath Z2M;
+  public PathPlannerPath Z3M;
+  public PathPlannerPath Z4M;
+  public PathPlannerPath Z5M;
+  public PathPlannerPath Z6M;
 
   public double getWristAngle() {
     return m_Wrist.getAngle();
@@ -199,6 +209,15 @@ public class RobotContainer {
       Z5L = PathPlannerPath.fromPathFile("5L");
       Z6R = PathPlannerPath.fromPathFile("6R");
       Z6L = PathPlannerPath.fromPathFile("6L");
+
+        // Load paths for algae scoring
+        Z1M = PathPlannerPath.fromPathFile("1M");
+        Z2M = PathPlannerPath.fromPathFile("2M");
+        Z3M = PathPlannerPath.fromPathFile("3M");
+        Z4M = PathPlannerPath.fromPathFile("4M");
+        Z5M = PathPlannerPath.fromPathFile("5M");
+        Z6M = PathPlannerPath.fromPathFile("6M");
+
       System.out.println("-> All paths loaded successfully");
     } catch (FileVersionException | IOException | ParseException e) {
       System.err.println("!! ERROR LOADING PATHS !!");
@@ -216,6 +235,13 @@ public class RobotContainer {
       Z5L = null;
       Z6R = null;
       Z6L = null;
+
+      Z1M = null;
+      Z2M = null;
+      Z3M = null;
+      Z4M = null;
+      Z5M = null;
+      Z6M = null;
     }
   }
 
@@ -242,7 +268,33 @@ public class RobotContainer {
    * @param side The scoring side (LEFT or RIGHT)
    * @return The PathPlannerPath for the specified zone and side
    */
-  public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
+//   public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
+//     System.out.println("\n[Path Selection] Determining path:");
+//     System.out.println("-> Current Zone: " + zone);
+//     System.out.println("-> Requested Side: " + side);
+//     System.out.println("-> Alliance: " + DriverStation.getAlliance().orElse(Alliance.Blue));
+
+//     PathPlannerPath path =
+//         switch (zone) {
+//           case ZONE_1 -> side == ScoringSide.RIGHT ? Z1R : Z1L;
+//           case ZONE_2 -> side == ScoringSide.RIGHT ? Z2R : Z2L;
+//           case ZONE_3 -> side == ScoringSide.RIGHT ? Z3R : Z3L;
+//           case ZONE_4 -> side == ScoringSide.RIGHT ? Z4R : Z4L;
+//           case ZONE_5 -> side == ScoringSide.RIGHT ? Z5R : Z5L;
+//           case ZONE_6 -> side == ScoringSide.RIGHT ? Z6R : Z6L;
+//           default -> null;
+//         };
+
+//     if (path != null) {
+//       System.out.println("-> Selected Path: " + path.name);
+//     } else {
+//       System.err.println("!! ERROR: No path found for zone " + zone + " side " + side);
+//     }
+
+//     return path;
+//   }
+
+public PathPlannerPath getPathForZoneAndSide(ReefZone zone, ScoringSide side) {
     System.out.println("\n[Path Selection] Determining path:");
     System.out.println("-> Current Zone: " + zone);
     System.out.println("-> Requested Side: " + side);
@@ -250,12 +302,42 @@ public class RobotContainer {
 
     PathPlannerPath path =
         switch (zone) {
-          case ZONE_1 -> side == ScoringSide.RIGHT ? Z1R : Z1L;
-          case ZONE_2 -> side == ScoringSide.RIGHT ? Z2R : Z2L;
-          case ZONE_3 -> side == ScoringSide.RIGHT ? Z3R : Z3L;
-          case ZONE_4 -> side == ScoringSide.RIGHT ? Z4R : Z4L;
-          case ZONE_5 -> side == ScoringSide.RIGHT ? Z5R : Z5L;
-          case ZONE_6 -> side == ScoringSide.RIGHT ? Z6R : Z6L;
+          case ZONE_1 -> 
+            switch (side) {
+              case RIGHT -> Z1R;
+              case LEFT -> Z1L;
+              case MIDDLE -> Z1M;
+            };
+          case ZONE_2 -> 
+            switch (side) {
+              case RIGHT -> Z2R;
+              case LEFT -> Z2L;
+              case MIDDLE -> Z2M;
+            };
+          case ZONE_3 -> 
+            switch (side) {
+              case RIGHT -> Z3R;
+              case LEFT -> Z3L;
+              case MIDDLE -> Z3M;
+            };
+          case ZONE_4 -> 
+            switch (side) {
+              case RIGHT -> Z4R;
+              case LEFT -> Z4L;
+              case MIDDLE -> Z4M;
+            };
+          case ZONE_5 -> 
+            switch (side) {
+              case RIGHT -> Z5R;
+              case LEFT -> Z5L;
+              case MIDDLE -> Z5M;
+            };
+          case ZONE_6 -> 
+            switch (side) {
+              case RIGHT -> Z6R;
+              case LEFT -> Z6L;
+              case MIDDLE -> Z6M;
+            };
           default -> null;
         };
 
@@ -266,7 +348,7 @@ public class RobotContainer {
     }
 
     return path;
-  }
+}
 
   /**
    * Creates a command to drive to a reef scoring position based on the current zone and specified
@@ -614,6 +696,8 @@ public class RobotContainer {
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+    new JoystickButton(driverJoystick, Driver.BUTTON_6)
+        .onTrue(Commands.runOnce(() -> new DriveToPoint(drive, new Pose2d(8.15, drive.getPose().getY(), new Rotation2d(0))).schedule()));
 
     // Elevator manual control
     operatorController

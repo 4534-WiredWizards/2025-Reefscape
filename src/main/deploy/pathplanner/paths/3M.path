@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.41151552871919,
+        "y": 2.419677734375
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.271819100696957,
+        "y": 2.627005754666106
+      },
+      "isLocked": false,
+      "linkedName": "Reef Post 3M"
+    },
+    {
+      "anchor": {
+        "x": 5.16010810959507,
+        "y": 2.8781170912191896
+      },
+      "prevControl": {
+        "x": 5.275030879133951,
+        "y": 2.656097369028765
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "reversed": false,
+  "folder": "Algea",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "useDefaultConstraints": false
+}
