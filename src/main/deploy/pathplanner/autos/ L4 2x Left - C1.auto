@@ -51,6 +51,12 @@
           "data": {
             "name": "RunCoralOutake"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetWristSafePosition"
+          }
         }
       ]
     }
