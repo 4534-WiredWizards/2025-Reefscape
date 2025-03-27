@@ -731,17 +731,26 @@ public class RobotContainer {
             driverJoystick,
             Driver.LeftThrottle.TOP_THUMB_BUTTON) // Algae pickup on reef in current zone
         .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger));
-    new JoystickButton(
-            driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON) // Drive to barge position
-        .onTrue(
-            Commands.runOnce(
-                () ->
-                    new DriveToPoint(
-                            drive,
-                            new Pose2d(
-                                8.62, drive.getPose().getY(), new Rotation2d(Math.toRadians(180))),
-                            cancelDriveTrigger)
-                        .schedule())); // HOME FIELD
+   // Add this button binding in your configureButtonBindings() method
+    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON) // Drive to barge position
+    .onTrue(Commands.runOnce(() -> {
+        // Create the target pose based on alliance
+        double targetX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 
+                Constants.FieldPosition.Blue.Barge.SCORING_X : 
+                Constants.FieldPosition.Red.Barge.SCORING_X;
+        
+        // Keep the current Y position to maintain lateral position
+        double currentY = drive.getPose().getY();
+        
+        // Use 180 degrees rotation to face the barge
+        double targetRotation = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 
+          Math.toRadians(180) : 
+          Math.toRadians(0);
+        Pose2d targetPose = new Pose2d(targetX, currentY, new Rotation2d(targetRotation));
+        
+        // Create and schedule the command
+        new DriveToPoint(drive, targetPose,cancelDriveTrigger ).schedule();
+    }));
 
     // Elevator manual control
     operatorController
