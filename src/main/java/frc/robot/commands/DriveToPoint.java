@@ -43,8 +43,8 @@ public class DriveToPoint extends Command {
 
     PathConstraints constraints =
         new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec(), // 100% of max velocity
-            drive.getMaxLinearSpeedMetersPerSec() * 2, // 200% of max acceleration
+            drive.getMaxLinearSpeedMetersPerSec() * 0.4, // 100% of max velocity
+            drive.getMaxLinearSpeedMetersPerSec() * 0.4, // 200% of max acceleration
             drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
             drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
             );

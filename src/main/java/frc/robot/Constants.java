@@ -256,8 +256,17 @@ public interface Constants {
       double CORAL_INTAKE_SPEED = 0.6;
       double CORAL_OUTTAKE_SPEED = -0.28;
       double ALGAE_INTAKE_SPEED = 0.2;
-      double ALGAE_OUTTAKE_SPEED = -.3;
+      double ALGAE_OUTTAKE_SPEED = -.35;
     }
+  }
+
+  interface LED {
+    int LED_ID = 54; // CANdle ID
+    double BRIGHTNESS_SCALAR = 0.4;
+    int TIMEOUT_MS = 100;
+
+    // LED segment definitions
+    int CANDLE_LED_SEGMENT_SIZE = 8;
   }
 
   interface Swerve {

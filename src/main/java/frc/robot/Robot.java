@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.LEDSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -128,6 +129,8 @@ public class Robot extends LoggedRobot {
     // Call the robot container's init method
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
+    LEDSubsystem.LEDSegment.CANDLE_LEDS.setColor(LEDSubsystem.RED);
+
     new Thread(
             () -> {
               try {
@@ -146,16 +149,16 @@ public class Robot extends LoggedRobot {
     robotContainer.vision.resetRobotPose();
 
     // Thread sleep 15s then set climb idle mode to coast
-    new Thread(
-            () -> {
-              try {
-                Thread.sleep(15000); // 15 second delay
-                robotContainer.m_climb.setIdleMode(IdleMode.kCoast);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
-            })
-        .start();
+    // new Thread(
+    //         () -> {
+    //           try {
+    //             Thread.sleep(15000); // 15 second delay
+    //             robotContainer.m_climb.setIdleMode(IdleMode.kCoast);
+    //           } catch (InterruptedException e) {
+    //             e.printStackTrace();
+    //           }
+    //         })
+    //     .start();
   }
 
   /** This function is called periodically when disabled. */
