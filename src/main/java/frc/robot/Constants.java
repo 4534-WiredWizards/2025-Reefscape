@@ -45,7 +45,7 @@ public interface Constants {
 
     interface Blue {
       interface Barge {
-        double SCORING_X = 8.62;
+        double SCORING_X = 8.62; // COMP = 8.00
       }
 
       interface Reef {
@@ -56,7 +56,7 @@ public interface Constants {
 
     interface Red {
       interface Barge {
-        double SCORING_X = 13.0;
+        double SCORING_X = 9.55;
       }
       interface Reef {
         double CENTER_X = 13.0;
