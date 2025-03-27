@@ -1,23 +1,18 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,10 +58,13 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -393,8 +391,9 @@ public class RobotContainer {
               Command pathCommand =
                   new SequentialCommandGroup(
                           new DriveToPath(drive, path, cancelDriveTrigger),
-                          setOperatorRumble(0.7) // Will end when trigger is pressed when path completes
-                        )
+                          setOperatorRumble(
+                              0.7) // Will end when trigger is pressed when path completes
+                          )
                       .finallyDo(
                           () -> {
                             // When the command ends (either by completion or cancellation),
@@ -656,7 +655,6 @@ public class RobotContainer {
     //           LEDSubsystem.off();
     //         }));
 
-  
     // // setAllianceColor
     // SmartDashboard.putData(
     //     "LED/AllianceColor",
@@ -796,7 +794,7 @@ public class RobotContainer {
                     new SetElevatorPosition(
                         m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
-                    new AdaptiveWrist(m_Intake, ()->Wrist.ALGAE_INTAKE_ANGLE, true))));
+                    new AdaptiveWrist(m_Intake, () -> Wrist.ALGAE_INTAKE_ANGLE, true))));
 
     // B - High algae
     operatorController
@@ -808,7 +806,7 @@ public class RobotContainer {
                     new SetElevatorPosition(
                         m_elevator, Elevator.POSITION_HIGH_ALGAE, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
-                    new AdaptiveWrist(m_Intake, ()->Wrist.ALGAE_INTAKE_ANGLE, true))));
+                    new AdaptiveWrist(m_Intake, () -> Wrist.ALGAE_INTAKE_ANGLE, true))));
 
     // Safe storage position for algae
     operatorController
@@ -816,8 +814,7 @@ public class RobotContainer {
         .onTrue(
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, (Wrist.BARGE_ANGLE - 5.0), true),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, true)
-          ));
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, true)));
 
     // Shoot algae
     operatorController

@@ -4,14 +4,12 @@
 
 package frc.robot.commands.Elevator;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SetElevatorPosition extends Command {
   private final ElevatorSubsystem m_elevator;
@@ -85,7 +83,8 @@ public class SetElevatorPosition extends Command {
     // Get the current target position from the supplier at initialization time
     m_targetPosition = m_targetPositionSupplier.getAsDouble();
 
-    double safePosition = Math.min(Elevator.MAX_SAFE_POS, Math.max(Elevator.MIN_SAFE_POS, m_targetPosition));
+    double safePosition =
+        Math.min(Elevator.MAX_SAFE_POS, Math.max(Elevator.MIN_SAFE_POS, m_targetPosition));
 
     if (m_targetPosition == Elevator.POSITION_GROUND) {
       m_elevator.setLookForStalled(true);
@@ -93,8 +92,8 @@ public class SetElevatorPosition extends Command {
       m_elevator.setLookForStalled(false);
     }
 
-
-    // If elevator height is less than ELEVATOR_DANGER_LIMIT and wrist angle is greater than  MIN_CLEAR_ELEVATOR_ANGLE dont run
+    // If elevator height is less than ELEVATOR_DANGER_LIMIT and wrist angle is greater than
+    // MIN_CLEAR_ELEVATOR_ANGLE dont run
     // if (m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
     //     && m_wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
     //   Logger.recordOutput("Elevator/Command/Blocked", true);

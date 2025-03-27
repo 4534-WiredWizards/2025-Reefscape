@@ -4,14 +4,12 @@
 
 package frc.robot.commands.Wrist;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.IntakeSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class AdaptiveWrist extends Command {
   private final IntakeSubsystem m_intake;
