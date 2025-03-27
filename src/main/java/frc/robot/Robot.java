@@ -150,17 +150,19 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {
     robotContainer.vision.resetRobotPose();
 
-    // Thread sleep 15s then set climb idle mode to coast
-    // new Thread(
-    //         () -> {
-    //           try {
-    //             Thread.sleep(15000); // 15 second delay
-    //             robotContainer.m_climb.setIdleMode(IdleMode.kCoast);
-    //           } catch (InterruptedException e) {
-    //             e.printStackTrace();
-    //           }
-    //         })
-    //     .start();
+    // Thread sleep 15s then set climb idle mode to coast if robot is still disabled
+    new Thread(
+        () -> {
+          try {
+          Thread.sleep(15000); // 15 second delay
+          if (isDisabled()) { // Check if the robot is still disabled
+            robotContainer.m_climb.setIdleMode(IdleMode.kCoast);
+          }
+          } catch (InterruptedException e) {
+          e.printStackTrace();
+          }
+        })
+      .start();
   }
 
   /** This function is called periodically when disabled. */

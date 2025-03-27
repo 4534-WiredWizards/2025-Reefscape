@@ -1,18 +1,23 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,7 +47,6 @@ import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
 import frc.robot.commands.ManualPoseSetter;
 import frc.robot.commands.Wrist.AdaptiveWrist;
-import frc.robot.commands.Wrist.HoldAlgae;
 import frc.robot.commands.Wrist.RunCoralIntake;
 import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
@@ -51,7 +55,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -60,13 +63,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -392,11 +392,9 @@ public class RobotContainer {
               // capability
               Command pathCommand =
                   new SequentialCommandGroup(
-                          new DriveToPath(
-                              drive, path, cancelDriveTrigger), // Will end when trigger is pressed
-                          // Add rumble feedback when path completes
-                          setOperatorRumble(0.7) // Use a moderate rumble intensity
-                          )
+                          new DriveToPath(drive, path, cancelDriveTrigger),
+                          setOperatorRumble(0.7) // Will end when trigger is pressed when path completes
+                        )
                       .finallyDo(
                           () -> {
                             // When the command ends (either by completion or cancellation),
@@ -783,7 +781,7 @@ public class RobotContainer {
     // Configure climb controls
     operatorController2
         .a()
-        .whileTrue(new SimpleMoveClimb(m_climb, () -> -0.75)); // Wind - Climb //Back stock 1
+        .whileTrue(new SimpleMoveClimb(m_climb, () -> -0.8)); // Wind - Climb //Back stock 1
     operatorController2
         .b()
         .whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
@@ -798,7 +796,7 @@ public class RobotContainer {
                     new SetElevatorPosition(
                         m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
-                    new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
+                    new AdaptiveWrist(m_Intake, ()->Wrist.ALGAE_INTAKE_ANGLE, true))));
 
     // B - High algae
     operatorController
@@ -810,7 +808,7 @@ public class RobotContainer {
                     new SetElevatorPosition(
                         m_elevator, Elevator.POSITION_HIGH_ALGAE, m_Wrist, false),
                     new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
-                    new AdaptiveWrist(m_Intake, this::getWristAngle, true))));
+                    new AdaptiveWrist(m_Intake, ()->Wrist.ALGAE_INTAKE_ANGLE, true))));
 
     // Safe storage position for algae
     operatorController
@@ -818,10 +816,8 @@ public class RobotContainer {
         .onTrue(
             new SequentialCommandGroup(
                 new SetWristPosition(m_Wrist, (Wrist.BARGE_ANGLE - 5.0), true),
-                new ParallelCommandGroup(
-                    new SetElevatorPosition(
-                        m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, true),
-                    new HoldAlgae(m_Intake))));
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, true)
+          ));
 
     // Shoot algae
     operatorController
