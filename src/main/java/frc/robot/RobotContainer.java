@@ -82,7 +82,7 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
   public final ClimbSubsystem m_climb = new ClimbSubsystem();
-  public final LEDSubsystem LEDSubsystem = new LEDSubsystem();
+  // public final LEDSubsystem LEDSubsystem = new LEDSubsystem();
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
@@ -649,30 +649,23 @@ public class RobotContainer {
             .ignoringDisable(true));
 
     // Set led color commands
-    SmartDashboard.putData("LED/idle", new InstantCommand(() -> LEDSubsystem.idle()));
+    // SmartDashboard.putData("LED/idle", new InstantCommand(() -> LEDSubsystem.idle()));
 
-    SmartDashboard.putData(
-        "LED/Off",
-        new InstantCommand(
-            () -> {
-              LEDSubsystem.off();
-            }));
+    // SmartDashboard.putData(
+    //     "LED/Off",
+    //     new InstantCommand(
+    //         () -> {
+    //           LEDSubsystem.off();
+    //         }));
 
-    // Off fullClear
-    // SmartDashboard.putData("LED/fullClear", new InstantCommand(() ->
-    // LEDSubsystem..fullClear()));
-
-    // disableLEDs
-    // SmartDashboard.putData("LED/disableLEDs", new InstantCommand(() ->
-    // LEDSubsystem.LEDSegment.MAIN_STRIMAIN_STRIP.disableLEDs()));
-
-    // setAllianceColor
-    SmartDashboard.putData(
-        "LED/AllianceColor",
-        new InstantCommand(
-            () -> {
-              LEDSubsystem.setAllianceColor();
-            }));
+  
+    // // setAllianceColor
+    // SmartDashboard.putData(
+    //     "LED/AllianceColor",
+    //     new InstantCommand(
+    //         () -> {
+    //           LEDSubsystem.setAllianceColor();
+    //         }));
 
     // New method with cancellation capability
     // SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT,
