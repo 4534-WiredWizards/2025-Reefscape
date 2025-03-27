@@ -196,7 +196,7 @@ public interface Constants {
     double POSITION_SAFE_ALGAE = 10.0;
 
     // Manual Control
-    double MANUAL_SPEED = 0.45;
+    double MANUAL_SPEED = 0.4;
     int DOWN_DIRECTION = -1;
   }
 
@@ -250,6 +250,7 @@ public interface Constants {
     double L3_ANGLE = 120.0;
     double L4_ANGLE = 89.0;
     double BARGE_ANGLE = 85;
+    double CLIMB_ANGLE = 30;
 
     // Operational Positions
     double ALGAE_INTAKE_ANGLE = 20.0;
