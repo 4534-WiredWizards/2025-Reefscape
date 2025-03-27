@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.607748287671233,
-        "y": 1.658454623287671
+        "x": 1.6268059529049297,
+        "y": 0.6908041510783448
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.500984589041096,
-        "y": 1.8087114726027391
+        "x": 2.379137323943662,
+        "y": 1.3892653774207746
       },
       "isLocked": false,
       "linkedName": "Coral Station 2"
@@ -20,8 +20,8 @@
         "y": 2.732615646565613
       },
       "prevControl": {
-        "x": 3.588580572618566,
-        "y": 2.241908409723508
+        "x": 3.6696068992077464,
+        "y": 2.267763121698944
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,7 +40,7 @@
       "minWaypointRelativePos": 0.6266092192691028,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.7,
+        "maxVelocity": 0.6,
         "maxAcceleration": 1.2,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
