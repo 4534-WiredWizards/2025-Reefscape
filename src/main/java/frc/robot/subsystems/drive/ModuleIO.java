@@ -13,8 +13,9 @@
 
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface ModuleIO {
   @AutoLog
@@ -43,6 +44,9 @@ public interface ModuleIO {
 
   /** Run the drive motor at the specified open loop value. */
   public default void setDriveOpenLoop(double output) {}
+
+  public default void setBrakeMode() {}
+  public default void setCoastMode() {}
 
   /** Run the turn motor at the specified open loop value. */
   public default void setTurnOpenLoop(double output) {}
