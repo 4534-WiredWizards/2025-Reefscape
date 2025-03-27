@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1720034246575342,
-        "y": 1.0574272260273971
+        "x": 1.607748287671233,
+        "y": 1.658454623287671
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.172003424657534,
-        "y": 1.0574272260273967
+        "x": 2.607748287671233,
+        "y": 1.6584546232876705
       },
       "isLocked": false,
       "linkedName": "Coral Station 2"
@@ -30,18 +30,18 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.636363636363637,
+      "waypointRelativePos": 0.37700534759358195,
       "rotationDegrees": 60.54460000000001
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7728813559322029,
+      "minWaypointRelativePos": 0.5288135593220371,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
-        "maxAcceleration": 3.5,
+        "maxAcceleration": 1.2,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -50,7 +50,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Scoring Postition",
+      "waypointRelativePos": 0.30169491525423725,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-L4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.5,

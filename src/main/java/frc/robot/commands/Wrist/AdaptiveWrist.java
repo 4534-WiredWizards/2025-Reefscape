@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Wrist;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -20,6 +21,11 @@ public class AdaptiveWrist extends Command {
   private boolean isRunningCoralIntake = false;
   private boolean wasInCoralRange = false;
 
+  // Protection delay timer
+  private boolean protectionOverrideScheduled = false;
+  private Timer protectionDelayTimer = new Timer();
+  private static final double PROTECTION_DELAY_SECONDS = 1.0;
+
   public AdaptiveWrist(
       IntakeSubsystem intake, DoubleSupplier wristAngleSupplier, boolean isPickup) {
     this.m_intake = intake;
@@ -33,8 +39,11 @@ public class AdaptiveWrist extends Command {
   public void initialize() {
     // Create a new instance of the coral intake command
     coralIntakeCommand = new RunCoralIntake(m_intake, true);
+    m_intake.setProtectionOverride(true); // Disable protection during operation
+
     isRunningCoralIntake = false;
     wasInCoralRange = false;
+    protectionOverrideScheduled = false;
     Logger.recordOutput("Wrist/Status/AdaptiveWrist", "Initialized");
   }
 
@@ -110,6 +119,60 @@ public class AdaptiveWrist extends Command {
     if (isRunningCoralIntake) {
       coralIntakeCommand.end(interrupted);
       isRunningCoralIntake = false;
+    }
+
+    // Instead of immediately re-enabling protection, start a timer
+    // We'll handle this in the command scheduler through inheritance
+    protectionDelayTimer.reset();
+    protectionDelayTimer.start();
+    protectionOverrideScheduled = true;
+
+    // Log the delay for debug purposes
+    Logger.recordOutput(
+        "Wrist/Status/AdaptiveWrist",
+        "Command ended - protection re-enable scheduled in "
+            + PROTECTION_DELAY_SECONDS
+            + " seconds");
+
+    // Create a separate command to re-enable protection after the delay
+    // This will run even after this command is no longer scheduled
+    new EnableProtectionAfterDelayCommand(m_intake, protectionDelayTimer, PROTECTION_DELAY_SECONDS)
+        .schedule();
+  }
+
+  /**
+   * Inner class to handle re-enabling protection after delay This is a separate command that runs
+   * independently
+   */
+  private static class EnableProtectionAfterDelayCommand extends Command {
+    private final IntakeSubsystem m_intake;
+    private final Timer timer;
+    private final double delaySeconds;
+
+    public EnableProtectionAfterDelayCommand(
+        IntakeSubsystem intake, Timer timer, double delaySeconds) {
+      this.m_intake = intake;
+      this.timer = timer;
+      this.delaySeconds = delaySeconds;
+      // No requirements - we want this to run in parallel with other commands
+    }
+
+    @Override
+    public void execute() {
+      // Just waiting for timer
+      Logger.recordOutput("Intake/Protection/DelayRemaining", delaySeconds - timer.get());
+    }
+
+    @Override
+    public boolean isFinished() {
+      return timer.hasElapsed(delaySeconds);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+      // Re-enable protection when time elapses (or if interrupted)
+      m_intake.setProtectionOverride(false);
+      Logger.recordOutput("Intake/Protection/Status", "Protection re-enabled after delay");
     }
   }
 }

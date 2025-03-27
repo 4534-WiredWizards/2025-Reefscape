@@ -16,6 +16,7 @@ public class RunCoralOutake extends Command {
   @Override
   public void initialize() {
     System.out.println("RunCoralOutake initialized");
+    intakeSubsystem.setProtectionOverride(true); // Disable protection during outake
     intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
     wasCoralDetected = intakeSubsystem.getSecondSensor();
     System.out.println("Initial coral detection: " + wasCoralDetected);
@@ -31,6 +32,7 @@ public class RunCoralOutake extends Command {
   public void end(boolean interrupted) {
     System.out.println("RunCoralOutake ended, interrupted: " + interrupted);
     intakeSubsystem.stopRoller();
+    intakeSubsystem.setProtectionOverride(false); // Re-enable protection
   }
 
   @Override

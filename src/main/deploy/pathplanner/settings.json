@@ -3,6 +3,7 @@
   "robotLength": 0.86995,
   "holonomicMode": true,
   "pathFolders": [
+    "Algae",
     "Done",
     "Not Done",
     "Scoring"

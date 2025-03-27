@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C1 to 5L"
+            "pathName": "C5 to 3R"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5L to CS1"
+            "pathName": "3R to CS2"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CS1 to 6R"
+            "pathName": "CS2 to 2R"
           }
         },
         {
@@ -53,9 +53,27 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "2R to CS2"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "SetWristSafePosition"
+            "name": "WE-CoralIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS2 to 2L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
           }
         }
       ]

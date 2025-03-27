@@ -19,7 +19,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
- * Contains global constants and configurations for the robot. Includes runtime mode definitions,
+ * Contains global constants and configurations for the robot. Includes runtime
+ * mode definitions,
  * subsystem configurations, and controller mappings.
  */
 public interface Constants {
@@ -39,7 +40,14 @@ public interface Constants {
 
   /* Game Field Constants */
   interface FieldPosition {
+
+    // Barge Scoring x position, returns different values based on alliance color
+
     interface Blue {
+      interface Barge {
+        double SCORING_X = 8.62; // COMP = 8.00
+      }
+
       interface Reef {
         double CENTER_X = 4.5;
         double CENTER_Y = 4.0;
@@ -47,6 +55,9 @@ public interface Constants {
     }
 
     interface Red {
+      interface Barge {
+        double SCORING_X = 9.55;
+      }
       interface Reef {
         double CENTER_X = 13.0;
         double CENTER_Y = 4.0;
@@ -66,7 +77,8 @@ public interface Constants {
 
   public enum ScoringSide {
     LEFT,
-    RIGHT
+    RIGHT,
+    MIDDLE
   }
 
   public enum ScoringHeight {
@@ -93,37 +105,37 @@ public interface Constants {
   }
 
   interface ScoringPositions {
-    record ZonePosition(double x, double y, double theta) {}
+    record ZonePosition(double x, double y, double theta) {
+    }
 
     // Zone positions for each side (Left and Right)
-    static final Map<ReefZone, Map<ScoringSide, Pose2d>> ZONE_POSITIONS =
+    static final Map<ReefZone, Map<ScoringSide, Pose2d>> ZONE_POSITIONS = Map.of(
+        ReefZone.ZONE_1,
         Map.of(
-            ReefZone.ZONE_1,
-            Map.of(
-                ScoringSide.LEFT, new Pose2d(3.083, 4.189, new Rotation2d(0.0)),
-                ScoringSide.RIGHT, new Pose2d(3.083, 3.859, new Rotation2d(0.0))),
-            ReefZone.ZONE_2,
-            Map.of(
-                ScoringSide.LEFT, new Pose2d(3.647, 2.914, new Rotation2d(Math.toRadians(60.0))),
-                ScoringSide.RIGHT, new Pose2d(3.946, 2.754, new Rotation2d(Math.toRadians(60.0)))),
-            ReefZone.ZONE_3,
-            Map.of(
-                ScoringSide.LEFT, new Pose2d(5.034, 2.742, new Rotation2d(Math.toRadians(120.0))),
-                ScoringSide.RIGHT, new Pose2d(5.316, 2.923, new Rotation2d(Math.toRadians(120.0)))),
-            ReefZone.ZONE_4,
-            Map.of(
-                ScoringSide.LEFT, new Pose2d(5.894, 3.858, new Rotation2d(Math.toRadians(180.0))),
-                ScoringSide.RIGHT, new Pose2d(5.894, 4.189, new Rotation2d(Math.toRadians(180.0)))),
-            ReefZone.ZONE_5,
-            Map.of(
-                ScoringSide.LEFT, new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
-                ScoringSide.RIGHT,
-                    new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
-            ReefZone.ZONE_6,
-            Map.of(
-                ScoringSide.LEFT, new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
-                ScoringSide.RIGHT,
-                    new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
+            ScoringSide.LEFT, new Pose2d(3.083, 4.189, new Rotation2d(0.0)),
+            ScoringSide.RIGHT, new Pose2d(3.083, 3.859, new Rotation2d(0.0))),
+        ReefZone.ZONE_2,
+        Map.of(
+            ScoringSide.LEFT, new Pose2d(3.647, 2.914, new Rotation2d(Math.toRadians(60.0))),
+            ScoringSide.RIGHT, new Pose2d(3.946, 2.754, new Rotation2d(Math.toRadians(60.0)))),
+        ReefZone.ZONE_3,
+        Map.of(
+            ScoringSide.LEFT, new Pose2d(5.034, 2.742, new Rotation2d(Math.toRadians(120.0))),
+            ScoringSide.RIGHT, new Pose2d(5.316, 2.923, new Rotation2d(Math.toRadians(120.0)))),
+        ReefZone.ZONE_4,
+        Map.of(
+            ScoringSide.LEFT, new Pose2d(5.894, 3.858, new Rotation2d(Math.toRadians(180.0))),
+            ScoringSide.RIGHT, new Pose2d(5.894, 4.189, new Rotation2d(Math.toRadians(180.0)))),
+        ReefZone.ZONE_5,
+        Map.of(
+            ScoringSide.LEFT, new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
+            ScoringSide.RIGHT,
+            new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
+        ReefZone.ZONE_6,
+        Map.of(
+            ScoringSide.LEFT, new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
+            ScoringSide.RIGHT,
+            new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
 
     static Pose2d getPose(ReefZone zone, ScoringSide side) {
       return ZONE_POSITIONS.get(zone).get(side);
@@ -142,23 +154,23 @@ public interface Constants {
     double ELEVATOR_DANGER_LIMIT = 6.8;
 
     // Voltage Configuration
-    double PEAK_FORWARD_VOLTAGE = 12.0;
-    double PEAK_REVERSE_VOLTAGE = -12.0;
+    double PEAK_FORWARD_VOLTAGE = 15.0;
+    double PEAK_REVERSE_VOLTAGE = -9.0;
     double ZEROING_VOLTAGE = 5.0;
 
     // PID and Feedforward
-    double KP = 5.0;
+    double KP = 3.5;
     double KI = 0.01;
-    double KD = 0.1;
+    double KD = 0.3;
     double KS = 0.25;
-    double KV = 0.6;
-    double KA = 0.05;
-    double KG = 1.18;
+    double KV = 0.68;
+    double KA = 0.07;
+    double KG = 1.2;
 
     // Motion Profile
-    double CRUISE_VELOCITY = 65.0;
-    double MAX_ACCELERATION = 145.0;
-    double JERK = 200.0;
+    double CRUISE_VELOCITY = 100;
+    double MAX_ACCELERATION = 150.0;
+    double JERK = 1200;
 
     // Physical Properties
     double PULLEY_DIAMETER = 120.0 / 25.4; // 120mm in inches
@@ -181,9 +193,10 @@ public interface Constants {
     double POSITION_HIGH_ALGAE = POSITION_L3;
     double POSITION_LOW_ALGAE = 15.0;
     double POSITION_BARGE = 70.0;
+    double POSITION_SAFE_ALGAE = 10.0;
 
     // Manual Control
-    double MANUAL_SPEED = 0.45;
+    double MANUAL_SPEED = 0.4;
     int DOWN_DIRECTION = -1;
   }
 
@@ -215,9 +228,9 @@ public interface Constants {
     double KA = 0.01;
 
     // Motion Profile
-    double CRUISE_VELOCITY = 90.0;
-    double ACCELERATION = 120.0;
-    double JERK = 0.0;
+    double CRUISE_VELOCITY = 100.0;
+    double ACCELERATION = 150.0;
+    double JERK = 1200;
 
     // Safety Limits
     double MAX_SAFE_VAL = 0.1;
@@ -236,6 +249,8 @@ public interface Constants {
     double L2_ANGLE = 120.0;
     double L3_ANGLE = 120.0;
     double L4_ANGLE = 89.0;
+    double BARGE_ANGLE = 85;
+    double CLIMB_ANGLE = 30;
 
     // Operational Positions
     double ALGAE_INTAKE_ANGLE = 20.0;
@@ -253,9 +268,18 @@ public interface Constants {
       // Speeds
       double CORAL_INTAKE_SPEED = 0.6;
       double CORAL_OUTTAKE_SPEED = -0.28;
-      double ALGAE_INTAKE_SPEED = 0.2;
-      double ALGAE_OUTTAKE_SPEED = -0.5;
+      double ALGAE_INTAKE_SPEED = 0.25;
+      double ALGAE_OUTTAKE_SPEED = -.35;
     }
+  }
+
+  interface LED {
+    int LED_ID = 54; // CANdle ID
+    double BRIGHTNESS_SCALAR = 0.4;
+    int TIMEOUT_MS = 100;
+
+    // LED segment definitions
+    int CANDLE_LED_SEGMENT_SIZE = 8;
   }
 
   interface Swerve {
@@ -342,6 +366,8 @@ public interface Constants {
       int CLIMB_SEQUENCE_BUTTON = 6; // Right bumper
       int ZERO_ELEVATOR_BUTTON = 7; // Start button
       int RESET_BOT_POSE_BUTTON = 8; // Select button
+      int PRESS_LEFT_THUMBSTICK = 9;
+      int PRESS_RIGHT_THUMBSTICK = 10;
 
       // Axes
       int RIGHT_THUMB_AXIS = 4;

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.Elevator.MAX_SAFE_POS;
 import static frc.robot.Constants.Elevator.MIN_SAFE_POS;
+import static frc.robot.Constants.Elevator.ROTATIONS_TO_INCHES;
 import static frc.robot.Constants.Elevator.STALL_VELOCITY_THRESHOLD;
 
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -115,8 +116,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     TalonFXConfiguration fx_cfg = new TalonFXConfiguration();
 
     fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+
     fx_cfg.Voltage.PeakForwardVoltage = Elevator.PEAK_FORWARD_VOLTAGE;
     fx_cfg.Voltage.PeakReverseVoltage = Elevator.PEAK_REVERSE_VOLTAGE;
+    fx_cfg.CurrentLimits.StatorCurrentLimit = 100;
+    fx_cfg.CurrentLimits.SupplyCurrentLimit = 0;
+    fx_cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+    fx_cfg.CurrentLimits.SupplyCurrentLimitEnable = false;
 
     fx_cfg.Slot0.kP = Elevator.KP;
     fx_cfg.Slot0.kI = Elevator.KI;
@@ -255,6 +261,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     double voltage = elevatorMotor1.getMotorVoltage().getValueAsDouble();
     double current = elevatorMotor1.getSupplyCurrent().getValueAsDouble();
     double temperature = elevatorMotor1.getDeviceTemp().getValueAsDouble();
+
+    double elevatorExtension = getEncoderPosition() * ROTATIONS_TO_INCHES;
+    elevatorLigament.setLength(Units.inchesToMeters(elevatorExtension)); // Remove if using direct meters
+
+    // Log the mechanism visualization every cycle
+    Logger.recordOutput("Elevator/Mechanism", elevatorMechanism);
 
     // Modified stall detection logic (only active during zeroing)
     boolean potentialStall = false;

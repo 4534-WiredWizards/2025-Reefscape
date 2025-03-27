@@ -92,6 +92,14 @@ public class SetElevatorPosition extends Command {
       m_elevator.setLookForStalled(false);
     }
 
+    // If elevator height is less than ELEVATOR_DANGER_LIMIT and wrist angle is greater than
+    // MIN_CLEAR_ELEVATOR_ANGLE dont run
+    // if (m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT
+    //     && m_wrist.getAngle() > Wrist.MIN_CLEAR_ELEVATOR_ANGLE) {
+    //   Logger.recordOutput("Elevator/Command/Blocked", true);
+    //   return;
+    // }
+
     m_elevator.setPosition(safePosition);
   }
 
