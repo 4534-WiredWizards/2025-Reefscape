@@ -325,18 +325,6 @@ public class Drive extends SubsystemBase {
     stop();
   }
 
-  public void setBrakeMode() {
-    for (int i = 0; i < 4; i++) {
-      modules[i].setBrakeMode();
-    }
-  }
-
-  public void setCoastMode() {
-    for (int i = 0; i < 4; i++) {
-      modules[i].setCoastMode();
-    }
-  }
-
   /** Determines which side of a line a point lies on */
   private double getSideOfLine(double x, double y, double slope, boolean isRedAlliance) {
     double centerX =
@@ -367,8 +355,7 @@ public class Drive extends SubsystemBase {
     }
 
     if (isRedAlliance) {
-      // For Blue alliance, we need to adjust the zone mapping since the field is
-      // mirrored
+      // For Blue alliance, we need to adjust the zone mapping since the field is mirrored
       if (sides[0]) { // Right of vertical
         if (sides[1]) return ReefZone.ZONE_2;
         else return sides[2] ? ReefZone.ZONE_1 : ReefZone.ZONE_6;
@@ -479,9 +466,9 @@ public class Drive extends SubsystemBase {
       Matrix<N3, N1> visionMeasurementStdDevs) {
 
     // System.out.println("[VisionSubsystem] Adding Vision Measurement: ");
-    // System.out.println(" - Pose: " + visionRobotPoseMeters);
-    // System.out.println(" - Timestamp: " + timestampSeconds);
-    // System.out.println(" - StdDevs: " + visionMeasurementStdDevs);
+    // System.out.println("  - Pose: " + visionRobotPoseMeters);
+    // System.out.println("  - Timestamp: " + timestampSeconds);
+    // System.out.println("  - StdDevs: " + visionMeasurementStdDevs);
 
     poseEstimator.addVisionMeasurement(
         visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);

@@ -44,10 +44,6 @@ public interface ModuleIO {
   /** Run the drive motor at the specified open loop value. */
   public default void setDriveOpenLoop(double output) {}
 
-  public default void setBrakeMode() {}
-
-  public default void setCoastMode() {}
-
   /** Run the turn motor at the specified open loop value. */
   public default void setTurnOpenLoop(double output) {}
 
