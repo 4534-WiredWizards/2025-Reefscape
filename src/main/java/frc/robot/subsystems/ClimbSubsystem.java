@@ -3,15 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Climb;
+import org.littletonrobotics.junction.Logger;
 
 public class ClimbSubsystem extends SubsystemBase {
   // define climb motor
@@ -55,7 +53,7 @@ public class ClimbSubsystem extends SubsystemBase {
   public void stop() {
     climbMotor.set(0);
   }
-  
+
   public boolean isStalled() {
     // Implement stall detection logic here if needed
     return false;
