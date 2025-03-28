@@ -147,7 +147,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     robotContainer.vision.resetRobotPose();
-    robotContainer.drive.setCoastMode(); // Set coast mode when disabled
+    // robotContainer.drive.setCoastMode(); // Set coast mode when disabled
 
     // Thread sleep 15s then set climb idle mode to coast if robot is still disabled
     new Thread(
@@ -173,7 +173,7 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     System.out.println("Resetting robot pose in auto");
     robotContainer.vision.resetRobotPose();
-    robotContainer.drive.setBrakeMode(); // Set brake mode for autonomous
+    // robotContainer.drive.setBrakeMode(); // Set brake mode for autonomous
     robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -192,7 +192,7 @@ public class Robot extends LoggedRobot {
   public void teleopInit() {
     System.out.println("Resetting robot pose in teleop");
     robotContainer.vision.resetRobotPose();
-    robotContainer.drive.setBrakeMode(); // Continue using brake mode for teleop
+    // robotContainer.drive.setBrakeMode(); // Continue using brake mode for teleop
     robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     // This makes sure that the autonomous stops running when

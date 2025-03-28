@@ -37,7 +37,7 @@
   "constraintZones": [
     {
       "name": "Slow Place",
-      "minWaypointRelativePos": 0.41016949152542376,
+      "minWaypointRelativePos": 0.4779661016949152,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.7,
@@ -64,7 +64,7 @@
     },
     {
       "name": "Raise",
-      "waypointRelativePos": 0.43,
+      "waypointRelativePos": 0.5457627118644061,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

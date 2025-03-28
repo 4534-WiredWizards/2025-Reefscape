@@ -50,6 +50,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -80,7 +81,7 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
   public final ClimbSubsystem m_climb = new ClimbSubsystem();
-  // public final LEDSubsystem LEDSubsystem = new LEDSubsystem();
+  public final LEDSubsystem LEDSubsystem = new LEDSubsystem();
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
@@ -646,23 +647,22 @@ public class RobotContainer {
             .ignoringDisable(true));
 
     // Set led color commands
-    // SmartDashboard.putData("LED/idle", new InstantCommand(() ->
-    // LEDSubsystem.idle()));
+    SmartDashboard.putData("LED/idle", new InstantCommand(() -> LEDSubsystem.idle()));
 
-    // SmartDashboard.putData(
-    // "LED/Off",
-    // new InstantCommand(
-    // () -> {
-    // LEDSubsystem.off();
-    // }));
+    SmartDashboard.putData(
+        "LED/Off",
+        new InstantCommand(
+            () -> {
+              LEDSubsystem.off();
+            }));
 
-    // // setAllianceColor
-    // SmartDashboard.putData(
-    // "LED/AllianceColor",
-    // new InstantCommand(
-    // () -> {
-    // LEDSubsystem.setAllianceColor();
-    // }));
+    // setAllianceColor
+    SmartDashboard.putData(
+        "LED/AllianceColor",
+        new InstantCommand(
+            () -> {
+              LEDSubsystem.setAllianceColor();
+            }));
 
     // New method with cancellation capability
     // SmartDashboard.putData("Score/AutoZone L", driveToReefSide(ScoringSide.LEFT,
@@ -728,11 +728,22 @@ public class RobotContainer {
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
     new JoystickButton(
             driverJoystick,
+            Driver.LeftThrottle
+                .MIDDLE_THUMB_BUTTON) // Auto align with left reef post in current zone
+        .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
+    new JoystickButton(
+            driverJoystick,
+            Driver.LeftThrottle
+                .BOTTOM_THUMB_BUTTON) // Auto align with right reef post in current zone
+        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+
+    new JoystickButton(
+            driverJoystick,
             Driver.LeftThrottle.TOP_THUMB_BUTTON) // Algae pickup on reef in current zone
         .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger));
     // Add this button binding in your configureButtonBindings() method
     new JoystickButton(
-            driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON) // Drive to barge position
+            driverJoystick, Driver.LeftThrottle.FRONT_THUMB_BUTTON) // Drive to barge position
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -795,7 +806,7 @@ public class RobotContainer {
         .a()
         .onTrue(
             new ParallelCommandGroup(
-                new SimpleMoveClimb(m_climb, () -> -0.6),
+                new SimpleMoveClimb(m_climb, () -> -.5),
                 new SetWristPosition(m_Wrist, Wrist.CLIMB_ANGLE, false)));
     // .toggleOnTrue(new SimpleMoveClimb(m_climb, () -> -0.6)); // Wind - Climb
     // until reverse limit reached and if it slips then rewind

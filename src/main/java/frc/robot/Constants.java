@@ -251,7 +251,7 @@ public interface Constants {
     double L3_ANGLE = 120.0;
     double L4_ANGLE = 89.0;
     double BARGE_ANGLE = 85;
-    double CLIMB_ANGLE = 30;
+    double CLIMB_ANGLE = 90;
 
     // Operational Positions
     double ALGAE_INTAKE_ANGLE = 20.0;
