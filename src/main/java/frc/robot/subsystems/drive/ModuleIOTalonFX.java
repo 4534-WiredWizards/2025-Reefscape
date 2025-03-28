@@ -257,20 +257,6 @@ public class ModuleIOTalonFX implements ModuleIO {
   }
 
   @Override
-  public void setBrakeMode() {
-    TalonFXConfiguration config = new TalonFXConfiguration();
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    driveTalon.getConfigurator().apply(config, 0.05);
-  }
-
-  @Override
-  public void setCoastMode() {
-    TalonFXConfiguration config = new TalonFXConfiguration();
-    config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    driveTalon.getConfigurator().apply(config, 0.05);
-  }
-
-  @Override
   public void setTurnPosition(Rotation2d rotation) {
     turnTalon.setControl(
         switch (constants.SteerMotorClosedLoopOutput) {

@@ -30,8 +30,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
  * constants from Phoenix. Simulation is always based on voltage control.
  */
 public class ModuleIOSim implements ModuleIO {
-  // TunerConstants doesn't support separate sim constants, so they are declared
-  // locally
+  // TunerConstants doesn't support separate sim constants, so they are declared locally
   private static final double DRIVE_KP = 0.05;
   private static final double DRIVE_KD = 0.0;
   private static final double DRIVE_KS = 0.0;
@@ -110,8 +109,7 @@ public class ModuleIOSim implements ModuleIO {
     inputs.turnAppliedVolts = turnAppliedVolts;
     inputs.turnCurrentAmps = Math.abs(turnSim.getCurrentDrawAmps());
 
-    // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't
-    // matter)
+    // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't matter)
     inputs.odometryTimestamps = new double[] {Timer.getFPGATimestamp()};
     inputs.odometryDrivePositionsRad = new double[] {inputs.drivePositionRad};
     inputs.odometryTurnPositions = new Rotation2d[] {inputs.turnPosition};
@@ -134,16 +132,6 @@ public class ModuleIOSim implements ModuleIO {
     driveClosedLoop = true;
     driveFFVolts = DRIVE_KS * Math.signum(velocityRadPerSec) + DRIVE_KV * velocityRadPerSec;
     driveController.setSetpoint(velocityRadPerSec);
-  }
-
-  @Override
-  public void setBrakeMode() {
-    // Simulation implementation
-  }
-
-  @Override
-  public void setCoastMode() {
-    // Simulation implementation
   }
 
   @Override
