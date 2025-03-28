@@ -5,6 +5,7 @@ package frc.robot.commands.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Wrist;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -25,6 +26,7 @@ public class RunCoralIntake extends Command {
   @Override
   public void initialize() {
     secondSensorActivated = false;
+    RobotContainer.LEDSubsystem.coralIntakeMode(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,7 +37,7 @@ public class RunCoralIntake extends Command {
     if (!secondSensorActivated) {
       intakeSubsystem.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
       // System.out.println("second sensor not activated");
-    } else {
+    } else {    
       // System.out.println("Stopping roller");
       intakeSubsystem.stopRoller();
     }
@@ -46,6 +48,12 @@ public class RunCoralIntake extends Command {
   public void end(boolean interrupted) {
     if (interrupted) {
       intakeSubsystem.stopRoller();
+    } else if (secondSensorActivated) {
+      // Show success pattern if coral was successfully intaked
+      RobotContainer.LEDSubsystem.showIntakeSuccess();
+    } else {
+      // Return to default if no coral was detected
+      RobotContainer.LEDSubsystem.idle();
     }
   }
 

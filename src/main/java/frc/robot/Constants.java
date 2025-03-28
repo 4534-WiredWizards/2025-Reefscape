@@ -43,7 +43,7 @@ public interface Constants {
 
     interface Blue {
       interface Barge {
-        double SCORING_X = 8.62; // COMP = 8.00
+        double SCORING_X = 8.0; // COMP = 8.00 : HOME = 8.62;
       }
 
       interface Reef {

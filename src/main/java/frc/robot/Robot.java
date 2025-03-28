@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.LEDSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -131,13 +130,14 @@ public class Robot extends LoggedRobot {
     // Call the robot container's init method
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
-    LEDSubsystem.LEDSegment.CANDLE_LEDS.setColor(LEDSubsystem.RED);
+    robotContainer.LEDSubsystem.startupAnimation();
 
     new Thread(
             () -> {
               try {
                 Thread.sleep(25000); // 25 second delay
                 robotContainer.vision.resetRobotPose();
+                robotContainer.LEDSubsystem.showTeamColor();
               } catch (InterruptedException e) {
                 e.printStackTrace();
               }
@@ -149,6 +149,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     robotContainer.vision.resetRobotPose();
+    robotContainer.LEDSubsystem.disabledMode();
     // robotContainer.drive.setCoastMode(); // Set coast mode when disabled
 
     // Thread sleep 15s then set climb idle mode to coast if robot is still disabled
@@ -175,8 +176,10 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     System.out.println("Resetting robot pose in auto");
     robotContainer.vision.resetRobotPose();
-    // robotContainer.drive.setBrakeMode(); // Set brake mode for autonomous
     robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
+    robotContainer.LEDSubsystem.autonomousInit();
+    // robotContainer.drive.setBrakeMode(); // Set brake mode for autonomous
+
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -196,6 +199,8 @@ public class Robot extends LoggedRobot {
     robotContainer.vision.resetRobotPose();
     // robotContainer.drive.setBrakeMode(); // Continue using brake mode for teleop
     robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
+    robotContainer.LEDSubsystem.setAllianceColor();
+
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.

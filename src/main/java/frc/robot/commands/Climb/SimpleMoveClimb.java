@@ -4,10 +4,13 @@
 
 package frc.robot.commands.Climb;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ClimbSubsystem;
 import java.util.function.DoubleSupplier;
+
 import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.ClimbSubsystem;
 
 public class SimpleMoveClimb extends Command {
 
@@ -26,6 +29,7 @@ public class SimpleMoveClimb extends Command {
   @Override
   public void initialize() {
     m_climb.stop();
+    RobotContainer.LEDSubsystem.climbingMode(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +38,9 @@ public class SimpleMoveClimb extends Command {
     double speed = speedSupplier.getAsDouble();
     // deadband for joystick
     Logger.recordOutput("Climb/GivenSpeed", speed);
-
+    if (m_climb.getReverseLimitSwitch()) {
+      RobotContainer.LEDSubsystem.climbFinished();
+    }
     m_climb.moveManual(speed);
   }
 
@@ -42,6 +48,7 @@ public class SimpleMoveClimb extends Command {
   @Override
   public void end(boolean interrupted) {
     m_climb.stop();
+   
   }
 
   // Returns true when the command should end.
