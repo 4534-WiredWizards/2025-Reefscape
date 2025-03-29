@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -24,11 +22,11 @@ import com.ctre.phoenix.led.TwinkleAnimation;
 import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LED;
+import org.littletonrobotics.junction.Logger;
 
 public class LEDSubsystem extends SubsystemBase {
   // Common colors
@@ -60,8 +58,10 @@ public class LEDSubsystem extends SubsystemBase {
   public static final Color PURPLE = new Color(128, 0, 128);
   public static final Color ORANGE = new Color(255, 165, 0);
   public static final Color CORAL_COLOR = new Color(255, 255, 255); // White for coral as requested
-  public static final Color ALGAE_COLOR = new Color(82, 180, 157); // RGB(82, 180, 157) for algae as requested
-  public static final Color TEAM_COLOR = new Color(229, 52, 18); // RGB(229, 52, 18) team color as requested
+  public static final Color ALGAE_COLOR =
+      new Color(82, 180, 157); // RGB(82, 180, 157) for algae as requested
+  public static final Color TEAM_COLOR =
+      new Color(229, 52, 18); // RGB(229, 52, 18) team color as requested
 
   // LED segment definitions
   public enum LEDSegment {
@@ -182,14 +182,14 @@ public class LEDSubsystem extends SubsystemBase {
 
     // Schedule reset to idle after 1 second
     new Thread(
-        () -> {
-          try {
-            Thread.sleep(1000);
-            idle();
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-          }
-        })
+            () -> {
+              try {
+                Thread.sleep(1000);
+                idle();
+              } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+              }
+            })
         .start();
 
     Logger.recordOutput("LED/Status", "Setpoint Reached - Solid Green");
@@ -242,7 +242,6 @@ public class LEDSubsystem extends SubsystemBase {
       idle();
     }
   }
-  
 
   /** Indicates successful intake - solid green for 1.5s. */
   public void showIntakeSuccess() {
@@ -251,14 +250,14 @@ public class LEDSubsystem extends SubsystemBase {
 
     // Schedule reset to idle after 1.5 seconds
     new Thread(
-        () -> {
-          try {
-            Thread.sleep(1500);
-            idle();
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-          }
-        })
+            () -> {
+              try {
+                Thread.sleep(1500);
+                idle();
+              } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+              }
+            })
         .start();
 
     Logger.recordOutput("LED/Status", "Intake Success - Solid Green");
@@ -270,14 +269,14 @@ public class LEDSubsystem extends SubsystemBase {
 
     // Schedule reset to idle after 1 second
     new Thread(
-        () -> {
-          try {
-            Thread.sleep(1000);
-            idle();
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-          }
-        })
+            () -> {
+              try {
+                Thread.sleep(1000);
+                idle();
+              } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+              }
+            })
         .start();
 
     Logger.recordOutput("LED/Status", "Error - Red Strobe");

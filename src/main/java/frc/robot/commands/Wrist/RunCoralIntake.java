@@ -37,7 +37,7 @@ public class RunCoralIntake extends Command {
     if (!secondSensorActivated) {
       intakeSubsystem.moveRoller(Wrist.Roller.CORAL_INTAKE_SPEED);
       // System.out.println("second sensor not activated");
-    } else {    
+    } else {
       // System.out.println("Stopping roller");
       intakeSubsystem.stopRoller();
     }

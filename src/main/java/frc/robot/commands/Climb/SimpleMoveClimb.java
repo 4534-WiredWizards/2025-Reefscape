@@ -4,13 +4,11 @@
 
 package frc.robot.commands.Climb;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ClimbSubsystem;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SimpleMoveClimb extends Command {
 
@@ -48,7 +46,6 @@ public class SimpleMoveClimb extends Command {
   @Override
   public void end(boolean interrupted) {
     m_climb.stop();
-   
   }
 
   // Returns true when the command should end.
