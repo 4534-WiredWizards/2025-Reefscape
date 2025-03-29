@@ -130,6 +130,7 @@ public class RobotContainer {
   }
 
   public static void setAutoDriving(boolean autoDriving) {
+    
     RobotContainer.autoDriving = autoDriving;
   }
 

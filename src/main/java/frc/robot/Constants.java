@@ -188,7 +188,7 @@ public interface Constants {
     // Preset Positions
     double POSITION_GROUND = -0.1;
     double POSITION_L1 = 0.0;
-    double POSITION_L2 = 15.95;
+    double POSITION_L2 = 16.3;
     double POSITION_L3 = 32.0;
     double POSITION_L4 = 69.81;
     double POSITION_HIGH_ALGAE = POSITION_L3;
