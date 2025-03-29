@@ -33,7 +33,6 @@ import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
-import frc.robot.commands.Climb.HoldClimbPosition;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPath;
 import frc.robot.commands.DriveToPoint;
@@ -46,7 +45,6 @@ import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -793,9 +791,9 @@ public class RobotContainer {
     configurePOVButtons();
 
     // Hold Climb Button
-    operatorController
-        .button(Operator.RESET_BOT_POSE_BUTTON)
-        .toggleOnTrue(new HoldClimbPosition(m_climb));
+    // operatorController
+    //     .button(Operator.RESET_BOT_POSE_BUTTON)
+    //     .toggleOnTrue(new HoldClimbPosition(m_climb));
 
     // // Configure climb controls
     // operatorController2 // Top left stock 1
