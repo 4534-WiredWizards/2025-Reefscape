@@ -4,7 +4,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -63,14 +62,11 @@ public class DriveToPath extends Command {
     addRequirements(drive);
   }
 
-  // Modify the initialize method
+  // Rest of the code remains unchanged...
   @Override
   public void initialize() {
     Logger.recordOutput("DriveToPoint/StartPose", drive.getPose());
     Logger.recordOutput("DriveToPoint/Status", "Pathfinding to start of prebuilt path");
-
-    // Start auto-align LED sequence
-    RobotContainer.LEDSubsystem.autoAlignMode(true);
 
     // Reset interrupt tracking
     wasInterruptedByTrigger = false;
@@ -99,26 +95,17 @@ public class DriveToPath extends Command {
     }
   }
 
-  // Modify the end method
   @Override
   public void end(boolean interrupted) {
-    // Stop auto-align LED sequence
-    if (interrupted || wasInterruptedByTrigger) {
-      RobotContainer.LEDSubsystem.showError();
-    } else {
-      RobotContainer.LEDSubsystem.showIntakeSuccess();
-    }
-
     if (pathFollowingCommand != null) {
       pathFollowingCommand.cancel();
     }
 
     if (interrupted || wasInterruptedByTrigger) {
-      Logger.recordOutput("DrivPeToPoint/Status", "Command interrupted");
+      Logger.recordOutput("DriveToPoint/Status", "Command interrupted");
     } else {
       Logger.recordOutput("DriveToPoint/Status", "Successfully followed path");
     }
-
     // Log final status
     Logger.recordOutput("DriveToPoint/FinalPose", drive.getPose());
     Logger.recordOutput("DriveToPoint/WasInterruptedByTrigger", wasInterruptedByTrigger);
