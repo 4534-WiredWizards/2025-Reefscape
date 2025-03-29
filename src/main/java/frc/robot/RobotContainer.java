@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -83,6 +82,7 @@ public class RobotContainer {
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
   public final ClimbSubsystem m_climb = new ClimbSubsystem();
   public static final LEDSubsystem LEDSubsystem = new LEDSubsystem();
+  public static Boolean autoDriving = false;
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
@@ -121,6 +121,14 @@ public class RobotContainer {
 
   public double getWristAngle() {
     return m_Wrist.getAngle();
+  }
+
+  public boolean isAutoDriving() {
+    return autoDriving;
+  }
+
+  public static void setAutoDriving(boolean autoDriving) {
+    RobotContainer.autoDriving = autoDriving;
   }
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -378,11 +386,10 @@ public class RobotContainer {
         // First, check if we can run the command
         new InstantCommand(
             () -> {
-              // Check if drive is already being used by another command
-              Command existingCommand = CommandScheduler.getInstance().requiring(drive);
-              if (existingCommand != null) {
+              if (isAutoDriving()) {
                 Logger.recordOutput(
-                    "DriveToReef/Status", "Command request ignored - path already running");
+                    "DriveToReef/Status", "Command request ignored - auto-driving active");
+                System.out.println("Command request ignored - auto-driving active");
                 return;
               }
 
@@ -901,6 +908,7 @@ public class RobotContainer {
     // Display current zone
     SmartDashboard.putNumber("Drive/CurrentZone", drive.getZone().ordinal() + 1);
 
+    SmartDashboard.putBoolean("AutoDriving", isAutoDriving());
     // Log current requested position
     Logger.recordOutput("Targets/ElevatorPosition", targetElevatorPosition);
     Logger.recordOutput("Targets/WristAngle", targetWristAngle);
