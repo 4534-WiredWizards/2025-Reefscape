@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -374,10 +375,19 @@ public class RobotContainer {
 
   public Command driveToReefSide(ScoringSide side, BooleanSupplier cancelDriveTrigger) {
     return new SequentialCommandGroup(
-        new InstantCommand(() -> vision.resetRobotPose()),
-        // Create a new initial command that determines the path based on current zone
+        // First, check if we can run the command
         new InstantCommand(
             () -> {
+              // Check if drive is already being used by another command
+              Command existingCommand = CommandScheduler.getInstance().requiring(drive);
+              if (existingCommand != null) {
+                Logger.recordOutput(
+                    "DriveToReef/Status", "Command request ignored - path already running");
+                return;
+              }
+
+              // Continue with normal execution
+              vision.resetRobotPose();
 
               // Get the current zone at execution time
               ReefZone currentZone = drive.getZone();
@@ -387,29 +397,9 @@ public class RobotContainer {
               // Get the path for the current zone and side
               PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
 
-              // Create and schedule a command to follow that specific path with cancel
-              // capability
-              Command pathCommand =
-                  new SequentialCommandGroup(
-                          new DriveToPath(drive, path, cancelDriveTrigger),
-                          setOperatorRumble(
-                              0.7) // Will end when trigger is pressed when path completes
-                          )
-                      .finallyDo(
-                          () -> {
-                            // When the command ends (either by completion or cancellation),
-                            // log the status and stop the drive
-                            Logger.recordOutput(
-                                "DriveToReef/Status",
-                                "Path following ended - "
-                                    + (cancelDriveTrigger.getAsBoolean()
-                                        ? "Cancelled by driver"
-                                        : "Completed successfully"));
-                            drive.stop();
-                          });
-
+              // Create and schedule the command
+              Command pathCommand = new DriveToPath(drive, path, cancelDriveTrigger);
               pathCommand.schedule();
-              Logger.recordOutput("DriveToReef/Status", "Started driving to reef side");
             }));
   }
 
