@@ -12,10 +12,11 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -189,7 +190,7 @@ public interface Constants {
     double POSITION_GROUND = -0.1;
     double POSITION_L1 = 0.0;
     double POSITION_L2 = 16.3;
-    double POSITION_L3 = 32.0;
+    double POSITION_L3 = 33.5;
     double POSITION_L4 = 69.81;
     double POSITION_HIGH_ALGAE = POSITION_L3;
     double POSITION_LOW_ALGAE = 15.0;
