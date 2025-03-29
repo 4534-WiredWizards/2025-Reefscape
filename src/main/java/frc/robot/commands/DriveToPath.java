@@ -5,6 +5,8 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -82,9 +84,12 @@ public class DriveToPath extends Command {
 
     // Reset interrupt tracking
     wasInterruptedByTrigger = false;
-
+    RobotContainer.setAutoDriving(true);
     // Create pathfinding command to the prebuilt path
-    pathFollowingCommand = AutoBuilder.pathfindThenFollowPath(path, constraints).until(interrupter);
+    pathFollowingCommand =
+        AutoBuilder.pathfindThenFollowPath(path, constraints)
+            .until(interrupter)
+            .andThen(new InstantCommand(() -> RobotContainer.setAutoDriving(false)));
 
     // Schedule the path following command
     pathFollowingCommand.schedule();
