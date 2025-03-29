@@ -725,16 +725,16 @@ public class RobotContainer {
             driverJoystick,
             Driver.BASE_RIGHT_BUTTON) // Auto align with right reef post in current zone
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
-    new JoystickButton(
-            driverJoystick,
-            Driver.LeftThrottle
-                .MIDDLE_THUMB_BUTTON) // Auto align with left reef post in current zone
-        .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
-    new JoystickButton(
-            driverJoystick,
-            Driver.LeftThrottle
-                .BOTTOM_THUMB_BUTTON) // Auto align with right reef post in current zone
-        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+    // new JoystickButton(
+    //         driverJoystick,
+    //         Driver.LeftThrottle
+    //             .MIDDLE_THUMB_BUTTON) // Auto align with left reef post in current zone
+    //     .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
+    // new JoystickButton(
+    //         driverJoystick,
+    //         Driver.LeftThrottle
+    //             .BOTTOM_THUMB_BUTTON) // Auto align with right reef post in current zone
+    //     .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
 
     new JoystickButton(
             driverJoystick,
@@ -805,7 +805,7 @@ public class RobotContainer {
         .a()
         .onTrue(
             new ParallelCommandGroup(
-                new SimpleMoveClimb(m_climb, () -> -.5),
+                new SimpleMoveClimb(m_climb, () -> -.8),
                 new SetWristPosition(m_Wrist, Wrist.CLIMB_ANGLE, false)));
     // .toggleOnTrue(new SimpleMoveClimb(m_climb, () -> -0.6)); // Wind - Climb
     // until reverse limit reached and if it slips then rewind
