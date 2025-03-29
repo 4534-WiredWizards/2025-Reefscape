@@ -724,16 +724,16 @@ public class RobotContainer {
             driverJoystick,
             Driver.BASE_RIGHT_BUTTON) // Auto align with right reef post in current zone
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
-    new JoystickButton(
-            driverJoystick,
-            Driver.LeftThrottle
-                .MIDDLE_THUMB_BUTTON) // Auto align with left reef post in current zone
-        .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
-    new JoystickButton(
-            driverJoystick,
-            Driver.LeftThrottle
-                .BOTTOM_THUMB_BUTTON) // Auto align with right reef post in current zone
-        .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+    // new JoystickButton(
+    //         driverJoystick,
+    //         Driver.LeftThrottle
+    //             .MIDDLE_THUMB_BUTTON) // Auto align with left reef post in current zone
+    //     .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
+    // new JoystickButton(
+    //         driverJoystick,
+    //         Driver.LeftThrottle
+    //             .BOTTOM_THUMB_BUTTON) // Auto align with right reef post in current zone
+    //     .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
 
     new JoystickButton(
             driverJoystick,
