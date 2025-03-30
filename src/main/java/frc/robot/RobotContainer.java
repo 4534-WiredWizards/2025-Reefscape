@@ -33,8 +33,6 @@ import frc.robot.Constants.IO.Operator;
 import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
-import frc.robot.commands.Climb.HoldClimbPosition;
-import frc.robot.commands.Climb.SimpleMoveClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPath;
 import frc.robot.commands.DriveToPoint;
@@ -47,7 +45,6 @@ import frc.robot.commands.Wrist.RunCoralOutake;
 import frc.robot.commands.Wrist.SetWristPosition;
 import frc.robot.commands.Wrist.SimpleMoveWrist;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -80,13 +77,13 @@ public class RobotContainer {
   private final IntakeSubsystem m_Intake = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
-  public final ClimbSubsystem m_climb = new ClimbSubsystem();
+  // public final ClimbSubsystem m_climb = new ClimbSubsystem();
   public static final LEDSubsystem LEDSubsystem = new LEDSubsystem();
   public static Boolean autoDriving = false;
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
-  private final CommandXboxController operatorController2 = new CommandXboxController(2);
+  // private final CommandXboxController operatorController2 = new CommandXboxController(2);
 
   private final Joystick driverJoystick = new Joystick(1);
 
@@ -794,23 +791,23 @@ public class RobotContainer {
     configurePOVButtons();
 
     // Hold Climb Button
-    operatorController
-        .button(Operator.RESET_BOT_POSE_BUTTON)
-        .toggleOnTrue(new HoldClimbPosition(m_climb));
+    // operatorController
+    //     .button(Operator.RESET_BOT_POSE_BUTTON)
+    //     .toggleOnTrue(new HoldClimbPosition(m_climb));
 
-    // Configure climb controls
-    operatorController2 // Top left stock 1
-        .a()
-        .onTrue(
-            new ParallelCommandGroup(
-                new SimpleMoveClimb(m_climb, () -> -.85),
-                new SetWristPosition(m_Wrist, Wrist.CLIMB_ANGLE, false)));
-    // .toggleOnTrue(new SimpleMoveClimb(m_climb, () -> -0.6)); // Wind - Climb
-    // until reverse limit reached and if it slips then rewind
+    // // Configure climb controls
+    // operatorController2 // Top left stock 1
+    //     .a()
+    //     .onTrue(
+    //         new ParallelCommandGroup(
+    //             new SimpleMoveClimb(m_climb, () -> -.85),
+    //             new SetWristPosition(m_Wrist, Wrist.CLIMB_ANGLE, false)));
+    // // .toggleOnTrue(new SimpleMoveClimb(m_climb, () -> -0.6)); // Wind - Climb
+    // // until reverse limit reached and if it slips then rewind
 
-    operatorController2 // Bottom left stock 1
-        .b()
-        .whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
+    // operatorController2 // Bottom left stock 1
+    //     .b()
+    //     .whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
 
     // A - Low algae
     operatorController
