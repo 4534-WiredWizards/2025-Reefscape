@@ -1,5 +1,12 @@
 package frc.robot.generated;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -17,16 +24,9 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -41,8 +41,32 @@ import edu.wpi.first.units.measure.Voltage;
 public class TunerConstants {
   // Both sets of gains need to be tuned to your individual robot.
 
-  // The steer motor uses any SwerveModule.SteerRequestType control request with the
+  // The steer motor uses any SwerveModule.SteerRequestType control request with
+  // the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
+
+
+//   private static final Slot0Configs steerGains =
+//   new Slot0Configs()
+//       .withKP(100)
+//       .withKI(0)
+//       .withKD(0.5)
+//       .withKS(0.1)
+//       .withKV(1.59)
+//       .withKA(0)
+//       .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+
+// // When using closed-loop control, the drive motor uses the control
+// // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
+// private static final Slot0Configs driveGains =
+//   new Slot0Configs()
+//       .withKP(0.110522)
+//       .withKI(0)
+//       .withKD(0)
+//       .withKS(0.189180) // .203021
+//       .withKA(0.02) // From basic feed forward routine
+//       .withKV(0.85185); // From basic feed forward routine
+
   private static final Slot0Configs steerGains =
       new Slot0Configs()
           .withKP(100)
@@ -55,14 +79,17 @@ public class TunerConstants {
 
   // When using closed-loop control, the drive motor uses the control
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
+
   private static final Slot0Configs driveGains =
       new Slot0Configs()
           .withKP(0.110522)
           .withKI(0)
           .withKD(0)
-          .withKS(.203021) // .203021 or 0.189180
-          .withKA(0.01328728) // From basic feed forward routine 0.02 for testing
-          .withKV(0.85185); // From basic feed forward routine
+          .withKS(0.203021)
+          .withKA(0.01328728) // From basic feed forward routine
+          .withKV(0.85185);
+
+
 
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
@@ -86,14 +113,17 @@ public class TunerConstants {
   // This needs to be tuned to your individual robot
   private static final Current kSlipCurrent = Amps.of(120.0);
 
-  // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
-  // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
+  // Initial configs for the drive and steer motors and the azimuth encoder; these
+  // cannot be null.
+  // Some configs will be overwritten; check the `with*InitialConfigs()` API
+  // documentation.
   private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  // Swerve azimuth does not require much torque output, so we can set a relatively
+                  // Swerve azimuth does not require much torque output, so we can set a
+                  // relatively
                   // low
                   // stator current limit to help avoid brownouts without impacting performance.
                   .withStatorCurrentLimit(Amps.of(60))
@@ -264,9 +294,9 @@ public class TunerConstants {
    * program,.
    */
   // public static CommandSwerveDrivetrain createDrivetrain() {
-  //     return new CommandSwerveDrivetrain(
-  //         DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight
-  //     );
+  // return new CommandSwerveDrivetrain(
+  // DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight
+  // );
   // }
 
   /** Swerve Drive class utilizing CTR Electronics' Phoenix 6 API with the selected device types. */
