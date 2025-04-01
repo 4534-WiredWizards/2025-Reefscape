@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CS2 to 2R"
+            "pathName": "CS2 to 2L"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2R to CS2"
+            "pathName": "2L to CS2"
           }
         },
         {
@@ -67,7 +67,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CS2 to 2L"
+            "pathName": "CS2 to 2R"
           }
         },
         {

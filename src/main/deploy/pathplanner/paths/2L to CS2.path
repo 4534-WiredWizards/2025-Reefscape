@@ -3,57 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4757954545454544,
-        "y": 0.8291051136363637
+        "x": 3.658631281803947,
+        "y": 2.9198955678723597
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2371666178515963,
-        "y": 2.5703410516444434
+        "x": 3.036944439233052,
+        "y": 2.1886980570819663
       },
       "isLocked": false,
-      "linkedName": "Coral Station 2"
+      "linkedName": "Reef Post 2L"
     },
     {
       "anchor": {
-        "x": 3.9458635885730704,
-        "y": 2.749908750622526
+        "x": 1.4757954545454544,
+        "y": 0.8291051136363637
       },
       "prevControl": {
-        "x": 3.8330724296940013,
-        "y": 2.526798566008025
+        "x": 1.7178183469416108,
+        "y": 0.8917542920523531
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef Post 2R"
+      "linkedName": "Coral Station 2"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.32861635220125784,
-      "rotationDegrees": 59.99999999999999
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": -126.0
     }
   ],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6266092192691028,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 0.6,
-        "maxAcceleration": 1.2,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Wrist Out",
-      "waypointRelativePos": 0.05,
+      "waypointRelativePos": 0.01974865350089766,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -63,13 +49,24 @@
       }
     },
     {
-      "name": "Scoring Postion",
-      "waypointRelativePos": 0.4813559322033899,
+      "name": "Zero Elevator",
+      "waypointRelativePos": 0.1777378815080791,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "WE-L4"
+          "name": "E-Zero"
+        }
+      }
+    },
+    {
+      "name": "Coral Intake",
+      "waypointRelativePos": 0.5511669658886892,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "WE-CoralIntake"
         }
       }
     }
@@ -84,13 +81,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 59.99999999999999
+    "rotation": -125.80417830609093
   },
   "reversed": false,
   "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -125.80417830609093
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }
