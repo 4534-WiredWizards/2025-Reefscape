@@ -1,18 +1,23 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,13 +61,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -461,48 +463,60 @@ public class RobotContainer {
 
   /** Creates a command sequence for elevator down and coral intake */
   public Command elevatorDownAndRunCoralIntake() {
-    return new SequentialCommandGroup(
+    return new ConditionalCommand(
+        // First condition: Check if coral is already detected in second sensor
+        new SequentialCommandGroup(
+            // Just move elevator down and wrist to safe position if coral already in intake
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist)
+        ),
+        // If no coral detected, then run the intake sequence
         new ConditionalCommand(
-            // If the elevator is NOT at ground position, run the full sequence
+            // If elevator is already down (position < 3.0)
+            new ParallelDeadlineGroup(
+                new RunCoralIntake(m_Intake, true),
+                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)
+            ),
+            // If elevator is up, decide based on wrist position
             new ConditionalCommand(
+                // If wrist is already in a position to clear elevator
                 new ParallelDeadlineGroup(
                     new RunCoralIntake(m_Intake, true),
                     new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
                     new SequentialCommandGroup(
-                        // Start with wrist in clear position
-                        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false)
-                            // Cancel this when elevator is below danger limit
-                            .until(
-                                () ->
-                                    m_elevator.getEncoderPosition()
-                                        < Elevator.ELEVATOR_DANGER_LIMIT),
-                        // Then move wrist to intake position
-                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false))),
-                new SequentialCommandGroup( // Run when wrist is Not cleaxxr
-                    // Clear the wrist
+                        // Wait until elevator is low enough, then move wrist
+                        new WaitUntilCommand(() -> 
+                            m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)
+                    )
+                ),
+                // If wrist is not in position to clear elevator
+                new SequentialCommandGroup(
+                    // First clear the wrist
                     new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                    // Move elevator down and move wrist in and run intake
+                    // Then move elevator and wrist
                     new ParallelDeadlineGroup(
                         new RunCoralIntake(m_Intake, true),
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
                         new SequentialCommandGroup(
-                            new WaitUntilCommand(
-                                () ->
-                                    m_elevator.getEncoderPosition()
-                                        < Elevator.ELEVATOR_DANGER_LIMIT),
-                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
-                () ->
-                    m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE && m_Wrist.getAngle() > 82),
-            // If the elevator is ALREADY at ground position, just run intake and set wrist
-            new ParallelDeadlineGroup(
-                new RunCoralIntake(m_Intake, true),
-                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
-            // The condition: Check if elevator is NOT at ground position
-            () -> !(m_elevator.getEncoderPosition() < 3.0)),
-        // Add rumble feedback after coral intake completes
-        setOperatorRumble(0.2));
-  }
-
+                            new WaitUntilCommand(() -> 
+                                m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)
+                        )
+                    )
+                ),
+                // Condition: Is wrist already in clear position?
+                () -> m_Wrist.getAngle() >= Wrist.MIN_CLEAR_ELEVATOR_ANGLE
+            ),
+            // Condition: Is elevator already down?
+            () -> m_elevator.getEncoderPosition() < 3.0
+        ),
+        // Main condition: Is coral already detected?
+        () -> m_Intake.getSecondSensor()
+    )
+    // Add rumble feedback after completion
+    .andThen(setOperatorRumble(0.2));
+}
   /** Register named commands for PathPlanner */
   private void registerNamedCommands() {
     NamedCommands.registerCommand("Intake", new AdaptiveWrist(m_Intake, this::getWristAngle, true));
