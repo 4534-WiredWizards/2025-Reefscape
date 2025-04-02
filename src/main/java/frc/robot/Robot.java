@@ -147,6 +147,8 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {
     robotContainer.vision.resetRobotPose();
     robotContainer.LEDSubsystem.disabledMode();
+    RobotContainer.setAutoDriving(false);
+
     // robotContainer.drive.setCoastMode(); // Set coast mode when disabled
 
     // Thread sleep 15s then set climb idle mode to coast if robot is still disabled
