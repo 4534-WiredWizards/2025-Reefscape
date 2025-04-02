@@ -249,7 +249,7 @@ public interface Constants {
     double L1_ANGLE = 123.0;
     double L2_ANGLE = 120.0;
     double L3_ANGLE = 120.0;
-    double L4_ANGLE = 89.0;
+    double L4_ANGLE = 60;
     double BARGE_ANGLE = 85;
     double CLIMB_ANGLE = 90;
 
