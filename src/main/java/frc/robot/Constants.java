@@ -287,25 +287,6 @@ public interface Constants {
     interface Drive {
       double ROTATION_SPEED_SCALAR = 0.5; // 6.0/12.0
 
-      interface PID {
-        double KP = 100.0;
-        double KI = 0.0;
-        double KD = 0.5;
-        double KS = 0.1;
-        double KV = 1.59;
-        double KA = 0.0;
-      }
-    }
-
-    interface Steer {
-      interface PID {
-        double KP = 0.0097625642;
-        double KI = 0.0;
-        double KD = 0.0;
-        double KS = 0.19258;
-        double KV = 0.0194598749;
-        double KA = 0.0027024509;
-      }
     }
   }
 
@@ -384,13 +365,13 @@ public interface Constants {
 
     // PID Constants
     interface PID {
-      double DRIVE_KP = 5.0;
+      double DRIVE_KP = 0.110522;
       double DRIVE_KI = 0.0;
       double DRIVE_KD = 0.0;
 
-      double TURN_KP = 2.0;
-      double TURN_KI = 1.0;
-      double TURN_KD = 0.0;
+      double TURN_KP = 100.0;
+      double TURN_KI = 0.0;
+      double TURN_KD = 0.5;
     }
   }
 }
