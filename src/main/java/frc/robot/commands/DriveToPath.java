@@ -4,6 +4,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -19,6 +22,7 @@ public class DriveToPath extends Command {
 
   // Track if interrupted by trigger
   private boolean wasInterruptedByTrigger = false;
+  private boolean hasStarted = false;
 
   // Create a private method to initialize constraints
   private PathConstraints createDefaultConstraints(Drive drive) {
@@ -68,11 +72,24 @@ public class DriveToPath extends Command {
     Logger.recordOutput("DriveToPoint/StartPose", drive.getPose());
     Logger.recordOutput("DriveToPoint/Status", "Pathfinding to start of prebuilt path");
 
+    Command existingCommand = CommandScheduler.getInstance().requiring(drive);
+    if (existingCommand != null && existingCommand != this) {
+      Logger.recordOutput(
+          "DriveToPoint/Status", "Command skipped - another path is already running");
+      hasStarted = false;
+      return; // Skip initialization
+    }
+
+    hasStarted = true;
+
     // Reset interrupt tracking
     wasInterruptedByTrigger = false;
-
+    RobotContainer.setAutoDriving(true);
     // Create pathfinding command to the prebuilt path
-    pathFollowingCommand = AutoBuilder.pathfindThenFollowPath(path, constraints).until(interrupter);
+    pathFollowingCommand =
+        AutoBuilder.pathfindThenFollowPath(path, constraints)
+            .until(interrupter)
+            .andThen(new InstantCommand(() -> RobotContainer.setAutoDriving(false)));
 
     // Schedule the path following command
     pathFollowingCommand.schedule();
@@ -80,6 +97,10 @@ public class DriveToPath extends Command {
 
   @Override
   public void execute() {
+
+    if (!hasStarted) {
+      return;
+    }
     // Update current status
     Logger.recordOutput("DriveToPoint/CurrentPose", drive.getPose());
 
@@ -97,25 +118,33 @@ public class DriveToPath extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if (pathFollowingCommand != null) {
-      pathFollowingCommand.cancel();
-    }
 
-    if (interrupted || wasInterruptedByTrigger) {
-      Logger.recordOutput("DriveToPoint/Status", "Command interrupted");
-    } else {
-      Logger.recordOutput("DriveToPoint/Status", "Successfully followed path");
-    }
-    // Log final status
-    Logger.recordOutput("DriveToPoint/FinalPose", drive.getPose());
-    Logger.recordOutput("DriveToPoint/WasInterruptedByTrigger", wasInterruptedByTrigger);
+    if (hasStarted) {
+      if (pathFollowingCommand != null) {
+        pathFollowingCommand.cancel();
+      }
 
-    // Make sure we stop the drive when the command ends
-    drive.stop();
+      if (interrupted || wasInterruptedByTrigger) {
+        Logger.recordOutput("DriveToPoint/Status", "Command interrupted");
+      } else {
+        Logger.recordOutput("DriveToPoint/Status", "Successfully followed path");
+      }
+      // Log final status
+      Logger.recordOutput("DriveToPoint/FinalPose", drive.getPose());
+      Logger.recordOutput("DriveToPoint/WasInterruptedByTrigger", wasInterruptedByTrigger);
+
+      // Make sure we stop the drive when the command ends
+      drive.stop();
+    }
   }
 
   @Override
   public boolean isFinished() {
+
+    if (!hasStarted) {
+      return true;
+    }
+
     if (interrupter != null && interrupter.getAsBoolean()) {
       Logger.recordOutput("DriveToPoint/Status", "Command interrupted by trigger");
       return true;

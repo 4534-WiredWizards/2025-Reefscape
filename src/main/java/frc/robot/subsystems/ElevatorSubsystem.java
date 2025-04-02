@@ -263,7 +263,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     double temperature = elevatorMotor1.getDeviceTemp().getValueAsDouble();
 
     double elevatorExtension = getEncoderPosition() * ROTATIONS_TO_INCHES;
-    elevatorLigament.setLength(Units.inchesToMeters(elevatorExtension)); // Remove if using direct meters
+    elevatorLigament.setLength(
+        Units.inchesToMeters(elevatorExtension)); // Remove if using direct meters
 
     // Log the mechanism visualization every cycle
     Logger.recordOutput("Elevator/Mechanism", elevatorMechanism);
@@ -289,10 +290,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     if (currentStatus.contains("Moving to position") || currentStatus.contains("At position")) {
       Logger.recordOutput("Elevator/Status/PositionError", setpoint - currentPosition);
     }
-
-    // Mechanism 2d visualization
-    double elevatorExtension = currentPosition;
-    elevatorLigament.setLength(Units.inchesToMeters(elevatorExtension));
 
     // Add color coding based on different states
     if (isStalled()) {

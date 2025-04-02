@@ -12,15 +12,13 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
- * Contains global constants and configurations for the robot. Includes runtime
- * mode definitions,
+ * Contains global constants and configurations for the robot. Includes runtime mode definitions,
  * subsystem configurations, and controller mappings.
  */
 public interface Constants {
@@ -45,7 +43,7 @@ public interface Constants {
 
     interface Blue {
       interface Barge {
-        double SCORING_X = 8.62; // COMP = 8.00
+        double SCORING_X = 8.0; // COMP = 8.00 : HOME = 8.62;
       }
 
       interface Reef {
@@ -58,6 +56,7 @@ public interface Constants {
       interface Barge {
         double SCORING_X = 9.55;
       }
+
       interface Reef {
         double CENTER_X = 13.0;
         double CENTER_Y = 4.0;
@@ -105,37 +104,39 @@ public interface Constants {
   }
 
   interface ScoringPositions {
-    record ZonePosition(double x, double y, double theta) {
-    }
+    record ZonePosition(double x, double y, double theta) {}
 
     // Zone positions for each side (Left and Right)
-    static final Map<ReefZone, Map<ScoringSide, Pose2d>> ZONE_POSITIONS = Map.of(
-        ReefZone.ZONE_1,
+    static final Map<ReefZone, Map<ScoringSide, Pose2d>> ZONE_POSITIONS =
         Map.of(
-            ScoringSide.LEFT, new Pose2d(3.083, 4.189, new Rotation2d(0.0)),
-            ScoringSide.RIGHT, new Pose2d(3.083, 3.859, new Rotation2d(0.0))),
-        ReefZone.ZONE_2,
-        Map.of(
-            ScoringSide.LEFT, new Pose2d(3.647, 2.914, new Rotation2d(Math.toRadians(60.0))),
-            ScoringSide.RIGHT, new Pose2d(3.946, 2.754, new Rotation2d(Math.toRadians(60.0)))),
-        ReefZone.ZONE_3,
-        Map.of(
-            ScoringSide.LEFT, new Pose2d(5.034, 2.742, new Rotation2d(Math.toRadians(120.0))),
-            ScoringSide.RIGHT, new Pose2d(5.316, 2.923, new Rotation2d(Math.toRadians(120.0)))),
-        ReefZone.ZONE_4,
-        Map.of(
-            ScoringSide.LEFT, new Pose2d(5.894, 3.858, new Rotation2d(Math.toRadians(180.0))),
-            ScoringSide.RIGHT, new Pose2d(5.894, 4.189, new Rotation2d(Math.toRadians(180.0)))),
-        ReefZone.ZONE_5,
-        Map.of(
-            ScoringSide.LEFT, new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
-            ScoringSide.RIGHT,
-            new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
-        ReefZone.ZONE_6,
-        Map.of(
-            ScoringSide.LEFT, new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
-            ScoringSide.RIGHT,
-            new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
+            ReefZone.ZONE_1,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(3.083, 4.189, new Rotation2d(0.0)),
+                ScoringSide.RIGHT, new Pose2d(3.083, 3.859, new Rotation2d(0.0))),
+            ReefZone.ZONE_2,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(3.647, 2.914, new Rotation2d(Math.toRadians(60.0))),
+                ScoringSide.RIGHT, new Pose2d(3.946, 2.754, new Rotation2d(Math.toRadians(60.0)))),
+            ReefZone.ZONE_3,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(5.034, 2.742, new Rotation2d(Math.toRadians(120.0))),
+                ScoringSide.RIGHT, new Pose2d(5.316, 2.923, new Rotation2d(Math.toRadians(120.0)))),
+            ReefZone.ZONE_4,
+            Map.of(
+                ScoringSide.LEFT, new Pose2d(5.894, 3.858, new Rotation2d(Math.toRadians(180.0))),
+                ScoringSide.RIGHT, new Pose2d(5.894, 4.189, new Rotation2d(Math.toRadians(180.0)))),
+            ReefZone.ZONE_5,
+            Map.of(
+                ScoringSide.LEFT,
+                new Pose2d(5.314, 5.127, new Rotation2d(Math.toRadians(-120.0))),
+                ScoringSide.RIGHT,
+                new Pose2d(5.022, 5.268, new Rotation2d(Math.toRadians(-120.0)))),
+            ReefZone.ZONE_6,
+            Map.of(
+                ScoringSide.LEFT,
+                new Pose2d(3.957, 5.263, new Rotation2d(Math.toRadians(-60.0))),
+                ScoringSide.RIGHT,
+                new Pose2d(3.673, 5.108, new Rotation2d(Math.toRadians(-60.0)))));
 
     static Pose2d getPose(ReefZone zone, ScoringSide side) {
       return ZONE_POSITIONS.get(zone).get(side);
@@ -187,8 +188,8 @@ public interface Constants {
     // Preset Positions
     double POSITION_GROUND = -0.1;
     double POSITION_L1 = 0.0;
-    double POSITION_L2 = 15.95;
-    double POSITION_L3 = 32.0;
+    double POSITION_L2 = 16.3;
+    double POSITION_L3 = 34;
     double POSITION_L4 = 69.81;
     double POSITION_HIGH_ALGAE = POSITION_L3;
     double POSITION_LOW_ALGAE = 15.0;
@@ -248,9 +249,9 @@ public interface Constants {
     double L1_ANGLE = 123.0;
     double L2_ANGLE = 120.0;
     double L3_ANGLE = 120.0;
-    double L4_ANGLE = 89.0;
+    double L4_ANGLE = 60;
     double BARGE_ANGLE = 85;
-    double CLIMB_ANGLE = 30;
+    double CLIMB_ANGLE = 90;
 
     // Operational Positions
     double ALGAE_INTAKE_ANGLE = 20.0;
