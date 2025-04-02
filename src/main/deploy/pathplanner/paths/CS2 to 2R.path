@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2371666178515963,
-        "y": 2.5703410516444434
+        "x": 3.217777773122676,
+        "y": 2.554461860974746
       },
       "isLocked": false,
       "linkedName": "Coral Station 2"
@@ -20,8 +20,8 @@
         "y": 2.749908750622526
       },
       "prevControl": {
-        "x": 3.8330724296940013,
-        "y": 2.526798566008025
+        "x": 3.902206284847011,
+        "y": 2.50375018418339
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "Wrist Out",
-      "waypointRelativePos": 0.05,
+      "waypointRelativePos": 0.01,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -64,7 +64,7 @@
     },
     {
       "name": "Scoring Postion",
-      "waypointRelativePos": 0.4813559322033899,
+      "waypointRelativePos": 0.12203389830508479,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
