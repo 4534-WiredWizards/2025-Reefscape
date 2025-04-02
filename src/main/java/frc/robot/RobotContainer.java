@@ -923,7 +923,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("Drive/CurrentZone", drive.getZone().ordinal() + 1);
 
     SmartDashboard.putBoolean("AutoDriving", isAutoDriving());
-    Logger.recordOutput("DriveToPoint/Status", isAutoDriving());
     // Log current requested position
     Logger.recordOutput("Targets/ElevatorPosition", targetElevatorPosition);
     Logger.recordOutput("Targets/WristAngle", targetWristAngle);
