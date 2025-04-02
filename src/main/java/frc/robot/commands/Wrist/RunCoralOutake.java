@@ -7,17 +7,34 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class RunCoralOutake extends Command {
   private final IntakeSubsystem intakeSubsystem;
   private boolean wasCoralDetected = false;
+  private final double outakeSpeed;
 
-  public RunCoralOutake(IntakeSubsystem intakeSubsystem) {
+  /**
+   * Creates a command to outake a coral game piece.
+   * 
+   * @param intakeSubsystem The intake subsystem
+   * @param outakeSpeed The speed to outake at (optional, defaults to CORAL_OUTTAKE_SPEED)
+   */
+  public RunCoralOutake(IntakeSubsystem intakeSubsystem, double outakeSpeed) {
     this.intakeSubsystem = intakeSubsystem;
+    this.outakeSpeed = outakeSpeed;
     addRequirements(intakeSubsystem);
+  }
+  
+  /**
+   * Creates a command to outake a coral game piece at the default speed.
+   * 
+   * @param intakeSubsystem The intake subsystem
+   */
+  public RunCoralOutake(IntakeSubsystem intakeSubsystem) {
+    this(intakeSubsystem, Wrist.Roller.CORAL_OUTTAKE_SPEED);
   }
 
   @Override
   public void initialize() {
     System.out.println("RunCoralOutake initialized");
     intakeSubsystem.setProtectionOverride(true); // Disable protection during outake
-    intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
+    intakeSubsystem.moveRoller(outakeSpeed);
     wasCoralDetected = intakeSubsystem.getSecondSensor();
     System.out.println("Initial coral detection: " + wasCoralDetected);
   }
@@ -25,7 +42,7 @@ public class RunCoralOutake extends Command {
   @Override
   public void execute() {
     System.out.println("RunCoralOutake executing");
-    intakeSubsystem.moveRoller(Wrist.Roller.CORAL_OUTTAKE_SPEED);
+    intakeSubsystem.moveRoller(outakeSpeed);
   }
 
   @Override
