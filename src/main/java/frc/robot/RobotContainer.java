@@ -448,6 +448,14 @@ public class RobotContainer {
         });
   }
 
+  // L1 socoring command that just rotates the wrist to a L1 angle and then runs the coral outakte but at a speed of -0.1
+  public Command L1Scoring() {
+    return new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, true),
+        new RunCoralOutake(m_Intake, -0.1).withTimeout(1.5)
+      );
+  }
+
   // new SequentialCommandGroup(
   // // Step 1: Clear the elevator
   // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
@@ -794,6 +802,11 @@ public class RobotContainer {
     operatorController
         .rightTrigger()
         .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
+
+    // Operator controller PRESS_RIGHT_THUMBSTICK L1 score
+    operatorController.button(Operator.PRESS_RIGHT_THUMBSTICK).onTrue(L1Scoring());
+
+
 
     // operatorController
     // .button(Operator.RESET_BOT_POSE_BUTTON)
