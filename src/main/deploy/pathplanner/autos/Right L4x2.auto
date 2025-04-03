@@ -23,22 +23,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "RunCoralOutake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "3R to CS2"
-                }
-              }
-            ]
+            "name": "RunCoralOutake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3R to CS2"
           }
         },
         {
@@ -54,22 +47,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "RunCoralOutake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "2L to CS2"
-                }
-              }
-            ]
+            "name": "RunCoralOutake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2L to CS2"
           }
         },
         {
