@@ -11,7 +11,7 @@ public class RunCoralOutake extends Command {
 
   /**
    * Creates a command to outake a coral game piece.
-   * 
+   *
    * @param intakeSubsystem The intake subsystem
    * @param outakeSpeed The speed to outake at (optional, defaults to CORAL_OUTTAKE_SPEED)
    */
@@ -20,10 +20,10 @@ public class RunCoralOutake extends Command {
     this.outakeSpeed = outakeSpeed;
     addRequirements(intakeSubsystem);
   }
-  
+
   /**
    * Creates a command to outake a coral game piece at the default speed.
-   * 
+   *
    * @param intakeSubsystem The intake subsystem
    */
   public RunCoralOutake(IntakeSubsystem intakeSubsystem) {
