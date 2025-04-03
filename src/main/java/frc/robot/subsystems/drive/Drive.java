@@ -264,8 +264,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Drive/DetectedZone", getZone().ordinal() + 1);
 
     // Log distance from reef center
-    Logger.recordOutput("Drive/DistanceFromReefCenter",
-        getDistanceFromReefCenter(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red));
+    Logger.recordOutput("Drive/DistanceFromReefCenter",getDistanceFromReefCenter());
 
     // Record getMaxAngularSpeedRadPerSec
     Logger.recordOutput("Drive/MaxAngularSpeedRadPerSec", getMaxAngularSpeedRadPerSec());
@@ -341,7 +340,10 @@ public class Drive extends SubsystemBase {
   // Fucnction that returns distance from reef center in meters, takes in a
   // boolean isRedAlliance
   /** Function that returns distance from reef center in meters */
-  private double getDistanceFromReefCenter(boolean isRedAlliance) {
+  public double getDistanceFromReefCenter() {
+
+    boolean isRedAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+
     Pose2d pose = getPose();
     double x = pose.getX();
     double y = pose.getY();

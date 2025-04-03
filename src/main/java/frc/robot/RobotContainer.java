@@ -405,7 +405,15 @@ public class RobotContainer {
               PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
 
               // Create and schedule the command
-              Command pathCommand = new DriveToPath(drive, path, cancelDriveTrigger);
+              Command pathCommand = new SequentialCommandGroup(
+                new DriveToPath(drive, path, cancelDriveTrigger),
+                new WaitUntilCommand(() -> drive.getDistanceFromReefCenter() > 1.29), 
+                elevatorDownAndRunCoralIntake(true)
+              );
+            
+            
+            
+            
               pathCommand.schedule();
             }));
   }
