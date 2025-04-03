@@ -444,9 +444,9 @@ public class RobotContainer {
                       double distance = drive.getDistanceFromReefCenter();
                       System.out.println(
                           "[DriveToReef] Checking distance from reef: " + distance + "m");
-                      return distance > 1.8;
+                      return distance > 1.55;
                     })
-                .withTimeout(5)
+                .withTimeout(6)
                 .handleInterrupt(
                     () -> System.out.println("[DriveToReef] Distance wait interrupted!"))
                 .finallyDo(
@@ -458,9 +458,9 @@ public class RobotContainer {
             // Schedule elevator/wrist command if not interrupted
             Commands.deferredProxy(
                 () -> {
-                  if (drive.getDistanceFromReefCenter() > 1.8) {
+                  if (drive.getDistanceFromReefCenter() > 1.55) {
                     System.out.println("[DriveToReef] Starting elevator/wrist sequence...");
-                    return createScoringSequence(0, Wrist.MIN_CLEAR_ELEVATOR_ANGLE)
+                    return new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist)
                         .withTimeout(3)
                         .handleInterrupt(
                             () ->
@@ -530,7 +530,8 @@ public class RobotContainer {
   public Command L1Scoring() {
     return new SequentialCommandGroup(
         new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, true),
-        new RunCoralOutake(m_Intake, -0.1).withTimeout(1.5));
+        new RunCoralOutake(m_Intake, -0.19).withTimeout(2),
+        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
   }
 
   // new SequentialCommandGroup(

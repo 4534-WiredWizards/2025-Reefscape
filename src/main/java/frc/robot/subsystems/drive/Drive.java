@@ -65,60 +65,62 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
-  static final double ODOMETRY_FREQUENCY = new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD()
-      ? 250.0
-      : 100.0;
+  static final double ODOMETRY_FREQUENCY =
+      new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
 
   // field2d
   private final Field2d m_field = new Field2d();
 
-  public static final double DRIVE_BASE_RADIUS = Math.max(
+  public static final double DRIVE_BASE_RADIUS =
       Math.max(
-          Math.hypot(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
-          Math.hypot(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY)),
-      Math.max(
-          Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
-          Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
+          Math.max(
+              Math.hypot(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+              Math.hypot(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY)),
+          Math.max(
+              Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+              Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
   // PathPlanner config constants
-  private static final RobotConfig PP_CONFIG = new RobotConfig(
-      Autonomous.ROBOT_MASS_KG,
-      Autonomous.ROBOT_MOI,
-      new ModuleConfig(
-          TunerConstants.FrontLeft.WheelRadius,
-          TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
-          Autonomous.WHEEL_COF,
-          DCMotor.getKrakenX60Foc(1)
-              .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
-          TunerConstants.FrontLeft.SlipCurrent,
-          1),
-      getModuleTranslations());
+  private static final RobotConfig PP_CONFIG =
+      new RobotConfig(
+          Autonomous.ROBOT_MASS_KG,
+          Autonomous.ROBOT_MOI,
+          new ModuleConfig(
+              TunerConstants.FrontLeft.WheelRadius,
+              TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
+              Autonomous.WHEEL_COF,
+              DCMotor.getKrakenX60Foc(1)
+                  .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
+              TunerConstants.FrontLeft.SlipCurrent,
+              1),
+          getModuleTranslations());
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
-  private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro, using kinematics as fallback.",
-      AlertType.kError);
+  private final Alert gyroDisconnectedAlert =
+      new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
       new SwerveModulePosition[] {
-          new SwerveModulePosition(),
-          new SwerveModulePosition(),
-          new SwerveModulePosition(),
-          new SwerveModulePosition()
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition()
       };
-  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(kinematics, rawGyroRotation,
-      lastModulePositions, new Pose2d());
+  private SwerveDrivePoseEstimator poseEstimator =
+      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
   // Zone detection constants
-  private final double[] lineSlopes = new double[] {
-      Double.POSITIVE_INFINITY, // vertical line
-      1 / Math.tan(Math.toRadians(60)), // 60 degrees
-      1 / Math.tan(Math.toRadians(-60)), // -60 degrees
-  };
+  private final double[] lineSlopes =
+      new double[] {
+        Double.POSITIVE_INFINITY, // vertical line
+        1 / Math.tan(Math.toRadians(60)), // 60 degrees
+        1 / Math.tan(Math.toRadians(-60)), // -60 degrees
+      };
 
   public Drive(
       GyroIO gyroIO,
@@ -167,14 +169,15 @@ public class Drive extends SubsystemBase {
         });
 
     // Configure SysId
-    sysId = new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null,
-            null,
-            null,
-            (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
-        new SysIdRoutine.Mechanism(
-            (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+    sysId =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
   }
 
   // Function to drive to a specific point
@@ -182,16 +185,17 @@ public class Drive extends SubsystemBase {
 
     Pose2d targetPose = new Pose2d(TargetX, TargetY, Rotation2d.fromDegrees(rotationDegrees));
 
-    PathConstraints constraints = new PathConstraints(
-        getMaxLinearSpeedMetersPerSec(), // Maximum linear velocity (m/s)
-        getMaxLinearSpeedMetersPerSec() * 2, // Maximum linear acceleration (m/s²)
-        getMaxAngularSpeedRadPerSec(), // Maximum angular velocity (rad/s)
-        getMaxAngularSpeedRadPerSec() * 2 // Maximum angular acceleration (rad/s²)
-    );
+    PathConstraints constraints =
+        new PathConstraints(
+            getMaxLinearSpeedMetersPerSec(), // Maximum linear velocity (m/s)
+            getMaxLinearSpeedMetersPerSec() * 2, // Maximum linear acceleration (m/s²)
+            getMaxAngularSpeedRadPerSec(), // Maximum angular velocity (rad/s)
+            getMaxAngularSpeedRadPerSec() * 2 // Maximum angular acceleration (rad/s²)
+            );
 
     AutoBuilder.pathfindToPose(
         targetPose, constraints, 0.0 // Goal end velocity (m/s)
-    );
+        );
   }
 
   // createDriveToPointCommand -- creates a command to drive to a specific point
@@ -223,7 +227,8 @@ public class Drive extends SubsystemBase {
     }
 
     // Update odometry
-    double[] sampleTimestamps = modules[0].getOdometryTimestamps(); // All signals are sampled together
+    double[] sampleTimestamps =
+        modules[0].getOdometryTimestamps(); // All signals are sampled together
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module
@@ -231,10 +236,11 @@ public class Drive extends SubsystemBase {
       SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
       for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
         modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
-        moduleDeltas[moduleIndex] = new SwerveModulePosition(
-            modulePositions[moduleIndex].distanceMeters
-                - lastModulePositions[moduleIndex].distanceMeters,
-            modulePositions[moduleIndex].angle);
+        moduleDeltas[moduleIndex] =
+            new SwerveModulePosition(
+                modulePositions[moduleIndex].distanceMeters
+                    - lastModulePositions[moduleIndex].distanceMeters,
+                modulePositions[moduleIndex].angle);
         lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
       }
 
@@ -264,7 +270,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Drive/DetectedZone", getZone().ordinal() + 1);
 
     // Log distance from reef center
-    Logger.recordOutput("Drive/DistanceFromReefCenter",getDistanceFromReefCenter());
+    Logger.recordOutput("Drive/DistanceFromReefCenter", getDistanceFromReefCenter());
 
     // Record getMaxAngularSpeedRadPerSec
     Logger.recordOutput("Drive/MaxAngularSpeedRadPerSec", getMaxAngularSpeedRadPerSec());
@@ -310,10 +316,8 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Stops the drive and turns the modules to an X arrangement to resist movement.
-   * The modules will
-   * return to their normal orientations the next time a nonzero velocity is
-   * requested.
+   * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will
+   * return to their normal orientations the next time a nonzero velocity is requested.
    */
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
@@ -326,8 +330,10 @@ public class Drive extends SubsystemBase {
 
   /** Determines which side of a line a point lies on */
   private double getSideOfLine(double x, double y, double slope, boolean isRedAlliance) {
-    double centerX = isRedAlliance ? FieldPosition.Red.Reef.CENTER_X : FieldPosition.Blue.Reef.CENTER_X;
-    double centerY = isRedAlliance ? FieldPosition.Red.Reef.CENTER_Y : FieldPosition.Blue.Reef.CENTER_Y;
+    double centerX =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_X : FieldPosition.Blue.Reef.CENTER_X;
+    double centerY =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_Y : FieldPosition.Blue.Reef.CENTER_Y;
 
     if (Double.isInfinite(slope)) {
       return x - centerX; // Vertical line case
@@ -348,8 +354,10 @@ public class Drive extends SubsystemBase {
     double x = pose.getX();
     double y = pose.getY();
 
-    double centerX = isRedAlliance ? FieldPosition.Red.Reef.CENTER_X : FieldPosition.Blue.Reef.CENTER_X;
-    double centerY = isRedAlliance ? FieldPosition.Red.Reef.CENTER_Y : FieldPosition.Blue.Reef.CENTER_Y;
+    double centerX =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_X : FieldPosition.Blue.Reef.CENTER_X;
+    double centerY =
+        isRedAlliance ? FieldPosition.Red.Reef.CENTER_Y : FieldPosition.Blue.Reef.CENTER_Y;
 
     return Math.hypot(Math.abs(x - centerX), Math.abs(y - centerY));
   }
@@ -372,28 +380,20 @@ public class Drive extends SubsystemBase {
       // For Blue alliance, we need to adjust the zone mapping since the field is
       // mirrored
       if (sides[0]) { // Right of vertical
-        if (sides[1])
-          return ReefZone.ZONE_2;
-        else
-          return sides[2] ? ReefZone.ZONE_1 : ReefZone.ZONE_6;
+        if (sides[1]) return ReefZone.ZONE_2;
+        else return sides[2] ? ReefZone.ZONE_1 : ReefZone.ZONE_6;
       } else { // Left of vertical
-        if (sides[2])
-          return ReefZone.ZONE_3;
-        else
-          return sides[1] ? ReefZone.ZONE_4 : ReefZone.ZONE_5;
+        if (sides[2]) return ReefZone.ZONE_3;
+        else return sides[1] ? ReefZone.ZONE_4 : ReefZone.ZONE_5;
       }
     } else {
       // Original Blue alliance logic
       if (sides[0]) { // Right of vertical
-        if (sides[1])
-          return ReefZone.ZONE_5;
-        else
-          return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
+        if (sides[1]) return ReefZone.ZONE_5;
+        else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
       } else { // Left of vertical
-        if (sides[2])
-          return ReefZone.ZONE_6;
-        else
-          return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+        if (sides[2]) return ReefZone.ZONE_6;
+        else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
       }
     }
   }
@@ -410,10 +410,7 @@ public class Drive extends SubsystemBase {
     return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
   }
 
-  /**
-   * Returns the module states (turn angles and drive velocities) for all of the
-   * modules.
-   */
+  /** Returns the module states (turn angles and drive velocities) for all of the modules. */
   @AutoLogOutput(key = "SwerveStates/Measured")
   private SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
@@ -423,10 +420,7 @@ public class Drive extends SubsystemBase {
     return states;
   }
 
-  /**
-   * Returns the module positions (turn angles and drive positions) for all of the
-   * modules.
-   */
+  /** Returns the module positions (turn angles and drive positions) for all of the modules. */
   private SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] states = new SwerveModulePosition[4];
     for (int i = 0; i < 4; i++) {
@@ -450,10 +444,7 @@ public class Drive extends SubsystemBase {
     return values;
   }
 
-  /**
-   * Returns the average velocity of the modules in rotations/sec (Phoenix native
-   * units).
-   */
+  /** Returns the average velocity of the modules in rotations/sec (Phoenix native units). */
   public double getFFCharacterizationVelocity() {
     double output = 0.0;
     for (int i = 0; i < 4; i++) {
@@ -519,10 +510,10 @@ public class Drive extends SubsystemBase {
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {
     return new Translation2d[] {
-        new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
-        new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
-        new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
-        new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
+      new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+      new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
+      new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+      new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
   }
 
