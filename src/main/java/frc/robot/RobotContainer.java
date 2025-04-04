@@ -1,11 +1,8 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -13,12 +10,10 @@ import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -61,10 +56,13 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -622,7 +620,9 @@ public class RobotContainer {
         "WE-L2", createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
     NamedCommands.registerCommand(
         "WE-L3", createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
-    NamedCommands.registerCommand("WE-L4", createScoringSequence(Elevator.POSITION_L4, 110.0));
+    NamedCommands.registerCommand(
+        "WE-L4", createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
+    // NamedCommands.registerCommand("WE-L4", createScoringSequence(Elevator.POSITION_L4, 110.0));
 
     // Elevator to zero position
     NamedCommands.registerCommand(
@@ -716,9 +716,8 @@ public class RobotContainer {
     // SmartDashboard.putData(
     // "Elevator/L4", new SetElevatorPosition(m_elevator, Elevator.POSITION_L4,
     // m_Wrist));
-    // SmartDashboard.putData(
-    // "Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3,
-    // m_Wrist));
+    SmartDashboard.putData(
+        "Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
     // SmartDashboard.putData(
     // "Elevator/L2", new SetElevatorPosition(m_elevator, Elevator.POSITION_L2,
     // m_Wrist));
@@ -987,7 +986,8 @@ public class RobotContainer {
             () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
             () -> false));
     m_Intake.setDefaultCommand(m_Intake.getProtectionCommand());
-    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
+    m_Wrist.setDefaultCommand(
+        new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX() * .5));
   }
 
   /**
