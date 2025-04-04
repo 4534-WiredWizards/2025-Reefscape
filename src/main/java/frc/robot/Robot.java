@@ -129,12 +129,13 @@ public class Robot extends LoggedRobot {
   // Robot intialization function
   @Override
   public void robotInit() {
-    // CameraServer.startAutomaticCapture(0); // First camera
-    // CameraServer.startAutomaticCapture(1); // Second camera
+    // Usb fisheye camera attached at robo rio
     UsbCamera fisheye = CameraServer.startAutomaticCapture(0);
     fisheye.setResolution(320, 240);
     fisheye.setPixelFormat(PixelFormat.kMJPEG);
     fisheye.setFPS(60);
+
+    
     // Call the robot container's init method
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
     // robotContainer.m_climb.setIdleMode(IdleMode.kBrake);

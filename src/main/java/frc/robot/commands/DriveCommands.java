@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -75,54 +76,112 @@ public class DriveCommands {
       DoubleSupplier omegaSupplier,
       DoubleSupplier throttleSupplier,
       BooleanSupplier slowTurn,
-      BooleanSupplier fieldOrientedView) {
+      BooleanSupplier fieldOrientedView,
+      DoubleSupplier elevatorHeightSupplier) {
+
     return Commands.run(
-        () -> {
-          // Get linear velocity
-          Translation2d linearVelocity =
-              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+        new Runnable() {
+          // Base acceleration rate in meters/second²
+          private final double BASE_ACCEL = 47.3;
 
-          // Apply rotation deadband
-          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+          // Create rate limiters with initial acceleration rates
+          private SlewRateLimiter xLimiter = new SlewRateLimiter(BASE_ACCEL);
+          private SlewRateLimiter yLimiter = new SlewRateLimiter(BASE_ACCEL);
+          private SlewRateLimiter omegaLimiter =
+              new SlewRateLimiter(Math.toRadians(drive.getMaxAngularSpeedRadPerSec()));
 
-          // Square rotation value for more precise control
-          omega = Math.copySign(omega * omega, omega);
+          // Track previous elevator height category for rate limiter adjustments
+          private int previousHeightCategory = 0;
 
-          turningSpeed = drive.getMaxAngularSpeedRadPerSec();
-          if (slowTurn.getAsBoolean()) {
-            turningSpeed /= 2;
-          }
+          @Override
+          public void run() {
+            // Get elevator height and determine acceleration category
+            double elevatorHeight = elevatorHeightSupplier.getAsDouble();
+            int heightCategory;
+            double accelScale;
 
-          double xDirectionSpeed = linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec();
-          double yDirectionSpeed = linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec();
+            if (elevatorHeight > Elevator.POSITION_L3) {
+              heightCategory = 2; // High
+              accelScale = 0.1; // 10% acceleration
+            } else if (elevatorHeight > Elevator.POSITION_L2) {
+              heightCategory = 1; // Medium
+              accelScale = 0.3; // 30% acceleration
+            } else {
+              heightCategory = 0; // Low
+              accelScale = 1.0; // 100% acceleration
+            }
 
-          // Throttle adjust, get throttSupplier double, when value is -1 then speed should be
-          // multiplied by 1, when value is at 1 should be multiplied by 0.5
-          // Thus the throttle axis caps the speed in a range of 50%-100% based on the axis's value
-          // which when at "full" is -1 and when at "empty" is 1
-          double throttle = throttleSupplier.getAsDouble();
-          double speedMultiplier = throttle * -.25 + .75;
-          xDirectionSpeed *= speedMultiplier;
-          yDirectionSpeed *= speedMultiplier;
+            // If height category changed, update rate limiters
+            if (heightCategory != previousHeightCategory) {
+              // Calculate new rate limits
+              double scaledLinearAccel = BASE_ACCEL * accelScale;
+              double scaledAngularAccel =
+                  Math.toRadians(drive.getMaxAngularSpeedRadPerSec()) * accelScale;
 
-          // Convert to field relative speeds & send command
-          ChassisSpeeds speeds =
-              new ChassisSpeeds(xDirectionSpeed, yDirectionSpeed, (omega * turningSpeed));
-          boolean isFlipped =
-              DriverStation.getAlliance().isPresent()
-                  && DriverStation.getAlliance().get() == Alliance.Red;
+              // Create new limiters with new rates
+              xLimiter = new SlewRateLimiter(scaledLinearAccel);
+              yLimiter = new SlewRateLimiter(scaledLinearAccel);
+              omegaLimiter = new SlewRateLimiter(scaledAngularAccel);
 
-          if (!fieldOrientedView.getAsBoolean()) {
-            // Field Oriented Drive
-            drive.runVelocity(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                    speeds,
-                    isFlipped
-                        ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                        : drive.getRotation()));
-          } else {
-            // Robot Oriented Drive
-            drive.runVelocity(speeds);
+              previousHeightCategory = heightCategory;
+
+              // Logging
+              String lastUpdated = java.time.LocalDateTime.now().toString();
+              System.out.printf(
+                  "[JoystickDrive] Last Updated: %s | HeightCategory: %d | AccelScale: %.2f%n",
+                  lastUpdated, heightCategory, accelScale);
+            }
+
+            // Get linear velocity from joysticks
+            Translation2d rawLinearVelocity =
+                getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+
+            // Apply deadband and square for rotation
+            double rawOmega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+            rawOmega = Math.copySign(rawOmega * rawOmega, rawOmega);
+
+            // Apply slew rate limiting
+            double xVelocity = xLimiter.calculate(rawLinearVelocity.getX());
+            double yVelocity = yLimiter.calculate(rawLinearVelocity.getY());
+            double omegaVelocity = omegaLimiter.calculate(rawOmega);
+
+            // Apply throttle adjustment
+            double throttle = throttleSupplier.getAsDouble();
+            double speedMultiplier = throttle * -0.25 + 0.75;
+
+            // Scale by max speeds
+            double xDirectionSpeed =
+                xVelocity * drive.getMaxLinearSpeedMetersPerSec() * speedMultiplier;
+            double yDirectionSpeed =
+                yVelocity * drive.getMaxLinearSpeedMetersPerSec() * speedMultiplier;
+
+            // Determine turning speed
+            double turningSpeed = drive.getMaxAngularSpeedRadPerSec();
+            if (slowTurn.getAsBoolean()) {
+              turningSpeed /= 2;
+            }
+            double omegaSpeed = omegaVelocity * turningSpeed;
+
+            // Create chassis speeds
+            ChassisSpeeds speeds = new ChassisSpeeds(xDirectionSpeed, yDirectionSpeed, omegaSpeed);
+
+            // Apply field-relative or robot-relative control based on toggle
+            boolean isFlipped =
+                DriverStation.getAlliance().isPresent()
+                    && DriverStation.getAlliance().get() == Alliance.Red;
+
+            if (!fieldOrientedView.getAsBoolean()) {
+              // Field Oriented Drive
+              drive.runVelocity(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                      speeds,
+                      isFlipped
+                          ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                          : drive.getRotation()));
+            } else {
+              // Robot Oriented Drive
+              drive.runVelocity(speeds);
+            }
           }
         },
         drive);
