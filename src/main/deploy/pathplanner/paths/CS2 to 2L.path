@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "Scoring Postition",
-      "waypointRelativePos": 0.0847457627118644,
+      "waypointRelativePos": 0.03596443965517238,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

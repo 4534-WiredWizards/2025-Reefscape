@@ -30,14 +30,14 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.32861635220125784,
+      "waypointRelativePos": 0.17221348067915696,
       "rotationDegrees": 59.99999999999999
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6266092192691028,
+      "minWaypointRelativePos": 0.6100372665229886,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.6,
@@ -64,7 +64,7 @@
     },
     {
       "name": "Scoring Postion",
-      "waypointRelativePos": 0.12203389830508479,
+      "waypointRelativePos": 0.21157731681034486,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -75,8 +75,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 4.72,
+    "maxAcceleration": 5.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -92,5 +92,5 @@
     "velocity": 0,
     "rotation": -125.80417830609093
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

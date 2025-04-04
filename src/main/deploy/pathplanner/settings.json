@@ -35,6 +35,6 @@
   "bumperOffsetY": 0.0,
   "robotFeatures": [
     "{\"name\":\"Rectangle\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.1016,\"y\":0.0},\"size\":{\"width\":0.7112,\"length\":0.0508},\"borderRadius\":0.05,\"strokeWidth\":0.012,\"filled\":false}}",
-    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.6,\"y\":0.0},\"end\":{\"x\":0.5,\"y\":0.0},\"strokeWidth\":0.03}}"
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.6,\"y\":0.025},\"end\":{\"x\":0.5,\"y\":0.0255},\"strokeWidth\":0.03}}"
   ]
 }
