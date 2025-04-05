@@ -188,9 +188,9 @@ public interface Constants {
     // Preset Positions
     double POSITION_GROUND = -0.1;
     double POSITION_L1 = 0.0;
-    double POSITION_L2 = 10.5;
-    double POSITION_L3 = 26.06;
-    double POSITION_L4 = 70.3;
+    double POSITION_L2 = 16.3;
+    double POSITION_L3 = 34;
+    double POSITION_L4 = 69.81;
     double POSITION_HIGH_ALGAE = POSITION_L3;
     double POSITION_LOW_ALGAE = 15.0;
     double POSITION_BARGE = 70.0;
@@ -246,10 +246,10 @@ public interface Constants {
     double STALL_CURRENT_THRESHOLD = 30.0;
 
     // Level Positions
-    double L1_ANGLE = 150.0;
-    double L2_ANGLE = 143.0;
-    double L3_ANGLE = 143.0;
-    double L4_ANGLE = 75;
+    double L1_ANGLE = 123.0;
+    double L2_ANGLE = 120.0;
+    double L3_ANGLE = 120.0;
+    double L4_ANGLE = 89.0;
     double BARGE_ANGLE = 85;
     double CLIMB_ANGLE = 90;
 
