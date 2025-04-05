@@ -622,8 +622,7 @@ public class RobotContainer {
         "WE-L3", createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
     NamedCommands.registerCommand(
         "WE-L4", createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
-    // NamedCommands.registerCommand("WE-L4",
-    // createScoringSequence(Elevator.POSITION_L4, 110.0));
+    // NamedCommands.registerCommand("WE-L4", createScoringSequence(Elevator.POSITION_L4, 110.0));
 
     // Elevator to zero position
     NamedCommands.registerCommand(
@@ -985,9 +984,7 @@ public class RobotContainer {
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
             () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
             () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
-            () -> false,
-            // Elv height suplier
-            () -> m_elevator.getEncoderPosition()));
+            () -> false));
     m_Intake.setDefaultCommand(m_Intake.getProtectionCommand());
     m_Wrist.setDefaultCommand(
         new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX() * .5));

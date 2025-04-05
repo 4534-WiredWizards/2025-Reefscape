@@ -590,32 +590,6 @@
             }
           },
           {
-            "title": "limelight-back",
-            "x": 1936.0,
-            "y": 192.0,
-            "width": 976.0,
-            "height": 640.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/limelight-back",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
-            "title": "limelight-front",
-            "x": 2912.0,
-            "y": 192.0,
-            "width": 864.0,
-            "height": 640.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/limelight-front",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
             "title": "Enabled",
             "x": 752.0,
             "y": 752.0,
@@ -652,10 +626,10 @@
           },
           {
             "title": "MatchTime",
-            "x": 1936.0,
-            "y": 0.0,
-            "width": 1840.0,
-            "height": 192.0,
+            "x": 3104.0,
+            "y": 224.0,
+            "width": 608.0,
+            "height": 480.0,
             "type": "Match Time",
             "properties": {
               "topic": "/AdvantageKit/DriverStation/MatchTime",
@@ -694,6 +668,19 @@
               "topic": "/AdvantageKit/RealOutputs/Drive/DetectedZone",
               "period": 0.06,
               "data_type": "int"
+            }
+          },
+          {
+            "title": "USB Camera 0",
+            "x": 1920.0,
+            "y": 0.0,
+            "width": 1088.0,
+            "height": 896.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/USB Camera 0",
+              "period": 0.06,
+              "rotation_turns": 0
             }
           }
         ]
@@ -3501,23 +3488,16 @@
             }
           },
           {
-            "title": "Field",
-            "x": 144.0,
-            "y": 480.0,
-            "width": 576.0,
-            "height": 368.0,
-            "type": "Field",
+            "title": "USB Camera 0",
+            "x": 464.0,
+            "y": 192.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Camera Stream",
             "properties": {
-              "topic": "/SmartDashboard/Field",
+              "topic": "/CameraPublisher/USB Camera 0",
               "period": 0.06,
-              "field_game": "Reefscape",
-              "robot_width": 0.85,
-              "robot_length": 0.85,
-              "show_other_objects": true,
-              "show_trajectories": true,
-              "field_rotation": 0.0,
-              "robot_color": 4294198070,
-              "trajectory_color": 4294967295
+              "rotation_turns": 0
             }
           }
         ]

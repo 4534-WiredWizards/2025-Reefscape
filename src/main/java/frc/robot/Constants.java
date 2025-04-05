@@ -156,7 +156,7 @@ public interface Constants {
 
     // Voltage Configuration
     double PEAK_FORWARD_VOLTAGE = 15.0;
-    double PEAK_REVERSE_VOLTAGE = -9.0;
+    double PEAK_REVERSE_VOLTAGE = -10.0;
     double ZEROING_VOLTAGE = 5.0;
 
     // PID and Feedforward
