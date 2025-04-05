@@ -131,7 +131,8 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     // Usb fisheye camera attached at robo rio
     UsbCamera fisheye = CameraServer.startAutomaticCapture(0);
-    fisheye.setResolution(320, 240);
+    // fisheye.setResolution(320, 240);
+    fisheye.setResolution(640, 480);
     fisheye.setPixelFormat(PixelFormat.kMJPEG);
     fisheye.setFPS(60);
 
