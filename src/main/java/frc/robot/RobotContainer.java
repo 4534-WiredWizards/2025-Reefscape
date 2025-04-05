@@ -460,6 +460,14 @@ public class RobotContainer {
         });
   }
 
+
+  public Command L1Scoring() {
+    return new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, true),
+        new RunCoralOutake(m_Intake, -0.19).withTimeout(2),
+        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
+  }
+
   // new SequentialCommandGroup(
   // // Step 1: Clear the elevator
   // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
@@ -788,6 +796,10 @@ public class RobotContainer {
     operatorController
         .rightTrigger()
         .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
+
+
+    operatorController.button(Operator.PRESS_RIGHT_THUMBSTICK).onTrue(L1Scoring());
+
 
     // operatorController
     // .button(Operator.RESET_BOT_POSE_BUTTON)
