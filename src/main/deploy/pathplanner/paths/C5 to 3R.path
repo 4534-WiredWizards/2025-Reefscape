@@ -64,7 +64,7 @@
     },
     {
       "name": "Raise",
-      "waypointRelativePos": 0.5457627118644061,
+      "waypointRelativePos": 0.46101694915254265,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

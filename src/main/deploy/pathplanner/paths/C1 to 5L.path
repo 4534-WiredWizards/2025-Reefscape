@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "Wrist Out",
-      "waypointRelativePos": 0.033105793189368765,
+      "waypointRelativePos": 0.05,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -59,7 +59,7 @@
     },
     {
       "name": "Scoring Postition",
-      "waypointRelativePos": 0.48813559322033984,
+      "waypointRelativePos": 0.2271186440677966,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
