@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4757954545454544,
-        "y": 0.8291051136363637
+        "x": 1.3372859589041095,
+        "y": 0.9221960616438355
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0652397260273974,
-        "y": 1.2828125
+        "x": 2.089617329942842,
+        "y": 1.620657287986265
       },
       "isLocked": false,
       "linkedName": "Coral Station 2"
     },
     {
       "anchor": {
-        "x": 4.019611855370471,
-        "y": 2.837843203215958
+        "x": 3.9458635885730704,
+        "y": 2.749908750622526
       },
       "prevControl": {
-        "x": 3.7113904000647397,
-        "y": 2.273885816852322
+        "x": 3.6717645858896164,
+        "y": 2.0664155355637623
       },
       "nextControl": null,
       "isLocked": false,
@@ -37,10 +37,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6033898305084736,
+      "minWaypointRelativePos": 0.6266092192691028,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.55,
+        "maxVelocity": 0.6,
         "maxAcceleration": 1.2,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "Wrist Out",
-      "waypointRelativePos": 0.01,
+      "waypointRelativePos": 0.05,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -64,7 +64,7 @@
     },
     {
       "name": "Scoring Postion",
-      "waypointRelativePos": 0.3152542372881357,
+      "waypointRelativePos": 0.4813559322033899,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -75,8 +75,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.3003,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -92,5 +92,5 @@
     "velocity": 0,
     "rotation": -125.80417830609093
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

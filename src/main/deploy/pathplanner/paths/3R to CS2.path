@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.266134612333048,
-        "y": 3.029381474025008
+        "x": 5.32080455391615,
+        "y": 2.919616108653112
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.057915285689626,
-        "y": 2.205262524462805
+        "x": 5.578816722920336,
+        "y": 1.8646295140306133
       },
       "isLocked": false,
       "linkedName": "Reef Post 3R"
     },
     {
       "anchor": {
-        "x": 1.4757954545454544,
-        "y": 0.8291051136363637
+        "x": 1.3372859589041095,
+        "y": 0.9221960616438355
       },
       "prevControl": {
-        "x": 1.884630681818182,
-        "y": 1.3276846590909088
+        "x": 1.9968609222327236,
+        "y": 2.1245673848041067
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 0.19,
+      "maxWaypointRelativePos": 0.23728813559322032,
       "constraints": {
         "maxVelocity": 0.6,
         "maxAcceleration": 1.0,
@@ -68,7 +68,7 @@
     },
     {
       "name": "Zero Elevator",
-      "waypointRelativePos": 0.09,
+      "waypointRelativePos": 0.12881355932203387,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -90,8 +90,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.72,
-    "maxAcceleration": 5.5,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
