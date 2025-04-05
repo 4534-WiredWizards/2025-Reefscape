@@ -468,8 +468,8 @@ public class RobotContainer {
   // new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
 
   /** Creates a command sequence for elevator down and coral intake */
-  public Command elevatorDownAndRunCoralIntake() {
-    return new SequentialCommandGroup(
+  public Command elevatorDownAndRunCoralIntake(boolean addRumbleFeedback) {
+    Command mainCommand =
         new ConditionalCommand(
             // If the elevator is NOT at ground position, run the full sequence
             new ConditionalCommand(
@@ -506,9 +506,14 @@ public class RobotContainer {
                 new RunCoralIntake(m_Intake, true),
                 new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
             // The condition: Check if elevator is NOT at ground position
-            () -> !(m_elevator.getEncoderPosition() < 3.0)),
-        // Add rumble feedback after coral intake completes
-        setOperatorRumble(0.2));
+            () -> !(m_elevator.getEncoderPosition() < 3.0));
+
+    // Conditionally add rumble feedback based on the parameter
+    if (addRumbleFeedback) {
+      return mainCommand.andThen(setOperatorRumble(0.2));
+    } else {
+      return mainCommand;
+    }
   }
 
   /** Register named commands for PathPlanner */
@@ -519,7 +524,7 @@ public class RobotContainer {
         "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
 
     // Complex WE-CoralIntake command for intake with elevator coordination
-    NamedCommands.registerCommand("WE-CoralIntake", elevatorDownAndRunCoralIntake());
+    NamedCommands.registerCommand("WE-CoralIntake", elevatorDownAndRunCoralIntake(false));
 
     // Register different level scoring commands
     NamedCommands.registerCommand(
@@ -564,7 +569,7 @@ public class RobotContainer {
                     new SetWristPosition(m_Wrist, this::getTargetWristAngle, false))));
 
     // Commands to move wrist and elevator to the scoring position
-    new EventTrigger("WE-CoralIntake").onTrue(elevatorDownAndRunCoralIntake());
+    new EventTrigger("WE-CoralIntake").onTrue(elevatorDownAndRunCoralIntake(false));
   }
 
   /** Setup manual pose setter functionality */
@@ -864,7 +869,7 @@ public class RobotContainer {
   /** Configure POV (D-pad) buttons for operator */
   private void configurePOVButtons() {
     // Coral intake sequence (Down button)
-    operatorController.povDown().onTrue(elevatorDownAndRunCoralIntake());
+    operatorController.povDown().onTrue(elevatorDownAndRunCoralIntake(true));
 
     // L2 scoring position (Left button)
     operatorController
