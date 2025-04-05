@@ -7,7 +7,6 @@ import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,6 +34,7 @@ import frc.robot.Constants.ReefZone;
 import frc.robot.Constants.ScoringSide;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveToPath;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.Elevator.SetElevatorPosition;
 import frc.robot.commands.Elevator.SimpleMoveElevator;
@@ -83,8 +83,7 @@ public class RobotContainer {
 
   // Controllers
   private final CommandXboxController operatorController = new CommandXboxController(0);
-  // private final CommandXboxController operatorController2 = new
-  // CommandXboxController(2);
+  // private final CommandXboxController operatorController2 = new CommandXboxController(2);
 
   private final Joystick driverJoystick = new Joystick(1);
 
@@ -382,109 +381,31 @@ public class RobotContainer {
 
   public Command driveToReefSide(ScoringSide side, BooleanSupplier cancelDriveTrigger) {
     return new SequentialCommandGroup(
-            // Initialization
-            new InstantCommand(
-                () -> {
-                  System.out.println("[DriveToReef] Resetting robot pose...");
-                  vision.resetRobotPose();
-                }),
+        // First, check if we can run the command
+        new InstantCommand(
+            () -> {
+              if (isAutoDriving()) {
+                Logger.recordOutput(
+                    "DriveToReef/Status", "Command request ignored - auto-driving active");
+                System.out.println("Command request ignored - auto-driving active");
+                return;
+              }
 
-            // Set auto-driving flag
-            Commands.runOnce(
-                () -> {
-                  System.out.println("[DriveToReef] Setting autoDriving = true");
-                  RobotContainer.setAutoDriving(true);
-                }),
+              // Continue with normal execution
+              vision.resetRobotPose();
 
-            // Path following command
-            Commands.deferredProxy(
-                () -> {
-                  ReefZone currentZone = drive.getZone();
-                  System.out.println("[DriveToReef] Current zone: " + currentZone);
+              // Get the current zone at execution time
+              ReefZone currentZone = drive.getZone();
+              Logger.recordOutput("DriveToReef/ExecutionZone", currentZone.toString());
+              Logger.recordOutput("DriveToReef/RequestedSide", side.toString());
 
-                  PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
-                  if (path == null) {
-                    System.err.println(
-                        "[DriveToReef] ERROR: No path found for zone "
-                            + currentZone
-                            + " side "
-                            + side);
-                    return Commands.print("[DriveToReef] Invalid path - command aborted");
-                  }
+              // Get the path for the current zone and side
+              PathPlannerPath path = getPathForZoneAndSide(currentZone, side);
 
-                  System.out.println("[DriveToReef] Using path: " + path.name);
-
-                  PathConstraints constraints =
-                      new PathConstraints(
-                          drive.getMaxLinearSpeedMetersPerSec() * 0.6,
-                          drive.getMaxLinearSpeedMetersPerSec() * 0.4,
-                          drive.getMaxAngularSpeedRadPerSec() * 0.7,
-                          drive.getMaxAngularSpeedRadPerSec() * 0.7);
-
-                  System.out.println("[DriveToReef] Starting path following...");
-                  return AutoBuilder.pathfindThenFollowPath(path, constraints)
-                      .withTimeout(10)
-                      .until(cancelDriveTrigger)
-                      .handleInterrupt(
-                          () -> System.out.println("[DriveToReef] Path following interrupted!"))
-                      .finallyDo(
-                          (interrupted) -> {
-                            System.out.println(
-                                "[DriveToReef] Path following completed. Interrupted: "
-                                    + interrupted);
-                            System.out.println(
-                                "[DriveToReef] Current distance from reef: "
-                                    + drive.getDistanceFromReefCenter());
-                          });
-                }),
-
-            // Wait until backed off from reef
-            new WaitUntilCommand(
-                    () -> {
-                      double distance = drive.getDistanceFromReefCenter();
-                      System.out.println(
-                          "[DriveToReef] Checking distance from reef: " + distance + "m");
-                      return distance > 1.58;
-                    })
-                .withTimeout(6)
-                .handleInterrupt(
-                    () -> System.out.println("[DriveToReef] Distance wait interrupted!"))
-                .finallyDo(
-                    (interrupted) ->
-                        System.out.println(
-                            "[DriveToReef] Distance condition met or timeout. Interrupted: "
-                                + interrupted)),
-
-            // Schedule elevator/wrist command if not interrupted
-            Commands.deferredProxy(
-                () -> {
-                  if (drive.getDistanceFromReefCenter() > 1.58 && side != ScoringSide.MIDDLE) {
-                    System.out.println("[DriveToReef] Starting elevator/wrist sequence...");
-                    return elevatorDownAndRunCoralIntake(false)
-                        .withTimeout(3)
-                        .handleInterrupt(
-                            () ->
-                                System.out.println("[DriveToReef] Elevator sequence interrupted!"))
-                        .finallyDo(
-                            (interrupted) ->
-                                System.out.println(
-                                    "[DriveToReef] Elevator sequence completed. Interrupted: "
-                                        + interrupted));
-                  } else {
-                    System.out.println(
-                        "[DriveToReef] Skipping elevator/wrist sequence due to timeout.");
-                    return Commands.none();
-                  }
-                }))
-        .finallyDo(
-            (interrupted) -> {
-              System.out.println(
-                  "[DriveToReef] Full sequence completed. Interrupted: " + interrupted);
-              RobotContainer.setAutoDriving(false);
-              System.out.println(
-                  "[DriveToReef] Final distance from reef: " + drive.getDistanceFromReefCenter());
-              System.out.println("[DriveToReef] Final pose: " + drive.getPose());
-            });
+              // Create and schedule the command
+              Command pathCommand = new DriveToPath(drive, path, cancelDriveTrigger);
+              pathCommand.schedule();
+            }));
   }
 
   /** Creates a sequence for moving to a scoring position */
@@ -525,15 +446,6 @@ public class RobotContainer {
         });
   }
 
-  // L1 socoring command that just rotates the wrist to a L1 angle and then runs
-  // the coral outakte but at a speed of -0.1
-  public Command L1Scoring() {
-    return new SequentialCommandGroup(
-        new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, true),
-        new RunCoralOutake(m_Intake, -0.19).withTimeout(2),
-        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
-  }
-
   // new SequentialCommandGroup(
   // // Step 1: Clear the elevator
   // new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
@@ -547,60 +459,48 @@ public class RobotContainer {
   // Elevator.ELEVATOR_DANGER_LIMIT),
   // new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
 
-  public Command elevatorDownAndRunCoralIntake(boolean addRumbleFeedback) {
-    Command mainCommand =
+  /** Creates a command sequence for elevator down and coral intake */
+  public Command elevatorDownAndRunCoralIntake() {
+    return new SequentialCommandGroup(
         new ConditionalCommand(
-            // First condition: Check if coral is already detected in second sensor
-            new SequentialCommandGroup(
-                // Just move elevator down and wrist to safe position if coral already in intake
-                new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist)),
-            // If no coral detected, then run the intake sequence
+            // If the elevator is NOT at ground position, run the full sequence
             new ConditionalCommand(
-                // If elevator is already down (position < 3.0)
                 new ParallelDeadlineGroup(
                     new RunCoralIntake(m_Intake, true),
-                    new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
-                // If elevator is up, decide based on wrist position
-                new ConditionalCommand(
-                    // If wrist is already in a position to clear elevator
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+                    new SequentialCommandGroup(
+                        // Start with wrist in clear position
+                        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false)
+                            // Cancel this when elevator is below danger limit
+                            .until(
+                                () ->
+                                    m_elevator.getEncoderPosition()
+                                        < Elevator.ELEVATOR_DANGER_LIMIT),
+                        // Then move wrist to intake position
+                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false))),
+                new SequentialCommandGroup( // Run when wrist is Not cleaxxr
+                    // Clear the wrist
+                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+                    // Move elevator down and move wrist in and run intake
                     new ParallelDeadlineGroup(
                         new RunCoralIntake(m_Intake, true),
                         new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
                         new SequentialCommandGroup(
-                            // Wait until elevator is low enough, then move wrist
                             new WaitUntilCommand(
                                 () ->
                                     m_elevator.getEncoderPosition()
                                         < Elevator.ELEVATOR_DANGER_LIMIT),
-                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false))),
-                    // If wrist is not in position to clear elevator
-                    new SequentialCommandGroup(
-                        // First clear the wrist
-                        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                        // Then move elevator and wrist
-                        new ParallelDeadlineGroup(
-                            new RunCoralIntake(m_Intake, true),
-                            new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
-                            new SequentialCommandGroup(
-                                new WaitUntilCommand(
-                                    () ->
-                                        m_elevator.getEncoderPosition()
-                                            < Elevator.ELEVATOR_DANGER_LIMIT),
-                                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
-                    // Condition: Is wrist already in clear position?
-                    () -> m_Wrist.getAngle() >= Wrist.MIN_CLEAR_ELEVATOR_ANGLE),
-                // Condition: Is elevator already down?
-                () -> m_elevator.getEncoderPosition() < 3.0),
-            // Main condition: Is coral already detected?
-            () -> m_Intake.getSecondSensor());
-
-    // Conditionally add rumble feedback based on the parameter
-    if (addRumbleFeedback) {
-      return mainCommand.andThen(setOperatorRumble(0.2));
-    } else {
-      return mainCommand;
-    }
+                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                () ->
+                    m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE && m_Wrist.getAngle() > 82),
+            // If the elevator is ALREADY at ground position, just run intake and set wrist
+            new ParallelDeadlineGroup(
+                new RunCoralIntake(m_Intake, true),
+                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+            // The condition: Check if elevator is NOT at ground position
+            () -> !(m_elevator.getEncoderPosition() < 3.0)),
+        // Add rumble feedback after coral intake completes
+        setOperatorRumble(0.2));
   }
 
   /** Register named commands for PathPlanner */
@@ -611,7 +511,7 @@ public class RobotContainer {
         "Outake", new AdaptiveWrist(m_Intake, this::getWristAngle, false));
 
     // Complex WE-CoralIntake command for intake with elevator coordination
-    NamedCommands.registerCommand("WE-CoralIntake", elevatorDownAndRunCoralIntake(false));
+    NamedCommands.registerCommand("WE-CoralIntake", elevatorDownAndRunCoralIntake());
 
     // Register different level scoring commands
     NamedCommands.registerCommand(
@@ -620,9 +520,7 @@ public class RobotContainer {
         "WE-L2", createScoringSequence(Elevator.POSITION_L2, Wrist.L2_ANGLE));
     NamedCommands.registerCommand(
         "WE-L3", createScoringSequence(Elevator.POSITION_L3, Wrist.L3_ANGLE));
-    NamedCommands.registerCommand(
-        "WE-L4", createScoringSequence(Elevator.POSITION_L4, Wrist.L4_ANGLE));
-    // NamedCommands.registerCommand("WE-L4", createScoringSequence(Elevator.POSITION_L4, 110.0));
+    NamedCommands.registerCommand("WE-L4", createScoringSequence(62.9, 110.0));
 
     // Elevator to zero position
     NamedCommands.registerCommand(
@@ -658,7 +556,7 @@ public class RobotContainer {
                     new SetWristPosition(m_Wrist, this::getTargetWristAngle, false))));
 
     // Commands to move wrist and elevator to the scoring position
-    new EventTrigger("WE-CoralIntake").onTrue(elevatorDownAndRunCoralIntake(false));
+    new EventTrigger("WE-CoralIntake").onTrue(elevatorDownAndRunCoralIntake());
   }
 
   /** Setup manual pose setter functionality */
@@ -716,8 +614,9 @@ public class RobotContainer {
     // SmartDashboard.putData(
     // "Elevator/L4", new SetElevatorPosition(m_elevator, Elevator.POSITION_L4,
     // m_Wrist));
-    SmartDashboard.putData(
-        "Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3, m_Wrist));
+    // SmartDashboard.putData(
+    // "Elevator/L3", new SetElevatorPosition(m_elevator, Elevator.POSITION_L3,
+    // m_Wrist));
     // SmartDashboard.putData(
     // "Elevator/L2", new SetElevatorPosition(m_elevator, Elevator.POSITION_L2,
     // m_Wrist));
@@ -823,15 +722,15 @@ public class RobotContainer {
             Driver.BASE_RIGHT_BUTTON) // Auto align with right reef post in current zone
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
     // new JoystickButton(
-    // driverJoystick,
-    // Driver.LeftThrottle
-    // .MIDDLE_THUMB_BUTTON) // Auto align with left reef post in current zone
-    // .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
+    //         driverJoystick,
+    //         Driver.LeftThrottle
+    //             .MIDDLE_THUMB_BUTTON) // Auto align with left reef post in current zone
+    //     .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     // new JoystickButton(
-    // driverJoystick,
-    // Driver.LeftThrottle
-    // .BOTTOM_THUMB_BUTTON) // Auto align with right reef post in current zone
-    // .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+    //         driverJoystick,
+    //         Driver.LeftThrottle
+    //             .BOTTOM_THUMB_BUTTON) // Auto align with right reef post in current zone
+    //     .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
 
     new JoystickButton(
             driverJoystick,
@@ -883,9 +782,6 @@ public class RobotContainer {
         .rightTrigger()
         .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
-    // Operator controller PRESS_RIGHT_THUMBSTICK L1 score
-    operatorController.button(Operator.PRESS_RIGHT_THUMBSTICK).onTrue(L1Scoring());
-
     // operatorController
     // .button(Operator.RESET_BOT_POSE_BUTTON)
     // .onTrue(new InstantCommand(() ->
@@ -897,23 +793,23 @@ public class RobotContainer {
 
     // Hold Climb Button
     // operatorController
-    // .button(Operator.RESET_BOT_POSE_BUTTON)
-    // .toggleOnTrue(new HoldClimbPosition(m_climb));
+    //     .button(Operator.RESET_BOT_POSE_BUTTON)
+    //     .toggleOnTrue(new HoldClimbPosition(m_climb));
 
     // // Configure climb controls
     // operatorController2 // Top left stock 1
-    // .a()Finished run coral intake
+    //     .a()Finished run coral intake
 
-    // .onTrue(
-    // new ParallelCommandGroup(
-    // new SimpleMoveClimb(m_climb, () -> -.85),
-    // new SetWristPosition(m_Wrist, Wrist.CLIMB_ANGLE, false)));
+    //     .onTrue(
+    //         new ParallelCommandGroup(
+    //             new SimpleMoveClimb(m_climb, () -> -.85),
+    //             new SetWristPosition(m_Wrist, Wrist.CLIMB_ANGLE, false)));
     // // .toggleOnTrue(new SimpleMoveClimb(m_climb, () -> -0.6)); // Wind - Climb
     // // until reverse limit reached and if it slips then rewind
 
     // operatorController2 // Bottom left stock 1
-    // .b()
-    // .whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
+    //     .b()
+    //     .whileTrue(new SimpleMoveClimb(m_climb, () -> 1)); // Unwind //Back stock 2
 
     // A - Low algae
     operatorController
@@ -958,7 +854,7 @@ public class RobotContainer {
   /** Configure POV (D-pad) buttons for operator */
   private void configurePOVButtons() {
     // Coral intake sequence (Down button)
-    operatorController.povDown().onTrue(elevatorDownAndRunCoralIntake(true));
+    operatorController.povDown().onTrue(elevatorDownAndRunCoralIntake());
 
     // L2 scoring position (Left button)
     operatorController
@@ -986,8 +882,7 @@ public class RobotContainer {
             () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
             () -> false));
     m_Intake.setDefaultCommand(m_Intake.getProtectionCommand());
-    m_Wrist.setDefaultCommand(
-        new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX() * .5));
+    m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
   }
 
   /**
