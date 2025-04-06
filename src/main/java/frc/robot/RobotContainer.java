@@ -450,7 +450,7 @@ public class RobotContainer {
   public Command L1Scoring() {
     return new SequentialCommandGroup(
         new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, true),
-        new RunCoralOutake(m_Intake, -0.19).withTimeout(2),
+        new RunCoralOutake(m_Intake, -0.15).withTimeout(2),
         new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
   }
 

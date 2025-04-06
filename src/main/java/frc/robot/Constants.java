@@ -246,7 +246,7 @@ public interface Constants {
     double STALL_CURRENT_THRESHOLD = 30.0;
 
     // Level Positions
-    double L1_ANGLE = 150.0;
+    double L1_ANGLE = 170.0;
     double L2_ANGLE = 120.0;
     double L3_ANGLE = 120.0;
     double L4_ANGLE = 89.0;
