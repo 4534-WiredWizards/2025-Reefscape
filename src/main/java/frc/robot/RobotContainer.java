@@ -698,9 +698,9 @@ public class RobotContainer {
   // Method to set controller rumble for operator controller
   public Command setOperatorRumble(double rumble) {
     return new SequentialCommandGroup(
-        new InstantCommand(() -> operatorController.setRumble(kBothRumble, rumble)),
-        new WaitCommand(0.5),
-        new InstantCommand(() -> operatorController.setRumble(kBothRumble, 0.0)));
+            new InstantCommand(() -> operatorController.setRumble(kBothRumble, rumble)),
+            new WaitCommand(0.3))
+        .finallyDo(interrupted -> operatorController.setRumble(kBothRumble, 0.0));
   }
 
   /** Configure button bindings for driver and operator controls */
