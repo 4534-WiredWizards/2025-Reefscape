@@ -795,7 +795,10 @@ public class RobotContainer {
         .rightTrigger()
         .whileTrue(new AdaptiveWrist(m_Intake, this::getWristAngle, false)); // Outtake
 
-    operatorController.button(Operator.PRESS_RIGHT_THUMBSTICK).onTrue(L1Scoring());
+    operatorController.button(Operator.PRESS_LEFT_THUMBSTICK).onTrue(L1Scoring());
+    operatorController
+        .button(Operator.PRESS_RIGHT_THUMBSTICK)
+        .onTrue(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE));
 
     // operatorController
     // .button(Operator.RESET_BOT_POSE_BUTTON)
