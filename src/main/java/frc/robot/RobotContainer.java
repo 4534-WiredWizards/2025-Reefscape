@@ -448,10 +448,11 @@ public class RobotContainer {
   }
 
   public Command L1Scoring() {
-    return new SequentialCommandGroup(
-        new SetWristPosition(m_Wrist, Wrist.L1_ANGLE, true),
-        new RunCoralOutake(m_Intake, -0.15).withTimeout(2),
-        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
+    return new ParallelCommandGroup(
+        // new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE - 4, true),
+        new RunCoralOutake(m_Intake, -0.17).withTimeout(2)
+        // new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, true));
+        );
   }
 
   // new SequentialCommandGroup(
@@ -864,7 +865,25 @@ public class RobotContainer {
     // Shoot algae
     operatorController
         .x()
-        .onTrue(new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true));
+        .onTrue(
+            new SequentialCommandGroup(
+                new ParallelCommandGroup(
+                    // Command to move elevator to BARGE position and adjust wrist
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
+
+                    // Sequence to wait for elevator position and trigger algae outtake
+                    new SequentialCommandGroup(
+                        // Wait until elevator is above the threshold
+                        new WaitUntilCommand(
+                            () -> m_elevator.getEncoderPosition() > Elevator.POSITION_BARGE - 36),
+
+                        // Run the algae outtake command (replace with your specific command)
+                        new AdaptiveWrist(m_Intake, () -> Wrist.BARGE_ANGLE, false)
+                            .withTimeout(.5))),
+                // Wait for 0.2 seconds
+                // new WaitCommand(0.2),
+                // Move elevator to zero position
+                elevatorDownAndRunCoralIntake(false)));
 
     // Set default command for wrist
   }
