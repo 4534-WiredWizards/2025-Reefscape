@@ -2,7 +2,6 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 // Tilghman97WasHere
-// DONOTTESTWITHOUTMEEEEEEEEEEEEEEEEE pls
 
 package frc.robot.subsystems;
 
@@ -11,33 +10,30 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Music extends SubsystemBase {
-
-  // Define Motors
-  private final TalonFX FrontLeftDrive = new TalonFX(10);
-  private final TalonFX FrontLeftTurn = new TalonFX(15);
-
-  private final TalonFX FrontRightDrive = new TalonFX(20);
-  private final TalonFX FrontRightTurn = new TalonFX(25);
-
-  private final TalonFX BackLeftDrive = new TalonFX(30);
-  private final TalonFX BackLeftTurn = new TalonFX(35);
-
-  private final TalonFX BackRightDrive = new TalonFX(40);
-  private final TalonFX BackRightTurn = new TalonFX(45);
-
   private Orchestra m_orchestra = new Orchestra();
-  /** Creates a new Music. */
-  public Music() {
-    m_orchestra.addInstrument(FrontLeftDrive, 0);
-    m_orchestra.addInstrument(FrontLeftTurn, 0);
-    m_orchestra.addInstrument(FrontRightDrive, 0);
-    m_orchestra.addInstrument(FrontRightTurn, 0);
 
-    // add back motors to different track to add ability for chords
-    m_orchestra.addInstrument(BackLeftDrive, 0);
-    m_orchestra.addInstrument(BackLeftTurn, 0);
-    m_orchestra.addInstrument(BackRightDrive, 0);
-    m_orchestra.addInstrument(BackRightTurn, 0);
+  /** Creates a new Music subsystem that uses existing motor references */
+  public Music(
+      TalonFX frontLeftDrive,
+      TalonFX frontLeftTurn,
+      TalonFX frontRightDrive,
+      TalonFX frontRightTurn,
+      TalonFX backLeftDrive,
+      TalonFX backLeftTurn,
+      TalonFX backRightDrive,
+      TalonFX backRightTurn) {
+
+    // Add motors to orchestra using existing references
+    m_orchestra.addInstrument(frontLeftDrive, 0);
+    m_orchestra.addInstrument(frontLeftTurn, 0);
+    m_orchestra.addInstrument(frontRightDrive, 0);
+    m_orchestra.addInstrument(frontRightTurn, 0);
+
+    // Add back motors to different track to add ability for chords
+    m_orchestra.addInstrument(backLeftDrive, 0);
+    m_orchestra.addInstrument(backLeftTurn, 0);
+    m_orchestra.addInstrument(backRightDrive, 0);
+    m_orchestra.addInstrument(backRightTurn, 0);
   }
 
   public void playUnderTheSea() {

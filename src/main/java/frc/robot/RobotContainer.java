@@ -48,6 +48,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.Music;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -72,6 +73,25 @@ public class RobotContainer {
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
   public static final LEDSubsystem LEDSubsystem = new LEDSubsystem();
   public static Boolean autoDriving = false;
+  private final TunerConstants.TunerSwerveDrivetrain m_swerveDrive =
+      new TunerConstants.TunerSwerveDrivetrain(
+          TunerConstants.DrivetrainConstants,
+          TunerConstants.FrontLeft,
+          TunerConstants.FrontRight,
+          TunerConstants.BackLeft,
+          TunerConstants.BackRight);
+
+  //Passes the existing motor definitions into the music subsystem
+  private final Music m_music =
+      new Music(
+          m_swerveDrive.getModule(0).getDriveMotor(),
+          m_swerveDrive.getModule(0).getSteerMotor(),
+          m_swerveDrive.getModule(1).getDriveMotor(),
+          m_swerveDrive.getModule(1).getSteerMotor(),
+          m_swerveDrive.getModule(2).getDriveMotor(),
+          m_swerveDrive.getModule(2).getSteerMotor(),
+          m_swerveDrive.getModule(3).getDriveMotor(),
+          m_swerveDrive.getModule(3).getSteerMotor());
 
   private final CommandXboxController operatorController = new CommandXboxController(0);
   private final Joystick driverJoystick = new Joystick(1);
