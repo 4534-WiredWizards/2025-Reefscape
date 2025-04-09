@@ -456,7 +456,7 @@ public class RobotContainer {
                 new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
                 new SequentialCommandGroup(
                     new WaitUntilCommand(() -> m_elevator.getEncoderPosition() > Elevator.POSITION_BARGE - 36),
-                    new AdaptiveWrist(m_Intake, () -> Wrist.BARGE_ANGLE, false).withTimeout(.2))),
+                    new AdaptiveWrist(m_Intake, () -> Wrist.BARGE_ANGLE, false).withTimeout(.3))),
             elevatorDownAndRunCoralIntake(false)));
   }
 
