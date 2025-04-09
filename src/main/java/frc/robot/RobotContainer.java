@@ -1,18 +1,23 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,13 +62,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   private final Drive drive;
@@ -303,13 +305,51 @@ public class RobotContainer {
     return new ParallelCommandGroup(new RunCoralOutake(m_Intake, -0.17).withTimeout(2));
   }
 
-  private Command getAngleHoldCommand() {
+  private double getZoneTargetAngle(ReefZone zone) {
+    switch (zone) {
+        case ZONE_1: return 0;
+        case ZONE_2: return 60;
+        case ZONE_3: return 120;
+        case ZONE_4: return 180;
+        case ZONE_5: return 240;
+        case ZONE_6: return 300;
+        default: return 0;
+    }
+}
+
+  private Command getAutoRotationCommand() {
     return DriveCommands.joystickDriveAtAngle(
         drive,
         () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
         () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
-        () -> Rotation2d.fromDegrees(SmartDashboard.getNumber("DriveAngle/TargetDegrees", 0)));
-  }
+        () -> {
+            Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+            double baseAngle;
+            
+            if (m_Intake.getSecondSensor()) {
+                // Has coral - use zone-based angle
+                ReefZone currentZone = drive.getZone();
+                baseAngle = getZoneTargetAngle(currentZone);
+                
+                // Flip angle for red alliance
+                if (alliance == Alliance.Red) {
+                    baseAngle = (baseAngle + 180) % 360;
+                }
+            } else if (m_elevator.getEncoderPosition() < Elevator.POSITION_L2) {
+                // No coral and elevator low - coral station angle
+                baseAngle = 234; // Blue alliance station angle
+                if (alliance == Alliance.Red) {
+                    baseAngle = 54; // Red alliance station angle
+                }
+            } else {
+                // Default to current rotation
+                return drive.getRotation();
+            }
+            
+            return Rotation2d.fromDegrees(baseAngle);
+        }
+    );
+}
 
   public Command elevatorDownAndRunCoralIntake(boolean addRumbleFeedback) {
     Command mainCommand =
@@ -455,7 +495,7 @@ public class RobotContainer {
                 }));
 
     new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
-        .toggleOnTrue(getAngleHoldCommand());
+        .toggleOnTrue(getAutoRotationCommand());
 
     operatorController
         .leftBumper()
