@@ -84,7 +84,9 @@ public class AdaptiveWrist extends Command {
     } else {
       // We're in algae range
       if (isPickup) {
-        m_intake.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
+        // Use the HoldAlgae command for algae pickup
+        new HoldAlgae(m_intake).execute();
+        // m_intake.moveRoller(Wrist.Roller.ALGAE_INTAKE_SPEED);
         Logger.recordOutput("Wrist/Status/AdaptiveWrist", "Algae Intake");
       } else {
         m_intake.moveRoller(Wrist.Roller.ALGAE_OUTTAKE_SPEED);
