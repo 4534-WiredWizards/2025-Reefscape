@@ -20,6 +20,10 @@ public class IntakeSubsystem extends SubsystemBase {
   private final SparkLimitSwitch secondSensor;
   private CoralProtectionCommand protectionCommand = null;
 
+  // Add ramping to avoid current spikes and maintain torque
+  private double prevSpeed = 0;
+  private final double RAMP_RATE = 0.1; // Adjust as needed
+
   public IntakeSubsystem() {
     rollerMotor = new SparkFlex(Wrist.Roller.MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
 
@@ -39,10 +43,6 @@ public class IntakeSubsystem extends SubsystemBase {
     rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  // Add ramping to avoid current spikes and maintain torque
-  private double prevSpeed = 0;
-  private final double RAMP_RATE = 0.1; // Adjust as needed
-
   public void moveRoller(double targetSpeed) {
     // Calculate new speed with ramping
     double newSpeed = prevSpeed;
@@ -57,9 +57,34 @@ public class IntakeSubsystem extends SubsystemBase {
     Logger.recordOutput("Intake/Control/Speed", newSpeed);
   }
 
+  /**
+   * Sets a specific current/torque level for the roller motor.
+   * This provides more consistent force regardless of position.
+   * 
+   * @param currentAmps Target current in amps
+   */
+  public void setTorque(double currentAmps) {
+    // Implement torque control via duty cycle approximation
+    // This is a simplified approach since SparkFlex doesn't have direct current control
+    
+    // Clamp to safe range
+    double safeCurrent = Math.max(0.0, Math.min(currentAmps, 40.0)); // Max 40 amps for safety
+    
+    // Convert current to approximate duty cycle
+    // This is an approximation that may need tuning for your specific motor
+    double estimatedDutyCycle = safeCurrent / 80.0; // 80A is roughly max stall current
+    
+    // Apply with ramping for safety
+    moveRoller(estimatedDutyCycle);
+    
+    Logger.recordOutput("Intake/Control/TargetCurrent", safeCurrent);
+    Logger.recordOutput("Intake/Control/EstimatedDutyCycle", estimatedDutyCycle);
+  }
+
   public void stopRoller() {
     rollerMotor.set(0);
-    // Logger.recordOutput("Intake/Control/Speed", 0);
+    prevSpeed = 0;
+    Logger.recordOutput("Intake/Control/Speed", 0);
   }
 
   public boolean getFirstSensor() {
@@ -68,6 +93,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public boolean getSecondSensor() {
     return secondSensor.isPressed();
+  }
+
+  /**
+   * Gets the current motor current in amps
+   */
+  public double getCurrentAmps() {
+    return rollerMotor.getOutputCurrent();
   }
 
   // Add this method to the IntakeSubsystem class
@@ -85,10 +117,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
-  // Periodic,
+  // Periodic
   @Override
   public void periodic() {
     Logger.recordOutput("Intake/Sensor/First", getFirstSensor());
     Logger.recordOutput("Intake/Sensor/Second", getSecondSensor());
+    Logger.recordOutput("Intake/Status/Current", getCurrentAmps());
   }
 }
