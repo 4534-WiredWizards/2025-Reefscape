@@ -1,23 +1,18 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -61,10 +56,13 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   private final Drive drive;
@@ -282,20 +280,29 @@ public class RobotContainer {
   }
 
   public Command L1Scoring() {
-    return new ParallelCommandGroup(new RunCoralOutake(m_Intake, -0.17).withTimeout(2));
+    return new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, 170, true),
+        new RunCoralOutake(m_Intake, -0.17).withTimeout(2));
   }
 
   private double getZoneTargetAngle(ReefZone zone) {
     switch (zone) {
-        case ZONE_1: return 0;
-        case ZONE_2: return 60;
-        case ZONE_3: return 120;
-        case ZONE_4: return 180;
-        case ZONE_5: return 240;
-        case ZONE_6: return 300;
-        default: return 0;
+      case ZONE_1:
+        return 0;
+      case ZONE_2:
+        return 60;
+      case ZONE_3:
+        return 120;
+      case ZONE_4:
+        return 180;
+      case ZONE_5:
+        return 240;
+      case ZONE_6:
+        return 300;
+      default:
+        return 0;
     }
-}
+  }
 
   private Command getAutoRotationCommand() {
     return DriveCommands.joystickDriveAtAngle(
@@ -303,64 +310,83 @@ public class RobotContainer {
         () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
         () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
         () -> {
-            Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-            double baseAngle;
-            
-            if (m_Intake.getSecondSensor()) {
-                // Has coral - use zone-based angle
-                ReefZone currentZone = drive.getZone();
-                baseAngle = getZoneTargetAngle(currentZone);
-                
-                // Flip angle for red alliance
-                if (alliance == Alliance.Red) {
-                    baseAngle = (baseAngle + 180) % 360;
-                }
-            } else if (m_elevator.getEncoderPosition() < Elevator.POSITION_L2) {
-                // No coral and elevator low - coral station angle
-                baseAngle = 234; // Blue alliance station angle
-                if (alliance == Alliance.Red) {
-                    baseAngle = 54; // Red alliance station angle
-                }
-            } else {
-                // Default to current rotation
-                return drive.getRotation();
+          Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+          double baseAngle;
+          String rotationSource = "";
+
+          if (m_Intake.getSecondSensor()) {
+            // Has coral - use zone-based angle
+            ReefZone currentZone = drive.getZone();
+            baseAngle = getZoneTargetAngle(currentZone);
+            rotationSource = "Zone " + currentZone;
+
+            // Flip angle for red alliance
+            if (alliance == Alliance.Red) {
+              baseAngle = (baseAngle + 180) % 360;
             }
-            
-            return Rotation2d.fromDegrees(baseAngle);
-        }
-    );
-}
+          } else if (m_elevator.getEncoderPosition() < Elevator.POSITION_L2) {
+            // No coral and elevator low - coral station angle
+            baseAngle = 234; // Blue alliance station angle
+            rotationSource = "Station";
+            if (alliance == Alliance.Red) {
+              baseAngle = 54; // Red alliance station angle
+            }
+          } else {
+            // Default to current rotation
+            baseAngle = drive.getRotation().getDegrees();
+            rotationSource = "Current";
+          }
+
+          // Log the target angle and its source
+          Logger.recordOutput("AutoRotation/TargetAngle", baseAngle);
+          Logger.recordOutput("AutoRotation/Source", rotationSource);
+
+          return Rotation2d.fromDegrees(baseAngle);
+        });
+  }
+
+  /**
+   * Immediately begin moving wrist to safe angle and drive elevator down while preparing to intake
+   */
+  private Command wristSafeElvDownThenIntake() {
+    return new ParallelDeadlineGroup(
+        new RunCoralIntake(m_Intake, true),
+        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+        new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false)
+                .until(() -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)));
+  }
+
+  /** Wait for wrist to reach safe angle before going down and intaking */
+  private Command waitForSafeWristThenDownAndIntake() {
+    return new SequentialCommandGroup(
+        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+        new ParallelDeadlineGroup(
+            new RunCoralIntake(m_Intake, true),
+            new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
+            new SequentialCommandGroup(
+                new WaitUntilCommand(
+                    () -> m_elevator.getEncoderPosition() < Elevator.ELEVATOR_DANGER_LIMIT),
+                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false))));
+  }
+
+  /** Set wrist to intake position and run intake, assuming already safe */
+  private Command wristInAndIntake() {
+    return new ParallelDeadlineGroup(
+        new RunCoralIntake(m_Intake, true),
+        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false));
+  }
 
   public Command elevatorDownAndRunCoralIntake(boolean addRumbleFeedback) {
     Command mainCommand =
         new ConditionalCommand(
             new ConditionalCommand(
-                new ParallelDeadlineGroup(
-                    new RunCoralIntake(m_Intake, true),
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
-                    new SequentialCommandGroup(
-                        new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, false)
-                            .until(
-                                () ->
-                                    m_elevator.getEncoderPosition()
-                                        < Elevator.ELEVATOR_DANGER_LIMIT),
-                        new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false))),
-                new SequentialCommandGroup(
-                    new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-                    new ParallelDeadlineGroup(
-                        new RunCoralIntake(m_Intake, true),
-                        new SetElevatorPosition(m_elevator, Elevator.POSITION_GROUND, m_Wrist),
-                        new SequentialCommandGroup(
-                            new WaitUntilCommand(
-                                () ->
-                                    m_elevator.getEncoderPosition()
-                                        < Elevator.ELEVATOR_DANGER_LIMIT),
-                            new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)))),
+                wristSafeElvDownThenIntake(),
+                waitForSafeWristThenDownAndIntake(),
                 () ->
                     m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE && m_Wrist.getAngle() > 82),
-            new ParallelDeadlineGroup(
-                new RunCoralIntake(m_Intake, true),
-                new SetWristPosition(m_Wrist, Wrist.CORAL_INTAKE_ANGLE, false)),
+            wristInAndIntake(),
             () -> !(m_elevator.getEncoderPosition() < 3.0));
 
     return addRumbleFeedback ? mainCommand.andThen(setOperatorRumble(0.2)) : mainCommand;
@@ -446,7 +472,8 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER);
+    Trigger cancelDriveTrigger =
+        new JoystickButton(driverJoystick, Driver.RightJoystick.WEIRD_UNDER_BUTTON);
 
     new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
@@ -474,8 +501,8 @@ public class RobotContainer {
                   new DriveToPoint(drive, targetPose, cancelDriveTrigger).schedule();
                 }));
 
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.MIDDLE_THUMB_BUTTON)
-        .toggleOnTrue(getAutoRotationCommand());
+    new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER)
+        .whileTrue(getAutoRotationCommand());
 
     operatorController
         .leftBumper()
@@ -529,8 +556,7 @@ public class RobotContainer {
         .y()
         .onTrue(
             new SequentialCommandGroup(
-                new SetWristPosition(m_Wrist, (Wrist.BARGE_ANGLE - 5.0), true),
-                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, true)));
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, false)));
 
     operatorController
         .x()
@@ -543,7 +569,7 @@ public class RobotContainer {
                             () -> m_elevator.getEncoderPosition() > Elevator.POSITION_BARGE - 36),
                         new AdaptiveWrist(m_Intake, () -> Wrist.BARGE_ANGLE, false)
                             .withTimeout(.3))),
-                elevatorDownAndRunCoralIntake(false)));
+                wristSafeElvDownThenIntake()));
   }
 
   private void configurePOVButtons() {
@@ -558,6 +584,7 @@ public class RobotContainer {
   }
 
   private void configureDefaultCommands() {
+    // drive.setDefaultCommand(getAutoRotationCommand());
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
