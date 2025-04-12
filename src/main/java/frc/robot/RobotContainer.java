@@ -81,7 +81,7 @@ public class RobotContainer {
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
 
-  //Passes the existing motor definitions into the music subsystem
+  // Passes the existing motor definitions into the music subsystem
   private final Music m_music =
       new Music(
           m_swerveDrive.getModule(0).getDriveMotor(),
@@ -94,7 +94,10 @@ public class RobotContainer {
           m_swerveDrive.getModule(3).getSteerMotor());
 
   private final CommandXboxController operatorController = new CommandXboxController(0);
-  private final Joystick driverJoystick = new Joystick(1);
+  private final Joystick driverThrottle = new Joystick(1);
+  private final Joystick driverJoystick = new Joystick(2);
+
+  // private final Joystick driverJoystick = new Joystick(1);
 
   private double targetElevatorPosition = Elevator.POSITION_L1;
   private double targetWristAngle = Wrist.L1_ANGLE;
@@ -492,19 +495,18 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    Trigger cancelDriveTrigger =
-        new JoystickButton(driverJoystick, Driver.RightJoystick.WEIRD_UNDER_BUTTON);
+    Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, 6);
 
-    new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
+    new JoystickButton(driverJoystick, 2)
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
-    new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON)
+    new JoystickButton(driverJoystick, 14)
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
+    new JoystickButton(driverJoystick, 12)
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.TOP_THUMB_BUTTON)
+    new JoystickButton(driverThrottle, 4)
         .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.FRONT_THUMB_BUTTON)
+    new JoystickButton(driverThrottle, 5)
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -610,9 +612,9 @@ public class RobotContainer {
             drive,
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
-            () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
-            () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
+            () -> -(driverJoystick.getRawAxis(4) + driverJoystick.getRawAxis(2)),
+            () -> driverThrottle.getRawAxis(0),
+            () -> driverThrottle.getRawButton(1),
             () -> false));
     m_Intake.setDefaultCommand(m_Intake.getProtectionCommand());
     m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
