@@ -58,25 +58,25 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   /**
-   * Sets a specific current/torque level for the roller motor. This provides more consistent force
-   * regardless of position.
-   *
+   * Sets a specific current/torque level for the roller motor.
+   * This provides more consistent force regardless of position.
+   * 
    * @param currentAmps Target current in amps
    */
   public void setTorque(double currentAmps) {
     // Implement torque control via duty cycle approximation
     // This is a simplified approach since SparkFlex doesn't have direct current control
-
+    
     // Clamp to safe range
     double safeCurrent = Math.max(0.0, Math.min(currentAmps, 40.0)); // Max 40 amps for safety
-
+    
     // Convert current to approximate duty cycle
     // This is an approximation that may need tuning for your specific motor
     double estimatedDutyCycle = safeCurrent / 80.0; // 80A is roughly max stall current
-
+    
     // Apply with ramping for safety
     moveRoller(estimatedDutyCycle);
-
+    
     Logger.recordOutput("Intake/Control/TargetCurrent", safeCurrent);
     Logger.recordOutput("Intake/Control/EstimatedDutyCycle", estimatedDutyCycle);
   }
@@ -95,7 +95,9 @@ public class IntakeSubsystem extends SubsystemBase {
     return secondSensor.isPressed();
   }
 
-  /** Gets the current motor current in amps */
+  /**
+   * Gets the current motor current in amps
+   */
   public double getCurrentAmps() {
     return rollerMotor.getOutputCurrent();
   }

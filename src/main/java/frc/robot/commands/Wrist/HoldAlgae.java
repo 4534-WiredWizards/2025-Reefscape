@@ -6,17 +6,17 @@ import frc.robot.subsystems.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * A command that runs the algae intake at reduced power to hold the algae in place until the
- * command is interrupted.
+ * A command that runs the algae intake at reduced power to hold the algae in place
+ * until the command is interrupted.
  */
 public class HoldAlgae extends Command {
   private final IntakeSubsystem intakeSubsystem;
   private final double holdPowerPercentage;
   private final boolean useTorqueControl;
-
+  
   // Constants for torque control
   private static final double BASELINE_HOLD_CURRENT = 10.0; // Amps
-
+  
   /**
    * Creates a new HoldAlgae command with the default power level.
    *
@@ -35,7 +35,7 @@ public class HoldAlgae extends Command {
   public HoldAlgae(IntakeSubsystem intakeSubsystem, double powerPercentage) {
     this(intakeSubsystem, powerPercentage, false); // Default to speed control
   }
-
+  
   /**
    * Creates a new HoldAlgae command with a specified power level and control mode.
    *
@@ -43,8 +43,7 @@ public class HoldAlgae extends Command {
    * @param powerPercentage Percentage of normal intake power/torque (0.0 to 1.0)
    * @param useTorqueControl Whether to use torque control instead of speed control
    */
-  public HoldAlgae(
-      IntakeSubsystem intakeSubsystem, double powerPercentage, boolean useTorqueControl) {
+  public HoldAlgae(IntakeSubsystem intakeSubsystem, double powerPercentage, boolean useTorqueControl) {
     this.intakeSubsystem = intakeSubsystem;
     this.holdPowerPercentage = Math.max(0.0, Math.min(1.0, powerPercentage));
     this.useTorqueControl = useTorqueControl;
@@ -54,7 +53,7 @@ public class HoldAlgae extends Command {
   @Override
   public void initialize() {
     System.out.println("HoldAlgae initialized" + (useTorqueControl ? " with torque control" : ""));
-
+    
     if (useTorqueControl) {
       // Use torque control mode
       double targetCurrent = BASELINE_HOLD_CURRENT * holdPowerPercentage;
@@ -78,7 +77,7 @@ public class HoldAlgae extends Command {
       // Update torque setting in case current has changed
       double targetCurrent = BASELINE_HOLD_CURRENT * holdPowerPercentage;
       intakeSubsystem.setTorque(targetCurrent);
-
+      
       // Log actual current vs target for debugging
       double actualCurrent = intakeSubsystem.getCurrentAmps();
       Logger.recordOutput("Intake/Status/CurrentDelta", targetCurrent - actualCurrent);
