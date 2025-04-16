@@ -1,18 +1,23 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,13 +62,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   private final Drive drive;
@@ -73,25 +75,23 @@ public class RobotContainer {
   public final WristSubsystem m_Wrist = new WristSubsystem(m_elevator);
   public static final LEDSubsystem LEDSubsystem = new LEDSubsystem();
   public static Boolean autoDriving = false;
-  private final TunerConstants.TunerSwerveDrivetrain m_swerveDrive =
-      new TunerConstants.TunerSwerveDrivetrain(
-          TunerConstants.DrivetrainConstants,
-          TunerConstants.FrontLeft,
-          TunerConstants.FrontRight,
-          TunerConstants.BackLeft,
-          TunerConstants.BackRight);
+  private final TunerConstants.TunerSwerveDrivetrain m_swerveDrive = new TunerConstants.TunerSwerveDrivetrain(
+      TunerConstants.DrivetrainConstants,
+      TunerConstants.FrontLeft,
+      TunerConstants.FrontRight,
+      TunerConstants.BackLeft,
+      TunerConstants.BackRight);
 
   // Passes the existing motor definitions into the music subsystem
-  private final Music m_music =
-      new Music(
-          m_swerveDrive.getModule(0).getDriveMotor(),
-          m_swerveDrive.getModule(0).getSteerMotor(),
-          m_swerveDrive.getModule(1).getDriveMotor(),
-          m_swerveDrive.getModule(1).getSteerMotor(),
-          m_swerveDrive.getModule(2).getDriveMotor(),
-          m_swerveDrive.getModule(2).getSteerMotor(),
-          m_swerveDrive.getModule(3).getDriveMotor(),
-          m_swerveDrive.getModule(3).getSteerMotor());
+  private final Music m_music = new Music(
+      m_swerveDrive.getModule(0).getDriveMotor(),
+      m_swerveDrive.getModule(0).getSteerMotor(),
+      m_swerveDrive.getModule(1).getDriveMotor(),
+      m_swerveDrive.getModule(1).getSteerMotor(),
+      m_swerveDrive.getModule(2).getDriveMotor(),
+      m_swerveDrive.getModule(2).getSteerMotor(),
+      m_swerveDrive.getModule(3).getDriveMotor(),
+      m_swerveDrive.getModule(3).getSteerMotor());
 
   private final CommandXboxController operatorController = new CommandXboxController(0);
   private final Joystick driverJoystick = new Joystick(1);
@@ -108,38 +108,44 @@ public class RobotContainer {
     loadPaths();
     switch (Constants.CURRENT_MODE) {
       case REAL:
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
-        vision =
-            new Vision(
-                drive,
-                new VisionIOLimelight(camera1Name, drive::getRotation),
-                new VisionIOLimelight(camera0Name, drive::getRotation));
+        drive = new Drive(
+            new GyroIOPigeon2(),
+            new ModuleIOTalonFX(TunerConstants.FrontLeft),
+            new ModuleIOTalonFX(TunerConstants.FrontRight),
+            new ModuleIOTalonFX(TunerConstants.BackLeft),
+            new ModuleIOTalonFX(TunerConstants.BackRight));
+        vision = new Vision(
+            drive,
+            new VisionIOLimelight(camera1Name, drive::getRotation),
+            new VisionIOLimelight(camera0Name, drive::getRotation));
         break;
       case SIM:
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
-        vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIOSim(TunerConstants.FrontLeft),
+            new ModuleIOSim(TunerConstants.FrontRight),
+            new ModuleIOSim(TunerConstants.BackLeft),
+            new ModuleIOSim(TunerConstants.BackRight));
+        vision = new Vision(drive, new VisionIO() {
+        }, new VisionIO() {
+        });
         break;
       default:
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
-        vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            });
+        vision = new Vision(drive, new VisionIO() {
+        }, new VisionIO() {
+        });
     }
 
     registerNamedCommands();
@@ -200,40 +206,39 @@ public class RobotContainer {
     System.out.println("-> Requested Side: " + side);
     System.out.println("-> Alliance: " + DriverStation.getAlliance().orElse(Alliance.Blue));
 
-    PathPlannerPath path =
-        switch (zone) {
-          case ZONE_1 -> switch (side) {
-            case RIGHT -> Z1R;
-            case LEFT -> Z1L;
-            case MIDDLE -> Z1M;
-          };
-          case ZONE_2 -> switch (side) {
-            case RIGHT -> Z2R;
-            case LEFT -> Z2L;
-            case MIDDLE -> Z2M;
-          };
-          case ZONE_3 -> switch (side) {
-            case RIGHT -> Z3R;
-            case LEFT -> Z3L;
-            case MIDDLE -> Z3M;
-          };
-          case ZONE_4 -> switch (side) {
-            case RIGHT -> Z4R;
-            case LEFT -> Z4L;
-            case MIDDLE -> Z4M;
-          };
-          case ZONE_5 -> switch (side) {
-            case RIGHT -> Z5R;
-            case LEFT -> Z5L;
-            case MIDDLE -> Z5M;
-          };
-          case ZONE_6 -> switch (side) {
-            case RIGHT -> Z6R;
-            case LEFT -> Z6L;
-            case MIDDLE -> Z6M;
-          };
-          default -> null;
-        };
+    PathPlannerPath path = switch (zone) {
+      case ZONE_1 -> switch (side) {
+        case RIGHT -> Z1R;
+        case LEFT -> Z1L;
+        case MIDDLE -> Z1M;
+      };
+      case ZONE_2 -> switch (side) {
+        case RIGHT -> Z2R;
+        case LEFT -> Z2L;
+        case MIDDLE -> Z2M;
+      };
+      case ZONE_3 -> switch (side) {
+        case RIGHT -> Z3R;
+        case LEFT -> Z3L;
+        case MIDDLE -> Z3M;
+      };
+      case ZONE_4 -> switch (side) {
+        case RIGHT -> Z4R;
+        case LEFT -> Z4L;
+        case MIDDLE -> Z4M;
+      };
+      case ZONE_5 -> switch (side) {
+        case RIGHT -> Z5R;
+        case LEFT -> Z5L;
+        case MIDDLE -> Z5M;
+      };
+      case ZONE_6 -> switch (side) {
+        case RIGHT -> Z6R;
+        case LEFT -> Z6L;
+        case MIDDLE -> Z6M;
+      };
+      default -> null;
+    };
 
     if (path != null) {
       System.out.println("-> Selected Path: " + path.name);
@@ -333,6 +338,7 @@ public class RobotContainer {
           Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
           double baseAngle;
           String rotationSource = "";
+          boolean inTopHalfOfField = drive.getPose().getY() > 4.00;
 
           if (m_Intake.getSecondSensor()) {
             // Has coral - use zone-based angle
@@ -340,16 +346,18 @@ public class RobotContainer {
             baseAngle = getZoneTargetAngle(currentZone);
             rotationSource = "Zone " + currentZone;
 
-            // Flip angle for red alliance
+            // Flip angle for red alliance (✅ locked checked)
             if (alliance == Alliance.Red) {
               baseAngle = (baseAngle + 180) % 360;
             }
           } else if (m_elevator.getEncoderPosition() < Elevator.POSITION_L2) {
             // No coral and elevator low - coral station angle
-            baseAngle = 234; // Blue alliance station angle
             rotationSource = "Station";
+
             if (alliance == Alliance.Red) {
-              baseAngle = 54; // Red alliance station angle
+              baseAngle = inTopHalfOfField ? 54 : 306; //Switch between right and left red player station
+            } else {
+              baseAngle = inTopHalfOfField ? 126 : 234; //Switch between right and left blue player station
             }
           } else {
             // Default to current rotation
@@ -360,13 +368,15 @@ public class RobotContainer {
           // Log the target angle and its source
           Logger.recordOutput("AutoRotation/TargetAngle", baseAngle);
           Logger.recordOutput("AutoRotation/Source", rotationSource);
+          Logger.recordOutput("AutoRotation/inTopHalfOfField", inTopHalfOfField);
 
           return Rotation2d.fromDegrees(baseAngle);
         });
   }
 
   /**
-   * Immediately begin moving wrist to safe angle and drive elevator down while preparing to intake
+   * Immediately begin moving wrist to safe angle and drive elevator down while
+   * preparing to intake
    */
   private Command wristSafeElvDownThenIntake() {
     return new ParallelDeadlineGroup(
@@ -399,15 +409,13 @@ public class RobotContainer {
   }
 
   public Command elevatorDownAndRunCoralIntake(boolean addRumbleFeedback) {
-    Command mainCommand =
+    Command mainCommand = new ConditionalCommand(
         new ConditionalCommand(
-            new ConditionalCommand(
-                wristSafeElvDownThenIntake(),
-                waitForSafeWristThenDownAndIntake(),
-                () ->
-                    m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE && m_Wrist.getAngle() > 82),
-            wristInAndIntake(),
-            () -> !(m_elevator.getEncoderPosition() < 3.0));
+            wristSafeElvDownThenIntake(),
+            waitForSafeWristThenDownAndIntake(),
+            () -> m_Wrist.getAngle() < Wrist.MIN_CLEAR_ELEVATOR_ANGLE && m_Wrist.getAngle() > 82),
+        wristInAndIntake(),
+        () -> !(m_elevator.getEncoderPosition() < 3.0));
 
     return addRumbleFeedback ? mainCommand.andThen(setOperatorRumble(0.2)) : mainCommand;
   }
@@ -464,19 +472,19 @@ public class RobotContainer {
     SmartDashboard.putData(
         "PoseReset/1",
         new InstantCommand(
-                () -> {
-                  System.out.println("[Button 1] Attempting reset...");
-                  vision.resetRobotPose();
-                })
+            () -> {
+              System.out.println("[Button 1] Attempting reset...");
+              vision.resetRobotPose();
+            })
             .ignoringDisable(true));
 
     SmartDashboard.putData(
         "PoseReset/2",
         new InstantCommand(
-                () -> {
-                  System.out.println("[Button 2] Attempting reset...");
-                  vision.resetRobotPose();
-                })
+            () -> {
+              System.out.println("[Button 2] Attempting reset...");
+              vision.resetRobotPose();
+            })
             .ignoringDisable(true));
 
     SmartDashboard.putData("LED/Off", new InstantCommand(() -> LEDSubsystem.off()));
@@ -486,14 +494,13 @@ public class RobotContainer {
 
   public Command setOperatorRumble(double rumble) {
     return new SequentialCommandGroup(
-            new InstantCommand(() -> operatorController.setRumble(kBothRumble, rumble)),
-            new WaitCommand(0.3))
+        new InstantCommand(() -> operatorController.setRumble(kBothRumble, rumble)),
+        new WaitCommand(0.3))
         .finallyDo(interrupted -> operatorController.setRumble(kBothRumble, 0.0));
   }
 
   private void configureButtonBindings() {
-    Trigger cancelDriveTrigger =
-        new JoystickButton(driverJoystick, Driver.RightJoystick.WEIRD_UNDER_BUTTON);
+    Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, Driver.RightJoystick.WEIRD_UNDER_BUTTON);
 
     new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
@@ -508,15 +515,13 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  double targetX =
-                      DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
-                          ? Constants.FieldPosition.Blue.Barge.SCORING_X
-                          : Constants.FieldPosition.Red.Barge.SCORING_X;
+                  double targetX = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
+                      ? Constants.FieldPosition.Blue.Barge.SCORING_X
+                      : Constants.FieldPosition.Red.Barge.SCORING_X;
                   double currentY = drive.getPose().getY();
-                  double targetRotation =
-                      DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
-                          ? Math.toRadians(180)
-                          : Math.toRadians(0);
+                  double targetRotation = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
+                      ? Math.toRadians(180)
+                      : Math.toRadians(0);
                   Pose2d targetPose = new Pose2d(targetX, currentY, new Rotation2d(targetRotation));
                   new DriveToPoint(drive, targetPose, cancelDriveTrigger).schedule();
                 }));

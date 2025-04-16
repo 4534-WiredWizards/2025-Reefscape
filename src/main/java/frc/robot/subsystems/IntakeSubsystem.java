@@ -1,6 +1,8 @@
 // IntakeSubsystem.java
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
@@ -8,10 +10,10 @@ import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Wrist;
 import frc.robot.commands.CoralProtectionCommand;
-import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase {
   private final SparkFlex rollerMotor;
@@ -35,10 +37,10 @@ public class IntakeSubsystem extends SubsystemBase {
     config.limitSwitch.reverseLimitSwitchEnabled(false);
 
     // Increase current limit (carefully)
-    config.idleMode(IdleMode.kBrake).smartCurrentLimit(80);
+    config.idleMode(IdleMode.kBrake).smartCurrentLimit(100);
 
     // Use the correct method for voltage compensation
-    config.voltageCompensation(12.0);
+    // config.voltageCompensation(12.0);
 
     rollerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
