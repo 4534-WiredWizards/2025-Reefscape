@@ -1,23 +1,18 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,10 +57,13 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   private final Drive drive;
@@ -96,7 +94,8 @@ public class RobotContainer {
           m_swerveDrive.getModule(3).getSteerMotor());
 
   private final CommandXboxController operatorController = new CommandXboxController(0);
-  private final Joystick driverJoystick = new Joystick(1);
+  private final Joystick driverThrottle = new Joystick(1);
+  private final Joystick driverJoystick = new Joystick(2);
 
   private double targetElevatorPosition = Elevator.POSITION_L1;
   private double targetWristAngle = Wrist.L1_ANGLE;
@@ -500,19 +499,18 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    Trigger cancelDriveTrigger =
-        new JoystickButton(driverJoystick, Driver.RightJoystick.WEIRD_UNDER_BUTTON);
+    Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, 6);
 
-    new JoystickButton(driverJoystick, Driver.RightJoystick.STRIPED_CENTER_BUTTON)
+    new JoystickButton(driverJoystick, 2)
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
-    new JoystickButton(driverJoystick, Driver.BASE_LEFT_BUTTON)
+    new JoystickButton(driverJoystick, 14)
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.BASE_RIGHT_BUTTON)
+    new JoystickButton(driverJoystick, 12)
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.TOP_THUMB_BUTTON)
+    new JoystickButton(driverThrottle, 4)
         .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger));
-    new JoystickButton(driverJoystick, Driver.LeftThrottle.FRONT_THUMB_BUTTON)
+    new JoystickButton(driverThrottle, 5)
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -618,12 +616,9 @@ public class RobotContainer {
             drive,
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_Y_AXIS),
             () -> -driverJoystick.getRawAxis(Driver.DRIVE_X_AXIS),
-          
-
-            
-            () -> -driverJoystick.getRawAxis(Driver.DRIVE_ROTATE_AXIS),
-            () -> driverJoystick.getRawAxis(Driver.DRIVE_THROTTLE_AXIS),
-            () -> driverJoystick.getRawButton(Driver.RightJoystick.RIGHT_THUMB_BUTTON),
+            () -> -(driverJoystick.getRawAxis(4) + driverJoystick.getRawAxis(2)),
+            () -> driverThrottle.getRawAxis(0),
+            () -> driverThrottle.getRawButton(1),
             () -> false));
     m_Intake.setDefaultCommand(m_Intake.getProtectionCommand());
     m_Wrist.setDefaultCommand(new SimpleMoveWrist(m_Wrist, () -> operatorController.getLeftX()));
