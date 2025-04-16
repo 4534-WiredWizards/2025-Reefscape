@@ -271,7 +271,7 @@ public interface Constants {
       // Speeds
       double CORAL_INTAKE_SPEED = 0.6;
       double CORAL_OUTTAKE_SPEED = -0.28;
-      double ALGAE_INTAKE_SPEED = 0.5;
+      double ALGAE_INTAKE_SPEED = 0.25;
       double ALGAE_OUTTAKE_SPEED = -.35;
     }
   }
