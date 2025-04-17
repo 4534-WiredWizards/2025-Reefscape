@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.863085075102549,
+        "y": 3.8571176763054154
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.168071220290493,
+        "y": 3.9874236630721827
+      },
+      "isLocked": false,
+      "linkedName": "Reef Post 4R"
+    },
+    {
+      "anchor": {
+        "x": 6.483366458516725,
+        "y": 4.01349375550176
+      },
+      "prevControl": {
+        "x": 6.235472781230954,
+        "y": 3.9811097353415326
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Lineup For 4M"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0.02364130434782609,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "Low Algae Intake",
+      "waypointRelativePos": 0.15700407608695652,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "LowAlgaeIntake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 179.2249742931609
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}
