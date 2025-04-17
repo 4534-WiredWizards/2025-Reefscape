@@ -443,6 +443,31 @@ public class RobotContainer {
     NamedCommands.registerCommand("RunCoralOutake", new RunCoralOutake(m_Intake).withTimeout(1.5));
     NamedCommands.registerCommand(
         "ResetBotPose", new InstantCommand(() -> vision.resetRobotPose()));
+
+
+
+        // Low algae intake command
+        NamedCommands.registerCommand(
+            "LowAlgaeIntake",
+            new SequentialCommandGroup(
+          new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+          new ParallelCommandGroup(
+              new SetElevatorPosition(
+            m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
+              new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
+              new AdaptiveWrist(m_Intake, () -> Wrist.ALGAE_INTAKE_ANGLE, true))));
+
+
+              NamedCommands.registerCommand(
+                "BargeShot",
+                new SequentialCommandGroup(
+                  new ParallelCommandGroup(
+                    new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
+                    new SequentialCommandGroup(
+                      new WaitUntilCommand(
+                        () -> m_elevator.getEncoderPosition() > Elevator.POSITION_BARGE - 36),
+                      new AdaptiveWrist(m_Intake, () -> Wrist.BARGE_ANGLE, false)
+                        .withTimeout(.3)))));
   }
 
   private void configureEventTriggers() {
