@@ -12,11 +12,10 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.Map;
 
 /**
  * Contains global constants and configurations for the robot. Includes runtime mode definitions,
@@ -45,7 +44,8 @@ public interface Constants {
     interface Blue {
       interface Barge {
         // double SCORING_X = 7.8;
-        double SCORING_X = 8.0-1; // COMP = 8.00 : HOME = 8.62;, Minus 1 cause of new barge shot... TUNE
+        double SCORING_X =
+            8.0 - 1; // COMP = 8.00 : HOME = 8.62;, Minus 1 cause of new barge shot... TUNE
       }
 
       interface Reef {
