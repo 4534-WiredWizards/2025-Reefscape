@@ -27,6 +27,12 @@
           "data": {
             "name": "SetWristSafePosition"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4R To safe down"
+          }
         }
       ]
     }
