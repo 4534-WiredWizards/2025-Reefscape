@@ -88,7 +88,7 @@ public class DriveToPath extends Command {
     // Create pathfinding command to the prebuilt path
     pathFollowingCommand =
         AutoBuilder.pathfindThenFollowPath(path, constraints)
-            .until(interrupter)
+            .until(interrupter != null ? interrupter : () -> false)
             .andThen(new InstantCommand(() -> RobotContainer.setAutoDriving(false)));
 
     // Schedule the path following command
@@ -126,6 +126,7 @@ public class DriveToPath extends Command {
 
       if (interrupted || wasInterruptedByTrigger) {
         Logger.recordOutput("DriveToPoint/Status", "Command interrupted");
+
       } else {
         Logger.recordOutput("DriveToPoint/Status", "Successfully followed path");
       }

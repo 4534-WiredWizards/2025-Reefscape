@@ -206,6 +206,7 @@ public class Robot extends LoggedRobot {
   public void teleopInit() {
     System.out.println("Resetting robot pose in teleop");
     robotContainer.vision.resetRobotPose();
+    RobotContainer.setAutoDriving(false);
     // robotContainer.drive.setBrakeMode(); // Continue using brake mode for teleop
     // robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
     robotContainer.LEDSubsystem.setAllianceColor();

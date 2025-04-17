@@ -1,23 +1,18 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,10 +57,13 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   private final Drive drive;
@@ -446,30 +444,25 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "ResetBotPose", new InstantCommand(() -> vision.resetRobotPose()));
 
+    // Low algae intake command
+    NamedCommands.registerCommand(
+        "LowAlgaeIntake",
+        new SequentialCommandGroup(
+            new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
+            new ParallelCommandGroup(
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
+                new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
+                new AdaptiveWrist(m_Intake, () -> Wrist.ALGAE_INTAKE_ANGLE, true))));
 
-
-        // Low algae intake command
-        NamedCommands.registerCommand(
-            "LowAlgaeIntake",
-            new SequentialCommandGroup(
-          new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE, true),
-          new ParallelCommandGroup(
-              new SetElevatorPosition(
-            m_elevator, Elevator.POSITION_LOW_ALGAE, m_Wrist, false),
-              new SetWristPosition(m_Wrist, Wrist.ALGAE_INTAKE_ANGLE, false),
-              new AdaptiveWrist(m_Intake, () -> Wrist.ALGAE_INTAKE_ANGLE, true))));
-
-
-              NamedCommands.registerCommand(
-                "BargeShot",
+    NamedCommands.registerCommand(
+        "BargeShot",
+        new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
                 new SequentialCommandGroup(
-                  new ParallelCommandGroup(
-                    new SetElevatorPosition(m_elevator, Elevator.POSITION_BARGE, m_Wrist, true),
-                    new SequentialCommandGroup(
-                      new WaitUntilCommand(
+                    new WaitUntilCommand(
                         () -> m_elevator.getEncoderPosition() > Elevator.POSITION_BARGE - 36),
-                      new AdaptiveWrist(m_Intake, () -> Wrist.BARGE_ANGLE, false)
-                        .withTimeout(.3)))));
+                    new AdaptiveWrist(m_Intake, () -> Wrist.BARGE_ANGLE, false).withTimeout(.3)))));
   }
 
   private void configureEventTriggers() {
@@ -527,6 +520,7 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     Trigger cancelDriveTrigger = new JoystickButton(driverJoystick, 6);
+    cancelDriveTrigger.onTrue(new InstantCommand(() -> setAutoDriving(false)));
 
     new JoystickButton(driverJoystick, 2)
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
@@ -579,6 +573,9 @@ public class RobotContainer {
     operatorController
         .button(Operator.PRESS_RIGHT_THUMBSTICK)
         .onTrue(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE));
+    operatorController
+        .button(Operator.CLIMB_SEQUENCE_BUTTON)
+        .onTrue(new InstantCommand(() -> setAutoDriving(false)));
     operatorController.button(Operator.ZERO_ELEVATOR_BUTTON).onTrue(m_elevator.zeroCommand());
 
     configurePOVButtons();
