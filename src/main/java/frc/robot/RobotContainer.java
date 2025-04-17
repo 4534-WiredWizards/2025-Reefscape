@@ -1,18 +1,23 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
+import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static edu.wpi.first.wpilibj.GenericHID.RumbleType.kBothRumble;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,13 +62,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   private final Drive drive;
@@ -525,10 +527,24 @@ public class RobotContainer {
     new JoystickButton(driverJoystick, 2)
         .onTrue(Commands.runOnce(() -> vision.resetRobotPose()).ignoringDisable(true));
 
+
+    // Left and right on joystick pov thing
     new JoystickButton(driverJoystick, 14)
         .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
     new JoystickButton(driverJoystick, 12)
         .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+
+
+
+    // Left and Right on throttle buttons
+    new JoystickButton(driverThrottle, 7)
+    .onTrue(driveToReefSide(ScoringSide.LEFT, cancelDriveTrigger));
+new JoystickButton(driverThrottle, 9)
+    .onTrue(driveToReefSide(ScoringSide.RIGHT, cancelDriveTrigger));
+    new JoystickButton(driverThrottle, 11)
+        .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger));
+
+
     new JoystickButton(driverThrottle, 4)
         .onTrue(driveToReefSide(ScoringSide.MIDDLE, cancelDriveTrigger));
     new JoystickButton(driverThrottle, 5)
@@ -574,8 +590,13 @@ public class RobotContainer {
         .button(Operator.PRESS_RIGHT_THUMBSTICK)
         .onTrue(new SetWristPosition(m_Wrist, Wrist.MIN_CLEAR_ELEVATOR_ANGLE));
     operatorController
-        .button(Operator.CLIMB_SEQUENCE_BUTTON)
-        .onTrue(new InstantCommand(() -> setAutoDriving(false)));
+        .button(8)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setAutoDriving(false);
+                  System.out.println("Auto-driving set to false");
+                }));
     operatorController.button(Operator.ZERO_ELEVATOR_BUTTON).onTrue(m_elevator.zeroCommand());
 
     configurePOVButtons();
