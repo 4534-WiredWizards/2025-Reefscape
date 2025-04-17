@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.863085075102549,
+        "y": 3.8571176763054154
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.388815789473683,
+        "y": 3.899917763157895
+      },
+      "isLocked": false,
+      "linkedName": "Reef Post 4R"
+    },
+    {
+      "anchor": {
+        "x": 6.773684210526316,
+        "y": 3.8614309210526314
+      },
+      "prevControl": {
+        "x": 6.525790533240545,
+        "y": 3.8290469008924037
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Lineup For 4M"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0.02364130434782609,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SetWristSafePosition"
+        }
+      }
+    },
+    {
+      "name": "E-Zero",
+      "waypointRelativePos": 0.709156193895871,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "E-Zero"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 179.2249742931609
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}
