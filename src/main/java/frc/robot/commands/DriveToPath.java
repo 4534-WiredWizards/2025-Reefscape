@@ -25,14 +25,25 @@ public class DriveToPath extends Command {
   private boolean hasStarted = false;
 
   // Create a private method to initialize constraints
+
+  // Older faster driving
+  // private PathConstraints createDefaultConstraints(Drive drive) {
+  //   return new PathConstraints(
+  //       drive.getMaxLinearSpeedMetersPerSec() * 0.6, // 100% of max velocity
+  //       drive.getMaxLinearSpeedMetersPerSec() * 0.4, // 200% of max acceleration
+  //       drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
+  //       drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
+  //       );
+  // }
+
   private PathConstraints createDefaultConstraints(Drive drive) {
     return new PathConstraints(
-        drive.getMaxLinearSpeedMetersPerSec() * 0.6, // 100% of max velocity
-        drive.getMaxLinearSpeedMetersPerSec() * 0.4, // 200% of max acceleration
-        drive.getMaxAngularSpeedRadPerSec() * 0.7, // 70% of max angular velocity
-        drive.getMaxAngularSpeedRadPerSec() * 0.7 // 70% of max angular acceleration
-        );
-  }
+        drive.getMaxLinearSpeedMetersPerSec() * 0.3, // Reduce linear speed to 30% of max velocity
+        drive.getMaxLinearSpeedMetersPerSec() * 0.2, // Reduce acceleration to 20% of max acceleration
+        drive.getMaxAngularSpeedRadPerSec() * 0.5, // Reduce angular velocity to 50% of max angular velocity
+        drive.getMaxAngularSpeedRadPerSec() * 0.5  // Reduce angular acceleration to 50% of max angular acceleration
+    );
+}
 
   /** Creates a new DriveToPoint with a prebuilt path and default constraints */
   public DriveToPath(Drive drive, PathPlannerPath path, BooleanSupplier interrupter) {
