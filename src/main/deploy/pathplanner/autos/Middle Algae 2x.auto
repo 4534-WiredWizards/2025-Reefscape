@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ResetBotPose"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle to 4R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunCoralOutake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetWristSafePosition"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4R Back Mid"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4M"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowAlgaeIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4M to Bargeshot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
