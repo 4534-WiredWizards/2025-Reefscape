@@ -482,8 +482,8 @@ public class RobotContainer {
   }
 
   private void setupManualPoseSetter() {
-    SmartDashboard.putNumber("ManualPose/X", 7.0);
-    SmartDashboard.putNumber("ManualPose/Y", 2.0);
+    SmartDashboard.putNumber("ManualPose/X", 7.2);
+    SmartDashboard.putNumber("ManualPose/Y", 4.0);
     SmartDashboard.putNumber("ManualPose/Rotation", 180);
     SmartDashboard.putData("ManualPose/SetPose", new ManualPoseSetter(drive).ignoringDisable(true));
   }

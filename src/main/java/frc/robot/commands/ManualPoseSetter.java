@@ -1,11 +1,12 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * Command to manually set the robot's pose from dashboard values. This allows for quick
@@ -22,9 +23,9 @@ public class ManualPoseSetter extends Command {
   @Override
   public void initialize() {
     // Get pose values from SmartDashboard
-    double x = SmartDashboard.getNumber("ManualPose/X", 0.0);
-    double y = SmartDashboard.getNumber("ManualPose/Y", 0.0);
-    double rotationDegrees = SmartDashboard.getNumber("ManualPose/Rotation", 0.0);
+    double x = SmartDashboard.getNumber("ManualPose/X", 7.2);
+    double y = SmartDashboard.getNumber("ManualPose/Y", 4);
+    double rotationDegrees = SmartDashboard.getNumber("ManualPose/Rotation", 180.0);
 
     // Create the pose
     Pose2d newPose = new Pose2d(x, y, Rotation2d.fromDegrees(rotationDegrees));
