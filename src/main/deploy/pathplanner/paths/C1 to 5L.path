@@ -59,7 +59,7 @@
     },
     {
       "name": "Scoring Postition",
-      "waypointRelativePos": 0.10508474576271186,
+      "waypointRelativePos": 0.10847457627118628,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -70,7 +70,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 1.5,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
