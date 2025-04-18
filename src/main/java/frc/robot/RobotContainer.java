@@ -557,19 +557,11 @@ public class RobotContainer {
                   Pose2d targetPose = new Pose2d(targetX, currentY, new Rotation2d(targetRotation));
                   new DriveToPoint(drive, targetPose, cancelDriveTrigger).schedule();
                 }));
-                
-    new JoystickButton(driverJoystick, Driver.RightJoystick.TRIGGER)
-        .whileTrue(
-            new ConditionalCommand(
-                new InstantCommand(() -> {
-                  if (isAutoDriving()) {
-                    System.out.println("Auto-driving is active. Ignoring trigger input.");
-                  } else {
-                    System.out.println("Auto-driving is inactive. Allowing drive rotation.");
-                  }
-                }),
-                getAutoRotationCommand(),
-                this::isAutoDriving));
+
+    Trigger driveControlTrigger = new Trigger(() -> !isAutoDriving() && driverJoystick.getRawButton(Driver.RightJoystick.TRIGGER));
+    driveControlTrigger.whileTrue(
+      getAutoRotationCommand()  // Only execute this command if both conditions are true
+    );
 
     operatorController
         .leftBumper()
