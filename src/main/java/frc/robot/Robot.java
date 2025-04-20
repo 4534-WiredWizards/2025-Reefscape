@@ -16,12 +16,13 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.LEDSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -126,16 +127,24 @@ public class Robot extends LoggedRobot {
   // Robot intialization function
   @Override
   public void robotInit() {
+    // CameraServer.startAutomaticCapture(0); // First camera
+    // CameraServer.startAutomaticCapture(1); // Second camera
+    UsbCamera fisheye = CameraServer.startAutomaticCapture(0);
+    // fisheye.setResolution(320, 240);
+    fisheye.setResolution(640, 480);
+    fisheye.setPixelFormat(PixelFormat.kMJPEG);
+    fisheye.setFPS(60);
     // Call the robot container's init method
     // robotContainer.m_vision.resetLimelightBotPoseBlue();
-    robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
-    LEDSubsystem.LEDSegment.CANDLE_LEDS.setColor(LEDSubsystem.RED);
+    // robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
+    robotContainer.LEDSubsystem.startupAnimation();
 
     new Thread(
             () -> {
               try {
                 Thread.sleep(25000); // 25 second delay
                 robotContainer.vision.resetRobotPose();
+                robotContainer.LEDSubsystem.showTeamColor();
               } catch (InterruptedException e) {
                 e.printStackTrace();
               }
@@ -147,21 +156,24 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     robotContainer.vision.resetRobotPose();
-    robotContainer.drive.setCoastMode(); // Set coast mode when disabled
+    robotContainer.LEDSubsystem.disabledMode();
+    RobotContainer.setAutoDriving(false);
+
+    // robotContainer.drive.setCoastMode(); // Set coast mode when disabled
 
     // Thread sleep 15s then set climb idle mode to coast if robot is still disabled
-    new Thread(
-            () -> {
-              try {
-                Thread.sleep(15000); // 15 second delay
-                if (isDisabled()) { // Check if the robot is still disabled
-                  robotContainer.m_climb.setIdleMode(IdleMode.kCoast);
-                }
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
-            })
-        .start();
+    // new Thread(
+    //         () -> {
+    //           try {
+    //             Thread.sleep(15000); // 15 second delay
+    //             if (isDisabled()) { // Check if the robot is still disabled
+    //               robotContainer.m_climb.setIdleMode(IdleMode.kCoast);
+    //             }
+    //           } catch (InterruptedException e) {
+    //             e.printStackTrace();
+    //           }
+    //         })
+    //     .start();
   }
 
   /** This function is called periodically when disabled. */
@@ -173,8 +185,10 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     System.out.println("Resetting robot pose in auto");
     robotContainer.vision.resetRobotPose();
-    robotContainer.drive.setBrakeMode(); // Set brake mode for autonomous
-    robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
+    // robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
+    robotContainer.LEDSubsystem.autonomousInit();
+    // robotContainer.drive.setBrakeMode(); // Set brake mode for autonomous
+
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -192,10 +206,11 @@ public class Robot extends LoggedRobot {
   public void teleopInit() {
     System.out.println("Resetting robot pose in teleop");
     robotContainer.vision.resetRobotPose();
-    robotContainer.drive.setBrakeMode(); // Continue using brake mode for teleop
-    robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
-    // robotContainer.m_vision.resetLimelightBotPoseBlue();
-    // This makes sure that the autonomous stops running when
+    RobotContainer.setAutoDriving(false);
+    // robotContainer.drive.setBrakeMode(); // Continue using brake mode for teleop
+    // robotContainer.m_climb.setIdleMode(IdleMode.kBrake);
+    robotContainer.LEDSubsystem.setAllianceColor();
+
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.

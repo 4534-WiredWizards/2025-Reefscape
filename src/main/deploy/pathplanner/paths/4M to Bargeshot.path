@@ -3,38 +3,50 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.483366458516725,
-        "y": 4.01349375550176
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.061980427486795,
-        "y": 4.003838165713028
-      },
-      "isLocked": false,
-      "linkedName": "Lineup For 4M"
-    },
-    {
-      "anchor": {
         "x": 5.824171297315141,
         "y": 4.012809817891725
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.990083764304577,
+        "y": 3.9875845895686615
+      },
+      "isLocked": false,
+      "linkedName": "Reef Post 4M"
+    },
+    {
+      "anchor": {
+        "x": 7.335874573613556,
+        "y": 4.769204582966549
+      },
       "prevControl": {
-        "x": 6.2356201171875,
-        "y": 4.0221435546875
+        "x": 6.524684336487676,
+        "y": 4.439385728433098
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef Post 4M"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Barge Shot",
+      "waypointRelativePos": 0.9676222826086963,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "BargeShot"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 1.0,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 32.69048170349399
   },
   "reversed": false,
-  "folder": "Algae",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.2249742931609
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }

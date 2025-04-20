@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -40,6 +41,7 @@ public class DriveToPoint extends Command {
     Logger.recordOutput("DriveToPoint/StartPose", drive.getPose());
     Logger.recordOutput("DriveToPoint/TargetPose", targetPose);
     Logger.recordOutput("DriveToPoint/Status", "Initializing path to target pose");
+    RobotContainer.LEDSubsystem.autoAlignMode(true);
 
     PathConstraints constraints =
         new PathConstraints(
@@ -70,6 +72,12 @@ public class DriveToPoint extends Command {
     // Cancel the pathfinding command to ensure the robot stops
     if (pathFindingCommand != null) {
       pathFindingCommand.cancel();
+    }
+
+    if (interrupted) {
+      RobotContainer.LEDSubsystem.showError();
+    } else {
+      RobotContainer.LEDSubsystem.showIntakeSuccess();
     }
 
     // Log end status

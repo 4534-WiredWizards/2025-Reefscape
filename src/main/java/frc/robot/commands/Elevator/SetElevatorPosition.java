@@ -116,7 +116,7 @@ public class SetElevatorPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     if (interrupted) {
-      m_elevator.stop();
+      // m_elevator.stop();
       Logger.recordOutput("Elevator/Command/Interrupted", true);
     } else if (m_targetPosition == Elevator.POSITION_GROUND) {
       m_elevator.setZeroCommand().schedule();

@@ -7,19 +7,13 @@
         {
           "type": "named",
           "data": {
-            "name": "SetTargetL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "ResetBotPose"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "C5 to 3R"
+            "pathName": "Middle to 4R"
           }
         },
         {
@@ -29,39 +23,40 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "3R to CS2"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "WE-CoralIntake"
+            "name": "SetWristSafePosition"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CS2 to 2R"
+            "pathName": "4R Back Mid"
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "RunCoralOutake"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4M"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowAlgaeIntake"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2R to CS2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WE-CoralIntake"
+            "pathName": "4M to Bargeshot"
           }
         }
       ]

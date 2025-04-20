@@ -15,10 +15,13 @@ import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.RgbFadeAnimation;
 import com.ctre.phoenix.led.SingleFadeAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix.led.TwinkleAnimation;
 import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
+import com.ctre.phoenix.led.TwinkleOffAnimation;
+import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,8 +29,6 @@ import frc.robot.Constants.LED;
 import org.littletonrobotics.junction.Logger;
 
 public class LEDSubsystem extends SubsystemBase {
-  // Removed duplicate instance field 'candle' as the static field is sufficient
-
   // Common colors
   public static class Color {
     public final int red;
@@ -56,11 +57,11 @@ public class LEDSubsystem extends SubsystemBase {
   public static final Color YELLOW = new Color(255, 255, 0);
   public static final Color PURPLE = new Color(128, 0, 128);
   public static final Color ORANGE = new Color(255, 165, 0);
-  public static final Color CORAL_COLOR = new Color(255, 80, 80); // For coral game piece
-  public static final Color ALGAE_COLOR = new Color(50, 220, 50); // For algae game piece
-
-  // Team colors
-  public static final Color TEAM_PRIMARY = new Color(0, 150, 255); // Adjust to your team color
+  public static final Color CORAL_COLOR = new Color(255, 255, 255); // White for coral as requested
+  public static final Color ALGAE_COLOR =
+      new Color(82, 180, 157); // RGB(82, 180, 157) for algae as requested
+  public static final Color TEAM_COLOR =
+      new Color(229, 52, 18); // RGB(229, 52, 18) team color as requested
 
   // LED segment definitions
   public enum LEDSegment {
@@ -121,7 +122,7 @@ public class LEDSubsystem extends SubsystemBase {
     LEDSegment.CANDLE_LEDS.fullClear();
     LEDSegment.MAIN_STRIP.fullClear();
 
-    // Set default state
+    // Set default state based on alliance color
     setAllianceColor();
 
     Logger.recordOutput("LED/Initialized", true);
@@ -144,50 +145,40 @@ public class LEDSubsystem extends SubsystemBase {
         "LED/Alliance", alliance.isPresent() ? alliance.get().toString() : "Unknown");
   }
 
-  /** Turns off all LEDs. */
-  public void IdleMode() {
-    LEDSegment.CANDLE_LEDS.fullClear();
-    LEDSegment.MAIN_STRIP.fullClear();
-    Logger.recordOutput("LED/Status", "Off");
+  // Robot startup fade in and out orange
+  public void startupAnimation() {
+    setFade(LEDSegment.MAIN_STRIP, ORANGE, 0.2);
+    Logger.recordOutput("LED/Status", "Startup Animation - Orange Fade");
   }
 
-  /** Clears all animations and sets default idle state. */
-  public void idle() {
-    LEDSegment.MAIN_STRIP.clearAnimation();
-    LEDSegment.MAIN_STRIP.setColor(TEAM_PRIMARY);
-    Logger.recordOutput("LED/Status", "Idle");
+  /** Shows team color. */
+  public void showTeamColor() {
+    LEDSegment.MAIN_STRIP.setColor(TEAM_COLOR);
+    Logger.recordOutput("LED/Status", "Team Color");
   }
 
-  /** Sets animation for coral intake. */
-  public void coralIntakeMode(boolean active) {
-    if (active) {
-      setColorFlow(LEDSegment.MAIN_STRIP, CORAL_COLOR, 0.5);
-      Logger.recordOutput("LED/Status", "Coral Intake");
-    } else {
-      idle();
-    }
+  /** Disabled mode - Rainbow animation. */
+  public void disabledMode() {
+    setRainbow(LEDSegment.MAIN_STRIP, 0.3);
+    Logger.recordOutput("LED/Status", "Disabled Mode - Rainbow");
   }
 
-  /** Sets animation for algae intake. */
-  public void algaeIntakeMode(boolean active) {
-    if (active) {
-      setColorFlow(LEDSegment.MAIN_STRIP, ALGAE_COLOR, 0.5);
-      Logger.recordOutput("LED/Status", "Algae Intake");
-    } else {
-      idle();
-    }
+  /** Autonomous initialization - slow fading blue. */
+  public void autonomousInit() {
+    setFade(LEDSegment.MAIN_STRIP, BLUE, 0.7);
+    Logger.recordOutput("LED/Status", "Autonomous Init - Blue Fade");
   }
 
-  // Off
-  public void off() {
-    LEDSegment.MAIN_STRIP.fullClear();
-    Logger.recordOutput("LED/Status", "Off");
+  /** Indicates elevator is moving. */
+  public void elevatorMoving() {
+    setStrobe(LEDSegment.MAIN_STRIP, YELLOW, 0.3);
+    Logger.recordOutput("LED/Status", "Elevator Moving - Yellow Strobe");
   }
 
-  /** Indicates successful intake. */
-  public void showIntakeSuccess() {
-    // Quick flash to indicate success
-    setStrobe(LEDSegment.MAIN_STRIP, GREEN, 0.2);
+  /** Indicates setpoint reached or piece pickup/placement. */
+  public void setpointReached() {
+    // Solid green for setpoint reached
+    LEDSegment.MAIN_STRIP.setColor(GREEN);
 
     // Schedule reset to idle after 1 second
     new Thread(
@@ -201,34 +192,117 @@ public class LEDSubsystem extends SubsystemBase {
             })
         .start();
 
-    Logger.recordOutput("LED/Status", "Intake Success");
+    Logger.recordOutput("LED/Status", "Setpoint Reached - Solid Green");
   }
 
-  /** Indicates scoring is ready. */
-  public void scoringReady(boolean ready) {
-    if (ready) {
-      setFade(LEDSegment.MAIN_STRIP, YELLOW, 0.3);
-      Logger.recordOutput("LED/Status", "Scoring Ready");
+  /** Turns off all LEDs. */
+  public void off() {
+    LEDSegment.CANDLE_LEDS.fullClear();
+    LEDSegment.MAIN_STRIP.fullClear();
+    Logger.recordOutput("LED/Status", "Off");
+  }
+
+  /** Clears all animations and sets default idle state to team color. */
+  public void idle() {
+    LEDSegment.MAIN_STRIP.clearAnimation();
+    // LEDSegment.MAIN_STRIP.setColor(TEAM_COLOR);
+    // Idle should show alliance color
+    setAllianceColor();
+    Logger.recordOutput("LED/Status", "Idle - Team Color");
+  }
+
+  /** Sets animation for coral intake - strobe white. */
+  public void coralIntakeMode(boolean active) {
+    if (active) {
+      setStrobe(LEDSegment.MAIN_STRIP, CORAL_COLOR, 0.3);
+      Logger.recordOutput("LED/Status", "Coral Intake - White Strobe");
     } else {
       idle();
     }
   }
 
-  /** Shows climbing mode active. */
+  /** Sets animation for algae intake. */
+  public void algaeIntakeMode(boolean active) {
+    if (active) {
+      setColorFlow(LEDSegment.MAIN_STRIP, ALGAE_COLOR, 0.5);
+      Logger.recordOutput("LED/Status", "Algae Intake - Teal Color Flow");
+    } else {
+      idle();
+    }
+  }
+
+  // LEDSubsystem.java
+
+  /** Shows auto-alignment active - yellow color flow */
+  public void autoAlignMode(boolean active) {
+    if (active) {
+      setColorFlow(LEDSegment.MAIN_STRIP, YELLOW, 0.5);
+      Logger.recordOutput("LED/Status", "Auto-Align Active - Yellow Color Flow");
+    } else {
+      idle();
+    }
+  }
+
+  /** Indicates successful intake - solid green for 1.5s. */
+  public void showIntakeSuccess() {
+    // Solid green for success
+    LEDSegment.MAIN_STRIP.setColor(GREEN);
+
+    // Schedule reset to idle after 1.5 seconds
+    new Thread(
+            () -> {
+              try {
+                Thread.sleep(1500);
+                idle();
+              } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+              }
+            })
+        .start();
+
+    Logger.recordOutput("LED/Status", "Intake Success - Solid Green");
+  }
+
+  // Quick error indication - red strobe then idle
+  public void showError() {
+    setStrobe(LEDSegment.MAIN_STRIP, RED, 0.3);
+
+    // Schedule reset to idle after 1 second
+    new Thread(
+            () -> {
+              try {
+                Thread.sleep(1000);
+                idle();
+              } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+              }
+            })
+        .start();
+
+    Logger.recordOutput("LED/Status", "Error - Red Strobe");
+  }
+
+  /** Shows climbing mode active - orange. */
   public void climbingMode(boolean active) {
     if (active) {
-      setLarson(LEDSegment.MAIN_STRIP, PURPLE, 0.3);
-      Logger.recordOutput("LED/Status", "Climbing");
+      LEDSegment.MAIN_STRIP.setColor(ORANGE);
+      Logger.recordOutput("LED/Status", "Climbing Mode - Solid Orange");
     } else {
       idle();
     }
+  }
+
+  /** Shows climb finished - solid green. */
+  public void climbFinished() {
+    LEDSegment.MAIN_STRIP.setColor(GREEN);
+    Logger.recordOutput("LED/Status", "Climb Finished - Solid Green");
   }
 
   /** Shows reef zone tracking active. */
   public void reefZoneTracking(boolean active) {
     if (active) {
       setRainbow(LEDSegment.MAIN_STRIP, 0.3);
-      Logger.recordOutput("LED/Status", "Reef Zone Tracking");
+      Logger.recordOutput("LED/Status", "Reef Zone Tracking - Rainbow");
     } else {
       idle();
     }
@@ -257,6 +331,13 @@ public class LEDSubsystem extends SubsystemBase {
             color.red, color.green, color.blue, 0, speed, segment.segmentSize, segment.startIndex));
 
     Logger.recordOutput("LED/Animation/" + segment.name(), "Fade");
+  }
+
+  /** Sets an RGB fade animation. */
+  public void setRgbFade(LEDSegment segment, double speed) {
+    segment.setAnimation(new RgbFadeAnimation(speed, segment.segmentSize, segment.startIndex));
+
+    Logger.recordOutput("LED/Animation/" + segment.name(), "RgbFade");
   }
 
   /** Sets a larson animation (like a scanner). */
@@ -306,6 +387,21 @@ public class LEDSubsystem extends SubsystemBase {
             TwinklePercent.Percent42));
 
     Logger.recordOutput("LED/Animation/" + segment.name(), "Twinkle");
+  }
+
+  /** Sets a twinkle-off animation. */
+  public void setTwinkleOff(LEDSegment segment, Color color, double speed) {
+    segment.setAnimation(
+        new TwinkleOffAnimation(
+            color.red,
+            color.green,
+            color.blue,
+            0,
+            speed,
+            segment.segmentSize,
+            TwinkleOffPercent.Percent42));
+
+    Logger.recordOutput("LED/Animation/" + segment.name(), "TwinkleOff");
   }
 
   /** Sets a fire animation. */

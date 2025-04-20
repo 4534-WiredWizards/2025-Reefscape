@@ -3,52 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.985361842105262,
-        "y": 6.988486842105263
+        "x": 5.863085075102549,
+        "y": 3.8571176763054154
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.804466145833333,
-        "y": 5.746456163194445
+        "x": 6.388815789473683,
+        "y": 3.899917763157895
       },
       "isLocked": false,
-      "linkedName": "Starting Cage 1"
+      "linkedName": "Reef Post 4R"
     },
     {
       "anchor": {
-        "x": 5.313311998106151,
-        "y": 5.138375786998031
+        "x": 6.773684210526316,
+        "y": 3.8614309210526314
       },
       "prevControl": {
-        "x": 6.025061998106151,
-        "y": 6.084125786998031
+        "x": 6.525790533240545,
+        "y": 3.8290469008924037
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef Post 5L"
+      "linkedName": "Lineup For 4M"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.44745762711864406,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 0.6,
-        "maxAcceleration": 1.2,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Wrist Out",
-      "waypointRelativePos": 0.03,
+      "waypointRelativePos": 0.02364130434782609,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -58,19 +44,19 @@
       }
     },
     {
-      "name": "Scoring Postition",
-      "waypointRelativePos": 0.10847457627118628,
+      "name": "E-Zero",
+      "waypointRelativePos": 0.709156193895871,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "WE-L4"
+          "name": "E-Zero"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 0.5,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -78,14 +64,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -119.99999999999999
+    "velocity": 0,
+    "rotation": 179.2249742931609
   },
   "reversed": false,
-  "folder": "Done",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -129.14398641457092
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }

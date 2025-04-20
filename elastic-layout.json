@@ -229,7 +229,7 @@
             "x": 1456.0,
             "y": 672.0,
             "width": 336.0,
-            "height": 256.0,
+            "height": 320.0,
             "type": "List Layout",
             "properties": {
               "label_position": "RIGHT"
@@ -413,9 +413,9 @@
           {
             "title": "Robot",
             "x": 832.0,
-            "y": 416.0,
+            "y": 384.0,
             "width": 256.0,
-            "height": 128.0,
+            "height": 160.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Field/Robot",
@@ -468,7 +468,7 @@
             "x": 1088.0,
             "y": 672.0,
             "width": 352.0,
-            "height": 128.0,
+            "height": 160.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Wrist/Status/Angle",
@@ -479,9 +479,9 @@
           {
             "title": "Elevator",
             "x": 1088.0,
-            "y": 800.0,
+            "y": 832.0,
             "width": 352.0,
-            "height": 128.0,
+            "height": 160.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/AdvantageKit/RealOutputs/Elevator/Status/Position",
@@ -493,8 +493,8 @@
             "title": "BatteryVoltage",
             "x": 256.0,
             "y": 800.0,
-            "width": 816.0,
-            "height": 160.0,
+            "width": 832.0,
+            "height": 192.0,
             "type": "Voltage View",
             "properties": {
               "topic": "/AdvantageKit/SystemStats/BatteryVoltage",
@@ -518,9 +518,9 @@
           {
             "title": "Field",
             "x": 0.0,
-            "y": 0.0,
-            "width": 1088.0,
-            "height": 512.0,
+            "y": 224.0,
+            "width": 960.0,
+            "height": 528.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
@@ -537,10 +537,10 @@
           },
           {
             "title": "MatchTime",
-            "x": 0.0,
-            "y": 512.0,
-            "width": 624.0,
-            "height": 240.0,
+            "x": 464.0,
+            "y": 0.0,
+            "width": 848.0,
+            "height": 208.0,
             "type": "Match Time",
             "properties": {
               "topic": "/AdvantageKit/DriverStation/MatchTime",
@@ -556,7 +556,7 @@
             "x": 0.0,
             "y": 752.0,
             "width": 384.0,
-            "height": 128.0,
+            "height": 192.0,
             "type": "FMSInfo",
             "properties": {
               "topic": "/FMSInfo",
@@ -564,11 +564,11 @@
             }
           },
           {
-            "title": "limelight-back",
-            "x": 1088.0,
-            "y": 0.0,
-            "width": 800.0,
-            "height": 480.0,
+            "title": "Limelight Back",
+            "x": 960.0,
+            "y": 224.0,
+            "width": 480.0,
+            "height": 720.0,
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/limelight-back",
@@ -577,37 +577,11 @@
             }
           },
           {
-            "title": "limelight-front",
-            "x": 1152.0,
-            "y": 480.0,
-            "width": 752.0,
-            "height": 464.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/limelight-front",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
-            "title": "limelight-back",
-            "x": 1936.0,
-            "y": 16.0,
-            "width": 976.0,
-            "height": 704.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/limelight-back",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
-            "title": "limelight-front",
-            "x": 2912.0,
-            "y": 0.0,
-            "width": 864.0,
-            "height": 704.0,
+            "title": "Limelight Front",
+            "x": 1440.0,
+            "y": 224.0,
+            "width": 448.0,
+            "height": 720.0,
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/limelight-front",
@@ -617,10 +591,10 @@
           },
           {
             "title": "Enabled",
-            "x": 624.0,
-            "y": 512.0,
-            "width": 528.0,
-            "height": 128.0,
+            "x": 752.0,
+            "y": 752.0,
+            "width": 208.0,
+            "height": 192.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/AdvantageKit/DriverStation/Enabled",
@@ -628,16 +602,16 @@
               "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
+              "true_icon": "Checkmark",
+              "false_icon": "X"
             }
           },
           {
             "title": "BatteryVoltage",
-            "x": 624.0,
-            "y": 640.0,
-            "width": 528.0,
-            "height": 160.0,
+            "x": 384.0,
+            "y": 752.0,
+            "width": 368.0,
+            "height": 192.0,
             "type": "Voltage View",
             "properties": {
               "topic": "/AdvantageKit/SystemStats/BatteryVoltage",
@@ -648,6 +622,65 @@
               "divisions": 5,
               "inverted": false,
               "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "MatchTime",
+            "x": 3104.0,
+            "y": 224.0,
+            "width": 608.0,
+            "height": 480.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "/AdvantageKit/DriverStation/MatchTime",
+              "period": 0.06,
+              "data_type": "double",
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Climb Succsessfull",
+            "x": 1312.0,
+            "y": 0.0,
+            "width": 576.0,
+            "height": 208.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Climb/ReverseLimitSwitch",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4287401100,
+              "true_icon": "Checkmark",
+              "false_icon": "X"
+            }
+          },
+          {
+            "title": "Zone",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 464.0,
+            "height": 208.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Drive/DetectedZone",
+              "period": 0.06,
+              "data_type": "int"
+            }
+          },
+          {
+            "title": "USB Camera 0",
+            "x": 1920.0,
+            "y": 0.0,
+            "width": 1088.0,
+            "height": 896.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/USB Camera 0",
+              "period": 0.06,
+              "rotation_turns": 0
             }
           }
         ]
@@ -3455,23 +3488,16 @@
             }
           },
           {
-            "title": "Field",
-            "x": 144.0,
-            "y": 480.0,
-            "width": 576.0,
-            "height": 368.0,
-            "type": "Field",
+            "title": "USB Camera 0",
+            "x": 464.0,
+            "y": 192.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Camera Stream",
             "properties": {
-              "topic": "/SmartDashboard/Field",
+              "topic": "/CameraPublisher/USB Camera 0",
               "period": 0.06,
-              "field_game": "Reefscape",
-              "robot_width": 0.85,
-              "robot_length": 0.85,
-              "show_other_objects": true,
-              "show_trajectories": true,
-              "field_rotation": 0.0,
-              "robot_color": 4294198070,
-              "trajectory_color": 4294967295
+              "rotation_turns": 0
             }
           }
         ]

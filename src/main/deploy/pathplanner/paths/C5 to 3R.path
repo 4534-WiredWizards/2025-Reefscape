@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.327843981328258,
-        "y": 2.9093212501355232
+        "x": 5.32080455391615,
+        "y": 2.919616108653112
       },
       "prevControl": {
-        "x": 5.511587969006002,
-        "y": 2.7397979567735753
+        "x": 5.504548541593894,
+        "y": 2.750092815291164
       },
       "nextControl": null,
       "isLocked": false,
@@ -37,7 +37,7 @@
   "constraintZones": [
     {
       "name": "Slow Place",
-      "minWaypointRelativePos": 0.41016949152542376,
+      "minWaypointRelativePos": 0.4779661016949152,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.7,
@@ -64,7 +64,7 @@
     },
     {
       "name": "Raise",
-      "waypointRelativePos": 0.43,
+      "waypointRelativePos": 0.46101694915254265,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

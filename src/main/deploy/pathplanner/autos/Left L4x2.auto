@@ -7,12 +7,6 @@
         {
           "type": "named",
           "data": {
-            "name": "SetTargetL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "ResetBotPose"
           }
         },
@@ -53,9 +47,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "6R to CS1"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "SetWristSafePosition"
+            "name": "WE-CoralIntake"
           }
         }
       ]

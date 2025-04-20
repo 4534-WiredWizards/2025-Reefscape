@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1834703947368421,
-        "y": 7.036595394736842
+        "x": 1.3823630136986302,
+        "y": 7.127803938356164
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8621748408564804,
-        "y": 6.328194444444445
+        "x": 2.4691398760445806,
+        "y": 5.944632104619368
       },
       "isLocked": false,
       "linkedName": "Coral Station 1"
@@ -20,8 +20,8 @@
         "y": 5.133936048476253
       },
       "prevControl": {
-        "x": 3.7034489288171746,
-        "y": 5.378848922479259
+        "x": 3.2533705160651407,
+        "y": 5.876378878741196
       },
       "nextControl": null,
       "isLocked": false,
@@ -37,7 +37,7 @@
   "constraintZones": [
     {
       "name": "Slow Place",
-      "minWaypointRelativePos": 0.5749584717607972,
+      "minWaypointRelativePos": 0.7000339673913045,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.4,
