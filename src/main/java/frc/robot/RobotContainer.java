@@ -620,13 +620,13 @@ public class RobotContainer {
                     new AdaptiveWrist(m_Intake, () -> Wrist.ALGAE_INTAKE_ANGLE, true))));
 
     operatorController
-        .y()
+        .x()
         .onTrue(
             new SequentialCommandGroup(
                 new SetElevatorPosition(m_elevator, Elevator.POSITION_SAFE_ALGAE, m_Wrist, false)));
 
     operatorController
-        .x()
+        .y()
         .onTrue(
             new SequentialCommandGroup(
                 new ParallelCommandGroup(
