@@ -171,7 +171,7 @@ public interface Constants {
     double KG = 1.2;
 
     // Motion Profile
-    double CRUISE_VELOCITY = 100;
+    double CRUISE_VELOCITY = 75.0; // 100.0
     double MAX_ACCELERATION = 150.0;
     double JERK = 1200;
 
@@ -231,7 +231,7 @@ public interface Constants {
     double KA = 0.01;
 
     // Motion Profile
-    double CRUISE_VELOCITY = 100.0;
+    double CRUISE_VELOCITY = 20; // 100.0
     double ACCELERATION = 150.0;
     double JERK = 1200;
 

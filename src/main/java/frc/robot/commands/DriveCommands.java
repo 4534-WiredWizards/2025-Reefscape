@@ -48,6 +48,7 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
   private static double turningSpeed;
+  private static double driveSpeed;
 
   private DriveCommands() {}
 
@@ -89,6 +90,7 @@ public class DriveCommands {
           omega = Math.copySign(omega * omega, omega);
 
           turningSpeed = drive.getMaxAngularSpeedRadPerSec();
+
           if (slowTurn.getAsBoolean()) {
             turningSpeed /= 2;
           }
@@ -101,7 +103,7 @@ public class DriveCommands {
           // Thus the throttle axis caps the speed in a range of 50%-100% based on the axis's value
           // which when at "full" is -1 and when at "empty" is 1
           double throttle = throttleSupplier.getAsDouble();
-          double speedMultiplier = throttle * -.25 + .75;
+          double speedMultiplier = (throttle * -.25 + .75) * 0.2; // TODO: remove 0.2
           xDirectionSpeed *= speedMultiplier;
           yDirectionSpeed *= speedMultiplier;
 
