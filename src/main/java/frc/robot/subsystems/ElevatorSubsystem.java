@@ -52,7 +52,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private int stallCount = 0;
   private static final int STALL_COUNT_THRESHOLD = 10;
 
-  // State tracking for logging
+  // State tracking for loggingg
   private String currentStatus = "Initialized";
   private double commandedPosition = 0.0;
   private double commandedVoltage = 0.0;
