@@ -1,14 +1,29 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants.ReefZone;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class VisionConstants {
   // AprilTag layout
-  public static AprilTagFieldLayout aprilTagLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+  public static AprilTagFieldLayout aprilTagLayout;
+
+
+    static {
+    try {
+      Path fieldLayoutPath = Filesystem.getDeployDirectory().toPath().resolve("CustomField.json");
+      aprilTagLayout = new AprilTagFieldLayout(fieldLayoutPath);
+    } catch (IOException e) {
+      System.err.println("Failed to load CustomField.json!");
+      e.printStackTrace();
+      aprilTagLayout = null;
+    }
+  }
+    
+
 
   // Camera names, must match names configured on coprocessor
   public static String camera0Name = "limelight-front";
