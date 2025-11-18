@@ -11,8 +11,7 @@ public class VisionConstants {
   // AprilTag layout
   public static AprilTagFieldLayout aprilTagLayout;
 
-
-    static {
+  static {
     try {
       Path fieldLayoutPath = Filesystem.getDeployDirectory().toPath().resolve("CustomField.json");
       aprilTagLayout = new AprilTagFieldLayout(fieldLayoutPath);
@@ -22,8 +21,6 @@ public class VisionConstants {
       aprilTagLayout = null;
     }
   }
-    
-
 
   // Camera names, must match names configured on coprocessor
   public static String camera0Name = "limelight-front";
