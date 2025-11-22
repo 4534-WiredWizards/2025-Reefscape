@@ -368,34 +368,93 @@ public class Drive extends SubsystemBase {
     double x = pose.getX();
     double y = pose.getY();
 
+    double v1 = 4;
+    double v2 = 6;
+    double h1 = 4;
+    double v3 = 4;
+    double v4 = 6;
+    double h2 = 4;
+
     // Determine alliance
     boolean isRedAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
-    boolean[] sides = new boolean[3];
-    for (int i = 0; i < 3; i++) {
-      sides[i] = getSideOfLine(x, y, lineSlopes[i], isRedAlliance) > 0;
-    }
+    // boolean[] sides = new boolean[3];
+    // for (int i = 0; i < 3; i++) {
+    //   sides[i] = getSideOfLine(x, y, lineSlopes[i], isRedAlliance) > 0;
+    // }
 
     if (isRedAlliance) {
-      // For Blue alliance, we need to adjust the zone mapping since the field is
-      // mirrored
-      if (sides[0]) { // Right of vertical
-        if (sides[1]) return ReefZone.ZONE_2;
-        else return sides[2] ? ReefZone.ZONE_1 : ReefZone.ZONE_6;
-      } else { // Left of vertical
-        if (sides[2]) return ReefZone.ZONE_3;
-        else return sides[1] ? ReefZone.ZONE_4 : ReefZone.ZONE_5;
+
+      if (x > v1) {
+        if (x > v2) {
+          if (y > h1) {
+            return ReefZone.ZONE_1;
+          } else {
+            return ReefZone.ZONE_2;
+          }
+        } else {
+          if (y > h1) {
+            return ReefZone.ZONE_3;
+          } else {
+            return ReefZone.ZONE_4;
+          }
+        }
+      } else {
+        if (y > h1) {
+          return ReefZone.ZONE_5;
+        } else {
+          return ReefZone.ZONE_6;
+        }
       }
     } else {
-      // Original Blue alliance logic
-      if (sides[0]) { // Right of vertical
-        if (sides[1]) return ReefZone.ZONE_5;
-        else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
-      } else { // Left of vertical
-        if (sides[2]) return ReefZone.ZONE_6;
-        else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+
+      if (x > v3) {
+        if (x > v4) {
+          if (y > h2) {
+            return ReefZone.ZONE_1;
+          } else {
+            return ReefZone.ZONE_2;
+          }
+        } else {
+          if (y > h2) {
+            return ReefZone.ZONE_3;
+          } else {
+            return ReefZone.ZONE_4;
+          }
+        }
+      } else {
+        if (y > h2) {
+          return ReefZone.ZONE_5;
+        } else {
+          return ReefZone.ZONE_6;
+        }
       }
     }
+    /* This
+     * goe
+     * s
+     * over many lines
+     */
+
+    // For Blue alliance, we need to adjust the zone mapping since the field is
+    // mirrored
+    //   if (sides[0]) { // Right of vertical
+    //     if (sides[1]) return ReefZone.ZONE_2;
+    //     else return sides[2] ? ReefZone.ZONE_1 : ReefZone.ZONE_6;
+    //   } else { // Left of vertical
+    //     if (sides[2]) return ReefZone.ZONE_3;
+    //     else return sides[1] ? ReefZone.ZONE_4 : ReefZone.ZONE_5;
+    //   }
+    // } else {
+    //   // Original Blue alliance logic
+    //   if (sides[0]) { // Right of vertical
+    //     if (sides[1]) return ReefZone.ZONE_5;
+    //     else return sides[2] ? ReefZone.ZONE_4 : ReefZone.ZONE_3;
+    //   } else { // Left of vertical
+    //     if (sides[2]) return ReefZone.ZONE_6;
+    //     else return sides[1] ? ReefZone.ZONE_1 : ReefZone.ZONE_2;
+    //   }
+    // }
   }
 
   /** Returns a command to run a quasistatic test in the specified direction. */
