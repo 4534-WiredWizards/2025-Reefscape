@@ -29,12 +29,12 @@ public class VisionConstants {
   // Map of zone to primary AprilTag ID for Blue alliance
   public static final Map<ReefZone, Integer> BLUE_ZONE_PRIMARY_TAGS =
       Map.of(
-          ReefZone.ZONE_1, 18,
-          ReefZone.ZONE_2, 17,
+          ReefZone.ZONE_1, 19,
+          ReefZone.ZONE_2, 20,
           ReefZone.ZONE_3, 22,
-          ReefZone.ZONE_4, 21,
-          ReefZone.ZONE_5, 20,
-          ReefZone.ZONE_6, 19);
+          ReefZone.ZONE_4, 18,
+          ReefZone.ZONE_5, 17,
+          ReefZone.ZONE_6, 21);
 
   // Map of zone to primary AprilTag ID for Red alliance
   public static final Map<ReefZone, Integer> RED_ZONE_PRIMARY_TAGS =

@@ -73,7 +73,15 @@ public interface Constants {
     ZONE_3,
     ZONE_4,
     ZONE_5,
-    ZONE_6
+    ZONE_6,
+    ZONE_BAD
+  }
+
+  interface ZoneLines {
+    double v1 = 2.4;
+    double v2 = 4;
+    double h1 = 3.3;
+    double v3 = 6;
   }
 
   public enum ScoringSide {
