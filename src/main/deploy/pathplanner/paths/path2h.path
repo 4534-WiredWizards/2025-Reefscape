@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.773684210526316,
-        "y": 3.8614309210526314
+        "x": 1.27,
+        "y": 0.57
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.352298179496386,
-        "y": 3.8517753312638994
+        "x": 1.035076844803523,
+        "y": 0.48449496416858273
       },
       "isLocked": false,
-      "linkedName": "Lineup For 4M"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.824171297315141,
-        "y": 4.012809817891725
+        "x": 0.4572,
+        "y": 1.676
       },
       "prevControl": {
-        "x": 6.2356201171875,
-        "y": 4.0221435546875
+        "x": 0.2796605641881309,
+        "y": 1.8520106494834991
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef Post 4M"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "Algae",
+  "folder": "New Folder",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.2249742931609
+    "rotation": -59.99999999999999
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
