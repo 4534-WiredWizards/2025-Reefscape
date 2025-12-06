@@ -5,12 +5,12 @@
   "pathFolders": [
     "Algae",
     "Done",
-    "New Folder",
+    "CustomField",
     "Not Done",
     "Scoring"
   ],
   "autoFolders": [
-    "New Folder"
+    "CustomField"
   ],
   "defaultMaxVel": 4.0,
   "defaultMaxAccel": 3.5,
