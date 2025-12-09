@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.0,
+        "y": 3.2
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.4127279326368083,
+        "y": 3.2956118405911394
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.187566478011371,
+        "y": 4.3086450960566225
+      },
+      "prevControl": {
+        "x": 4.9413304527743405,
+        "y": 4.26542681432923
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "WE-L4",
+      "waypointRelativePos": 0.5044883303411131,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Wrist Out",
+      "waypointRelativePos": 0.680430879712747,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -40.71084667118094
+  },
+  "reversed": false,
+  "folder": "CustomField",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
