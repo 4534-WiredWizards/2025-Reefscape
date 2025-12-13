@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.4572,
+        "y": 1.676
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.6958282777765321,
+        "y": 2.193972603764548
+      },
+      "isLocked": false,
+      "linkedName": "2hStart"
+    },
+    {
+      "anchor": {
+        "x": 1.8997962092483758,
+        "y": 5.871992955209542
+      },
+      "prevControl": {
+        "x": 1.8317913762079472,
+        "y": 5.631420008511158
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "SetWristSafePosition",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "WE-L4",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -12.994616791916554
+  },
+  "reversed": false,
+  "folder": "CustomField",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "useDefaultConstraints": true
+}

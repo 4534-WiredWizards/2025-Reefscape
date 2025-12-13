@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9458635885730704,
-        "y": 2.749908750622526
+        "x": 2.36,
+        "y": 0.615
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.255588274624121,
-        "y": 2.06040283667135
+        "x": 1.6697246860510506,
+        "y": -0.07450591395117634
       },
       "isLocked": false,
       "linkedName": "Reef Post 2R"
@@ -87,7 +87,7 @@
   "folder": "Done",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

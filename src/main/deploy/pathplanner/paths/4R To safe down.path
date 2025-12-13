@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.863085075102549,
-        "y": 3.8571176763054154
+        "x": 5.242,
+        "y": 3.956
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.388815789473683,
-        "y": 3.899917763157895
+        "x": 5.767730714371134,
+        "y": 3.9988000868524796
       },
       "isLocked": false,
       "linkedName": "Reef Post 4R"
@@ -71,7 +71,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -29.999999999999996
   },
   "useDefaultConstraints": false
 }

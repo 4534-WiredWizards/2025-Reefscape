@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.653272398969173,
-        "y": 5.133936048476253
+        "x": 2.069,
+        "y": 5.482
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8477812317901945,
-        "y": 5.761758755148968
+        "x": 1.2635088328210213,
+        "y": 6.109822706672715
       },
       "isLocked": true,
       "linkedName": "Reef Post 6R"
@@ -90,7 +90,7 @@
   "folder": "Not Done",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }
