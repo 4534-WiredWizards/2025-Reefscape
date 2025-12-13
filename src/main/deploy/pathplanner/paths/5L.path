@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.675,
-        "y": 5.183
+        "x": 2.021,
+        "y": 5.01
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.55,
-        "y": 4.9664936490538905
+        "x": 2.146,
+        "y": 4.79349364905389
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.264,
-        "y": 6.009
+        "x": 2.069,
+        "y": 5.482
       },
       "prevControl": {
-        "x": 3.433499999999999,
-        "y": 6.302582611882926
+        "x": 1.8994999999999997,
+        "y": 5.775582611882925
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef Post 5L"
+      "linkedName": "Reef Post 6R"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 150.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Scoring",
   "idealStartingState": {
     "velocity": 0.55,
-    "rotation": 150.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }
